@@ -1,0 +1,136 @@
+import { StyleSheet } from "react-native";
+import COLORS from "../../../../constants/colors";
+
+const historialModal = StyleSheet.create({
+	backgroundContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// backgroundColor: "rgba(255,255,255, 0.9)",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
+		// borderRadius: 20,
+	},
+	modalContainer: {
+		flex: 1,
+		marginVertical: "2%",
+		width: "90%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		backgroundColor: "rgba(242, 242, 242, 0.95)",
+		borderRadius: 20,
+	},
+	titleContainer: {
+		flex: 4,
+		backgroundColor: COLORS.naranja,
+		// height: "4%",
+		width: "95%",
+		marginTop: "2%",
+		borderRadius: 20,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	textTitle: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+	searchContainer: {
+		flex: 8,
+		// height: "8%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	searchFieldContainer: {
+		height: "60%",
+		width: "40%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
+		borderRadius: 50,
+	},
+	searchIconContainer: {
+		height: "100%",
+		width: "25%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.main,
+		borderRadius: 50,
+	},
+	searchIcon: {
+		color: COLORS.white,
+	},
+	searchYearContainer: {
+		flex: 8,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	searchYearText: {
+		fontSize: 17,
+		left: "-9%",
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+	listContainer: {
+		flex: 82,
+		width: "100%",
+		backgroundColor: COLORS.flatlistBackground,
+		justifyContent: "center",
+		alignItems: "center",
+		marginBottom: "2.5%",
+	},
+	listTitleContainer: {
+		flex: 1,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	listTitleText: {
+		fontSize: 13,
+		textAlign: "center",
+		fontWeight: "bold",
+		color: "black",
+	},
+	listElementsContainer: {
+		flex: 9,
+		width: "100%",
+	},
+	listElementBoxContainer: {
+		flex: 1,
+	},
+	listElement: {
+		padding: "1%",
+		marginVertical: "2%",
+		width: "100%",
+		backgroundColor: COLORS.flatlistElement1,
+		flexDirection: "row",
+	},
+	listElementText: {
+		fontSize: 12,
+		textAlign: "center",
+		color: "black",
+	},
+	exitButton: {
+		flex: 6,
+		backgroundColor: COLORS.naranja,
+		alignSelf: "flex-end",
+		// height: "6%",
+		width: "30%",
+		marginBottom: "3%",
+		marginRight: "3%",
+		borderRadius: 20,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.naranja,
+	},
+	textExitButton: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+});
+
+export { historialModal };
