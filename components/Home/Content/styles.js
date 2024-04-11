@@ -15,34 +15,6 @@ const menu = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	button: {
-		flex: 1,
-		backgroundColor: COLORS.main,
-		borderRadius: 25,
-		height: "82%",
-		width: "80%",
-		marginHorizontal: "1%",
-		marginVertical: "2%",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	icon: {
-		position: "absolute",
-		marginTop: "12%",
-	},
-	content: {
-		justifyContent: "center",
-		alignItems: "center",
-		alignContent: "center",
-		width: "90%",
-	},
-	text: {
-		marginTop: 58,
-		textAlign: "center",
-		fontSize: 11,
-		color: COLORS.white,
-		fontWeight: "bold",
-	},
 });
 
 const header = StyleSheet.create({
@@ -94,21 +66,14 @@ const infopers = StyleSheet.create({
 		// borderColor: "black"
 	},
 	scrollContainer: {
-		// flex: 1,
-		height: "150%",
+		flex: 1,
 		width: "100%",
 	},
 	scrollContentContainer: {
-		// flexGrow: 1,
-		
-		justifyContent: "flex-start",
-		alignItems: "center",
-		// borderWidth: 1,
-		// borderColor: "green"
+		flexGrow: 1,
 	},
 	cardContainer: {
-		// height: "60%",
-		width: "100%",
+		flex: 1,
 		marginTop: "3%",
 		justifyContent: "flex-start",
 		alignItems: "center",
@@ -150,7 +115,8 @@ const infopers = StyleSheet.create({
 		// borderColor: "purple"
 	},
 	cardInfoRowTitleContainer: {
-		flex: 2,
+		// flex: 2,
+		width: "20%",
 		height: "92%",
 		marginBottom: "-1.5%",
 		justifyContent: "center",
@@ -268,123 +234,7 @@ const infopers = StyleSheet.create({
 		color: COLORS.white,
 		alignSelf: "center"
 	},
-	familiaContainer: {
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: "2%",
-		// borderWidth: 1,
-		// borderColor: "black"
-	},
-	familiaTitleContainer: {
-		flex: 0.8,
-		width: "94%",
-		flexDirection: "row",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		// borderWidth: 1,
-		// borderColor: "black"
-	},
-	familiaTitleText: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: COLORS.black
-	},
-	familiaAddButton: {
-		flex: 0.3,
-		height: "75%",
-		marginLeft: "4%",
-		backgroundColor: COLORS.naranja,
-		justifyContent: "center",
-		alignContent: "center",
-		borderRadius: 50,
-	},
-	familiaAddButtonText: {
-		fontSize: 9,
-		fontWeight: "bold",
-		color: COLORS.white,
-		alignSelf: "center",
-	},
-	familiaContentContainer: {
-		flex: 4,
-		width: "92%",
-		justifyContent: "flex-end",
-		alignItems: "center",
-	},
-	familiaCardContainer: {
-		height: "80%",
-		width: "100%",
-		paddingTop: "8%",
-		padding: "4%",
-		marginBottom: "1%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		backgroundColor: COLORS.flatlistBackground,
-		borderBottomLeftRadius: 12,
-		borderBottomRightRadius: 12,
-		borderTopRightRadius: 12,
-	},
-	familiaMemberContainer: {
-		position: "absolute",
-		height: "30%",
-		width: "32%",
-		bottom: "66.6%",
-		justifyContent: "center",
-		alignItems: "center",
-		alignSelf: "flex-start",
-		flexDirection: "row",
-		// borderWidth: 1,
-		// borderColor: "black",
-		zIndex: 1,
-	},
-	familiaMemberIconContainer: {
-		// flex: 2,
-		// height: "100%",
-		// width: "40%",
-		// padding: 12,
-		backgroundColor: COLORS.primary,
-		justifyContent: "center",
-		alignItems: "center",
-		borderRadius: 50,
-		zIndex: 2,
-	},
-	familiaMemberIcon: {
-		color: COLORS.white
-	},
-	familiaMemberDataContainer: {
-		flex: 5,
-		height: "60%",
-		right: "15%",
-		backgroundColor: COLORS.flatlistElement2,
-		justifyContent: "center",
-		alignItems: "center",
-		borderTopRightRadius: 50,
-		borderBottomRightRadius: 50,
-		zIndex: 1,
-	},
-	familiaMemberDataText: {
-		fontSize: 11,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	familiaRemoveButton: {
-		position: "absolute",
-		width: "20%",
-		height: "16%",
-		bottom: "66.4%",
-		alignSelf: "flex-end",
-		borderBottomLeftRadius: 12,
-		borderTopRightRadius: 12,
-		backgroundColor: COLORS.familiaRemove,
-		justifyContent: "center",
-		alignItems: "center",
-		zIndex: 1,
-	},
-	familiaRemoveButtonText: {
-		fontSize: 10,
-		fontWeight: "bold",
-		color: COLORS.white,
-	},
+	
 });
 
 const vacaciones = StyleSheet.create({
