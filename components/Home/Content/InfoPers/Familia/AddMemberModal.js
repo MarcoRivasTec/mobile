@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, TextInput } from "react-native";
-import { familiaModal } from "./styles";
-import Icon from "../../icons";
-import COLORS from "../../../../constants/colors";
+import { familiaModal } from "../styles";
+import Icon from "../../../icons";
+import COLORS from "../../../../../constants/colors";
 
-function FamiliaModal({ onCallback, selectedModal, onExit, onRegister }) {
+function AddMemberModal({ onCallback, selectedModal, onExit, onRegister }) {
 	const [nombre, setNombre] = useState("");
 	const [apellidoPaterno, setApellidoPaterno] = useState("");
 	const [apellidoMaterno, setApellidoMaterno] = useState("");
@@ -145,4 +145,4 @@ function FamiliaModal({ onCallback, selectedModal, onExit, onRegister }) {
 	);
 }
 
-export default FamiliaModal;
+export default AddMemberModal;

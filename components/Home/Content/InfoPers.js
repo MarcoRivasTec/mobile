@@ -6,7 +6,7 @@ import ContentHeader from "./ContentHeader";
 import Icon from "../icons";
 import DomicilioModal from "./InfoPers/DomicilioModal";
 import TallasModal from "./InfoPers/TallasModal";
-import FamiliaModal from "./InfoPers/FamiliaModal";
+import Familia from "./InfoPers/Familia";
 
 function InfoPers() {
 	const { width, height } = Dimensions.get("window");
@@ -14,31 +14,17 @@ function InfoPers() {
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
 	const tallasHeight = Math.round(height * 0.15);
-	const familiaHeight = Math.round(height * 0.23);
 
-	const [parientes, setParientes] = useState([
-        {
-            nombre: "Marco Uriel",
-            apellidoPaterno: "Rivas",
-            apellidoMaterno: "Lozano",
-            parentesco: "Compañero",
-            sexo: "Hombre"
-        }
-    ]);
 
 	const handleRegisterPariente = (newPariente) => {
-        setParientes(currentParientes => [...currentParientes, newPariente]);
-    };
+		setParientes((currentParientes) => [...currentParientes, newPariente]);
+	};
 
 	const [selectedModal, setSelectedModal] = useState(null);
 
-	const openModal = (modalName) => {
-		setSelectedModal(modalName);
-	};
+	const openModal = (modalName) => setSelectedModal(modalName);
 
-	const closeModal = () => {
-		setSelectedModal(null);
-	};
+	const closeModal = () => setSelectedModal(null);
 
 	function CardRow(props) {
 		return (
@@ -127,6 +113,7 @@ function InfoPers() {
 							</TouchableOpacity>
 						</View>
 					</View>
+
 					{/* Infonavit */}
 					<View style={[infopers.cardContainer, { height: infonavitHeight }]}>
 						{/* Title */}
@@ -194,94 +181,24 @@ function InfoPers() {
 					</View>
 
 					{/* Familia */}
-					<View style={[infopers.familiaContainer, { height: familiaHeight }]}>
-						{/* Title */}
-						<View style={infopers.familiaTitleContainer}>
-							<Text style={infopers.familiaTitleText}>Familia</Text>
-							{/* Add Button */}
-							<TouchableOpacity
-								onPress={() => openModal("familia")}
-								style={infopers.familiaAddButton}
-							>
-								<Text style={infopers.familiaAddButtonText}>Agregar</Text>
-								
-							</TouchableOpacity>
-							{selectedModal === "familia" && (
-									<FamiliaModal onCallback={closeModal} onExit={closeModal} />
-								)}
-						</View>
-						{/* Content */}
-						<View style={infopers.familiaContentContainer}>
-							{/* Member */}
-							<View style={infopers.familiaMemberContainer}>
-								<View
-									style={[
-										infopers.familiaMemberIconContainer,
-										{ height: height * 0.05, width: width * 0.1 },
-									]}
-								>
-									<Icon
-										name="USUARIO"
-										size={18}
-										style={infopers.familiaMemberIcon}
-									/>
-								</View>
-								<View style={infopers.familiaMemberDataContainer}>
-									<Text style={infopers.familiaMemberDataText}>Madre</Text>
-								</View>
-							</View>
-							{/* Remove Button */}
-							<TouchableOpacity style={infopers.familiaRemoveButton}>
-								<Text style={infopers.familiaRemoveButtonText}>Quitar</Text>
-							</TouchableOpacity>
-							{/* Card Content */}
-							<View style={infopers.familiaCardContainer}>
-								<CardRow title="Nombre" data="PRUEBA" />
-								<View style={infopers.cardInfoRowContainer}>
-									<View
-										style={[
-											infopers.cardInfoRowTitleContainer,
-											{ flex: 0, width: "20%" },
-										]}
-									>
-										<Text
-											numberOfLines={1}
-											style={infopers.cardInfoRowTitleText}
-										>
-											Fec. Nac.
-										</Text>
-									</View>
-									<View style={infopers.cardInfoRowDataContainer}>
-										<Text style={infopers.cardInfoRowDataText}>PRUEBA</Text>
-									</View>
-									<View
-										style={[
-											infopers.cardInfoRowTitleContainer,
-											{ flex: 4, marginBottom: "-0.5%" },
-										]}
-									>
-										<Text
-											numberOfLines={2}
-											style={infopers.cardInfoRowTitleText}
-										>
-											Sexo
-										</Text>
-									</View>
-									<View
-										style={[infopers.cardInfoRowDataContainer, { flex: 8 }]}
-									>
-										<Text style={infopers.cardInfoRowDataText}>PRUEBA</Text>
-									</View>
-								</View>
-							</View>
-						</View>
-					</View>
+					<Familia
+						selectedModal={selectedModal}
+						width={width}
+						height={height}
+						CardRow={CardRow}
+						openModal={openModal}
+						closeModal={closeModal}
+					/>
 				</ScrollView>
 			</View>
 			{/* Modals */}
 			<View>
 				{selectedModal === "domicilio" && (
-					<DomicilioModal onCallback={closeModal} onExit={closeModal} onRegister={handleRegisterPariente} />
+					<DomicilioModal
+						onCallback={closeModal}
+						onExit={closeModal}
+						onRegister={handleRegisterPariente}
+					/>
 				)}
 				{selectedModal === "tallas" && (
 					<TallasModal onCallback={closeModal} onExit={closeModal} />

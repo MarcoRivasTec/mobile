@@ -1,6 +1,133 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../../../constants/colors";
 
+const familia = StyleSheet.create({
+	familiaContainer: {
+		flex: 1,
+		// width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "2%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	familiaTitleContainer: {
+		height: "25%",
+		width: "94%",
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	familiaTitleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	familiaAddButton: {
+		flex: 0.3,
+		height: "75%",
+		marginLeft: "4%",
+		backgroundColor: COLORS.naranja,
+		justifyContent: "center",
+		alignContent: "center",
+		borderRadius: 50,
+	},
+	familiaAddButtonText: {
+		fontSize: 9,
+		fontWeight: "bold",
+		color: COLORS.white,
+		alignSelf: "center",
+	},
+	familiaContentContainer: {
+		flex: 1,
+		width: "92%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	familiaCardContainer: {
+		height: "80%",
+		width: "100%",
+		paddingTop: "8%",
+		padding: "4%",
+		marginBottom: "1%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		backgroundColor: COLORS.flatlistBackground,
+		borderBottomLeftRadius: 12,
+		borderBottomRightRadius: 12,
+		borderTopRightRadius: 12,
+	},
+	familiaMemberContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "flex-end",
+		alignItems: "center",
+	},
+	familiaMemberNameContainer: {
+		position: "absolute",
+		height: "30%",
+		width: "32%",
+		bottom: "66.666666667%",
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "flex-start",
+		flexDirection: "row",
+		// borderWidth: 1,
+		// borderColor: "black",
+		zIndex: 1,
+	},
+	familiaMemberIconContainer: {
+		// flex: 2,
+		// height: "100%",
+		// width: "40%",
+		// padding: 12,
+		backgroundColor: COLORS.primary,
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 50,
+		zIndex: 2,
+	},
+	familiaMemberIcon: {
+		color: COLORS.white,
+	},
+	familiaMemberDataContainer: {
+		flex: 5,
+		height: "60%",
+		right: "15%",
+		backgroundColor: COLORS.flatlistElement2,
+		justifyContent: "center",
+		alignItems: "center",
+		borderTopRightRadius: 50,
+		borderBottomRightRadius: 50,
+		zIndex: 1,
+	},
+	familiaMemberDataText: {
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	familiaRemoveButton: {
+		position: "absolute",
+		width: "20%",
+		height: "16%",
+		bottom: "67%",
+		alignSelf: "flex-end",
+		borderBottomLeftRadius: 12,
+		borderTopRightRadius: 12,
+		backgroundColor: COLORS.familiaRemove,
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 1,
+	},
+	familiaRemoveButtonText: {
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+});
+
 const domicilioModal = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -135,8 +262,8 @@ const familiaModal = StyleSheet.create({
 		borderRadius: 8,
 	},
 	nombreDataText: {
-        width: "100%",
-        height: "100%",
+		width: "100%",
+		height: "100%",
 		paddingLeft: 5,
 		paddingRight: 5,
 		fontSize: 12,
@@ -231,4 +358,4 @@ const familiaModal = StyleSheet.create({
 	},
 });
 
-export { domicilioModal, tallasModal, familiaModal };
+export { domicilioModal, tallasModal, familiaModal, familia };
