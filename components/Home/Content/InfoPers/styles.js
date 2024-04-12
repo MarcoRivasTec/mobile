@@ -128,6 +128,85 @@ const familia = StyleSheet.create({
 	},
 });
 
+const tallas = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		flex: 2,
+		width: "94%",
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	prendasContainer: {
+		flex: 3,
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+		alignItems: "center",
+	},
+	prendaContainer: {
+		flex: 1,
+		height: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: "6%",
+	},
+	prendaIconContainer: {
+		position: "absolute",
+		height: "60%",
+		width: "55%",
+		backgroundColor: COLORS.primary,
+		left: "10%",
+		borderRadius: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 1,
+	},
+	prendaIcon: {
+		color: COLORS.white,
+	},
+	prendaDataContainer: {
+		position: "absolute",
+		height: "30%",
+		width: "80%",
+		right: "18%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.flatlistElement2,
+		borderBottomRightRadius: 50,
+		borderTopRightRadius: 50,
+	},
+	prendaDataText: {
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	button: {
+		flex: 0.3,
+		height: "45%",
+		marginLeft: "5%",
+		backgroundColor: COLORS.naranja,
+		justifyContent: "center",
+		alignContent: "center",
+		borderRadius: 50,
+	},
+	buttonText: {
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
+		alignSelf: "center",
+	},
+});
+
 const domicilioModal = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -169,15 +248,7 @@ const domicilioModal = StyleSheet.create({
 	},
 });
 
-const tallasModal = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-});
-
-const familiaModal = StyleSheet.create({
+const addMemberModal = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -225,11 +296,11 @@ const familiaModal = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		marginVertical: "1%",
+		marginVertical: "2.5%",
 	},
 	sectionTitleContainer: {
-		flex: 3,
-		left: "2%",
+		flex: 2.4,
+		left: 8,
 		justifyContent: "center",
 		alignItems: "flex-start",
 	},
@@ -291,6 +362,24 @@ const familiaModal = StyleSheet.create({
 		borderColor: COLORS.flatlistElement1,
 		borderRadius: 8,
 	},
+	pickerParentesco: {
+		width: "110%",
+	},
+	pickerSexo: {
+		width: "118%",
+	},
+	pickerItemParentesco: {
+		fontSize: 13,
+		color: COLORS.gray,
+	},
+	pickerItemSexo: {
+		fontSize: 13,
+	},
+	pickerItemStyle: {
+		fontSize: 14,
+		height: 50,
+		color: COLORS.gray,
+	},
 	sexoContainer: {
 		flex: 2,
 		justifyContent: "center",
@@ -310,15 +399,35 @@ const familiaModal = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
+		marginTop: "1%",
 	},
 	nacimientoDataContainer: {
 		flex: 3,
-		width: "50%",
+		width: "40%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderWidth: 1,
 		borderColor: COLORS.flatlistElement1,
 		borderRadius: 8,
+	},
+	fechaButton: {
+		height: "100%",
+		width: "100%",
+		// backgroundColor: COLORS.naranja,
+		// borderRadius: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingHorizontal: "2%"
+	},
+	fechaText: {
+		right: "7%",
+		fontSize: 13,
+		color: COLORS.black,
+	},
+	icon: {
+		position: "absolute",
+		alignSelf: "flex-end",
+		paddingRight: "3%",
 	},
 	buttonsContainer: {
 		flex: 1,
@@ -358,4 +467,96 @@ const familiaModal = StyleSheet.create({
 	},
 });
 
-export { domicilioModal, tallasModal, familiaModal, familia };
+const confirmModal = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	backgroundContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// backgroundColor: "rgba(255,255,255, 0.9)",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
+		// borderRadius: 20,
+	},
+	modalContainer: {
+		height: "24%",
+		marginVertical: "2%",
+		width: "80%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(242, 242, 242, 1)",
+		borderRadius: 25,
+	},
+	contentContainer: {
+		flex: 1,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		flex: 0.6,
+		// height: "4%",
+		width: "100%",
+		marginTop: "4%",
+		justifyContent: "flex-start",
+		alignItems: "flex-start",
+	},
+	titleText: {
+		fontSize: 22,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	dataContainer: {
+		flex: 1,
+		width: "95%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+	},
+	dataText: {
+		fontSize: 16,
+		textAlign: "center",
+		color: COLORS.black,
+	},
+	buttonsContainer: {
+		flex: 0.9,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		// marginVertical: "3%",
+	},
+	confirmButton: {
+		width: "40%",
+		height: "52%",
+		backgroundColor: COLORS.naranja,
+		borderRadius: 20,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.naranja,
+	},
+	confirmButtonText: {
+		fontSize: 13,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+	exitButton: {
+		width: "40%",
+		height: "52%",
+		backgroundColor: COLORS.naranja,
+		borderRadius: 20,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.flatlistBackground,
+	},
+	exitButtonText: {
+		fontSize: 13,
+		fontWeight: "bold",
+		color: COLORS.gray,
+	},
+});
+
+export { familia, tallas, domicilioModal, addMemberModal, confirmModal };

@@ -7,6 +7,7 @@ import Icon from "../icons";
 import DomicilioModal from "./InfoPers/DomicilioModal";
 import TallasModal from "./InfoPers/TallasModal";
 import Familia from "./InfoPers/Familia";
+import Tallas from "./InfoPers/Tallas";
 
 function InfoPers() {
 	const { width, height } = Dimensions.get("window");
@@ -14,7 +15,6 @@ function InfoPers() {
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
 	const tallasHeight = Math.round(height * 0.15);
-
 
 	const handleRegisterPariente = (newPariente) => {
 		setParientes((currentParientes) => [...currentParientes, newPariente]);
@@ -129,56 +129,14 @@ function InfoPers() {
 						</View>
 					</View>
 
-					{/* Tallas */}
-					<View style={[infopers.tallasContainer, { height: tallasHeight }]}>
-						<View style={infopers.tallasTitleContainer}>
-							<Text style={infopers.tallasTitleText}>Tallas</Text>
-							<TouchableOpacity
-								onPress={() => openModal("tallas")}
-								style={infopers.tallasButton}
-							>
-								<Text style={infopers.tallasButtonText}>Ver Tallas</Text>
-							</TouchableOpacity>
-						</View>
-						<View style={infopers.tallasPrendasContainer}>
-							<View style={infopers.tallasPrendaContainer}>
-								<View style={infopers.tallasPrendaIconContainer}>
-									<Icon
-										name="CAMISA"
-										size={22}
-										style={infopers.tallasPrendaIcon}
-									/>
-								</View>
-								<View style={infopers.tallasPrendaDataContainer}>
-									<Text style={infopers.tallasPrendaDataText}>S</Text>
-								</View>
-							</View>
-							<View style={infopers.tallasPrendaContainer}>
-								<View style={infopers.tallasPrendaIconContainer}>
-									<Icon
-										name="PANTALON"
-										size={22}
-										style={infopers.tallasPrendaIcon}
-									/>
-								</View>
-								<View style={infopers.tallasPrendaDataContainer}>
-									<Text style={infopers.tallasPrendaDataText}>8 US</Text>
-								</View>
-							</View>
-							<View style={infopers.tallasPrendaContainer}>
-								<View style={infopers.tallasPrendaIconContainer}>
-									<Icon
-										name="ZAPATO"
-										size={14}
-										style={infopers.tallasPrendaIcon}
-									/>
-								</View>
-								<View style={infopers.tallasPrendaDataContainer}>
-									<Text style={infopers.tallasPrendaDataText}>32 MX</Text>
-								</View>
-							</View>
-						</View>
-					</View>
+					{/* Tallas */}					
+					<Tallas
+						selectedModal={selectedModal}
+						width={width}
+						height={height}
+						openModal={openModal}
+						closeModal={closeModal}
+					/>
 
 					{/* Familia */}
 					<Familia
