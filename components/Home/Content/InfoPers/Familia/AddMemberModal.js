@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, TextInput } from "react-native";
-import { addMemberModal } from "../styles";
+import { addMemberModal } from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import DatePicker from "react-native-date-picker";
 import Icon from "../../../icons";

@@ -15,6 +15,7 @@ function InfoPers() {
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
 	const tallasHeight = Math.round(height * 0.15);
+	const titleHeight = Math.round(height * 0.036);
 
 	const handleRegisterPariente = (newPariente) => {
 		setParientes((currentParientes) => [...currentParientes, newPariente]);
@@ -134,6 +135,7 @@ function InfoPers() {
 						selectedModal={selectedModal}
 						width={width}
 						height={height}
+						titleHeight={titleHeight}
 						openModal={openModal}
 						closeModal={closeModal}
 					/>
@@ -157,9 +159,6 @@ function InfoPers() {
 						onExit={closeModal}
 						onRegister={handleRegisterPariente}
 					/>
-				)}
-				{selectedModal === "tallas" && (
-					<TallasModal onCallback={closeModal} onExit={closeModal} />
 				)}
 			</View>
 		</View>

@@ -35,7 +35,7 @@ const familia = StyleSheet.create({
 		borderRadius: 50,
 	},
 	familiaAddButtonText: {
-		fontSize: 9,
+		fontSize: 10,
 		fontWeight: "bold",
 		color: COLORS.white,
 		alignSelf: "center",
@@ -135,7 +135,7 @@ const tallas = StyleSheet.create({
 		alignItems: "center",
 	},
 	titleContainer: {
-		flex: 2,
+		flex: 1,
 		width: "94%",
 		flexDirection: "row",
 		justifyContent: "flex-start",
@@ -180,10 +180,17 @@ const tallas = StyleSheet.create({
 		width: "80%",
 		right: "18%",
 		justifyContent: "center",
-		alignItems: "center",
+		alignItems: "flex-end",
 		backgroundColor: COLORS.flatlistElement2,
 		borderBottomRightRadius: 50,
 		borderTopRightRadius: 50,
+	},
+	prendaDataTextContainer: {
+		height: "100%",
+		width: "85%",
+		right: "6%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	prendaDataText: {
 		fontSize: 11,
@@ -191,8 +198,8 @@ const tallas = StyleSheet.create({
 		color: COLORS.black,
 	},
 	button: {
-		flex: 0.3,
-		height: "45%",
+		height: "75%",		
+		width: "24%",
 		marginLeft: "5%",
 		backgroundColor: COLORS.naranja,
 		justifyContent: "center",
@@ -248,224 +255,7 @@ const domicilioModal = StyleSheet.create({
 	},
 });
 
-const addMemberModal = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	backgroundContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		// backgroundColor: "rgba(255,255,255, 0.9)",
-		backgroundColor: "rgba(0, 0, 0, 0.4)",
-		// borderRadius: 20,
-	},
-	modalContainer: {
-		height: "55%",
-		marginVertical: "2%",
-		width: "90%",
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: "rgba(242, 242, 242, 1)",
-		borderRadius: 25,
-	},
-	contentContainer: {
-		flex: 1,
-		width: "90%",
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
-	},
-	titleContainer: {
-		flex: 0.6,
-		// height: "4%",
-		// width: "100%",
-		marginTop: "4%",
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
-	},
-	titleText: {
-		fontSize: 22,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	sectionContainer: {
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		marginVertical: "2.5%",
-	},
-	sectionTitleContainer: {
-		flex: 2.4,
-		left: 8,
-		justifyContent: "center",
-		alignItems: "flex-start",
-	},
-	sectionTitleText: {
-		flex: 1,
-		fontSize: 15,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	dataText: {
-		fontSize: 8,
-		fontWeight: "bold",
-		color: COLORS.gray,
-	},
-	nombresContainer: {
-		flex: 1,
-		width: "100%",
-		// Vertical: "3%",
-		justifyContent: "space-evenly",
-		alignItems: "flex-start",
-		marginVertical: "1%",
-	},
-	nombreDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	nombreDataText: {
-		width: "100%",
-		height: "100%",
-		paddingLeft: 5,
-		paddingRight: 5,
-		fontSize: 12,
-		color: COLORS.gray,
-	},
-	apellidosContainer: {
-		flex: 1,
-		width: "100%",
-		// Vertical: "3%",
-		justifyContent: "space-evenly",
-		alignItems: "flex-start",
-	},
-	parentescoContainer: {
-		flex: 3,
-		justifyContent: "center",
-		alignItems: "flex-start",
-		marginRight: "2%",
-	},
-	parentescoDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	pickerParentesco: {
-		width: "110%",
-	},
-	pickerSexo: {
-		width: "118%",
-	},
-	pickerItemParentesco: {
-		fontSize: 13,
-		color: COLORS.gray,
-	},
-	pickerItemSexo: {
-		fontSize: 13,
-	},
-	pickerItemStyle: {
-		fontSize: 14,
-		height: 50,
-		color: COLORS.gray,
-	},
-	sexoContainer: {
-		flex: 2,
-		justifyContent: "center",
-		alignItems: "flex-start",
-	},
-	sexoDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	nacimientoContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		marginTop: "1%",
-	},
-	nacimientoDataContainer: {
-		flex: 3,
-		width: "40%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	fechaButton: {
-		height: "100%",
-		width: "100%",
-		// backgroundColor: COLORS.naranja,
-		// borderRadius: 50,
-		justifyContent: "center",
-		alignItems: "center",
-		// paddingHorizontal: "2%"
-	},
-	fechaText: {
-		right: "7%",
-		fontSize: 13,
-		color: COLORS.black,
-	},
-	icon: {
-		position: "absolute",
-		alignSelf: "flex-end",
-		paddingRight: "3%",
-	},
-	buttonsContainer: {
-		flex: 1,
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-around",
-		alignItems: "center",
-		marginVertical: "3%",
-	},
-	registrarButton: {
-		width: "40%",
-		height: "52%",
-		backgroundColor: COLORS.naranja,
-		borderRadius: 20,
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: COLORS.naranja,
-	},
-	registrarButtonText: {
-		fontSize: 13,
-		fontWeight: "bold",
-		color: COLORS.white,
-	},
-	exitButton: {
-		width: "40%",
-		height: "52%",
-		backgroundColor: COLORS.naranja,
-		borderRadius: 20,
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: COLORS.flatlistBackground,
-	},
-	exitButtonText: {
-		fontSize: 13,
-		fontWeight: "bold",
-		color: COLORS.gray,
-	},
-});
+
 
 const confirmModal = StyleSheet.create({
 	container: {
@@ -559,4 +349,4 @@ const confirmModal = StyleSheet.create({
 	},
 });
 
-export { familia, tallas, domicilioModal, addMemberModal, confirmModal };
+export { familia, tallas, domicilioModal, confirmModal };

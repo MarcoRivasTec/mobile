@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../../../../constants/colors";
 
-const modifyTallasModal = StyleSheet.create({
+const addMemberModal = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -46,13 +46,13 @@ const modifyTallasModal = StyleSheet.create({
 	},
 	sectionContainer: {
 		flex: 1,
-		width: "100%",
+		flexDirection: "row",
 		justifyContent: "center",
-		alignItems: "flex-start",
+		alignItems: "center",
 		marginVertical: "2.5%",
 	},
 	sectionTitleContainer: {
-		flex: 1.5,
+		flex: 2.4,
 		left: 8,
 		justifyContent: "center",
 		alignItems: "flex-start",
@@ -63,31 +63,119 @@ const modifyTallasModal = StyleSheet.create({
 		fontWeight: "bold",
 		color: COLORS.black,
 	},
-	tallaDataContainer: {
-		flex: 2,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderRadius: 8,
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1
-	},
 	dataText: {
 		fontSize: 8,
 		fontWeight: "bold",
 		color: COLORS.gray,
 	},
-	pickerTalla: {
+	nombresContainer: {
+		flex: 1,
 		width: "100%",
+		// Vertical: "3%",
+		justifyContent: "space-evenly",
+		alignItems: "flex-start",
+		marginVertical: "1%",
 	},
-	pickerItemTalla: {
+	nombreDataContainer: {
+		flex: 3,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		borderRadius: 8,
+	},
+	nombreDataText: {
+		width: "100%",
+		height: "100%",
+		paddingLeft: 5,
+		paddingRight: 5,
+		fontSize: 12,
+		color: COLORS.gray,
+	},
+	apellidosContainer: {
+		flex: 1,
+		width: "100%",
+		// Vertical: "3%",
+		justifyContent: "space-evenly",
+		alignItems: "flex-start",
+	},
+	parentescoContainer: {
+		flex: 3,
+		justifyContent: "center",
+		alignItems: "flex-start",
+		marginRight: "2%",
+	},
+	parentescoDataContainer: {
+		flex: 3,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		borderRadius: 8,
+	},
+	pickerParentesco: {
+		width: "110%",
+	},
+	pickerSexo: {
+		width: "118%",
+	},
+	pickerItemParentesco: {
 		fontSize: 13,
 		color: COLORS.gray,
+	},
+	pickerItemSexo: {
+		fontSize: 13,
 	},
 	pickerItemStyle: {
 		fontSize: 14,
 		height: 50,
 		color: COLORS.gray,
+	},
+	sexoContainer: {
+		flex: 2,
+		justifyContent: "center",
+		alignItems: "flex-start",
+	},
+	sexoDataContainer: {
+		flex: 3,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		borderRadius: 8,
+	},
+	nacimientoContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		marginTop: "1%",
+	},
+	nacimientoDataContainer: {
+		flex: 3,
+		width: "40%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		borderRadius: 8,
+	},
+	fechaButton: {
+		height: "100%",
+		width: "100%",
+		// backgroundColor: COLORS.naranja,
+		// borderRadius: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingHorizontal: "2%"
+	},
+	fechaText: {
+		right: "7%",
+		fontSize: 13,
+		color: COLORS.black,
 	},
 	icon: {
 		position: "absolute",
@@ -132,4 +220,4 @@ const modifyTallasModal = StyleSheet.create({
 	},
 });
 
-export { modifyTallasModal };
+export { addMemberModal };
