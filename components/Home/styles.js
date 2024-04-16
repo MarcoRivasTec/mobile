@@ -61,17 +61,27 @@ const data = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "flex-start",
 		alignItems: "center",
+		
 	},
-	cardSvg: {
+	cardAvatarContainer: {
+		flex: 0.34,
+		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	cardAvatarBackground: {
+		justifyContent: "center",
+		alignItems: "center",
+		height: "92%",
+		width: "76%",
+		backgroundColor: COLORS.flatlistBackground,
+		borderRadius: 100,
+	},
 	cardTextContainer: {
-		position: "absolute",
+		flex: 1,
 		height: "100%",
-		width: "100%",
-		marginLeft: "26%",
-		marginTop: "20%",
+		justifyContent: "center",
+		alignItems: "flex-start"
 	},
 	cardText: {
 		color: COLORS.white,

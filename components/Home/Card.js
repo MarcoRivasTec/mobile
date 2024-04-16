@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { data } from "./styles";
 import Svg, { Circle } from "react-native-svg";
+import Icon from "./icons";
 import COLORS from "../../constants/colors";
 
 function Card() {
@@ -34,18 +35,25 @@ function Card() {
 				{/* <SVGBanner style = {{flex: 1}}>
                     </SVGBanner> */}
 				<View style={data.cardDataContainer}>
-					<Svg height="100%" width="100%" style={data.cardSvg}>
-						<Circle cx="13%" cy="50%" r="13%" fill="white" />
-					</Svg>
+					<View style={data.cardAvatarContainer}>
+						<View style={data.cardAvatarBackground}>
+							<Icon
+								name="USER"
+								size={36}
+								color="gray"
+							></Icon>
+						</View>
+					</View>
+
 					{/* <View style = {{borderRadius: 50, padding: "12.5%", backgroundColor: COLORS.white}}> 
                         </View> */}
 					<View style={data.cardTextContainer}>
-						<Text style={[data.cardText, { fontSize: 24 }]}>Hello, Rubén!</Text>
+						<Text style={[data.cardText, { fontSize: 24 }]}>Hello, Marcos!</Text>
 						<Text style={[data.cardText, { fontSize: 16, fontWeight: "bold" }]}>
-							900338
+							94327
 						</Text>
 						<Text style={[data.cardText, { fontSize: 8, marginTop: "0.2%" }]}>
-							Supervisor de CSA
+							Técnico de Producción
 						</Text>
 					</View>
 				</View>
