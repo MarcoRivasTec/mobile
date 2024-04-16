@@ -1,6 +1,217 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../../../constants/colors";
 
+const familia = StyleSheet.create({
+	familiaContainer: {
+		flex: 1,
+		// width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "2%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	familiaTitleContainer: {
+		height: "25%",
+		width: "94%",
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	familiaTitleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	familiaAddButton: {
+		flex: 0.3,
+		height: "75%",
+		marginLeft: "4%",
+		backgroundColor: COLORS.naranja,
+		justifyContent: "center",
+		alignContent: "center",
+		borderRadius: 50,
+	},
+	familiaAddButtonText: {
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
+		alignSelf: "center",
+	},
+	familiaContentContainer: {
+		flex: 1,
+		width: "92%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	familiaCardContainer: {
+		height: "80%",
+		width: "100%",
+		paddingTop: "8%",
+		padding: "4%",
+		marginBottom: "1%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		backgroundColor: COLORS.flatlistBackground,
+		borderBottomLeftRadius: 12,
+		borderBottomRightRadius: 12,
+		borderTopRightRadius: 12,
+	},
+	familiaMemberContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "flex-end",
+		alignItems: "center",
+	},
+	familiaMemberNameContainer: {
+		position: "absolute",
+		height: "30%",
+		width: "32%",
+		bottom: "66.666666667%",
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "flex-start",
+		flexDirection: "row",
+		// borderWidth: 1,
+		// borderColor: "black",
+		zIndex: 1,
+	},
+	familiaMemberIconContainer: {
+		// flex: 2,
+		// height: "100%",
+		// width: "40%",
+		// padding: 12,
+		backgroundColor: COLORS.primary,
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 50,
+		zIndex: 2,
+	},
+	familiaMemberIcon: {
+		color: COLORS.white,
+	},
+	familiaMemberDataContainer: {
+		flex: 5,
+		height: "60%",
+		right: "15%",
+		backgroundColor: COLORS.flatlistElement2,
+		justifyContent: "center",
+		alignItems: "center",
+		borderTopRightRadius: 50,
+		borderBottomRightRadius: 50,
+		zIndex: 1,
+	},
+	familiaMemberDataText: {
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	familiaRemoveButton: {
+		position: "absolute",
+		width: "20%",
+		height: "16%",
+		bottom: "67%",
+		alignSelf: "flex-end",
+		borderBottomLeftRadius: 12,
+		borderTopRightRadius: 12,
+		backgroundColor: COLORS.familiaRemove,
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 1,
+	},
+	familiaRemoveButtonText: {
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+});
+
+const tallas = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		flex: 1,
+		width: "94%",
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	prendasContainer: {
+		flex: 3,
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+		alignItems: "center",
+		paddingLeft: "2%",
+	},
+	prendaContainer: {
+		flex: 1,
+		height: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		paddingLeft: "2%",
+	},
+	prendaIconContainer: {
+		height: "60%",
+		width: "40%",
+		left: "5%",
+		backgroundColor: COLORS.primary,
+		borderRadius: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 1,
+	},
+	prendaIcon: {
+		color: COLORS.white,
+	},
+	prendaDataContainer: {
+		height: "30%",
+		width: "70%",
+		justifyContent: "center",
+		alignItems: "flex-end",
+		backgroundColor: COLORS.flatlistElement2,
+		borderBottomRightRadius: 50,
+		borderTopRightRadius: 50,
+	},
+	prendaDataTextContainer: {
+		height: "80%",
+		width: "92%",
+		right: "5%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	prendaDataText: {
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	button: {
+		height: "75%",		
+		width: "24%",
+		marginLeft: "5%",
+		backgroundColor: COLORS.naranja,
+		justifyContent: "center",
+		alignContent: "center",
+		borderRadius: 50,
+	},
+	buttonText: {
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
+		alignSelf: "center",
+	},
+});
+
 const domicilioModal = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -42,15 +253,7 @@ const domicilioModal = StyleSheet.create({
 	},
 });
 
-const tallasModal = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-});
-
-const familiaModal = StyleSheet.create({
+const confirmModal = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -66,9 +269,9 @@ const familiaModal = StyleSheet.create({
 		// borderRadius: 20,
 	},
 	modalContainer: {
-		height: "55%",
+		height: "24%",
 		marginVertical: "2%",
-		width: "90%",
+		width: "80%",
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: "rgba(242, 242, 242, 1)",
@@ -77,13 +280,13 @@ const familiaModal = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
 		width: "90%",
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	titleContainer: {
 		flex: 0.6,
 		// height: "4%",
-		// width: "100%",
+		width: "100%",
 		marginTop: "4%",
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
@@ -93,115 +296,26 @@ const familiaModal = StyleSheet.create({
 		fontWeight: "bold",
 		color: COLORS.black,
 	},
-	sectionContainer: {
+	dataContainer: {
 		flex: 1,
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		marginVertical: "1%",
-	},
-	sectionTitleContainer: {
-		flex: 3,
-		left: "2%",
+		width: "95%",
 		justifyContent: "center",
 		alignItems: "flex-start",
-	},
-	sectionTitleText: {
-		flex: 1,
-		fontSize: 15,
-		fontWeight: "bold",
-		color: COLORS.black,
 	},
 	dataText: {
-		fontSize: 8,
-		fontWeight: "bold",
-		color: COLORS.gray,
-	},
-	nombresContainer: {
-		flex: 1,
-		width: "100%",
-		// Vertical: "3%",
-		justifyContent: "space-evenly",
-		alignItems: "flex-start",
-		marginVertical: "1%",
-	},
-	nombreDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	nombreDataText: {
-        width: "100%",
-        height: "100%",
-		paddingLeft: 5,
-		paddingRight: 5,
-		fontSize: 12,
-		color: COLORS.gray,
-	},
-	apellidosContainer: {
-		flex: 1,
-		width: "100%",
-		// Vertical: "3%",
-		justifyContent: "space-evenly",
-		alignItems: "flex-start",
-	},
-	parentescoContainer: {
-		flex: 3,
-		justifyContent: "center",
-		alignItems: "flex-start",
-		marginRight: "2%",
-	},
-	parentescoDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	sexoContainer: {
-		flex: 2,
-		justifyContent: "center",
-		alignItems: "flex-start",
-	},
-	sexoDataContainer: {
-		flex: 3,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
-	},
-	nacimientoContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-	},
-	nacimientoDataContainer: {
-		flex: 3,
-		width: "50%",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: COLORS.flatlistElement1,
-		borderRadius: 8,
+		fontSize: 16,
+		textAlign: "center",
+		color: COLORS.black,
 	},
 	buttonsContainer: {
-		flex: 1,
+		flex: 0.9,
 		width: "100%",
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
-		marginVertical: "3%",
+		// marginVertical: "3%",
 	},
-	registrarButton: {
+	confirmButton: {
 		width: "40%",
 		height: "52%",
 		backgroundColor: COLORS.naranja,
@@ -210,7 +324,7 @@ const familiaModal = StyleSheet.create({
 		alignItems: "center",
 		backgroundColor: COLORS.naranja,
 	},
-	registrarButtonText: {
+	confirmButtonText: {
 		fontSize: 13,
 		fontWeight: "bold",
 		color: COLORS.white,
@@ -231,4 +345,4 @@ const familiaModal = StyleSheet.create({
 	},
 });
 
-export { domicilioModal, tallasModal, familiaModal };
+export { familia, tallas, domicilioModal, confirmModal };
