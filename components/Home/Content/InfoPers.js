@@ -4,28 +4,44 @@ import { Dimensions } from "react-native";
 import { infopers } from "./styles";
 import ContentHeader from "./ContentHeader";
 import Icon from "../icons";
-import DomicilioModal from "./InfoPers/DomicilioModal";
-import TallasModal from "./InfoPers/TallasModal";
 import Familia from "./InfoPers/Familia";
 import Tallas from "./InfoPers/Tallas";
+import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal"
 
 function InfoPers() {
 	const { width, height } = Dimensions.get("window");
 	const infoheight = Math.round(height * 0.4);
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
-	const tallasHeight = Math.round(height * 0.15);
 	const titleHeight = Math.round(height * 0.036);
 
-	const handleRegisterPariente = (newPariente) => {
-		setParientes((currentParientes) => [...currentParientes, newPariente]);
-	};
-
 	const [selectedModal, setSelectedModal] = useState(null);
-
 	const openModal = (modalName) => setSelectedModal(modalName);
-
 	const closeModal = () => setSelectedModal(null);
+
+	const identificacion = {
+		rfc: "DUHM710425JF6",
+		curp: "DUHM710425HCHNRR04",
+		imss: "33887142934",
+		genero: "Masculino",
+		cuenta: "585777906"
+	};
+	identificacion.edoCivil = identificacion.genero === "Masculino" ? "Casado" : "Casada";
+
+
+	const [domicilio, setDomicilio] = useState({
+		calle: "Tlahuac",
+		numero: 3754,
+		colonia: "Lopez Mateos",
+		telefono: 6566491000,
+	});
+
+	const infonavit = {
+		noCredito: "0801045612",
+		tipo: "Cuota Fija",
+		tasa: "2329.7700",
+		status: "Activo",
+	};
 
 	function CardRow(props) {
 		return (
@@ -58,9 +74,9 @@ function InfoPers() {
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
-							<CardRow title="RFC" data="PRUEBA" />
-							<CardRow title="CURP" data="PRUEBA" />
-							<CardRow title="IMSS" data="PRUEBA" />
+							<CardRow title="RFC" data={identificacion.rfc} />
+							<CardRow title="CURP" data={identificacion.curp} />
+							<CardRow title="IMSS" data={identificacion.imss} />
 							<View style={infopers.cardInfoRowContainer}>
 								<View
 									style={[
@@ -73,7 +89,7 @@ function InfoPers() {
 									</Text>
 								</View>
 								<View style={infopers.cardInfoRowDataContainer}>
-									<Text style={infopers.cardInfoRowDataText}>PRUEBA</Text>
+									<Text style={infopers.cardInfoRowDataText}>{identificacion.genero}</Text>
 								</View>
 								<View
 									style={[
@@ -86,10 +102,10 @@ function InfoPers() {
 									</Text>
 								</View>
 								<View style={[infopers.cardInfoRowDataContainer, { flex: 8 }]}>
-									<Text style={infopers.cardInfoRowDataText}>PRUEBA</Text>
+									<Text style={infopers.cardInfoRowDataText}>{identificacion.edoCivil}</Text>
 								</View>
 							</View>
-							<CardRow title="CUENTA" data="PRUEBA" />
+							<CardRow title="CUENTA" data={identificacion.cuenta} />
 						</View>
 					</View>
 
@@ -101,9 +117,9 @@ function InfoPers() {
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
-							<CardRow title="Dirección" data="PRUEBA" />
-							<CardRow title="Colonia" data="PRUEBA" />
-							<CardRow title="Teléfono" data="PRUEBA" />
+							<CardRow title="Dirección" data={`${domicilio.calle} ${domicilio.numero}`} />
+							<CardRow title="Colonia" data={domicilio.colonia} />
+							<CardRow title="Teléfono" data={domicilio.telefono} />
 							<TouchableOpacity
 								onPress={() => openModal("domicilio")}
 								style={infopers.cardInfoButton}
@@ -111,6 +127,14 @@ function InfoPers() {
 								<Text style={infopers.cardInfoButtonText}>
 									Actualiza tu dirección
 								</Text>
+								{selectedModal === "domicilio" && (
+									<ModifyDomicilioModal
+										onExit={openModal}
+										onCallback={closeModal}
+										domicilio={domicilio}
+										setDomicilio={setDomicilio}
+									/>
+								)}
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -123,14 +147,14 @@ function InfoPers() {
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
-							<CardRow title="No. Crédito" data="PRUEBA" />
-							<CardRow title="Tipo" data="PRUEBA" />
-							<CardRow title="Tasa" data="PRUEBA" />
-							<CardRow title="Estatus: " data="PRUEBA" />
+							<CardRow title="No. Crédito" data={infonavit.noCredito} />
+							<CardRow title="Tipo" data={infonavit.tipo} />
+							<CardRow title="Tasa" data={infonavit.tasa} />
+							<CardRow title="Estatus: " data={infonavit.status} />
 						</View>
 					</View>
 
-					{/* Tallas */}					
+					{/* Tallas */}
 					<Tallas
 						selectedModal={selectedModal}
 						width={width}
@@ -150,16 +174,6 @@ function InfoPers() {
 						closeModal={closeModal}
 					/>
 				</ScrollView>
-			</View>
-			{/* Modals */}
-			<View>
-				{selectedModal === "domicilio" && (
-					<DomicilioModal
-						onCallback={closeModal}
-						onExit={closeModal}
-						onRegister={handleRegisterPariente}
-					/>
-				)}
 			</View>
 		</View>
 	);

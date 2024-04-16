@@ -10,7 +10,6 @@ function ModifyTallasModal({
 	onExit,
 	tallasPrendas,
 	setTallasPrendas,
-	onRegister,
 }) {
 	const [selectedPlayera, setSelectedPlayera] = useState(tallasPrendas.playera);
 	const [selectedPantalon, setSelectedPantalon] = useState(
@@ -26,8 +25,7 @@ function ModifyTallasModal({
 			pantalon: selectedPantalon,
 			calzado: selectedCalzado,
 		});
-		// Call the onRegister callback if needed
-		// if (onRegister) onRegister();
+		onCallback();
 	};
 
 	return (
@@ -465,8 +463,8 @@ function ModifyTallasModal({
 								</View>
 								<View style={modifyTallasModal.tallaDataContainer}>
 									<Picker
-										selectedValue={selectedPlayera}
-										onValueChange={(itemValue) => setSelectedPlayera(itemValue)}
+										selectedValue={selectedCalzado}
+										onValueChange={(itemValue) => setSelectedCalzado(itemValue)}
 										itemStyle={modifyTallasModal.pickerItemStyle}
 										style={modifyTallasModal.pickerTalla}
 									>

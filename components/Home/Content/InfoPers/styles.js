@@ -151,6 +151,7 @@ const tallas = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-evenly",
 		alignItems: "center",
+		paddingLeft: "2%",
 	},
 	prendaContainer: {
 		flex: 1,
@@ -158,14 +159,13 @@ const tallas = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		paddingHorizontal: "6%",
+		paddingLeft: "2%",
 	},
 	prendaIconContainer: {
-		position: "absolute",
 		height: "60%",
-		width: "55%",
+		width: "40%",
+		left: "5%",
 		backgroundColor: COLORS.primary,
-		left: "10%",
 		borderRadius: 50,
 		justifyContent: "center",
 		alignItems: "center",
@@ -175,10 +175,8 @@ const tallas = StyleSheet.create({
 		color: COLORS.white,
 	},
 	prendaDataContainer: {
-		position: "absolute",
 		height: "30%",
-		width: "80%",
-		right: "18%",
+		width: "70%",
 		justifyContent: "center",
 		alignItems: "flex-end",
 		backgroundColor: COLORS.flatlistElement2,
@@ -186,9 +184,9 @@ const tallas = StyleSheet.create({
 		borderTopRightRadius: 50,
 	},
 	prendaDataTextContainer: {
-		height: "100%",
-		width: "85%",
-		right: "6%",
+		height: "80%",
+		width: "92%",
+		right: "5%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -254,8 +252,6 @@ const domicilioModal = StyleSheet.create({
 		color: COLORS.white,
 	},
 });
-
-
 
 const confirmModal = StyleSheet.create({
 	container: {
