@@ -5,7 +5,7 @@ import COLORS from "../../constants/colors";
 import Icon from "./icons";
 import { Ionicons } from "@expo/vector-icons";
 
-function Quickbar({changeContent}) {
+function Quickbar({ changeContent }) {
 	//Loading fonts before setting the state for quickbar buttons results in error: rendering more/less hooks in previous state
 	const [pressedQuickbarButton, setQuickBarPressedButton] = useState(null);
 
@@ -51,12 +51,7 @@ function Quickbar({changeContent}) {
 					<Text
 						adjustsFontSizeToFit={true}
 						numberOfLines={3}
-						style={{
-							fontSize: 18,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 18 }]}
 					>
 						Información Personal
 					</Text>
@@ -91,12 +86,7 @@ function Quickbar({changeContent}) {
 					<Text
 						adjustsFontSizeToFit={true}
 						numberOfLines={3}
-						style={{
-							fontSize: 13,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 13 }]}
 					>
 						Área
 					</Text>
@@ -124,6 +114,7 @@ function Quickbar({changeContent}) {
 							color={
 								isQuickbarButtonPressed("button3") ? COLORS.white : COLORS.main
 							}
+							style={{ top: "4%" }}
 						/>
 					</View>
 				</View>
@@ -132,12 +123,7 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							fontSize: 12,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 12 }]}
 					>
 						Redes
 					</Text>
@@ -165,7 +151,7 @@ function Quickbar({changeContent}) {
 							color={
 								isQuickbarButtonPressed("button4") ? COLORS.white : COLORS.main
 							}
-							style={{top: "12%"}}
+							style={{ top: "4%" }}
 						/>
 					</View>
 				</View>
@@ -174,12 +160,7 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							fontSize: 15,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 15 }]}
 					>
 						Tecma Ideas
 					</Text>
@@ -207,7 +188,6 @@ function Quickbar({changeContent}) {
 							color={
 								isQuickbarButtonPressed("button5") ? COLORS.white : COLORS.main
 							}
-							style={{top: "6%"}}
 						/>
 					</View>
 				</View>
@@ -216,12 +196,7 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							fontSize: 12,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 12 }]}
 					>
 						Directorio
 					</Text>
