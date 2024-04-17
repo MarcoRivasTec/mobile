@@ -194,16 +194,15 @@ const area = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "purple"
 	},
-	cardTitleContainer: {
+	titleContainer: {
 		height: "12%",
 		width: "94%",
-		marginBottom: "3%",
 		justifyContent: "center",
 		alignItems: "flex-start",
 		// borderWidth: 1,
 		// borderColor: "purple"
 	},
-	cardTitleText:{
+	titleText:{
 		fontSize: 20,
 		fontWeight: "bold",
 		color: "black",
