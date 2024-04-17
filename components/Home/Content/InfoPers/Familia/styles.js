@@ -38,6 +38,8 @@ const addMemberModal = StyleSheet.create({
 		marginTop: "4%",
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
+		borderWidth: 1,
+		borderColor: "black"
 	},
 	titleText: {
 		fontSize: 22,
