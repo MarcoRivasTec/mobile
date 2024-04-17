@@ -7,7 +7,7 @@ const familia = StyleSheet.create({
 		// width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: "2%",
+		marginTop: "3%",
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
@@ -103,8 +103,16 @@ const familia = StyleSheet.create({
 		borderBottomRightRadius: 50,
 		zIndex: 1,
 	},
+	familiaMemberDataTextContainer: {
+		height: "100%",
+		width: "84%",
+		left: "3%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+	},
 	familiaMemberDataText: {
 		fontSize: 11,
+		textAlign: "left",
 		fontWeight: "bold",
 		color: COLORS.black,
 	},
@@ -133,6 +141,7 @@ const tallas = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		marginTop: "3%",
 	},
 	titleContainer: {
 		flex: 1,
@@ -185,10 +194,12 @@ const tallas = StyleSheet.create({
 	},
 	prendaDataTextContainer: {
 		height: "80%",
-		width: "92%",
+		width: "89%",
 		right: "5%",
 		justifyContent: "center",
 		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
 	},
 	prendaDataText: {
 		fontSize: 11,

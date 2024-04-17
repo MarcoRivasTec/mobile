@@ -116,7 +116,7 @@ const infopers = StyleSheet.create({
 	},
 	cardInfoRowTitleContainer: {
 		// flex: 2,
-		width: "20%",
+		width: "28%",
 		height: "92%",
 		marginBottom: "-1.5%",
 		justifyContent: "center",
@@ -131,7 +131,7 @@ const infopers = StyleSheet.create({
 	},
 	cardInfoRowDataContainer: {
 		flex: 8,
-		paddingLeft: "3%",
+		paddingLeft: "1%",
 		marginBottom: "-1.5%",
 		justifyContent: "center",
 		alignItems: "flex-start",

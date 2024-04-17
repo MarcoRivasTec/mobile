@@ -14,7 +14,7 @@ function Familia({
 	openModal,
 	closeModal,
 }) {
-    const cardHeight = Math.round(height * 0.18);
+	const cardHeight = Math.round(height * 0.18);
 	const titleHeight = Math.round(height * 0.036);
 
 	const [parientes, setParientes] = useState([
@@ -44,16 +44,16 @@ function Familia({
 		},
 	]);
 
-    const addMember = (newMember) => {
-        setParientes([...parientes, newMember]);
-    };
+	const addMember = (newMember) => {
+		setParientes([...parientes, newMember]);
+	};
 
-    const [memberIndexToRemove, setMemberIndexToRemove] = useState(null); // State to store index of member to remove
+	const [memberIndexToRemove, setMemberIndexToRemove] = useState(null); // State to store index of member to remove
 	const removeMember = () => {
 		const updatedParientes = [...parientes];
 		updatedParientes.splice(memberIndexToRemove, 1);
 		setParientes(updatedParientes);
-        closeModal();
+		closeModal();
 		setMemberIndexToRemove(null); // Reset member index to remove state
 	};
 
@@ -70,7 +70,11 @@ function Familia({
 					<Text style={familia.familiaAddButtonText}>Agregar</Text>
 				</TouchableOpacity>
 				{selectedModal === "familia" && (
-					<AddMemberModal onCallback={closeModal} onExit={closeModal} onRegister={addMember}/>
+					<AddMemberModal
+						onCallback={closeModal}
+						onExit={closeModal}
+						onRegister={addMember}
+					/>
 				)}
 			</View>
 
@@ -92,17 +96,23 @@ function Familia({
 								<Icon name="USER" size={18} style={familia.familiaMemberIcon} />
 							</View>
 							<View style={familia.familiaMemberDataContainer}>
-								<Text style={familia.familiaMemberDataText}>
-									{pariente.parentesco}
-								</Text>
+								<View style={familia.familiaMemberDataTextContainer}>
+									<Text
+										adjustsFontSizeToFit={true}
+										numberOfLines={1}
+										style={familia.familiaMemberDataText}
+									>
+										{pariente.parentesco}
+									</Text>
+								</View>
 							</View>
 						</View>
 						{/* Remove Button */}
 						<TouchableOpacity
-                            onPress={() => {
-                                setMemberIndexToRemove(index);
-                                openModal("confirm"); // Open the confirmation modal
-                            }}
+							onPress={() => {
+								setMemberIndexToRemove(index);
+								openModal("confirm"); // Open the confirmation modal
+							}}
 							// onPress={() => removeMember(index)}
 							style={familia.familiaRemoveButton}
 						>
@@ -114,7 +124,7 @@ function Familia({
 								onExit={closeModal}
 								title="Remover pariente"
 								data="¿Estás seguro que deseas remover este pariente?"
-                                onConfirm={() => removeMember(memberIndexToRemove)}
+								onConfirm={() => removeMember(memberIndexToRemove)}
 							/>
 						)}
 						{/* Card Content */}

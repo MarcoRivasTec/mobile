@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { infopers } from "./styles";
 import ContentHeader from "./ContentHeader";
-import Icon from "../icons";
+import CardRow from "./Design/CardRow";
 import Familia from "./InfoPers/Familia";
 import Tallas from "./InfoPers/Tallas";
 import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal"
@@ -43,21 +43,6 @@ function InfoPers() {
 		status: "Activo",
 	};
 
-	function CardRow(props) {
-		return (
-			<View style={infopers.cardInfoRowContainer}>
-				<View style={infopers.cardInfoRowTitleContainer}>
-					<Text numberOfLines={1} style={infopers.cardInfoRowTitleText}>
-						{props.title}
-					</Text>
-				</View>
-				<View style={infopers.cardInfoRowDataContainer}>
-					<Text style={infopers.cardInfoRowDataText}>{props.data}</Text>
-				</View>
-			</View>
-		);
-	}
-
 	return (
 		<View style={infopers.container}>
 			<ContentHeader title="Información Personal" />
@@ -81,7 +66,7 @@ function InfoPers() {
 								<View
 									style={[
 										infopers.cardInfoRowTitleContainer,
-										{ flex: 0, width: "20%" },
+										{ flex: 0, width: "28%" },
 									]}
 								>
 									<Text numberOfLines={1} style={infopers.cardInfoRowTitleText}>
@@ -94,7 +79,7 @@ function InfoPers() {
 								<View
 									style={[
 										infopers.cardInfoRowTitleContainer,
-										{ flex: 4, marginBottom: "-0.5%" },
+										{ flex: 6, marginBottom: "-0.5%" },
 									]}
 								>
 									<Text numberOfLines={2} style={infopers.cardInfoRowTitleText}>
