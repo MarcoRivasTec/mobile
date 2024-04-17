@@ -33,15 +33,23 @@ const header = StyleSheet.create({
 		backgroundColor: COLORS.main,
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
-		paddingLeft: "2%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	titleTextContainer: {
+		left: "3%",
+		top: "6%",
+		height: "80%",
+		width: "92%",
+		justifyContent: "center",
+		alignItems: "flex-start",
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
 	title: {
 		color: COLORS.white,
 		fontWeight: "bold",
-		top: "10%",
-		fontSize: 12
+		fontSize: 11
 	}
 	
 
@@ -158,6 +166,58 @@ const infopers = StyleSheet.create({
 		color: COLORS.white,
 		alignSelf: "center"
 	},	
+});
+
+const area = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	contentContainer: {
+		flex: 19,
+		justifyContent: "center",
+		alignItems: "center",
+		// height: "95%",
+		width: "100%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	cardContainer: {
+		flex: 1,
+		marginTop: "3%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	cardTitleContainer: {
+		height: "12%",
+		width: "94%",
+		marginBottom: "3%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	cardTitleText:{
+		fontSize: 20,
+		fontWeight: "bold",
+		color: "black",
+	},
+	cardInfoContainer: {
+		height: "80%",
+		width: "92%",
+		padding: "4%",
+		// marginBottom: "5%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		backgroundColor: COLORS.flatlistBackground,
+		borderRadius: 20
+	},
 });
 
 const vacaciones = StyleSheet.create({
@@ -469,4 +529,4 @@ const solicitudes = StyleSheet.create({
 });
 
 
-export { menu, header, infopers, vacaciones, reciboNom, prenomina, solicitudes };
+export { menu, header, infopers, area, vacaciones, reciboNom, prenomina, solicitudes };

@@ -59,7 +59,10 @@ function Quickbar({ changeContent }) {
 			</TouchableOpacity>
 			{/* Area */}
 			<TouchableOpacity
-				onPress={() => handlePress("button2")}
+				onPress={() => {
+					handlePress("button2");
+					changeContent("Area");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View

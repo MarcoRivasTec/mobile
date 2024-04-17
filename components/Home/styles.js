@@ -35,8 +35,6 @@ const data = StyleSheet.create({
 		alignItems: "center",
 		alignSelf: "center",
 		width: "92%",
-		borderWidth: 1,
-		borderColor: "black"
 	},
 	razonText: {
 		textAlign: "center",

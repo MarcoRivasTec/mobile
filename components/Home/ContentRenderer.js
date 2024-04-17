@@ -8,6 +8,7 @@ import ReciboNom from "./Content/ReciboNom";
 import Prenomina from "./Content/Prenomina";
 import Solicitudes from "./Content/Solicitudes";
 import InfoPers from "./Content/InfoPers";
+import Area from "./Content/Area";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -16,6 +17,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Menu changeContent={changeContent} />;
 			case "InfoPers":
 				return <InfoPers />;
+			case "Area":
+				return <Area />;
 			case "Vacaciones":
 				return <Vacaciones navigation={navigation} />;
 			case "ReciboNom":
