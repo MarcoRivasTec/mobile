@@ -524,6 +524,154 @@ const solicitudes = StyleSheet.create({
 	},
 });
 
+const prestamos = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	contentContainer: {
+		flex: 19,
+		justifyContent: "center",
+		alignItems: "center",
+		width: "94%",
+		marginTop: "2%",
+		borderRadius: 10,
+		// borderTopLeftRadius: 10,
+		// borderTopRightRadius: 10,
+		// borderBottomLeftRadius: 10,
+		// borderBottomRightRadius: 10,
+		backgroundColor: COLORS.flatlistBackground
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	titleBar: {
+		flex: 1,
+		width: "100%",
+		borderRadius: 100,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.naranja
+	},
+	titleContainer: {
+		height: "80%",
+		width: "38%",
+		borderRadius: 100,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.2)",
+	},
+	titleText: {
+		fontSize: 12,
+		fontWeight: "bold",
+		color: "white"
+	},
+	infoContainer: {
+		flex: 19,
+		width: "95%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	dataContainer: {
+		flex: 1,
+		width: "100%",	
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+		marginTop: "4%",
+	},
+	dataRowContainer: {
+		flex: 1,
+		height: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "1%",
+		
+		// borderWidth: 1,
+	},
+	dataTextContainer: {
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+	},
+	dataRowTextContainer: {
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	dataFieldContainer: {
+		height: "65%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "3%",
+		marginVertical: "1%",
+		borderWidth: 1,
+		borderColor: COLORS.grey,
+		borderRadius: 10,
+		backgroundColor: COLORS.white
+	},
+	dataRowFieldContainer: {
+		flex: 1,
+		height: "65%",
+		marginHorizontal: "4%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: COLORS.grey,
+		borderRadius: 10,
+		backgroundColor: COLORS.white
+	},
+	dataText: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: "black",
+	},
+	dataFieldText: {
+		fontSize: 15,
+		color: "black",
+	},
+	buttonContainer:{
+		flex: 0.5,
+		paddingHorizontal: "12%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 100,
+		marginTop: "1%",
+		marginBottom: "1%",
+		backgroundColor: COLORS.naranja
+	},
+	buttonText: {
+		fontSize: 13,
+		fontWeight: "bold",
+		color: "white",
+	},
+	agreementContainer: {
+		flex: 1.5,
+		marginTop: "2%",
+		flexDirection: "row",
+		width: "100%",
+		// borderWidth: 1,
+	},
+	agreementTextContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	agreementText: {
+		fontSize: 12,
+		color: COLORS.black
+	},
+	bouncyCheckbox: {
+		
+	},
+});
+
 const polizas = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -560,5 +708,6 @@ export {
 	reciboNom,
 	prenomina,
 	solicitudes,
+	prestamos,
 	polizas,
 };
