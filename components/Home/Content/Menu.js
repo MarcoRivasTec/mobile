@@ -70,7 +70,7 @@ function Menu({ changeContent }) {
 				<SectionButton
 					title="Pólizas"
 					icon="POLIZAS"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("Polizas")}
 				/>
 				<SectionButton
 					title="Mensajes"

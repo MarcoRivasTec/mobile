@@ -9,6 +9,7 @@ import Prenomina from "./Content/Prenomina";
 import Solicitudes from "./Content/Solicitudes";
 import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
+import Polizas from "./Content/Polizas"
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -39,8 +40,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 			// 	return <Denuncias />;
 			// case "Cartas":
 			// 	return <Cartas />;
-			// case "Polizas":
-			// 	return <Polizas />;
+			case "Polizas":
+				return <Polizas />;
 			// case "CambioNIP":
 			// 	return <CambioNIP />;
 			default:
