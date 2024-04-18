@@ -49,10 +49,8 @@ const header = StyleSheet.create({
 	title: {
 		color: COLORS.white,
 		fontWeight: "bold",
-		fontSize: 11
-	}
-	
-
+		fontSize: 11,
+	},
 });
 
 const infopers = StyleSheet.create({
@@ -97,7 +95,7 @@ const infopers = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "purple"
 	},
-	cardTitleText:{
+	cardTitleText: {
 		fontSize: 20,
 		fontWeight: "bold",
 		color: "black",
@@ -110,7 +108,7 @@ const infopers = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "flex-start",
 		backgroundColor: COLORS.flatlistBackground,
-		borderRadius: 20
+		borderRadius: 20,
 	},
 	cardInfoRowContainer: {
 		flex: 1,
@@ -135,7 +133,7 @@ const infopers = StyleSheet.create({
 	cardInfoRowTitleText: {
 		fontSize: 12,
 		fontWeight: "bold",
-		color: "black"
+		color: "black",
 	},
 	cardInfoRowDataContainer: {
 		flex: 8,
@@ -149,7 +147,7 @@ const infopers = StyleSheet.create({
 	cardInfoRowDataText: {
 		fontSize: 12,
 		color: "black",
-		textAlign: "center"
+		textAlign: "center",
 	},
 	cardInfoButton: {
 		flex: 0.65,
@@ -164,8 +162,8 @@ const infopers = StyleSheet.create({
 		fontSize: 9,
 		fontWeight: "bold",
 		color: COLORS.white,
-		alignSelf: "center"
-	},	
+		alignSelf: "center",
+	},
 });
 
 const area = StyleSheet.create({
@@ -202,7 +200,7 @@ const area = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "purple"
 	},
-	titleText:{
+	titleText: {
 		fontSize: 20,
 		fontWeight: "bold",
 		color: "black",
@@ -215,7 +213,7 @@ const area = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "flex-start",
 		backgroundColor: COLORS.flatlistBackground,
-		borderRadius: 20
+		borderRadius: 20,
 	},
 });
 
@@ -245,7 +243,7 @@ const vacaciones = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		top: "1%"
+		top: "1%",
 	},
 	historialContainer: {
 		flex: 9,
@@ -283,7 +281,7 @@ const reciboNom = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		top: "1%"
+		top: "1%",
 	},
 	nominaContainer: {
 		flex: 14,
@@ -329,22 +327,22 @@ const reciboNom = StyleSheet.create({
 		justifyContent: "center",
 		alignContent: "center",
 		borderRadius: 50,
-		backgroundColor: COLORS.main
+		backgroundColor: COLORS.main,
 	},
 	nominaSearchIcon: {
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	nominaSearchText: {
 		left: "30%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	nominaCantidadContainer: {
-		flex: 1, 
-		width: "100%", 
-		top: "3%"
+		flex: 1,
+		width: "100%",
+		top: "3%",
 	},
 	nominaCantidadElementContainer: {
 		width: "100%",
@@ -365,15 +363,15 @@ const reciboNom = StyleSheet.create({
 	nominaCantidadTitle: {
 		fontSize: 17,
 		color: COLORS.black,
-		textAlign: "center"
+		textAlign: "center",
 	},
 	nominaCantidad: {
 		fontSize: 17,
 		left: "25%",
 		fontWeight: "bold",
 		color: "black",
-		textAlign: "center"
-	}
+		textAlign: "center",
+	},
 });
 
 const prenomina = StyleSheet.create({
@@ -427,22 +425,22 @@ const prenomina = StyleSheet.create({
 		justifyContent: "center",
 		alignContent: "center",
 		borderRadius: 50,
-		backgroundColor: COLORS.main
+		backgroundColor: COLORS.main,
 	},
 	prenominaSearchIcon: {
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	prenominaSearchText: {
 		left: "30%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	prenominaCantidadContainer: {
-		flex: 1, 
-		width: "100%", 
-		top: "3%"
+		flex: 1,
+		width: "100%",
+		top: "3%",
 	},
 	prenominaCantidadElementContainer: {
 		width: "100%",
@@ -463,14 +461,14 @@ const prenomina = StyleSheet.create({
 	prenominaCantidadTitle: {
 		fontSize: 17,
 		color: COLORS.black,
-		textAlign: "center"
+		textAlign: "center",
 	},
 	prenominaCantidad: {
 		fontSize: 17,
 		left: "25%",
 		fontWeight: "bold",
 		color: "black",
-		textAlign: "center"
+		textAlign: "center",
 	},
 	buttonContainer: {
 		width: "24%",
@@ -478,7 +476,7 @@ const prenomina = StyleSheet.create({
 		top: "10%",
 		justifyContent: "center",
 		alignItems: "center",
-		alignSelf: "center"
+		alignSelf: "center",
 	},
 	buttonBackground: {
 		width: "100%",
@@ -493,8 +491,7 @@ const prenomina = StyleSheet.create({
 		fontSize: 12,
 		color: COLORS.white,
 		fontWeight: "bold",
-
-	}
+	},
 });
 
 const solicitudes = StyleSheet.create({
@@ -527,5 +524,41 @@ const solicitudes = StyleSheet.create({
 	},
 });
 
+const polizas = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	contentContainer: {
+		flex: 19,
+		justifyContent: "center",
+		alignItems: "center",
+		// height: "95%",
+		width: "100%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	scrollContainer: {
+		flex: 1,
+		width: "100%",
+	},
+	scrollContentContainer: {
+		flexGrow: 1,
+	},
+});
 
-export { menu, header, infopers, area, vacaciones, reciboNom, prenomina, solicitudes };
+export {
+	menu,
+	header,
+	infopers,
+	area,
+	vacaciones,
+	reciboNom,
+	prenomina,
+	solicitudes,
+	polizas,
+};
