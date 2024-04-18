@@ -10,6 +10,7 @@ import Solicitudes from "./Content/Solicitudes";
 import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
 import Polizas from "./Content/Polizas"
+import Prestamos from "./Content/Prestamos";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -28,8 +29,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Prenomina />;
 			case "Solicitudes":
 				return <Solicitudes />;
-			// case "Prestamos":
-			// 	return <Prestamos />;
+			case "Prestamos":
+				return <Prestamos />;
 			// case "Retiro":
 			// 	return <Retiro />;
 			// case "Opiniones":

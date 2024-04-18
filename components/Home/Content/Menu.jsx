@@ -36,7 +36,7 @@ function Menu({ changeContent }) {
 					title="Préstamos"
 					icon="PRESTAMOS"
 					size={40}
-					// onPress={() => changeContent("Prestamos")}
+					onPress={() => changeContent("Prestamos")}
 				/>
 				<SectionButton
 					title="Retiro de Ahorro"
