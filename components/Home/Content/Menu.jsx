@@ -82,7 +82,7 @@ function Menu({ changeContent }) {
 				<SectionButton
 					title="Opiniones"
 					icon="OPINIONES"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("Opiniones")}
 				/>
 			</View>
 		</View>

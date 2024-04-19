@@ -11,6 +11,7 @@ import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
 import Polizas from "./Content/Polizas"
 import Prestamos from "./Content/Prestamos";
+import Opiniones from "./Content/Opiniones";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -33,8 +34,7 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Prestamos />;
 			// case "Retiro":
 			// 	return <Retiro />;
-			// case "Opiniones":
-			// 	return <Opiniones />;
+			
 			// case "Reposiciones":
 			// 	return <Reposiciones />;
 			// case "Denuncias":
@@ -43,6 +43,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 			// 	return <Cartas />;
 			case "Polizas":
 				return <Polizas />;
+			case "Opiniones":
+				return <Opiniones />;
 			// case "CambioNIP":
 			// 	return <CambioNIP />;
 			default:
