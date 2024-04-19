@@ -699,6 +699,127 @@ const polizas = StyleSheet.create({
 	},
 });
 
+const opiniones = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	contentContainer: {
+		flex: 19,
+		justifyContent: "center",
+		alignItems: "center",
+		width: "94%",
+		marginTop: "2%",
+		borderRadius: 10,
+		// borderTopLeftRadius: 10,
+		// borderTopRightRadius: 10,
+		// borderBottomLeftRadius: 10,
+		// borderBottomRightRadius: 10,
+		backgroundColor: COLORS.flatlistBackground
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	titleBar: {
+		flex: 1,
+		width: "100%",
+		flexDirection: "row",
+		borderRadius: 100,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.naranja,
+		// borderWidth: 1,
+	},
+	iconContainer: {
+		position: "absolute",
+		height: "100%",
+		width: "10%",
+		alignSelf: "flex-start",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 100,
+		backgroundColor: COLORS.main
+	},
+	icon: {
+		color: COLORS.white
+	},
+	titleContainer: {
+		height: "100%",
+		width: "70%",
+		borderRadius: 100,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.2)",
+	},
+	titleText: {
+		fontSize: 12,
+		fontWeight: "bold",
+		color: "white"
+	},
+	infoContainer: {
+		flex: 16,
+		width: "95%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	dataContainer: {
+		height: "80%",
+		width: "100%",	
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		marginTop: "2%",
+	},
+	dataTitleContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		marginVertical: "3%",
+	},
+	dataTitleText: {
+		fontSize: 19,
+		fontWeight: "bold",
+		color: "black",
+	},
+	dataFieldContainer: {
+		flex: 10,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "flex-start",
+		borderRadius: 15,
+		padding: "3%",
+		backgroundColor: COLORS.white
+	},
+	dataFieldText: {
+		width: "100%",
+		height: "100%",
+		textAlignVertical: "top",
+		fontSize: 14,
+		fontWeight: "bold",
+		color: COLORS.black,
+		textAlign: "left"
+	},
+	buttonContainer:{
+		flex: 0.7,
+		paddingHorizontal: "12%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 100,
+		
+		marginTop: "5%",
+		backgroundColor: COLORS.naranja
+	},
+	buttonText: {
+		fontSize: 13,
+		fontWeight: "bold",
+		color: "white",
+	},
+});
+
 export {
 	menu,
 	header,
@@ -710,4 +831,5 @@ export {
 	solicitudes,
 	prestamos,
 	polizas,
+	opiniones
 };
