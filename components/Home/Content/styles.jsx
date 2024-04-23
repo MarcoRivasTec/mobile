@@ -672,6 +672,36 @@ const prestamos = StyleSheet.create({
 	},
 });
 
+const reposiciones = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	sectionContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	sectionTitleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "4%",
+	},
+	sectionButtonContainer: {
+		flex: 1,
+		height: "100%",
+		// top: "3%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+});
+
 const polizas = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -830,6 +860,7 @@ export {
 	prenomina,
 	solicitudes,
 	prestamos,
+	reposiciones,
 	polizas,
 	opiniones
 };
