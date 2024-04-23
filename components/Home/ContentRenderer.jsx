@@ -12,6 +12,7 @@ import Area from "./Content/Area";
 import Polizas from "./Content/Polizas"
 import Prestamos from "./Content/Prestamos";
 import Opiniones from "./Content/Opiniones";
+import Reposiciones from "./Content/Reposiciones";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -35,8 +36,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 			// case "Retiro":
 			// 	return <Retiro />;
 			
-			// case "Reposiciones":
-			// 	return <Reposiciones />;
+			case "Reposiciones":
+				return <Reposiciones />;
 			// case "Denuncias":
 			// 	return <Denuncias />;
 			// case "Cartas":

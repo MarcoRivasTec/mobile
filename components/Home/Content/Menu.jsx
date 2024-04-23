@@ -56,7 +56,7 @@ function Menu({ changeContent }) {
 					icon="REPOSICIONES"
 					size={32}
 					marginTop="15%"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("Reposiciones")}
 				/>
 				<SectionButton
 					title="Línea de Denuncias"
