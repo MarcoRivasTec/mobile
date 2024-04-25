@@ -41,6 +41,9 @@ function Confirm({ isModalVisible, onCallback, onExit, closeModal }) {
 								<Text style={confirm.text}>
 									Tu solicitud ha sido enviada exitosamente.
 								</Text>
+								<Text style={confirm.lowerText}>
+									Recibirás una notificación cuando tu solicitud haya sido procesada.
+								</Text>
 							</View>
 						</View>
 					</View>

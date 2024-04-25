@@ -4,6 +4,8 @@ import { reposiciones } from "./styles";
 import ContentHeader from "./ContentHeader";
 import ButtonAction from "./Buttons/ButtonAction";
 import Gafete from "./Reposiciones/Gafete";
+import Banorte from "./Reposiciones/Banorte";
+import Despensa from "./Reposiciones/Despensa";
 
 function Reposiciones() {
 	const [isGafModalVisible, setGafModalVisible] = useState(false);
@@ -24,7 +26,7 @@ function Reposiciones() {
 
 	return (
 		<View style={reposiciones.container}>
-			<ContentHeader title="Reposiciones"></ContentHeader>
+			<ContentHeader title="Reposiciones" />
 			<View style={reposiciones.sectionContainer}>
 				<View style={reposiciones.sectionTitleContainer}>
 					<Text style={{ fontSize: 22, fontWeight: "bold" }}>
@@ -38,44 +40,43 @@ function Reposiciones() {
 						size={50}
 						title="Solicitar gafete"
 					></ButtonAction>
-					<View>
-						{isGafModalVisible && (
-							<Gafete
-								onCallback={gafeteModalHandler}
-								onExit={gafeteModalHandler}
-							/>
-						)}
-					</View>
+
 					<ButtonAction
 						toggleModal={banorteModalHandler}
 						icon="TARJ_BANORTE"
 						size={50}
 						title="Tarjeta Banorte"
 					></ButtonAction>
-					{/* <View>
-						{isPermModalVisible && (
-							<SolPermisos
-								onCallback={permisosModalHandler}
-								onExit={permisosModalHandler}
-							/>
-						)}
-					</View> */}
-                    <ButtonAction
+
+					<ButtonAction
 						toggleModal={despensaModalHandler}
 						icon="TARJ_DESP"
 						size={50}
 						title="Tarjeta de Despensa"
 					></ButtonAction>
-					{/* <View>
-						{isPermModalVisible && (
-							<SolPermisos
-								onCallback={permisosModalHandler}
-								onExit={permisosModalHandler}
-							/>
-						)}
-					</View> */}
 				</View>
 			</View>
+			{isGafModalVisible && (
+				<Gafete
+					onCallback={gafeteModalHandler}
+					onExit={gafeteModalHandler}
+					isModalVisible={isGafModalVisible}
+				/>
+			)}
+			{isBanModalVisible && (
+				<Banorte
+					onCallback={banorteModalHandler}
+					onExit={banorteModalHandler}
+					isModalVisible={isBanModalVisible}
+				/>
+			)}
+			{isDespModalVisible && (
+				<Despensa
+					onCallback={despensaModalHandler}
+					onExit={despensaModalHandler}
+					isModalVisible={isDespModalVisible}
+				/>
+			)}
 		</View>
 	);
 }
