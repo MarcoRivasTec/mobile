@@ -695,6 +695,7 @@ const reposiciones = StyleSheet.create({
 	sectionButtonContainer: {
 		flex: 1,
 		height: "100%",
+		width: "80%",
 		// top: "3%",
 		justifyContent: "center",
 		alignItems: "center",

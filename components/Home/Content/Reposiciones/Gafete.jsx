@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity } from "react-native";
+import {
+	Modal,
+	View,
+	Text,
+	TouchableOpacity,
+} from "react-native";
 import { gafete } from "./styles";
 import Confirm from "./Confirm";
 
