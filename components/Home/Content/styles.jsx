@@ -217,6 +217,84 @@ const area = StyleSheet.create({
 	},
 });
 
+const redes = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	contentContainer: {
+		flex: 19,
+		width: "95%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingLeft: "4%",
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	socialContainer: {
+		height: "90%",
+		width: "90%",
+		justifyContent: "center",
+		// borderWidth: 1,
+		alignItems: "center",
+	},
+	stripContainer: {
+		flex: 1,
+		width: "100%",
+		// borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	stripImg: {
+		height: "100%",
+		width: "107%",
+		right: "5.5%",
+	},
+	iconContainer: {
+		position: "absolute",
+		height: "60%",
+		width: "16%",
+		left: "9%",
+		top: "24%",
+		// borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	linksContainer: {
+		position: "absolute",
+		flexDirection: "row",
+		height: "60%",
+		width: "72%",
+		left: "28%",
+		top: "22%",
+		// borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	linkContainer: {
+		flex: 1,
+		// borderWidth: 1,
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	text: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.white
+	}
+});
+
 const vacaciones = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -544,7 +622,7 @@ const prestamos = StyleSheet.create({
 		// borderTopRightRadius: 10,
 		// borderBottomLeftRadius: 10,
 		// borderBottomRightRadius: 10,
-		backgroundColor: COLORS.flatlistBackground
+		backgroundColor: COLORS.flatlistBackground,
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
@@ -554,7 +632,7 @@ const prestamos = StyleSheet.create({
 		borderRadius: 100,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: COLORS.naranja
+		backgroundColor: COLORS.naranja,
 	},
 	titleContainer: {
 		height: "80%",
@@ -567,7 +645,7 @@ const prestamos = StyleSheet.create({
 	titleText: {
 		fontSize: 12,
 		fontWeight: "bold",
-		color: "white"
+		color: "white",
 	},
 	infoContainer: {
 		flex: 19,
@@ -577,7 +655,7 @@ const prestamos = StyleSheet.create({
 	},
 	dataContainer: {
 		flex: 1,
-		width: "100%",	
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
 		// borderWidth: 1,
@@ -590,7 +668,7 @@ const prestamos = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: "1%",
-		
+
 		// borderWidth: 1,
 	},
 	dataTextContainer: {
@@ -614,7 +692,7 @@ const prestamos = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: COLORS.grey,
 		borderRadius: 10,
-		backgroundColor: COLORS.white
+		backgroundColor: COLORS.white,
 	},
 	dataRowFieldContainer: {
 		flex: 1,
@@ -625,7 +703,7 @@ const prestamos = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: COLORS.grey,
 		borderRadius: 10,
-		backgroundColor: COLORS.white
+		backgroundColor: COLORS.white,
 	},
 	dataText: {
 		fontSize: 15,
@@ -636,7 +714,7 @@ const prestamos = StyleSheet.create({
 		fontSize: 15,
 		color: "black",
 	},
-	buttonContainer:{
+	buttonContainer: {
 		flex: 0.5,
 		paddingHorizontal: "12%",
 		justifyContent: "center",
@@ -644,7 +722,7 @@ const prestamos = StyleSheet.create({
 		borderRadius: 100,
 		marginTop: "1%",
 		marginBottom: "1%",
-		backgroundColor: COLORS.naranja
+		backgroundColor: COLORS.naranja,
 	},
 	buttonText: {
 		fontSize: 13,
@@ -661,15 +739,13 @@ const prestamos = StyleSheet.create({
 	agreementTextContainer: {
 		flex: 1,
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	agreementText: {
 		fontSize: 12,
-		color: COLORS.black
+		color: COLORS.black,
 	},
-	bouncyCheckbox: {
-		
-	},
+	bouncyCheckbox: {},
 });
 
 const reposiciones = StyleSheet.create({
@@ -694,7 +770,7 @@ const reposiciones = StyleSheet.create({
 	},
 	sectionButtonContainer: {
 		flex: 1,
-		height: "100%",
+		// height: "100%",
 		width: "80%",
 		// top: "3%",
 		justifyContent: "center",
@@ -750,7 +826,7 @@ const opiniones = StyleSheet.create({
 		// borderTopRightRadius: 10,
 		// borderBottomLeftRadius: 10,
 		// borderBottomRightRadius: 10,
-		backgroundColor: COLORS.flatlistBackground
+		backgroundColor: COLORS.flatlistBackground,
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
@@ -772,10 +848,10 @@ const opiniones = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 100,
-		backgroundColor: COLORS.main
+		backgroundColor: COLORS.main,
 	},
 	icon: {
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	titleContainer: {
 		height: "100%",
@@ -788,7 +864,7 @@ const opiniones = StyleSheet.create({
 	titleText: {
 		fontSize: 12,
 		fontWeight: "bold",
-		color: "white"
+		color: "white",
 	},
 	infoContainer: {
 		flex: 16,
@@ -798,7 +874,7 @@ const opiniones = StyleSheet.create({
 	},
 	dataContainer: {
 		height: "80%",
-		width: "100%",	
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
@@ -823,7 +899,7 @@ const opiniones = StyleSheet.create({
 		alignItems: "flex-start",
 		borderRadius: 15,
 		padding: "3%",
-		backgroundColor: COLORS.white
+		backgroundColor: COLORS.white,
 	},
 	dataFieldText: {
 		width: "100%",
@@ -832,17 +908,17 @@ const opiniones = StyleSheet.create({
 		fontSize: 14,
 		fontWeight: "bold",
 		color: COLORS.black,
-		textAlign: "left"
+		textAlign: "left",
 	},
-	buttonContainer:{
+	buttonContainer: {
 		flex: 0.7,
 		paddingHorizontal: "12%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 100,
-		
+
 		marginTop: "5%",
-		backgroundColor: COLORS.naranja
+		backgroundColor: COLORS.naranja,
 	},
 	buttonText: {
 		fontSize: 13,
@@ -856,6 +932,7 @@ export {
 	header,
 	infopers,
 	area,
+	redes,
 	vacaciones,
 	reciboNom,
 	prenomina,
@@ -863,5 +940,5 @@ export {
 	prestamos,
 	reposiciones,
 	polizas,
-	opiniones
+	opiniones,
 };
