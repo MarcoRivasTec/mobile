@@ -56,7 +56,7 @@ function Menu({ changeContent }) {
 					icon="REPOSICIONES"
 					size={32}
 					marginTop="15%"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("Reposiciones")}
 				/>
 				<SectionButton
 					title="Línea de Denuncias"
@@ -73,7 +73,7 @@ function Menu({ changeContent }) {
 					onPress={() => changeContent("Polizas")}
 				/>
 				<SectionButton
-					title="Mensajes"
+					title="Avisos"
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"

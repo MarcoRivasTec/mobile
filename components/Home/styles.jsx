@@ -88,6 +88,12 @@ const data = StyleSheet.create({
 		color: COLORS.white,
 		marginVertical: "-0.8%",
 	},
+	image: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		borderRadius: 100
+	}
 });
 
 const quickbar = StyleSheet.create({
