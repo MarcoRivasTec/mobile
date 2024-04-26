@@ -20,7 +20,7 @@ function Opiniones() {
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 			<View style={opiniones.container}>
-				<ContentHeader title="Préstamos" />
+				<ContentHeader title="Opiniones" />
 
 				<View style={opiniones.contentContainer}>
 					<View style={opiniones.titleBar}>

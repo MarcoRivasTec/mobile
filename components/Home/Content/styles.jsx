@@ -873,15 +873,15 @@ const opiniones = StyleSheet.create({
 		alignItems: "center",
 	},
 	dataContainer: {
-		height: "80%",
-		width: "100%",
+		height: "50%",
+		width: "100%",	
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
-		marginTop: "2%",
+		// marginTop: "2%",
 	},
 	dataTitleContainer: {
-		flex: 1,
+		flex: 2,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
@@ -910,8 +910,8 @@ const opiniones = StyleSheet.create({
 		color: COLORS.black,
 		textAlign: "left",
 	},
-	buttonContainer: {
-		flex: 0.7,
+	buttonContainer:{
+		flex: 0.2,
 		paddingHorizontal: "12%",
 		justifyContent: "center",
 		alignItems: "center",
