@@ -13,16 +13,21 @@ import Polizas from "./Content/Polizas"
 import Prestamos from "./Content/Prestamos";
 import Opiniones from "./Content/Opiniones";
 import Reposiciones from "./Content/Reposiciones";
+import Redes from "./Content/Redes";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
 				return <Menu changeContent={changeContent} />;
+
 			case "InfoPers":
 				return <InfoPers />;
 			case "Area":
 				return <Area />;
+			case "Redes":
+				return <Redes />;
+
 			case "Vacaciones":
 				return <Vacaciones navigation={navigation} />;
 			case "ReciboNom":

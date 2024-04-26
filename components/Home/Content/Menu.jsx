@@ -73,7 +73,7 @@ function Menu({ changeContent }) {
 					onPress={() => changeContent("Polizas")}
 				/>
 				<SectionButton
-					title="Mensajes"
+					title="Avisos"
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"
