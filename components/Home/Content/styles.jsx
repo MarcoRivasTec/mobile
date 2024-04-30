@@ -779,6 +779,96 @@ const reposiciones = StyleSheet.create({
 	},
 });
 
+const linea = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	sectionContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	background: {
+		position: "absolute",
+		right: "25%",
+		height: "100%",
+		width: "100%"
+	},
+	sectionTitleContainer: {
+		flex: 1.2,
+		// height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "4%",
+		// borderWidth: 1,
+	},
+	sectionAnimation: {
+		flex: 7.4,
+		// height: "75%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	animationContainer: {
+		height: "100%",
+		width: "75%",
+		right: "9%",
+		bottom: "4%",
+		alignSelf: "flex-start",
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 2,
+		// borderWidth: 1,
+	},
+	textContainer: {
+		position: "absolute",
+		// flex: 1,
+		height: "22%",
+		width: "80%",
+		bottom: "30%",
+		paddingLeft: "6%",
+		borderTopLeftRadius: 10,
+		borderBottomLeftRadius: 10,
+		// top: "10%",
+		alignSelf: "flex-end",
+		justifyContent: "center",
+		alignItems: "flex-end",
+		backgroundColor: COLORS.white,
+		// zIndex: 1,
+		// borderWidth: 1,
+	},
+	textBox: {
+		width: "65%",
+		height: "80%",
+		marginRight: "2%",
+		justifyContent: "center",
+		alignItems: "flex-end",
+		// borderWidth: 1,
+	},
+	text: {
+		fontSize: 13,
+		color: COLORS.black,
+		textAlign: "right",
+		fontWeight: "500"
+	},
+	sectionButtonContainer: {
+		flex: 1.4,
+		// height: "15%",
+		width: "95%",
+		// borderWidth: 1,
+		// top: "6%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});
+
 const polizas = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -939,6 +1029,7 @@ export {
 	solicitudes,
 	prestamos,
 	reposiciones,
+	linea,
 	polizas,
 	opiniones,
 };
