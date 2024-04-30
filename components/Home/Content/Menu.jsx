@@ -62,7 +62,7 @@ function Menu({ changeContent }) {
 					title="Línea de Denuncias"
 					icon="DENUNCIA"
 					size={32}
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("LineaDenuncia")}
 				/>
 			</View>
 			{/* Row 4 */}

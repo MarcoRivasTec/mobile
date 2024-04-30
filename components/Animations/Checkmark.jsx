@@ -1,7 +1,7 @@
 import React from "react";
 import LottieView from "lottie-react-native";
 
-export default function Animation() {
+export default function Checkmark() {
 	return (
 		<LottieView
 			source={require("../../assets/animations/checkmark.json")}
