@@ -45,7 +45,7 @@ const Welcome = ({ navigation }) => {
           style={{ color: COLORS.white, fontSize: 80, textAlign: "center" }}
         >
           {" "}
-          Rubén!{" "}
+          Marcos!{" "}
         </Text>
       </Animated.View>
     </ImageBackground>

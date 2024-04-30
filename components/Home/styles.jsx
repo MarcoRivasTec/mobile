@@ -33,7 +33,8 @@ const data = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		width: "100%",
+		alignSelf: "center",
+		width: "92%",
 	},
 	razonText: {
 		textAlign: "center",
@@ -62,21 +63,37 @@ const data = StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "center",
 	},
-	cardSvg: {
+	cardAvatarContainer: {
+		flex: 0.34,
+		left: "5%",
+		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	cardAvatarBackground: {
+		justifyContent: "center",
+		alignItems: "center",
+		height: "92%",
+		width: "80%",
+		backgroundColor: COLORS.flatlistBackground,
+		borderRadius: 100,
+	},
 	cardTextContainer: {
-		position: "absolute",
+		flex: 1,
 		height: "100%",
-		width: "100%",
-		marginLeft: "26%",
-		marginTop: "20%",
+		justifyContent: "center",
+		alignItems: "flex-start",
 	},
 	cardText: {
 		color: COLORS.white,
 		marginVertical: "-0.8%",
 	},
+	image: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		borderRadius: 100
+	}
 });
 
 const quickbar = StyleSheet.create({
@@ -95,6 +112,7 @@ const quickbar = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		flex: 1,
+		top: "0.3%",
 		width: "100%",
 		height: "100%",
 	},
@@ -114,11 +132,16 @@ const quickbar = StyleSheet.create({
 		width: "90%",
 	},
 	textContainer: {
-		width: "84%",
-		justifyContent: "center",
-		paddingBottom: "4%",
-		marginBottom: "-3.5%",
 		height: "44%",
+		width: "86%",
+		justifyContent: "center",
+		alignItems: "center",
+		top: "1.5%",
+	},
+	text: {
+		textAlign: "center",
+		color: COLORS.primary,
+		fontWeight: "bold",
 	},
 });
 
@@ -132,7 +155,7 @@ const contentRenderer = StyleSheet.create({
 	},
 	svg: {
 		position: "absolute",
-		opacity: 0.4
+		opacity: 0.4,
 	},
 });
 

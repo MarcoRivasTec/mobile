@@ -24,7 +24,7 @@ function ButtonAction({ icon, size, title, toggleModal}) {
                         <Icon name={icon} size={size} style={buttonAction.icon} />
                     </View>
                     <View style={buttonAction.textContainer}>
-                        <Text style={buttonAction.text}>{title}</Text>
+                        <Text minimumFontScale={0.6} adjustsFontSizeToFit={true} numberOfLines={2} style={buttonAction.text}>{title}</Text>
                     </View>
                 </View>
             </TouchableOpacity>

@@ -1,56 +1,7 @@
 import { StyleSheet } from "react-native";
-import COLORS from "../../../../constants/colors";
+import COLORS from "../../../../../constants/colors";
 
-const domicilioModal = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	backgroundContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		// backgroundColor: "rgba(255,255,255, 0.9)",
-		backgroundColor: "rgba(0, 0, 0, 0.4)",
-		// borderRadius: 20,
-	},
-	modalContainer: {
-		flex: 1,
-		marginVertical: "2%",
-		width: "90%",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		backgroundColor: "rgba(242, 242, 242, 0.95)",
-		borderRadius: 20,
-	},
-	titleContainer: {
-		flex: 4,
-		backgroundColor: COLORS.naranja,
-		// height: "4%",
-		width: "95%",
-		marginTop: "2%",
-		borderRadius: 20,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	textTitle: {
-		fontSize: 15,
-		fontWeight: "bold",
-		color: COLORS.white,
-	},
-});
-
-const tallasModal = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-});
-
-const familiaModal = StyleSheet.create({
+const addMemberModal = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -87,6 +38,8 @@ const familiaModal = StyleSheet.create({
 		marginTop: "4%",
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
+		borderWidth: 1,
+		borderColor: "black"
 	},
 	titleText: {
 		fontSize: 22,
@@ -98,11 +51,11 @@ const familiaModal = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		marginVertical: "1%",
+		marginVertical: "2.5%",
 	},
 	sectionTitleContainer: {
-		flex: 3,
-		left: "2%",
+		flex: 2.4,
+		left: 8,
 		justifyContent: "center",
 		alignItems: "flex-start",
 	},
@@ -135,8 +88,8 @@ const familiaModal = StyleSheet.create({
 		borderRadius: 8,
 	},
 	nombreDataText: {
-        width: "100%",
-        height: "100%",
+		width: "100%",
+		height: "100%",
 		paddingLeft: 5,
 		paddingRight: 5,
 		fontSize: 12,
@@ -164,6 +117,24 @@ const familiaModal = StyleSheet.create({
 		borderColor: COLORS.flatlistElement1,
 		borderRadius: 8,
 	},
+	pickerParentesco: {
+		width: "110%",
+	},
+	pickerSexo: {
+		width: "118%",
+	},
+	pickerItemParentesco: {
+		fontSize: 13,
+		color: COLORS.gray,
+	},
+	pickerItemSexo: {
+		fontSize: 13,
+	},
+	pickerItemStyle: {
+		fontSize: 14,
+		height: 50,
+		color: COLORS.gray,
+	},
 	sexoContainer: {
 		flex: 2,
 		justifyContent: "center",
@@ -183,15 +154,35 @@ const familiaModal = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
+		marginTop: "1%",
 	},
 	nacimientoDataContainer: {
 		flex: 3,
-		width: "50%",
+		width: "40%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderWidth: 1,
 		borderColor: COLORS.flatlistElement1,
 		borderRadius: 8,
+	},
+	fechaButton: {
+		height: "100%",
+		width: "100%",
+		// backgroundColor: COLORS.naranja,
+		// borderRadius: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingHorizontal: "2%"
+	},
+	fechaText: {
+		right: "7%",
+		fontSize: 13,
+		color: COLORS.black,
+	},
+	icon: {
+		position: "absolute",
+		alignSelf: "flex-end",
+		paddingRight: "3%",
 	},
 	buttonsContainer: {
 		flex: 1,
@@ -231,4 +222,4 @@ const familiaModal = StyleSheet.create({
 	},
 });
 
-export { domicilioModal, tallasModal, familiaModal };
+export { addMemberModal };

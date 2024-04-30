@@ -5,7 +5,7 @@ import COLORS from "../../constants/colors";
 import Icon from "./icons";
 import { Ionicons } from "@expo/vector-icons";
 
-function Quickbar({changeContent}) {
+function Quickbar({ changeContent }) {
 	//Loading fonts before setting the state for quickbar buttons results in error: rendering more/less hooks in previous state
 	const [pressedQuickbarButton, setQuickBarPressedButton] = useState(null);
 
@@ -51,12 +51,7 @@ function Quickbar({changeContent}) {
 					<Text
 						adjustsFontSizeToFit={true}
 						numberOfLines={3}
-						style={{
-							fontSize: 18,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 18 }]}
 					>
 						Información Personal
 					</Text>
@@ -64,7 +59,10 @@ function Quickbar({changeContent}) {
 			</TouchableOpacity>
 			{/* Area */}
 			<TouchableOpacity
-				onPress={() => handlePress("button2")}
+				onPress={() => {
+					handlePress("button2");
+					changeContent("Area");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View
@@ -79,8 +77,8 @@ function Quickbar({changeContent}) {
 				>
 					<View style={quickbar.iconContainer}>
 						<Icon
-							name="RECIBO_NOM"
-							size={25}
+							name="AREA"
+							size={18}
 							color={
 								isQuickbarButtonPressed("button2") ? COLORS.white : COLORS.main
 							}
@@ -91,20 +89,18 @@ function Quickbar({changeContent}) {
 					<Text
 						adjustsFontSizeToFit={true}
 						numberOfLines={3}
-						style={{
-							fontSize: 18,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 13 }]}
 					>
-						Recibo de Nómina
+						Área
 					</Text>
 				</View>
 			</TouchableOpacity>
 			{/* Redes */}
 			<TouchableOpacity
-				onPress={() => handlePress("button3")}
+				onPress={() => {
+					handlePress("button3");
+					changeContent("Redes");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View
@@ -119,11 +115,12 @@ function Quickbar({changeContent}) {
 				>
 					<View style={quickbar.iconContainer}>
 						<Icon
-							name="POLIZAS"
+							name="REDES"
 							size={25}
 							color={
 								isQuickbarButtonPressed("button3") ? COLORS.white : COLORS.main
 							}
+							style={{ top: "4%" }}
 						/>
 					</View>
 				</View>
@@ -132,14 +129,9 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							fontSize: 12,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 12 }]}
 					>
-						Pólizas
+						Redes
 					</Text>
 				</View>
 			</TouchableOpacity>
@@ -159,12 +151,13 @@ function Quickbar({changeContent}) {
 					]}
 				>
 					<View style={quickbar.iconContainer}>
-						<Ionicons
-							name="chatbox-ellipses-outline"
+						<Icon
+							name="IDEAS"
 							size={26}
 							color={
 								isQuickbarButtonPressed("button4") ? COLORS.white : COLORS.main
 							}
+							style={{ top: "4%" }}
 						/>
 					</View>
 				</View>
@@ -173,14 +166,9 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							fontSize: 12,
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 15 }]}
 					>
-						Mensajes
+						Tecma Ideas
 					</Text>
 				</View>
 			</TouchableOpacity>
@@ -201,8 +189,8 @@ function Quickbar({changeContent}) {
 				>
 					<View style={quickbar.iconContainer}>
 						<Icon
-							name="PRESTAMOS"
-							size={26}
+							name="DIRECTORIO"
+							size={24}
 							color={
 								isQuickbarButtonPressed("button5") ? COLORS.white : COLORS.main
 							}
@@ -214,13 +202,9 @@ function Quickbar({changeContent}) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={{
-							textAlign: "center",
-							color: COLORS.primary,
-							fontWeight: "bold",
-						}}
+						style={[quickbar.text, { fontSize: 12 }]}
 					>
-						Préstamos
+						Directorio
 					</Text>
 				</View>
 			</TouchableOpacity>
