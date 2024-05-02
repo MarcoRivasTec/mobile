@@ -1,7 +1,7 @@
 import { StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
+
 import { home } from "../components/Home/styles";
 import Card from "../components/Home/Card";
 import Quickbar from "../components/Home/Quickbar";
@@ -17,15 +17,7 @@ const Home = ({ navigation }) => {
 
 	const changeContent = (content) => {
 		setCurrentContent(content);
-	};
-
-	const [fontsLoaded] = useFonts({
-		IcoMoon: require("../assets/icons/icomoon/icomoon.ttf"),
-	});
-
-	if (!fontsLoaded) {
-		return null;
-	}
+	};	
 
 	return (
 		<SafeAreaView style={home.container}>

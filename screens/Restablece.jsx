@@ -6,11 +6,11 @@ import { Ionicons } from "@expo/vector-icons";
 import Button from '../components/Button';
 
 const Restablece = ({ navigation }) => {
-    const [isPasswordShown, setIsPasswordShown] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
+    // const [isPasswordShown, setIsPasswordShown] = useState(false);
+    // const [isChecked, setIsChecked] = useState(false);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-            <View style={{ flex: 1, marginHorizontal: 22 }}>
+            {/* <View style={{ flex: 1, marginHorizontal: 22 }}>
                 <View style={{ marginVertical: 22 }}>
                     <Text style={{
                         fontSize: 22,
@@ -255,7 +255,7 @@ const Restablece = ({ navigation }) => {
                         }}>Login</Text>
                     </Pressable>
                 </View>
-            </View>
+            </View> */}
         </SafeAreaView>
     )
 }
