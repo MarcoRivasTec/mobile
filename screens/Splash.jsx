@@ -1,14 +1,21 @@
 import { StyleSheet, ImageBackground, StatusBar, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
-import Logo from "../components/Logo";
 import LogoBienvenida from "../components/Animations/LogoSplash";
+import { useFonts } from "expo-font";
 
 const Splash = ({ navigation }) => {
 	useEffect(() => {
 		StatusBar.setHidden(true); // Hide the status bar when the component mounts
 	}, []);
 
+	const [fontsLoaded] = useFonts({
+		IcoMoon: require("../assets/icons/icomoon/icomoon.ttf"),
+	});
+
+	if (!fontsLoaded) {
+		return null;
+	}
 	// useEffect(() => {
 	// 	const timer = setTimeout(() => {
 	// 		checkSplashStatus();
