@@ -1,14 +1,12 @@
 import {
 	Text,
 	Animated,
-	ImageBackground,
 	StyleSheet,
 	View,
-  StatusBar,
+	StatusBar,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import COLORS from "../constants/colors";
-import Logo from "../components/Logo";
 import WelcomeAnim from "../components/Animations/Welcome";
 
 const Welcome = ({ navigation }) => {
@@ -30,14 +28,14 @@ const Welcome = ({ navigation }) => {
 		}).start();
 	}, [fadeAnim]);
 
-  useEffect(() => {
+	useEffect(() => {
 		StatusBar.setHidden(true); // Hide the status bar when the component mounts
 	}, []);
 
 	const handleAnimationFinish = () => {
-    navigation.navigate("Home");
-    StatusBar.setHidden(false);
-  }
+		navigation.navigate("Home");
+		StatusBar.setHidden(false);
+	};
 	return (
 		<View style={{ width: "100%", height: "100%" }}>
 			<WelcomeAnim
@@ -46,13 +44,23 @@ const Welcome = ({ navigation }) => {
 			></WelcomeAnim>
 			<Animated.View style={[styles.container, { opacity: fadeAnim }]}>
 				<Text
-					style={{ color: COLORS.white, fontSize: 140, marginBottom: "-8%", left: "-4%" }}
+					style={{
+						color: COLORS.white,
+						fontSize: 140,
+						marginBottom: "-8%",
+						left: "-4%",
+					}}
 				>
 					{" "}
 					Hello{" "}
 				</Text>
 				<Text
-					style={{ color: COLORS.white, fontSize: 80, textAlign: "center", left: "1%" }}
+					style={{
+						color: COLORS.white,
+						fontSize: 80,
+						textAlign: "center",
+						left: "1%",
+					}}
 				>
 					{" "}
 					Marcos!{" "}
@@ -88,7 +96,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
-    bottom: "12%",
+		bottom: "12%",
 		justifyContent: "flex-end",
 		alignItems: "center",
 		zIndex: 1,
