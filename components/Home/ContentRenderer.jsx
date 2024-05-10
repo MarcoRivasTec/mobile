@@ -9,12 +9,13 @@ import Prenomina from "./Content/Prenomina";
 import Solicitudes from "./Content/Solicitudes";
 import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
-import Polizas from "./Content/Polizas"
+import Polizas from "./Content/Polizas";
 import Prestamos from "./Content/Prestamos";
 import Opiniones from "./Content/Opiniones";
 import Reposiciones from "./Content/Reposiciones";
 import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
+import Directorio from "./Content/Directorio";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
@@ -28,6 +29,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Area />;
 			case "Redes":
 				return <Redes />;
+			case "Directorio":
+				return <Directorio />;
 
 			case "Vacaciones":
 				return <Vacaciones navigation={navigation} />;
@@ -41,7 +44,7 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Prestamos />;
 			// case "Retiro":
 			// 	return <Retiro />;
-			
+
 			case "Reposiciones":
 				return <Reposiciones />;
 			case "LineaDenuncia":

@@ -291,8 +291,115 @@ const redes = StyleSheet.create({
 	text: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: COLORS.white
-	}
+		color: COLORS.white,
+	},
+});
+
+const directorio = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	contentContainer: {
+		flex: 19,
+		justifyContent: "center",
+		alignItems: "center",
+		// height: "95%",
+		width: "95%",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	titleContainer: {
+		height: "8%",
+		width: "100%",
+		justifyContent: "center",
+		// borderWidth: 1,
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	scrollContainer: {
+		height: "92%",
+		// borderWidth: 1,
+		width: "100%",
+	},
+	scrollContentContainer: {
+		flexGrow: 1,
+	},
+	registroContainer: {
+		width: "100%",
+		marginTop: "2%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "red"
+	},
+	registroRow: {
+		height: "100%",
+		width: "95%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	imgContainer: {
+		flex: 1,
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginRight: "2%",
+		// borderWidth: 1,
+		// borderColor: "green"
+	},
+	img: {
+		height: "100%",
+		width: "100%",
+	},
+	infoContainer: {
+		flex: 3.2,
+		height: "100%",
+		// flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingLeft: "2%",
+		// borderWidth: 1,
+	},
+	stripImg: {
+		height: "100%",
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		paddingLeft: "2%",
+	},
+	iconContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+		paddingLeft: "2%",
+		paddingRight: "2%",
+	},
+	icon: {
+		color: COLORS.white,
+	},
+	infoText: {
+		fontSize: 14,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+	divider: {
+		height: 1,
+		width: "100%",
+		height: 1,
+		backgroundColor: "grey",
+		marginTop: "1%",
+		marginHorizontal: "1%",
+	},
 });
 
 const vacaciones = StyleSheet.create({
@@ -797,7 +904,7 @@ const linea = StyleSheet.create({
 		position: "absolute",
 		right: "25%",
 		height: "100%",
-		width: "100%"
+		width: "100%",
 	},
 	sectionTitleContainer: {
 		flex: 1.2,
@@ -813,7 +920,7 @@ const linea = StyleSheet.create({
 		// height: "75%",
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	animationContainer: {
 		height: "100%",
@@ -855,7 +962,7 @@ const linea = StyleSheet.create({
 		fontSize: 13,
 		color: COLORS.black,
 		textAlign: "right",
-		fontWeight: "500"
+		fontWeight: "500",
 	},
 	sectionButtonContainer: {
 		flex: 1.4,
@@ -964,7 +1071,7 @@ const opiniones = StyleSheet.create({
 	},
 	dataContainer: {
 		height: "50%",
-		width: "100%",	
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
@@ -1000,7 +1107,7 @@ const opiniones = StyleSheet.create({
 		color: COLORS.black,
 		textAlign: "left",
 	},
-	buttonContainer:{
+	buttonContainer: {
 		flex: 0.2,
 		paddingHorizontal: "12%",
 		justifyContent: "center",
@@ -1023,6 +1130,7 @@ export {
 	infopers,
 	area,
 	redes,
+	directorio,
 	vacaciones,
 	reciboNom,
 	prenomina,
