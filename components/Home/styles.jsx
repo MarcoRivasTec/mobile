@@ -178,8 +178,8 @@ const navbar = StyleSheet.create({
 		alignItems: "center",
 	},
 	homeBackground: {
-		height: "90%",
-		width: "90%",
+		height: "175%",
+		width: "175%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 50,
