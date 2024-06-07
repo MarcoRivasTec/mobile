@@ -6,9 +6,8 @@ import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "../Home/icons";
 
-function NIP() {
-	const [isPasswordShown, setIsPasswordShown] = useState(true);
-	const [inputValue, setInputValue] = useState("");
+function NIP({nip, setNip}) {
+	const [isNipShown, setIsNipShown] = useState(true);
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={layout.fieldContainer}>
@@ -22,16 +21,16 @@ function NIP() {
 					keyboardType="number-pad"
 					inputMode="numeric"
 					maxLength={6}
-					value={inputValue}
-					onChangeText={(text) => handleTextChange(text, setInputValue)}
-					secureTextEntry={isPasswordShown}
+					value={nip}
+					onChangeText={(text) => handleTextChange(text, setNip)}
+					secureTextEntry={isNipShown}
 					style={layout.userInput}
 				/>
 				<TouchableOpacity
-					onPress={() => setIsPasswordShown(!isPasswordShown)}
+					onPress={() => setIsNipShown(!isNipShown)}
 					style={layout.passEye}
 				>
-					{isPasswordShown == true ? (
+					{isNipShown == true ? (
 						<Ionicons name="eye-off" size={24} color={COLORS.black} />
 					) : (
 						<Ionicons name="eye" size={24} color={COLORS.black} />

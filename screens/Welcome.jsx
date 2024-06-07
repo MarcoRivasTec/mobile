@@ -1,22 +1,11 @@
-import {
-	Text,
-	Animated,
-	StyleSheet,
-	View,
-	StatusBar,
-} from "react-native";
+import { Text, Animated, StyleSheet, View, StatusBar } from "react-native";
 import React, { useEffect, useRef } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
 
-const Welcome = ({ navigation }) => {
-	// useEffect(() => {
-	//   const timer = setTimeout(() => {
-	//     navigation.replace("Home");
-	//   }, 3000); // 3 seconds to automatically change to the next screen
-
-	//   return () => clearTimeout(timer); // Clears the timer
-	// }, []);
+const Welcome = ({ navigation, route }) => {
+	const { firstName } = route.params;
+	formattedName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -63,32 +52,10 @@ const Welcome = ({ navigation }) => {
 					}}
 				>
 					{" "}
-					Marcos!{" "}
+					{formattedName}!{" "}
 				</Text>
 			</Animated.View>
 		</View>
-		// <ImageBackground
-		//   source={require("../assets/backgrounds/FONDOBIENVENIDA.png")}
-		//   style={{ flex: 1 }}
-		// >
-		//   {/* Logo */}
-		//   <Logo></Logo>
-
-		//   <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-		//     <Text
-		//       style={{ color: COLORS.white, fontSize: 140, marginBottom: "-10%" }}
-		//     >
-		//       {" "}
-		//       Hello{" "}
-		//     </Text>
-		//     <Text
-		//       style={{ color: COLORS.white, fontSize: 80, textAlign: "center" }}
-		//     >
-		//       {" "}
-		//       Marcos!{" "}
-		//     </Text>
-		//   </Animated.View>
-		// </ImageBackground>
 	);
 };
 const styles = StyleSheet.create({
