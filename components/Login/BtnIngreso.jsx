@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../constants/colors";
 import { layout } from "./styles";
@@ -23,23 +23,34 @@ function Ingresar({ user, nip, navigation }) {
 	};
 
 	const handleLogin = () => {
+		if (user === "") {
+			Alert.alert("Debes introducir tu número de empleado o reloj");
+			return;
+		}
+		if (nip === "") {
+			Alert.alert("Debes introducir tu NIP");
+			return;
+		}
+
 		setIsLoading(true);
 		fetchPost({ query })
 			.then((data) => {
-				console.log("Response data at login:", data);
-				if (data.data.login.token) {
-					const nameParts = data.data.login.name.split(" ");
-					const firstName = nameParts[0];
-					navigation.navigate("Welcome", {firstName});
-				} else {
-					console.warn("Login failed: No token received");
-				}
 				setIsLoading(false);
+				if (data.data.login !== null) {
+					navigation.navigate("Welcome", {
+						name: data.data.login.name,
+						numEmp: user,
+					});
+				}
+				if (data.errors[0].message) {
+					Alert.alert(data.errors[0].message);
+				}
 			})
 			.catch((error) => {
-				console.error("Error at app:", error);
-				// Handle the error
 				setIsLoading(false);
+				// console.warn(error);
+				// Alert.alert(error.errors[0].message);
+				// Handle the error
 			});
 	};
 
