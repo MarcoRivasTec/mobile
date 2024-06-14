@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { infopers } from "./styles";
@@ -6,42 +6,98 @@ import ContentHeader from "./ContentHeader";
 import CardRow from "./Design/CardRow";
 import Familia from "./InfoPers/Familia";
 import Tallas from "./InfoPers/Tallas";
-import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal"
+import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal";
+import fetchPost from "../../fetching";
+import LoadingContent from "../../Animations/LoadingContent";
 
-function InfoPers() {
+function InfoPers({ numEmp }) {
 	const { width, height } = Dimensions.get("window");
 	const infoheight = Math.round(height * 0.4);
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
 	const titleHeight = Math.round(height * 0.036);
 
+	const query = {
+		query: `query InfoPers($numEmp: String!){
+			InfoPers(numEmp: $numEmp) {
+				identificacion {
+					rfc
+					curp
+					imss
+					genero
+					edocivil
+					cuenta
+				}
+				domicilio {
+					calle
+					numext
+					col
+					tel
+				}
+				infonavit {
+					credito
+					tipo
+					tasa
+					estatus
+				}
+			}
+		}`,
+		variables: {
+			numEmp: numEmp,
+		},
+	};
+
+	const [identificacion, setIdentificacion] = useState({
+		rfc: "No definido",
+		curp: "No definido",
+		imss: "No definido",
+		genero: "No definido",
+		edocivil: "No definido",
+		cuenta: "No definido",
+	});
+	const [domicilio, setDomicilio] = useState();
+	const [infonavit, setInfonavit] = useState({
+		credito: "No definido",
+		tipo: "No definido",
+		tasa: 0,
+		estatus: "No definido",
+	});
+
 	const [selectedModal, setSelectedModal] = useState(null);
 	const openModal = (modalName) => setSelectedModal(modalName);
 	const closeModal = () => setSelectedModal(null);
 
-	const identificacion = {
-		rfc: "DUHM710425JF6",
-		curp: "DUHM710425HCHNRR04",
-		imss: "33887142934",
-		genero: "Masculino",
-		cuenta: "585777906"
-	};
-	identificacion.edoCivil = identificacion.genero === "Masculino" ? "Casado" : "Casada";
+	// New state to manage loading
+	const [isLoading, setIsLoading] = useState(true);
 
+	// Fetch data when component mounts
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchPost({ query });
+				console.log("Response data at infopers:", data);
+				if (data.data.InfoPers) {
+					setIdentificacion(data.data.InfoPers.identificacion);
+					setDomicilio(data.data.InfoPers.domicilio);
+					setInfonavit(data.data.InfoPers.infonavit);
+					console.log(data.data.InfoPers.infonavit);
+				} else {
+					console.warn("Error retrieving personal information");
+				}
+			} catch (error) {
+				console.error("Error at infopers:", error);
+			} finally {
+				setIsLoading(false); // Set loading to false after data is fetched
+			}
+		};
 
-	const [domicilio, setDomicilio] = useState({
-		calle: "Tlahuac",
-		numero: 3754,
-		colonia: "Lopez Mateos",
-		telefono: 6566491000,
-	});
+		fetchData();
+	}, [numEmp]); // Dependency array includes numEmp to refetch data if numEmp changes
 
-	const infonavit = {
-		noCredito: "0801045612",
-		tipo: "Cuota Fija",
-		tasa: "2329.7700",
-		status: "Activo",
-	};
+	// Render loading or error state if data is not yet available
+	if (isLoading) {
+		return <LoadingContent/>
+	}
 
 	return (
 		<View style={infopers.container}>
@@ -52,10 +108,14 @@ function InfoPers() {
 					style={infopers.scrollContainer}
 				>
 					{/* Identificacion */}
-					<View style={[infopers.cardContainer, { height: infoheight }]}>
+					<View
+						style={[infopers.cardContainer, { height: infoheight }]}
+					>
 						{/* Title */}
 						<View style={infopers.cardTitleContainer}>
-							<Text style={infopers.cardTitleText}>Identificación</Text>
+							<Text style={infopers.cardTitleText}>
+								Identificación
+							</Text>
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
@@ -69,12 +129,17 @@ function InfoPers() {
 										{ flex: 0, width: "28%" },
 									]}
 								>
-									<Text numberOfLines={1} style={infopers.cardInfoRowTitleText}>
+									<Text
+										numberOfLines={1}
+										style={infopers.cardInfoRowTitleText}
+									>
 										GENERO
 									</Text>
 								</View>
 								<View style={infopers.cardInfoRowDataContainer}>
-									<Text style={infopers.cardInfoRowDataText}>{identificacion.genero}</Text>
+									<Text style={infopers.cardInfoRowDataText}>
+										{identificacion.genero}
+									</Text>
 								</View>
 								<View
 									style={[
@@ -82,29 +147,52 @@ function InfoPers() {
 										{ flex: 6, marginBottom: "-0.5%" },
 									]}
 								>
-									<Text numberOfLines={2} style={infopers.cardInfoRowTitleText}>
+									<Text
+										numberOfLines={2}
+										style={infopers.cardInfoRowTitleText}
+									>
 										ESTADO CIVIL
 									</Text>
 								</View>
-								<View style={[infopers.cardInfoRowDataContainer, { flex: 8 }]}>
-									<Text style={infopers.cardInfoRowDataText}>{identificacion.edoCivil}</Text>
+								<View
+									style={[
+										infopers.cardInfoRowDataContainer,
+										{ flex: 8 },
+									]}
+								>
+									<Text style={infopers.cardInfoRowDataText}>
+										{identificacion.edocivil}
+									</Text>
 								</View>
 							</View>
-							<CardRow title="CUENTA" data={identificacion.cuenta} />
+							<CardRow
+								title="CUENTA"
+								data={identificacion.cuenta}
+							/>
 						</View>
 					</View>
 
 					{/* Domicilio */}
-					<View style={[infopers.cardContainer, { height: domicilioHeight }]}>
+					<View
+						style={[
+							infopers.cardContainer,
+							{ height: domicilioHeight },
+						]}
+					>
 						{/* Title */}
 						<View style={infopers.cardTitleContainer}>
-							<Text style={infopers.cardTitleText}>Domicilio</Text>
+							<Text style={infopers.cardTitleText}>
+								Domicilio
+							</Text>
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
-							<CardRow title="Dirección" data={`${domicilio.calle} ${domicilio.numero}`} />
-							<CardRow title="Colonia" data={domicilio.colonia} />
-							<CardRow title="Teléfono" data={domicilio.telefono} />
+							<CardRow
+								title="Dirección"
+								data={`${domicilio.calle} ${domicilio.numext}`}
+							/>
+							<CardRow title="Colonia" data={domicilio.col} />
+							<CardRow title="Teléfono" data={domicilio.tel} />
 							<TouchableOpacity
 								onPress={() => openModal("domicilio")}
 								style={infopers.cardInfoButton}
@@ -125,17 +213,30 @@ function InfoPers() {
 					</View>
 
 					{/* Infonavit */}
-					<View style={[infopers.cardContainer, { height: infonavitHeight }]}>
+					<View
+						style={[
+							infopers.cardContainer,
+							{ height: infonavitHeight },
+						]}
+					>
 						{/* Title */}
 						<View style={infopers.cardTitleContainer}>
-							<Text style={infopers.cardTitleText}>Infonavit</Text>
+							<Text style={infopers.cardTitleText}>
+								Infonavit
+							</Text>
 						</View>
 						{/* Card */}
 						<View style={infopers.cardInfoContainer}>
-							<CardRow title="No. Crédito" data={infonavit.noCredito} />
+							<CardRow
+								title="No. Crédito"
+								data={infonavit.credito}
+							/>
 							<CardRow title="Tipo" data={infonavit.tipo} />
 							<CardRow title="Tasa" data={infonavit.tasa} />
-							<CardRow title="Estatus: " data={infonavit.status} />
+							<CardRow
+								title="Estatus: "
+								data={infonavit.estatus}
+							/>
 						</View>
 					</View>
 
