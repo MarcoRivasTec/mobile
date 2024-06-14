@@ -1,13 +1,13 @@
-import React, {createContext, useState} from "react";
+import React, { createContext, useState } from "react";
 
 export const AppContext = createContext();
 
-export const AppProvider = ({children}) => {
-    const [numEmp, setNumEmp] = useState("");
+export const AppProvider = ({ children }) => {
+	const [numEmp, setNumEmp] = useState("");
 
-    return(
-        <AppContext.Provider value={{numEmp, setNumEmp}}>
-            {children}
-        </AppContext.Provider>
-    )
-}
+	return (
+		<AppContext.Provider value={{ numEmp, setNumEmp }}>
+			{children}
+		</AppContext.Provider>
+	);
+};
