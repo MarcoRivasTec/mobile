@@ -17,23 +17,23 @@ import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
 
-function ContentRenderer({ content, changeContent, navigation }) {
+function ContentRenderer({ content, changeContent, navigation, numEmp }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
 				return <Menu changeContent={changeContent} />;
 
 			case "InfoPers":
-				return <InfoPers />;
+				return <InfoPers numEmp={numEmp}/>;
 			case "Area":
-				return <Area />;
+				return <Area numEmp={numEmp}/>;
 			case "Redes":
 				return <Redes />;
 			case "Directorio":
 				return <Directorio />;
 
 			case "Vacaciones":
-				return <Vacaciones navigation={navigation} />;
+				return <Vacaciones numEmp={numEmp} navigation={navigation} />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
