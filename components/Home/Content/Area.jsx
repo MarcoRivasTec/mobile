@@ -1,12 +1,14 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { area } from "./styles";
 import ContentHeader from "./ContentHeader";
 import CardRow from "./Design/CardRow";
 import fetchPost from "../../fetching";
-import LoadingContent from "../../Animations/LoadingContent"
+import LoadingContent from "../../Animations/LoadingContent";
 
-function Area({numEmp}) {
+function Area() {
+	const { numEmp } = useContext(AppContext);
+
 	const query = {
 		query: `query Area($numEmp: String!){
 			Area(numEmp: $numEmp) {
@@ -63,7 +65,7 @@ function Area({numEmp}) {
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {
-		return <LoadingContent/>;
+		return <LoadingContent />;
 	}
 
 	return (
@@ -82,10 +84,16 @@ function Area({numEmp}) {
 						<CardRow title="Turno" data={areaData.turno} />
 						<CardRow title="Ingreso" data={areaData.ingreso} />
 						<CardRow title="Nomina" data={areaData.nomina} />
-						<CardRow title="Supervisor" data={areaData.supervisor} />
+						<CardRow
+							title="Supervisor"
+							data={areaData.supervisor}
+						/>
 						<CardRow title="Área" data={areaData.area} />
 						<CardRow title="Planta" data={areaData.planta} />
-						<CardRow title="Clasificación" data={areaData.clasificacion} />
+						<CardRow
+							title="Clasificación"
+							data={areaData.clasificacion}
+						/>
 					</View>
 				</View>
 			</View>
