@@ -1,10 +1,36 @@
-import React from "react";
-import { Modal, View, Text, TouchableOpacity, FlatList } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+	Modal,
+	View,
+	Text,
+	TouchableOpacity,
+	FlatList,
+	Platform,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { historialModal } from "./styles";
 import Icon from "../../icons";
 import COLORS from "../../../../constants/colors";
+import { AppContext } from "../../../AppContext";
+import LoadingContent from "../../../Animations/LoadingContent";
+import DownArrow from "../../../Animations/DownArrow";
+import fetchPost from "../../../fetching";
+import YearModal from "./YearModal";
 
 function HistorialModal({ onCallback, isModalVisible, onExit }) {
+	const { numEmp } = useContext(AppContext);
+	// const { currentYear } = new Date().getFullYear();
+	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+	const [years, setYears] = useState([]);
+	const [historial, setHistorial] = useState([]);
+
+	const [isYearModalVisible, setIsYearModalVisible] = useState(false);
+
+	function yearModalHandler() {
+		console.warn(isYearModalVisible);
+		setIsYearModalVisible(!isYearModalVisible);
+	}
+
 	const vacaciones = [
 		{
 			id: "1",
@@ -153,12 +179,105 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 		// Add more items as needed
 	];
 
+	// New state to manage loading
+	const [isLoading, setIsLoading] = useState(true);
+
+	// Fetch data when component mounts
+	useEffect(() => {
+		const query = {
+			query: `query HistorialVacaciones($numEmp: String!, $year: Int!){
+				HistorialVacaciones(numEmp: $numEmp, year: $year) {
+					yearly {
+						id
+						dias
+						fecha
+						observaciones
+					}
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+				year: selectedYear,
+			},
+		};
+
+		const fetchData = async () => {
+			try {
+				const data = await fetchPost({ query });
+				console.log("Response data at historial:", data);
+				if (data.data.HistorialVacaciones) {
+					setHistorial(data.data.HistorialVacaciones.yearly);
+				} else {
+					console.warn("Error retrieving historial information");
+				}
+			} catch (error) {
+				console.error("Error at historial:", error);
+			} finally {
+				setIsLoading(false); // Set loading to false after data is fetched
+			}
+		};
+		fetchData();
+	}, [selectedYear]); // Dependency array includes numEmp to refetch data if numEmp changes
+
+	useEffect(() => {
+		const query = {
+			query: `query HistorialYears($numEmp: String!){
+				HistorialYears(numEmp: $numEmp) {
+					years {
+						id
+						year
+					}
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+			},
+		};
+
+		const fetchData = async () => {
+			try {
+				const data = await fetchPost({ query });
+				console.log("Response data at historial years:", data);
+				if (data.data.HistorialYears) {
+					setYears(data.data.HistorialYears.years);
+				} else {
+					console.warn("Error retrieving years information");
+				}
+			} catch (error) {
+				console.error("Error at years:", error);
+			} finally {
+				setIsLoading(false); // Set loading to false after data is fetched
+			}
+		};
+		fetchData();
+	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
+
+	useEffect(() => {
+		console.log("Historial update: ", historial);
+	}, [historial]);
+
+	useEffect(() => {
+		console.log("Year Modal update: ", isYearModalVisible);
+	}, [isYearModalVisible]);
+
+	useEffect(() => {
+		console.log("Historial years update: ", years);
+	}, [years]);
+
+	// Render loading or error state if data is not yet available
+	if (isLoading) {
+		return <LoadingContent />;
+	}
+
 	// Render each item in the FlatList
 	function renderItem({ item, index }) {
-		const backgroundColor = index % 2 === 0 ? COLORS.flatlistElement1 : COLORS.flatlistElement2;
+		const backgroundColor =
+			index % 2 === 0 ? COLORS.flatlistElement1 : COLORS.flatlistElement2;
 
 		return (
-			<TouchableOpacity style={[historialModal.listElement, {backgroundColor}]}>
+			<TouchableOpacity
+				style={[historialModal.listElement, { backgroundColor }]}
+			>
 				<Text style={[historialModal.listElementText, { flex: 3 }]}>
 					{item.fecha}
 				</Text>
@@ -171,6 +290,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 			</TouchableOpacity>
 		);
 	}
+
 	return (
 		<View style={{ flex: 1 }}>
 			<Modal
@@ -188,31 +308,114 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 							</Text>
 						</View>
 						{/* Year Search */}
-						<TouchableOpacity style={historialModal.searchContainer}>
+						{Platform.OS === "ios" ? (
+							<TouchableOpacity
+								onPress={yearModalHandler}
+								style={historialModal.searchContainer}
+							>
+								<View
+									style={historialModal.searchFieldContainer}
+								>
+									<View
+										style={
+											historialModal.searchIconContainer
+										}
+									>
+										<Icon
+											name="search"
+											size={18}
+											style={historialModal.searchIcon}
+										/>
+									</View>
+									<View
+										style={
+											historialModal.searchYearContainer
+										}
+									>
+										<Text
+											style={
+												historialModal.searchYearText
+											}
+										>
+											{selectedYear}
+										</Text>
+									</View>
+									<View
+										style={
+											historialModal.searchArrowContainer
+										}
+									>
+										<DownArrow />
+									</View>
+								</View>
+							</TouchableOpacity>
+						) : (
+							<View style={historialModal.searchContainer}>
+								<YearPicker
+									years={years}
+									selectedYear={selectedYear}
+									setSelectedYear={setSelectedYear}
+								/>
+							</View>
+						)}
+						{isYearModalVisible && (
+							<YearModal
+								years={years}
+								selectedYear={selectedYear}
+								setSelectedYear={setSelectedYear}
+								onCallback={yearModalHandler}
+								isYearModalVisible={isYearModalVisible}
+							/>
+						)}
+
+						{/* <TouchableOpacity
+							style={historialModal.searchContainer}
+						>
 							<View style={historialModal.searchFieldContainer}>
-								<View style={historialModal.searchIconContainer}>
+								<View
+									style={historialModal.searchIconContainer}
+								>
 									<Icon
 										name="search"
 										size={18}
 										style={historialModal.searchIcon}
 									/>
 								</View>
-								<View style={historialModal.searchYearContainer}>
-									<Text style={historialModal.searchYearText}>2023</Text>
+								<View
+									style={historialModal.searchYearContainer}
+								>
+									<Text style={historialModal.searchYearText}>
+										{selectedYear}
+									</Text>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						{/* List */}
 						<View style={historialModal.listContainer}>
 							{/* List Title */}
 							<View style={historialModal.listTitleContainer}>
-								<Text style={[historialModal.listTitleText, { flex: 3 }]}>
+								<Text
+									style={[
+										historialModal.listTitleText,
+										{ flex: 3 },
+									]}
+								>
 									Fecha
 								</Text>
-								<Text style={[historialModal.listTitleText, { flex: 1 }]}>
+								<Text
+									style={[
+										historialModal.listTitleText,
+										{ flex: 1 },
+									]}
+								>
 									Días
 								</Text>
-								<Text style={[historialModal.listTitleText, { flex: 4 }]}>
+								<Text
+									style={[
+										historialModal.listTitleText,
+										{ flex: 4 },
+									]}
+								>
 									Observaciones
 								</Text>
 							</View>
@@ -220,10 +423,12 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 							<View style={historialModal.listElementsContainer}>
 								<FlatList
 									alwaysBounceVertical="false"
-									data={vacaciones}
+									data={historial}
 									renderItem={renderItem}
 									keyExtractor={(item) => item.id}
-									style={historialModal.listElementBoxContainer}
+									style={
+										historialModal.listElementBoxContainer
+									}
 								></FlatList>
 							</View>
 						</View>
@@ -232,7 +437,9 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 							onPress={onExit}
 							style={historialModal.exitButton}
 						>
-							<Text style={historialModal.textExitButton}>Volver</Text>
+							<Text style={historialModal.textExitButton}>
+								Volver
+							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
