@@ -2,10 +2,51 @@ import { Text, Animated, StyleSheet, View, StatusBar } from "react-native";
 import React, { useEffect, useRef } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
+import getFirstName from "../components/utils";
+import fetchPost from "../components/fetching";
 
 const Welcome = ({ navigation, route }) => {
-	const { firstName } = route.params;
-	formattedName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+	const { name, numEmp } = route.params;
+	const firstName = getFirstName(name);
+	formattedName =
+		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+	const query = {
+		query: `query getCardInfo($numEmp: String!){
+			CardInfo(numEmp: $numEmp) {
+				razon
+				puesto
+			}
+		}`,
+		variables: {
+			numEmp: numEmp,
+		},
+	};
+
+	const getCardInfo = () => {
+		// setIsLoading(true);
+		fetchPost({ query })
+			.then((data) => {
+				console.log("Response data at welcome:", data);
+				if (data.data.CardInfo.puesto) {
+					navigation.navigate("Home", {
+						name: name,
+						numEmp: numEmp,
+						razon: data.data.CardInfo.razon,
+						puesto: data.data.CardInfo.puesto,
+					});
+					console.log(data.data.CardInfo.puesto);
+				} else {
+					console.warn("Error retrieving card info");
+				}
+				// setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error at welcome:", error);
+				// Handle the error
+				// setIsLoading(false);
+			});
+	};
 
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -22,7 +63,8 @@ const Welcome = ({ navigation, route }) => {
 	}, []);
 
 	const handleAnimationFinish = () => {
-		navigation.navigate("Home");
+		getCardInfo();
+		// navigation.navigate("Home");
 		StatusBar.setHidden(false);
 	};
 	return (

@@ -8,7 +8,7 @@ export default function WelcomeAnim({ onFinish }) {
 			style={{ width: "100%", height: "100%" }}
 			autoPlay
             resizeMode="cover"
-            speed={0.6}
+            speed={1}
 			loop={false}
 			onAnimationFinish={onFinish}
 		/>

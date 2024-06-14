@@ -1,8 +1,8 @@
-const endpoint = "http://10.3.1.144:4000/graphql";
+import { ENDPOINT } from "@env";
 
 const fetchPost = async ({ query }) => {
 	try {
-		const response = await fetch(endpoint, {
+		const response = await fetch(ENDPOINT, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
