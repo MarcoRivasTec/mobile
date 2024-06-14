@@ -1,12 +1,14 @@
 import { Text, Animated, StyleSheet, View, StatusBar } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
 import getFirstName from "../components/utils";
 import fetchPost from "../components/fetching";
+import { AppContext } from "../components/AppContext";
 
 const Welcome = ({ navigation, route }) => {
-	const { name, numEmp } = route.params;
+	const { name } = route.params;
+	const { numEmp } = useContext(AppContext);
 	const firstName = getFirstName(name);
 	formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
@@ -31,7 +33,6 @@ const Welcome = ({ navigation, route }) => {
 				if (data.data.CardInfo.puesto) {
 					navigation.navigate("Home", {
 						name: name,
-						numEmp: numEmp,
 						razon: data.data.CardInfo.razon,
 						puesto: data.data.CardInfo.puesto,
 					});

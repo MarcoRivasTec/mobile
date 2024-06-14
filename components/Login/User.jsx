@@ -1,11 +1,13 @@
 import { View, TextInput, KeyboardAvoidingView, Platform } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { handleTextChange } from "./textCheck";
 import { layout } from "./styles";
 import COLORS from "../../constants/colors";
 import Icon from "../Home/icons";
+import { AppContext } from "../AppContext";
 
-function User({ user, setUser }) {
+function User() {
+	const { numEmp, setNumEmp } = useContext(AppContext);
 
 	return (
 		<KeyboardAvoidingView
@@ -21,10 +23,8 @@ function User({ user, setUser }) {
 					placeholderTextColor={COLORS.placeholder}
 					keyboardType="number-pad"
 					inputMode="numeric"
-					value={user}
-					onChangeText={(text) =>
-						handleTextChange(text, setUser)
-					}
+					value={numEmp}
+					onChangeText={(text) => handleTextChange(text, setNumEmp)}
 					maxLength={12}
 					style={layout.userInput}
 				/>

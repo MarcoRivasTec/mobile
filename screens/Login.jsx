@@ -42,7 +42,7 @@ const Login = ({ navigation }) => {
 					</View>
 
 					{/* Content */}
-					<User user={user} setUser={setUser} />
+					<User />
 
 					{/* NIP */}
 					<NIP nip={nip} setNip={setNip} />
@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
 					<Checkbox />
 
 					{/* Boton ingreso */}
-					<Ingresar user={user} nip={nip} navigation={navigation} />
+					<Ingresar nip={nip} navigation={navigation} />
 
 					{/* Restablecer */}
 					<ResetPass navigation={navigation} />
