@@ -10,7 +10,8 @@ import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal";
 import fetchPost from "../../fetching";
 import LoadingContent from "../../Animations/LoadingContent";
 
-function InfoPers({ numEmp }) {
+function InfoPers() {
+	const { numEmp } = useContext(AppContext);
 	const { width, height } = Dimensions.get("window");
 	const infoheight = Math.round(height * 0.4);
 	const domicilioHeight = Math.round(height * 0.3);
@@ -96,7 +97,7 @@ function InfoPers({ numEmp }) {
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {
-		return <LoadingContent/>
+		return <LoadingContent />;
 	}
 
 	return (
