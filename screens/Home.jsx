@@ -1,15 +1,16 @@
 import { StatusBar } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { home } from "../components/Home/styles";
 import Card from "../components/Home/Card";
 import Quickbar from "../components/Home/Quickbar";
 import Navbar from "../components/Home/Navbar";
 import ContentRenderer from "../components/Home/ContentRenderer";
+import { AppContext } from "../components/AppContext";
 
 const Home = ({ navigation, route }) => {
-	const { name, numEmp, razon, puesto } = route.params;
+	const { name, razon, puesto } = route.params;
+	const { numEmp } = useContext(AppContext);
 	const cardInfo = {
 		name: name,
 		numEmp: numEmp,
@@ -38,17 +39,13 @@ const Home = ({ navigation, route }) => {
 
 			{/* Contenedor modulos/apartados */}
 			<ContentRenderer
-				numEmp={numEmp}
 				content={currentContent}
 				changeContent={changeContent}
 				navigation={navigation}
 			/>
 
 			{/* Contenedor barra navegacion */}
-			<Navbar
-				changeContent={changeContent}
-				navigation={navigation}
-			></Navbar>
+			<Navbar changeContent={changeContent} navigation={navigation} />
 		</SafeAreaView>
 	);
 };
