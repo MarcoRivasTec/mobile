@@ -19,171 +19,21 @@ import YearModal from "./YearModal";
 
 function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	const { numEmp } = useContext(AppContext);
-	// const { currentYear } = new Date().getFullYear();
 	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 	const [years, setYears] = useState([]);
 	const [historial, setHistorial] = useState([]);
+	// New state to manage loading
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [isYearModalVisible, setIsYearModalVisible] = useState(false);
 
 	function yearModalHandler() {
-		console.warn(isYearModalVisible);
 		setIsYearModalVisible(!isYearModalVisible);
 	}
 
-	const vacaciones = [
-		{
-			id: "1",
-			fecha: "01/15/2024",
-			dias: "5.00",
-			observaciones: "5 días disfrutados",
-		},
-		{
-			id: "2",
-			fecha: "02/10/2024",
-			dias: "3.00",
-			observaciones: "3 días de descanso",
-		},
-		{
-			id: "3",
-			fecha: "03/20/2024",
-			dias: "41.00",
-			observaciones: "4 días de vacaciones",
-		},
-		{
-			id: "4",
-			fecha: "04/05/2024",
-			dias: "50.00",
-			observaciones: "5 días libres",
-		},
-		{
-			id: "5",
-			fecha: "05/12/2024",
-			dias: "30.00",
-			observaciones: "3 días de relax",
-		},
-		{
-			id: "6",
-			fecha: "06/30/2024",
-			dias: "40.00",
-			observaciones: "4 días de ocio",
-		},
-		{
-			id: "7",
-			fecha: "01/15/2024",
-			dias: "50.00",
-			observaciones: "5 días disfrutados",
-		},
-		{
-			id: "8",
-			fecha: "02/10/2024",
-			dias: "30.00",
-			observaciones: "3 días de descanso",
-		},
-		{
-			id: "9",
-			fecha: "03/20/2024",
-			dias: "4",
-			observaciones: "4 días de vacaciones",
-		},
-		{
-			id: "10",
-			fecha: "04/05/2024",
-			dias: "5",
-			observaciones: "5 días libres",
-		},
-		{
-			id: "11",
-			fecha: "05/12/2024",
-			dias: "3",
-			observaciones: "3 días de relax",
-		},
-		{
-			id: "12",
-			fecha: "06/30/2024",
-			dias: 4,
-			observaciones: "4 días de ocio",
-		},
-		{
-			id: "13",
-			fecha: "01/15/2024",
-			dias: 5,
-			observaciones: "5 días disfrutados",
-		},
-		{
-			id: "14",
-			fecha: "02/10/2024",
-			dias: 3,
-			observaciones: "3 días de descanso",
-		},
-		{
-			id: "15",
-			fecha: "03/20/2024",
-			dias: 4,
-			observaciones: "4 días de vacaciones",
-		},
-		{
-			id: "16",
-			fecha: "04/05/2024",
-			dias: 5,
-			observaciones: "5 días libres",
-		},
-		{
-			id: "17",
-			fecha: "05/12/2024",
-			dias: 3,
-			observaciones: "3 días de relax",
-		},
-		{
-			id: "18",
-			fecha: "06/30/2024",
-			dias: 4,
-			observaciones: "4 días de ocio",
-		},
-		{
-			id: "19",
-			fecha: "01/15/2024",
-			dias: 5,
-			observaciones: "5 días disfrutados",
-		},
-		{
-			id: "20",
-			fecha: "02/10/2024",
-			dias: 3,
-			observaciones: "3 días de descanso",
-		},
-		{
-			id: "21",
-			fecha: "03/20/2024",
-			dias: 4,
-			observaciones: "4 días de vacaciones",
-		},
-		{
-			id: "22",
-			fecha: "04/05/2024",
-			dias: 5,
-			observaciones: "5 días libres",
-		},
-		{
-			id: "23",
-			fecha: "05/12/2024",
-			dias: 3,
-			observaciones: "3 días de relax",
-		},
-		{
-			id: "24",
-			fecha: "06/30/2024",
-			dias: 4,
-			observaciones: "4 días de ocio",
-		},
-		// Add more items as needed
-	];
-
-	// New state to manage loading
-	const [isLoading, setIsLoading] = useState(true);
-
 	// Fetch data when component mounts
 	useEffect(() => {
+		setIsLoading(true);
 		const query = {
 			query: `query HistorialVacaciones($numEmp: String!, $year: Int!){
 				HistorialVacaciones(numEmp: $numEmp, year: $year) {
@@ -204,7 +54,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 		const fetchData = async () => {
 			try {
 				const data = await fetchPost({ query });
-				console.log("Response data at historial:", data);
+				// console.log("Response data at historial:", data);
 				if (data.data.HistorialVacaciones) {
 					setHistorial(data.data.HistorialVacaciones.yearly);
 				} else {
@@ -220,6 +70,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	}, [selectedYear]); // Dependency array includes numEmp to refetch data if numEmp changes
 
 	useEffect(() => {
+		setIsLoading(true);
 		const query = {
 			query: `query HistorialYears($numEmp: String!){
 				HistorialYears(numEmp: $numEmp) {
@@ -237,7 +88,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 		const fetchData = async () => {
 			try {
 				const data = await fetchPost({ query });
-				console.log("Response data at historial years:", data);
+				// console.log("Response data at historial years:", data);
 				if (data.data.HistorialYears) {
 					setYears(data.data.HistorialYears.years);
 				} else {
@@ -252,22 +103,22 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 		fetchData();
 	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
 
-	useEffect(() => {
-		console.log("Historial update: ", historial);
-	}, [historial]);
+	// useEffect(() => {
+	// 	console.log("Historial update: ", historial);
+	// }, [historial]);
 
-	useEffect(() => {
-		console.log("Year Modal update: ", isYearModalVisible);
-	}, [isYearModalVisible]);
+	// useEffect(() => {
+	// 	console.log("Selected year update: ", typeof selectedYear);
+	// }, [selectedYear]);
 
-	useEffect(() => {
-		console.log("Historial years update: ", years);
-	}, [years]);
+	// useEffect(() => {
+	// 	console.log("Years update: ", years);
+	// }, [years]);
 
 	// Render loading or error state if data is not yet available
-	if (isLoading) {
-		return <LoadingContent />;
-	}
+	// if (isLoading) {
+	// 	return <LoadingContent />;
+	// }
 
 	// Render each item in the FlatList
 	function renderItem({ item, index }) {
@@ -358,38 +209,6 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 								/>
 							</View>
 						)}
-						{isYearModalVisible && (
-							<YearModal
-								years={years}
-								selectedYear={selectedYear}
-								setSelectedYear={setSelectedYear}
-								onCallback={yearModalHandler}
-								isYearModalVisible={isYearModalVisible}
-							/>
-						)}
-
-						{/* <TouchableOpacity
-							style={historialModal.searchContainer}
-						>
-							<View style={historialModal.searchFieldContainer}>
-								<View
-									style={historialModal.searchIconContainer}
-								>
-									<Icon
-										name="search"
-										size={18}
-										style={historialModal.searchIcon}
-									/>
-								</View>
-								<View
-									style={historialModal.searchYearContainer}
-								>
-									<Text style={historialModal.searchYearText}>
-										{selectedYear}
-									</Text>
-								</View>
-							</View>
-						</TouchableOpacity> */}
 						{/* List */}
 						<View style={historialModal.listContainer}>
 							{/* List Title */}
@@ -421,15 +240,19 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 							</View>
 							{/* List Elements */}
 							<View style={historialModal.listElementsContainer}>
-								<FlatList
-									alwaysBounceVertical="false"
-									data={historial}
-									renderItem={renderItem}
-									keyExtractor={(item) => item.id}
-									style={
-										historialModal.listElementBoxContainer
-									}
-								></FlatList>
+								{isLoading === false ? (
+									<FlatList
+										alwaysBounceVertical="false"
+										data={historial}
+										renderItem={renderItem}
+										keyExtractor={(item) => item.id}
+										style={
+											historialModal.listElementBoxContainer
+										}
+									/>
+								) : (
+									<LoadingContent />
+								)}
 							</View>
 						</View>
 						{/* Back button */}
@@ -441,6 +264,15 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 								Volver
 							</Text>
 						</TouchableOpacity>
+						{isYearModalVisible && (
+							<YearModal
+								years={years}
+								selectedYear={selectedYear}
+								setSelectedYear={setSelectedYear}
+								onCallback={yearModalHandler}
+								isYearModalVisible={isYearModalVisible}
+							/>
+						)}
 					</View>
 				</View>
 			</Modal>

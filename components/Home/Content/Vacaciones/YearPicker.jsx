@@ -8,18 +8,20 @@ function YearPicker({ onCallback, years, selectedYear, setSelectedYear }) {
 		<Picker
 			selectedValue={selectedYear}
 			onValueChange={(itemValue) => {
-				{
-					itemValue === "Selecciona el año"
-						? Alert.alert(
-								"Opción inválida",
-								"Debes seleccionar un año",
-								[{ text: "Entendido" }]
-						  )
-						: setSelectedYear(itemValue.year);
-					onCallback && onCallback();
+				if (itemValue === "Selecciona el año") {
+					Alert.alert("Opción inválida", "Debes seleccionar un año", [
+						{ text: "Entendido" },
+					]);
+				} else {
+					const yearInt = parseInt(itemValue, 0);
+					setSelectedYear(yearInt);
+				}
+
+				if (onCallback) {
+					onCallback();
 				}
 			}}
-			style={{width: "100%", height: "100%"}}
+			style={{ width: "100%", height: "100%" }}
 			itemStyle={yearModal.pickerItemStyle}
 		>
 			{Platform.OS === "android" ? (

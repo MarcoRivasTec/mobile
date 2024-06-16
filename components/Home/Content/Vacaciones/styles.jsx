@@ -147,6 +147,7 @@ const historialModal = StyleSheet.create({
 
 const yearModal = StyleSheet.create({
 	container: {
+		position: "absolute",
 		flex: 1,
 	},
 	backgroundContainer: {
