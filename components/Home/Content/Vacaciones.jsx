@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import { vacaciones } from "./styles";
 import ContentHeader from "./ContentHeader";
@@ -8,8 +8,11 @@ import ButtonAction from "./Buttons/ButtonAction";
 import HistorialModal from "./Vacaciones/HistorialModal";
 import LoadingContent from "../../Animations/LoadingContent";
 import fetchPost from "../../fetching";
+import { AppContext } from "../../AppContext";
 
-function Vacaciones({ numEmp }) {
+function Vacaciones() {
+	const { numEmp } = useContext(AppContext);
+
 	const [isModalVisible, setModalVisible] = useState(false);
 
 	function modalHandler() {
@@ -71,13 +74,9 @@ function Vacaciones({ numEmp }) {
 			}
 		};
 
-		diasVacs.disponibles = diasVacs.ganados - diasVacs
+		diasVacs.disponibles = diasVacs.ganados - diasVacs;
 		fetchData();
 	}, [numEmp]); // Dependency array includes numEmp to refetch data if numEmp changes
-
-	useEffect(() => {
-		console.log("Dias update: ", diasVacs.disponibles);
-	}, [diasVacs.disponibles]);
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {

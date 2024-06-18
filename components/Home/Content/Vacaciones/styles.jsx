@@ -13,7 +13,8 @@ const historialModal = StyleSheet.create({
 	},
 	modalContainer: {
 		flex: 1,
-		marginVertical: "2%",
+		marginVertical: "8%",
+		top: "2%",
 		width: "90%",
 		justifyContent: "flex-start",
 		alignItems: "center",
@@ -63,15 +64,26 @@ const historialModal = StyleSheet.create({
 		color: COLORS.white,
 	},
 	searchYearContainer: {
-		flex: 8,
+		flex: 6,
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	searchYearText: {
 		fontSize: 17,
-		left: "-9%",
+		// left: "-2%",
 		fontWeight: "bold",
 		color: COLORS.white,
+	},
+	searchArrowContainer: {
+		flex: 2,
+		justifyContent: "center",
+		alignItems: "center",
+		top: "2%",
+		// borderWidth: 1,
+		// alignSelf: "flex-end",
+		width: "100%",
+		// backgroundColor: "white"
+		// flex: 1,
 	},
 	listContainer: {
 		flex: 82,
@@ -133,4 +145,41 @@ const historialModal = StyleSheet.create({
 	},
 });
 
-export { historialModal };
+const yearModal = StyleSheet.create({
+	container: {
+		position: "absolute",
+		flex: 1,
+	},
+	backgroundContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// backgroundColor: "rgba(255,255,255, 0.9)",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
+	},
+	modalContainer: {
+		top: "40%",
+		alignSelf: "center",
+		position: "absolute",
+		height: "25%",
+		// marginVertical: "2%",
+		width: "80%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(242, 242, 242, 1)",
+		borderRadius: 25,
+	},
+	contentContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	picker: {
+		width: "100%",
+		height: "100%",
+	},
+});
+
+export { historialModal, yearModal };
