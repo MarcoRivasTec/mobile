@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import { area } from "./styles";
 import ContentHeader from "./ContentHeader";
 import CardRow from "./Design/CardRow";
 import fetchPost from "../../fetching";
 import LoadingContent from "../../Animations/LoadingContent";
+import { AppContext } from "../../AppContext";
 
 function Area() {
 	const { numEmp } = useContext(AppContext);
