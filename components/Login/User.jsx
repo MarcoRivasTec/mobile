@@ -1,13 +1,15 @@
 import { View, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import React, { useContext } from "react";
-import { handleTextChange } from "./textCheck";
+import { createSetInputValue, handleTextChange } from "./textCheck";
 import { layout } from "./styles";
 import COLORS from "../../constants/colors";
 import Icon from "../Home/icons";
 import { AppContext } from "../AppContext";
 
 function User() {
-	const { numEmp, setNumEmp } = useContext(AppContext);
+	const { numEmp, setFields } = useContext(AppContext);
+
+	const setNumEmp = createSetInputValue(setFields, "numEmp");
 
 	return (
 		<KeyboardAvoidingView

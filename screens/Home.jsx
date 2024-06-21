@@ -1,5 +1,5 @@
 import { StatusBar } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { home } from "../components/Home/styles";
 import Card from "../components/Home/Card";
@@ -9,8 +9,8 @@ import ContentRenderer from "../components/Home/ContentRenderer";
 import { AppContext } from "../components/AppContext";
 
 const Home = ({ navigation, route }) => {
-	const { name, razon, puesto } = route.params;
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, name } = useContext(AppContext);
+	const { razon, puesto } = route.params;
 	const cardInfo = {
 		name: name,
 		numEmp: numEmp,
