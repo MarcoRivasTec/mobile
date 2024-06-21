@@ -10,17 +10,41 @@ import { AppContext } from "../../AppContext";
 import LoadingContent from "../../Animations/LoadingContent";
 //import HistorialModal from "./Vacaciones/HistorialModal";
 
+function getWeekNumber(d) {
+	d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+	d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+	const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+	const weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+	return weekNo;
+}
+
 function ReciboNom() {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, proyecto } = useContext(AppContext);
+	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+	const [selectedWeek, setSelectedWeek] = useState(getWeekNumber(new Date()));
+	const [years, setYears] = useState([]);
+	const [weeks, setWeeks] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [fondoAhorro, setFondoAhorro] = useState({
 		saldo_ca: 0,
 		saldo_fa: 0,
 		saldo_pr: 0,
 	});
+	// const [recibos, setRecibos] = useState([]);
+	const [recibos, setRecibos] = useState([
+		{
+			nomina: 0,
+			percepciones: 0,
+			deducciones: 0,
+			neto: 0,
+		},
+	]);
 
 	// New state to manage loading
 
+	useEffect(() => {
+		console.log("Recibos changed: ", recibos);
+	}, [recibos]);
 	// Fetch data when component mounts
 	useEffect(() => {
 		const fetchData = async () => {
@@ -53,7 +77,43 @@ function ReciboNom() {
 			}
 		};
 		fetchData();
-	}, [numEmp]); // Dependency array includes numEmp to refetch data if numEmp changes
+	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const query = {
+				query: `query Recibos($numEmp: String!, $year: String!, $proy: String!){
+					Recibos(numEmp: $numEmp, year: $year, proy: $proy) {
+						nomina
+						percepciones
+						deducciones
+						neto
+					}
+				}`,
+				variables: {
+					numEmp: numEmp,
+					year: selectedYear.toString(),
+					proy: proyecto,
+				},
+			};
+			try {
+				const data = await fetchPost({ query });
+				console.log("Response data at recibos:", data);
+				if (data.data.Recibos) {
+					setRecibos(data.data.Recibos);
+					// setDiasVacs(data.data.Vacaciones.diasvacs);
+				} else {
+					console.warn("Error retrieving recibos information");
+				}
+			} catch (error) {
+				console.error("Error at recibos:", error);
+			} finally {
+				// console.log(diasVacs.disponibles);
+				setIsLoading(false); // Set loading to false after data is fetched
+			}
+		};
+		fetchData();
+	}, [selectedYear]); // Dependency array includes numEmp to refetch data if numEmp changes
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {
@@ -96,7 +156,9 @@ function ReciboNom() {
 								style={reciboNom.nominaSearchIcon}
 							></Icon>
 						</View>
-						<Text style={reciboNom.nominaSearchText}>2023</Text>
+						<Text style={reciboNom.nominaSearchText}>
+							{selectedYear}
+						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={reciboNom.nominaWeekContainer}>
 						<View style={reciboNom.nominaSearchIconContainer}>
@@ -107,7 +169,7 @@ function ReciboNom() {
 							></Icon>
 						</View>
 						<Text style={reciboNom.nominaSearchText}>
-							Semana 09
+							Semana {selectedWeek}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -123,7 +185,9 @@ function ReciboNom() {
 							</Text>
 						</View>
 						<View style={reciboNom.nominaCantidadBox}>
-							<Text style={reciboNom.nominaCantidad}>$5,954</Text>
+							<Text style={reciboNom.nominaCantidad}>
+								${recibos[0].percepciones}
+							</Text>
 						</View>
 					</TouchableOpacity>
 					<TouchableOpacity
@@ -139,7 +203,7 @@ function ReciboNom() {
 						</View>
 						<View style={reciboNom.nominaCantidadBox}>
 							<Text style={reciboNom.nominaCantidad}>
-								$939.99
+								${recibos[0].deducciones}
 							</Text>
 						</View>
 					</TouchableOpacity>
@@ -152,7 +216,9 @@ function ReciboNom() {
 							</Text>
 						</View>
 						<View style={reciboNom.nominaCantidadBox}>
-							<Text style={reciboNom.nominaCantidad}>$5,015</Text>
+							<Text style={reciboNom.nominaCantidad}>
+								${recibos[0].neto}
+							</Text>
 						</View>
 					</TouchableOpacity>
 				</View>
