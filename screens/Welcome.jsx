@@ -6,39 +6,38 @@ import getFirstName from "../components/utils";
 import fetchPost from "../components/fetching";
 import { AppContext } from "../components/AppContext";
 
-const Welcome = ({ navigation, route }) => {
-	const { name } = route.params;
-	const { numEmp } = useContext(AppContext);
+const Welcome = ({ navigation }) => {
+	const { numEmp, name, setFields } = useContext(AppContext);
 	const firstName = getFirstName(name);
 	formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+	const fadeAnim = useRef(new Animated.Value(0)).current;
 
-	const query = {
-		query: `query getCardInfo($numEmp: String!){
-			CardInfo(numEmp: $numEmp) {
-				razon
-				puesto
-			}
-		}`,
-		variables: {
-			numEmp: numEmp,
-		},
-	};
-
-	const getCardInfo = () => {
+	const getUserInfo = () => {
+		const query = {
+			query: `query UserInfo($numEmp: String!){
+				UserInfo(numEmp: $numEmp) {
+					razon
+					puesto
+					proyecto
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+			},
+		};
 		// setIsLoading(true);
 		fetchPost({ query })
 			.then((data) => {
 				console.log("Response data at welcome:", data);
-				if (data.data.CardInfo.puesto) {
-					navigation.navigate("Home", {
-						name: name,
-						razon: data.data.CardInfo.razon,
-						puesto: data.data.CardInfo.puesto,
+				if (data.data.UserInfo.puesto) {
+					navigation.replace("Home", {
+						razon: data.data.UserInfo.razon,
+						puesto: data.data.UserInfo.puesto,
 					});
-					console.log(data.data.CardInfo.puesto);
+					setFields({ proyecto: data.data.UserInfo.proyecto.trim() });
 				} else {
-					console.warn("Error retrieving card info");
+					console.warn("Error retrieving user info");
 				}
 				// setIsLoading(false);
 			})
@@ -49,22 +48,20 @@ const Welcome = ({ navigation, route }) => {
 			});
 	};
 
-	const fadeAnim = useRef(new Animated.Value(0)).current;
-
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
-			duration: 2000, // Adjust the duration as needed
+			duration: 1000, // Adjust the duration as needed
 			useNativeDriver: true, // Enable native driver for better performance
 		}).start();
 	}, [fadeAnim]);
 
-	useEffect(() => {
-		StatusBar.setHidden(true); // Hide the status bar when the component mounts
-	}, []);
+	// useEffect(() => {
+	// 	StatusBar.setHidden(true); // Hide the status bar when the component mounts
+	// }, []);
 
 	const handleAnimationFinish = () => {
-		getCardInfo();
+		getUserInfo();
 		// navigation.navigate("Home");
 		StatusBar.setHidden(false);
 	};
@@ -72,8 +69,8 @@ const Welcome = ({ navigation, route }) => {
 		<View style={{ width: "100%", height: "100%" }}>
 			<WelcomeAnim
 				style={{ position: "absolute", width: "100%", height: "100%" }}
-				onFinish={handleAnimationFinish}
-			></WelcomeAnim>
+				onFinish={() => handleAnimationFinish()}
+			/>
 			<Animated.View style={[styles.container, { opacity: fadeAnim }]}>
 				<Text
 					style={{
@@ -95,7 +92,7 @@ const Welcome = ({ navigation, route }) => {
 					}}
 				>
 					{" "}
-					{formattedName}!{" "}
+					{name}!{" "}
 				</Text>
 			</Animated.View>
 		</View>
