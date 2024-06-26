@@ -76,11 +76,12 @@ function getButtonTagStyle(flexValue) {
 const buttonInfo = StyleSheet.create({
 	container: {
 		flex: 1,
-		height: "80%",
-		width: "30%",
-		padding: "1.5%",
+		// height: "80%",
+		// width: "30%",
+		margin: "0.5%",
 		justifyContent: "center",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	background: {
 		width: "100%",
@@ -88,16 +89,18 @@ const buttonInfo = StyleSheet.create({
 		position: "absolute",
 	},
 	textContainer: {
-		height: "92%",
+		height: "60%",
 		bottom: "2%",
 		right: "1%",
-		width: "87%",
+		width: "92%",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
+		// borderWidth: 1,
+
 	},
 	textDataContainer: {
-		width: "90%",
-		height: "40%",
+		width: "100%",
+		height: "45%",
 		justifyContent: "flex-end",
 		alignItems: "center",
 		// borderWidth: 1,
@@ -105,19 +108,20 @@ const buttonInfo = StyleSheet.create({
 	},
 	textTitleContainer: {
 		width: "90%",
-		height: "38%",
+		height: "45%",
 		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	textTitle: {
-		fontSize: 12,
+		fontSize: 12.5,
 		fontWeight: "bold",
-		textAlign: "justify",
+		textAlign: "center",
 		color: COLORS.white,
 	},
 	textData: {
-		right: "2%",
-		fontSize: 20,
+		right: "1.5%",
+		fontSize: 18,
 		fontWeight: "bold",
 		color: COLORS.white,
 	},

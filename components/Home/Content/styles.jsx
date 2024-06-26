@@ -446,8 +446,16 @@ const reciboNom = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	contentContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1
+	},
 	sectionContainer: {
-		flex: 5,
+		// flex: 5,
+		height: "24%",
 		width: "100%",
 		// borderWidth: 1,
 		// borderColor: "black"
@@ -466,18 +474,21 @@ const reciboNom = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		top: "1%",
+		// borderWidth: 1,
 	},
 	nominaContainer: {
-		flex: 14,
-		top: "4%",
+		// flex: 14,
+		height: "37.5%",
+		marginTop: "1%",
 		width: "95%",
 		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	nominaHeader: {
 		width: "100%",
-		height: "7%",
+		// height: "15%",
+		flex: 1.7,
 		borderRadius: 50,
 		backgroundColor: COLORS.naranja,
 		flexDirection: "row",
@@ -507,8 +518,9 @@ const reciboNom = StyleSheet.create({
 		// borderWidth: 50,
 	},
 	nominaSearchIconContainer: {
-		paddingVertical: "4%",
-		paddingHorizontal: 5,
+		// height: "100%",
+		paddingVertical: 6,
+		paddingHorizontal: 6,
 		justifyContent: "center",
 		alignContent: "center",
 		borderRadius: 50,
@@ -525,13 +537,17 @@ const reciboNom = StyleSheet.create({
 		color: COLORS.white,
 	},
 	nominaCantidadContainer: {
-		flex: 1,
+		flex: 6,
+		// height: "55%",
 		width: "100%",
-		top: "3%",
+		// top: "3%",
+		marginTop: "1.5%",
+		// borderWidth: 1,
 	},
 	nominaCantidadElementContainer: {
+		flex: 1,
 		width: "100%",
-		height: "8%",
+		// height: "16%",
 		justifyContent: "space-around",
 		alignItems: "center",
 		marginVertical: "1.0%",
@@ -556,6 +572,33 @@ const reciboNom = StyleSheet.create({
 		fontWeight: "bold",
 		color: "black",
 		textAlign: "center",
+	},
+	nominaGenerarContainer: {
+		flex: 2.3,
+		// height: "30%",
+		width: "100%",
+		// top: "3%",
+		marginVertical: "1.5%",
+		// borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	nominaGenerarButton: {
+		height: "100%",
+		width: "50%",
+		backgroundColor: COLORS.main,
+		borderRadius: 15,
+		justifyContent: "center",
+		alignItems: "center",
+		flexDirection: "row"
+	},
+	nominaGenerarText: {
+		fontSize: 17,
+		color: COLORS.white,
+		textAlign: "center",
+	},
+	nominaGenerarIcon: {
+		color: COLORS.white,
 	},
 });
 
