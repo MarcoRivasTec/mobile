@@ -10,13 +10,19 @@ import { AppContext } from "../components/AppContext";
 
 const Home = ({ navigation, route }) => {
 	const { numEmp, name } = useContext(AppContext);
-	const { razon, puesto } = route.params;
+	// const { razon, puesto } = route.params;
 	const cardInfo = {
 		name: name,
 		numEmp: numEmp,
-		razon: razon,
-		puesto: puesto,
+		razon: "INTERNATIONAL MANUFACTURING SOLUTIONS OPERACIONES",
+		puesto: "TECNICO DE PRODUCCION",
 	};
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: razon,
+	// 	puesto: puesto,
+	// };
 	useEffect(() => {
 		StatusBar.setHidden(false); // Hide the status bar when the component mounts
 	}, []);
