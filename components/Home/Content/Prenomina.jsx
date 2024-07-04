@@ -5,6 +5,7 @@ import ContentHeader from "./ContentHeader";
 import Icon from "../icons";
 import COLORS from "../../../constants/colors";
 import { AppContext } from "../../AppContext";
+import fetchPost from "../../fetching";
 
 function getWeekNumber(d) {
 	d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -15,10 +16,9 @@ function getWeekNumber(d) {
 }
 
 function Prenomina() {
-	const { numEmp, proyecto } = useContext(AppContext);
+	const { numEmp } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isVerDetalleSelected, setIsVerDetalleSelected] = useState(false);
-	const [selectedDay, setSelectedDay] = useState("Lun");
 	const [prenominas, setPrenominas] = useState([
 		{
 			nomina: 1,
@@ -27,14 +27,22 @@ function Prenomina() {
 			neto: 0,
 		},
 	]);
-	const [detalles, setDetalles] = useState([
-		{
-			nomina: 1,
-			percepciones: 0,
-			deducciones: 0,
-			neto: 0,
-		},
-	]);
+	const [detalles, setDetalles] = useState([]);
+	// const [detalles, setDetalles] = useState([
+	// 	{
+	// 		dia: 1,
+	// 		fec_dia: "",
+	// 		horas: 0.0,
+	// 		extras: 0.0,
+	// 		incidencia: 0,
+	// 		dia_tipo: 0,
+	// 		entrada_1: "00:00",
+	// 		salida_1: "00:00",
+	// 		entrada_2: "00:00",
+	// 		salida_2: "00:00",
+	// 		nomina_tipo: 1,
+	// 	},
+	// ]);
 	const [years, setYears] = useState([]);
 	const [selectedYear, setSelectedYear] = useState(
 		years.length === 0 ? new Date().getFullYear() : years[0]
@@ -49,6 +57,7 @@ function Prenomina() {
 			// return weeks[0] !== 1 ? weeks[0] - 1 : weeks[0];
 		}
 	});
+	const [selectedDay, setSelectedDay] = useState("Lun");
 
 	const [isYearModalVisible, setIsYearModalVisible] = useState(false);
 	const [isWeekModalVisible, setIsWeekModalVisible] = useState(false);
@@ -96,38 +105,12 @@ function Prenomina() {
 	// 	console.log("Selected year changed: ", selectedYear);
 	// }, [selectedYear]);
 
-	// Fetch data when component mounts for ahorro
 	useEffect(() => {
-		const fetchDataAhorro = async () => {
+		setIsLoading(true);
+		const fetchDataYears = async () => {
 			const query = {
-				query: `query FondoAhorro($numEmp: String!){
-					FondoAhorro(numEmp: $numEmp) {
-						saldo_fa
-						saldo_ca
-						saldo_pr
-					}
-				}`,
-				variables: {
-					numEmp: numEmp,
-				},
-			};
-			try {
-				const data = await fetchPost({ query });
-				// console.log("Response data at fondo ahorro:", data);
-				if (data.data.FondoAhorro) {
-					setFondoAhorro(data.data.FondoAhorro);
-					// setDiasVacs(data.data.Vacaciones.diasvacs);
-				} else {
-					console.warn("Error retrieving fondo ahorro information");
-				}
-			} catch (error) {
-				console.error("Error at fondo ahorro:", error);
-			}
-		};
-		const fetchDataRecibosYears = async () => {
-			const query = {
-				query: `query RecibosYears($numEmp: String!){
-					RecibosYears(numEmp: $numEmp) {
+				query: `query prenominaYears($numEmp: String!){
+					prenominaYears(numEmp: $numEmp) {
 						year
 					}
 				}`,
@@ -137,42 +120,51 @@ function Prenomina() {
 			};
 			try {
 				const data = await fetchPost({ query });
-				// console.log("Response data at fondo ahorro:", data);
-				if (data.data.RecibosYears) {
-					const yearsCount = data.data.RecibosYears.map(
+				console.log(
+					"Response data at prenomina years:",
+					JSON.stringify(data, null, 2)
+				);l
+				if (data.data.prenominaYears) {
+					const yearsCount = data.data.prenominaYears.map(
 						(item) => item.year
 					);
 					setYears(yearsCount);
-					// setDiasVacs(data.data.Vacaciones.diasvacs);
+					// console.log(
+					// 	"Valid years: ",
+					// 	JSON.stringify(data.data.prenominaYears, null, 2)
+					// );
 				} else {
-					console.warn("Error retrieving recibos years information");
+					console.warn(
+						"Error retrieving prenomina years information"
+					);
 				}
 			} catch (error) {
-				console.error("Error at recibos years:", error);
+				console.error("Error at prenomina years:", error);
+			} finally {
+				// console.log(diasVacs.disponibles);
+				setIsLoading(false); // Set loading to false after data is fetched
 			}
 		};
-		fetchDataAhorro();
-		fetchDataRecibosYears();
-		setIsLoading(false); // Set loading to false after data is fetched
-	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
+		fetchDataYears();
+		setIsLoading(false);
+	}, []);
+	// Fetch data when component mounts for ahorro
 
 	useEffect(() => {
 		setIsLoading(true);
-		const fetchData = async () => {
+		const fetchDataSemana = async () => {
 			const query = {
-				query: `query Recibos($numEmp: String!, $year: String!, $proy: String!){
-					Recibos(numEmp: $numEmp, year: $year, proy: $proy) {
+				query: `query prenominaSemanal($numEmp: String!, $year: String!){
+					prenominaSemanal(numEmp: $numEmp, year: $year) {
 						nomina
-						percepciones
-						deducciones
-						neto
-						fecha
+						horas
+						extras
+						inc
 					}
 				}`,
 				variables: {
 					numEmp: numEmp,
-					year: selectedYear.toString(),
-					proy: proyecto,
+					year: selectedYear,
 				},
 			};
 			try {
@@ -181,22 +173,28 @@ function Prenomina() {
 				// 	"Response data at recibos:",
 				// 	JSON.stringify(data, null, 2)
 				// );
-				if (data.data.Recibos) {
-					const normales = data.data.Recibos.filter(
-						(item) => item.nomina >= 1 && item.nomina <= 53
+				if (data.data.prenominaSemanal) {
+					console.log(
+						"Response data at prenomina semanal:",
+						JSON.stringify(data, null, 2)
 					);
-					const especiales = data.data.Recibos.filter(
-						(item) => item.nomina >= 54 && item.nomina <= 950
-					);
+					// const normales = data.data.Recibos.filter(
+					// 	(item) => item.nomina >= 1 && item.nomina <= 53
+					// );
+					// const especiales = data.data.Recibos.filter(
+					// 	(item) => item.nomina >= 54 && item.nomina <= 950
+					// );
 					const weeksCount = normales.map((item) => item.nomina);
-					const nominasCount = especiales.map((item) => item.nomina);
-					normales.sort((a, b) => a.nomina - b.nomina);
-					especiales.sort((a, b) => a.nomina - b.nomina);
-					const mostRecentNomina = especiales.sort(
-						(a, b) =>
-							new Date(b.fecha.split("-").reverse().join("-")) -
-							new Date(a.fecha.split("-").reverse().join("-"))
-					)[0].nomina;
+					// const nominasCount = especiales.map((item) => item.nomina);
+					data.data.prenominaSemanal.sort(
+						(a, b) => a.nomina - b.nomina
+					);
+					// especiales.sort((a, b) => a.nomina - b.nomina);
+					// const mostRecentNomina = especiales.sort(
+					// 	(a, b) =>
+					// 		new Date(b.fecha.split("-").reverse().join("-")) -
+					// 		new Date(a.fecha.split("-").reverse().join("-"))
+					// )[0].nomina;
 
 					setSelectedNominaEsp(mostRecentNomina);
 					// console.warn(especiales);
@@ -204,26 +202,79 @@ function Prenomina() {
 					// 	"Valid nominas: ",
 					// 	JSON.stringify(validNominas, null, 2)
 					// );
-					setRecibos(normales);
-					setRecibosEsp(especiales);
+					setPrenominas(data.data.prenominaSemanal);
 					setWeeks(weeksCount);
-					setNominasEsp(nominasCount);
 					setSelectedWeek(weeksCount[0]);
-					setSelectedNominaEsp(mostRecentNomina);
 					// setWeeks a numero de semanas recibidas en recibos
 				} else {
-					console.warn("Error retrieving recibos information");
+					console.warn(
+						"Error retrieving prenomina semanal information"
+					);
 				}
 			} catch (error) {
-				console.error("Error at recibos:", error);
+				console.error("Error at prenomina semanal:", error);
 			} finally {
 				// console.log(diasVacs.disponibles);
 				setIsLoading(false); // Set loading to false after data is fetched
 			}
 		};
-		fetchData();
+		fetchDataSemana();
 		setIsLoading(false);
 	}, [selectedYear]);
+
+	useEffect(() => {
+		// if (detalles.length !== 0) return;
+
+		if (isVerDetalleSelected === false) return;
+
+		if (detalles.nomina === selectedWeek) return;
+
+		const fetchDataDias = async () => {
+			const query = {
+				query: `query prenominaDias($numEmp: String!, $week: Int!, $year: Int!){
+					prenominaDias(numEmp: $numEmp) {
+						nomina
+						dia
+						fec_dia
+						horas
+						extras
+						incidencia
+						dia_tipo
+						entrada_1
+						salida_1
+						entrada_2
+						salida_2
+						nomina_tipo
+					}
+				}`,
+				variables: {
+					numEmp: numEmp,
+					week: selectedWeek,
+					year: selectedYear,
+				},
+			};
+			try {
+				const data = await fetchPost({ query });
+				// console.log("Response data at fondo ahorro:", data);
+				if (data.data.prenominaDias) {
+					console.log(
+						"Response data at prenomina dias:",
+						JSON.stringify(data, null, 2)
+					);
+					setDetalles(data.data.prenominaDias);
+					setSelectedDay(1);
+
+					// setDiasVacs(data.data.Vacaciones.diasvacs);
+				} else {
+					console.warn("Error retrieving prenomia dias information");
+				}
+			} catch (error) {
+				console.error("Error at prenomia dia ahorro:", error);
+			}
+		};
+		fetchDataDias();
+		setIsLoading(false); // Set loading to false after data is fetched
+	}, [selectedWeek, isVerDetalleSelected]); // Dependency array includes numEmp to refetch data if numEmp changes
 
 	const DayButton = ({ day, value }) => {
 		return (
@@ -516,7 +567,10 @@ function Prenomina() {
 
 						<TouchableOpacity
 							onPress={verDetalleHandler}
-							style={[prenomina.buttonContainer, {height: 0, flex: 1}]}
+							style={[
+								prenomina.buttonContainer,
+								{ height: 0, flex: 1 },
+							]}
 						>
 							<ImageBackground
 								source={require("../../../assets/BOTON_SELECCION.png")}
