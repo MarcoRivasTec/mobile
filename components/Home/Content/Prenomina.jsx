@@ -22,27 +22,29 @@ function Prenomina() {
 	const [prenominas, setPrenominas] = useState([
 		{
 			nomina: 1,
-			percepciones: 0,
-			deducciones: 0,
-			neto: 0,
+			horas: 0,
+			extras: 0,
+			incidencia: 0,
 		},
 	]);
-	const [detalles, setDetalles] = useState([]);
-	// const [detalles, setDetalles] = useState([
-	// 	{
-	// 		dia: 1,
-	// 		fec_dia: "",
-	// 		horas: 0.0,
-	// 		extras: 0.0,
-	// 		incidencia: 0,
-	// 		dia_tipo: 0,
-	// 		entrada_1: "00:00",
-	// 		salida_1: "00:00",
-	// 		entrada_2: "00:00",
-	// 		salida_2: "00:00",
-	// 		nomina_tipo: 1,
-	// 	},
-	// ]);
+
+	// const [detalles, setDetalles] = useState([]);
+	const [detalles, setDetalles] = useState([
+		{
+			nomina: 0,
+			dia: 1,
+			fec_dia: "Sin dato",
+			horas: 0.0,
+			extras: 0.0,
+			incidencia: 0,
+			dia_tipo: 0,
+			entrada_1: "00:00",
+			salida_1: "00:00",
+			entrada_2: "00:00",
+			salida_2: "00:00",
+			nomina_tipo: 6,
+		},
+	]);
 	const [years, setYears] = useState([]);
 	const [selectedYear, setSelectedYear] = useState(
 		years.length === 0 ? new Date().getFullYear() : years[0]
@@ -57,7 +59,7 @@ function Prenomina() {
 			// return weeks[0] !== 1 ? weeks[0] - 1 : weeks[0];
 		}
 	});
-	const [selectedDay, setSelectedDay] = useState("Lun");
+	const [selectedDay, setSelectedDay] = useState(0);
 
 	const [isYearModalVisible, setIsYearModalVisible] = useState(false);
 	const [isWeekModalVisible, setIsWeekModalVisible] = useState(false);
@@ -81,36 +83,12 @@ function Prenomina() {
 		);
 	}, [isVerDetalleSelected]);
 
-	// useEffect(() => {
-	// 	console.log("Selected nomina especial changed: ", selectedNominaEsp);
-	// }, [selectedNominaEsp]);
-
-	// useEffect(() => {
-	// 	console.log("Nominas especiales changed: ", nominasEsp);
-	// }, [nominasEsp]);
-
-	// useEffect(() => {
-	// 	console.log("Years changed: ", years);
-	// }, [years]);
-
-	// useEffect(() => {
-	// 	console.log("Weeks changed: ", weeks);
-	// }, [weeks]);
-
-	// useEffect(() => {
-	// 	console.log("Selected week changed: ", selectedWeek);
-	// }, [selectedWeek]);
-
-	// useEffect(() => {
-	// 	console.log("Selected year changed: ", selectedYear);
-	// }, [selectedYear]);
-
 	useEffect(() => {
 		setIsLoading(true);
 		const fetchDataYears = async () => {
 			const query = {
-				query: `query prenominaYears($numEmp: String!){
-					prenominaYears(numEmp: $numEmp) {
+				query: `query PrenominaYears($numEmp: String!){
+					PrenominaYears(numEmp: $numEmp) {
 						year
 					}
 				}`,
@@ -120,23 +98,20 @@ function Prenomina() {
 			};
 			try {
 				const data = await fetchPost({ query });
-				console.log(
-					"Response data at prenomina years:",
-					JSON.stringify(data, null, 2)
-				);l
-				if (data.data.prenominaYears) {
-					const yearsCount = data.data.prenominaYears.map(
-						(item) => item.year
-					);
+				// console.log(
+				// 	"Response data at prenomina years:",
+				// 	JSON.stringify(data, null, 2)
+				// );
+				if (data.data.PrenominaYears) {
+					const yearsCount = data.data.PrenominaYears.map((item) => item.year);
+					console.log("Conteo years: ", yearsCount);
 					setYears(yearsCount);
 					// console.log(
 					// 	"Valid years: ",
 					// 	JSON.stringify(data.data.prenominaYears, null, 2)
 					// );
 				} else {
-					console.warn(
-						"Error retrieving prenomina years information"
-					);
+					console.warn("Error retrieving prenomina years information");
 				}
 			} catch (error) {
 				console.error("Error at prenomina years:", error);
@@ -154,12 +129,12 @@ function Prenomina() {
 		setIsLoading(true);
 		const fetchDataSemana = async () => {
 			const query = {
-				query: `query prenominaSemanal($numEmp: String!, $year: String!){
-					prenominaSemanal(numEmp: $numEmp, year: $year) {
+				query: `query PrenominaSemanal($numEmp: String!, $year: Int!){
+					PrenominaSemanal(numEmp: $numEmp, year: $year) {
 						nomina
 						horas
 						extras
-						inc
+						incidencia
 					}
 				}`,
 				variables: {
@@ -170,25 +145,21 @@ function Prenomina() {
 			try {
 				const data = await fetchPost({ query });
 				// console.log(
-				// 	"Response data at recibos:",
+				// 	"Response data at prenomina semanal:",
 				// 	JSON.stringify(data, null, 2)
 				// );
-				if (data.data.prenominaSemanal) {
-					console.log(
-						"Response data at prenomina semanal:",
-						JSON.stringify(data, null, 2)
-					);
+				if (data.data.PrenominaSemanal) {
 					// const normales = data.data.Recibos.filter(
 					// 	(item) => item.nomina >= 1 && item.nomina <= 53
 					// );
 					// const especiales = data.data.Recibos.filter(
 					// 	(item) => item.nomina >= 54 && item.nomina <= 950
 					// );
-					const weeksCount = normales.map((item) => item.nomina);
-					// const nominasCount = especiales.map((item) => item.nomina);
-					data.data.prenominaSemanal.sort(
-						(a, b) => a.nomina - b.nomina
+					const weeksCount = data.data.PrenominaSemanal.map(
+						(item) => item.nomina
 					);
+					// const nominasCount = especiales.map((item) => item.nomina);
+					data.data.PrenominaSemanal.sort((a, b) => a.nomina - b.nomina);
 					// especiales.sort((a, b) => a.nomina - b.nomina);
 					// const mostRecentNomina = especiales.sort(
 					// 	(a, b) =>
@@ -196,20 +167,18 @@ function Prenomina() {
 					// 		new Date(a.fecha.split("-").reverse().join("-"))
 					// )[0].nomina;
 
-					setSelectedNominaEsp(mostRecentNomina);
+					// setSelectedNominaEsp(mostRecentNomina);
 					// console.warn(especiales);
 					// console.log(
 					// 	"Valid nominas: ",
 					// 	JSON.stringify(validNominas, null, 2)
 					// );
-					setPrenominas(data.data.prenominaSemanal);
+					setPrenominas(data.data.PrenominaSemanal);
 					setWeeks(weeksCount);
 					setSelectedWeek(weeksCount[0]);
 					// setWeeks a numero de semanas recibidas en recibos
 				} else {
-					console.warn(
-						"Error retrieving prenomina semanal information"
-					);
+					console.warn("Error retrieving prenomina semanal information");
 				}
 			} catch (error) {
 				console.error("Error at prenomina semanal:", error);
@@ -227,12 +196,18 @@ function Prenomina() {
 
 		if (isVerDetalleSelected === false) return;
 
-		if (detalles.nomina === selectedWeek) return;
+		console.log(
+			`Selected week num is: ${selectedWeek} and nomina week is: ${
+				detalles[0].nomina ? detalles[0].nomina : "None"
+			}`
+		);
+
+		if (detalles[0].nomina === selectedWeek) return;
 
 		const fetchDataDias = async () => {
 			const query = {
-				query: `query prenominaDias($numEmp: String!, $week: Int!, $year: Int!){
-					prenominaDias(numEmp: $numEmp) {
+				query: `query PrenominaDias($numEmp: String!, $week: Int!, $year: Int!){
+					PrenominaDias(numEmp: $numEmp, week: $week, year: $year) {
 						nomina
 						dia
 						fec_dia
@@ -256,13 +231,13 @@ function Prenomina() {
 			try {
 				const data = await fetchPost({ query });
 				// console.log("Response data at fondo ahorro:", data);
-				if (data.data.prenominaDias) {
-					console.log(
-						"Response data at prenomina dias:",
-						JSON.stringify(data, null, 2)
-					);
-					setDetalles(data.data.prenominaDias);
-					setSelectedDay(1);
+				console.log(
+					"Response data at prenomina dias:",
+					JSON.stringify(data, null, 2)
+				);
+				if (data.data.PrenominaDias) {
+					setDetalles(data.data.PrenominaDias);
+					setSelectedDay(0);
 
 					// setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
@@ -276,7 +251,7 @@ function Prenomina() {
 		setIsLoading(false); // Set loading to false after data is fetched
 	}, [selectedWeek, isVerDetalleSelected]); // Dependency array includes numEmp to refetch data if numEmp changes
 
-	const DayButton = ({ day, value }) => {
+	const DayButton = ({ day, dayExt, value }) => {
 		return (
 			<TouchableOpacity
 				onPress={() => setSelectedDay(value)}
@@ -294,10 +269,105 @@ function Prenomina() {
 							: prenomina.detalleDayButtonText
 					}
 				>
-					{selectedDay === value ? day : value}
+					{selectedDay === value ? dayExt : day}
 				</Text>
 			</TouchableOpacity>
 		);
+	};
+
+	const getMontoArray = (array, position, tipo) => {
+		// console.log("Selected day is: ", position);
+		// console.log("Data monto: ", JSON.stringify(array[position], null, 2));
+		// console.log("Data: ", array[position].horas);
+		// console.log("Data horas: ", array[position].horas);
+		const formatNumber = (number) => {
+			return number.toLocaleString("en-US", {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			});
+		};
+		// adjustedPosition = position - 1;
+
+		const handleUndefined = () => {
+			return "Sin dato";
+		};
+
+		if (array[position] === undefined) {
+			return handleUndefined();
+		}
+
+		const formatDate = (date) => {
+			const day = String(date.getDate()).padStart(2, "0");
+			const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+			const year = date.getFullYear();
+			return `${day}-${month}-${year}`;
+		};
+
+		switch (tipo) {
+			case "horas":
+				return array[position].horas === undefined
+					? handleUndefined()
+					: `${formatNumber(array[position].horas)}`;
+			case "extras":
+				return array[position].extras === undefined
+					? handleUndefined()
+					: `${formatNumber(array[position].extras)}`;
+			case "incidencia":
+				// const today = formatDate(new Date());
+				if (array[position].fec_dia > formatDate(new Date())) {
+					console.log(
+						`Dia array: ${array[position].fec_dia} con type: ${typeof array[
+							position
+						].fec_dia} y dia hoy: ${formatDate(
+							new Date()
+						)} con type: ${typeof formatDate(new Date())}`
+					);
+					return handleUndefined();
+				} else {
+					return array[position].incidencia === undefined
+						? handleUndefined()
+						: array[position].incidencia === null
+						? "Sin incidencia"
+						: `${array[position].incidencia}`;
+				}
+			default:
+				return "";
+		}
+	};
+
+	const getMonto = (tipo) => {
+		const formatNumber = (number) => {
+			return number.toLocaleString("en-US", {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			});
+		};
+		adjustedWeek = selectedWeek - 1;
+
+		const handleUndefined = () => {
+			return "Sin dato";
+		};
+
+		if (prenominas[adjustedWeek] === undefined) {
+			return handleUndefined();
+		}
+
+		switch (tipo) {
+			case "horas":
+				return prenominas[adjustedWeek].horas === undefined
+					? handleUndefined()
+					: `${formatNumber(prenominas[adjustedWeek].horas)}`;
+			case "extras":
+				return prenominas[adjustedWeek].extras === undefined
+					? handleUndefined()
+					: `${formatNumber(prenominas[adjustedWeek].extras)}`;
+			case "incidencia":
+				return prenominas[adjustedWeek].incidencia === undefined
+					? handleUndefined()
+					: `${prenominas[adjustedWeek].incidencia}`;
+			default:
+				return "";
+		}
 	};
 
 	return (
@@ -326,29 +396,19 @@ function Prenomina() {
 					{/* Barra Busqueda */}
 					<View style={prenomina.prenominaHeader}>
 						{/* Boton Año */}
-						<TouchableOpacity
-							style={prenomina.prenominaYearContainer}
-						>
-							<View
-								style={prenomina.prenominaSearchIconContainer}
-							>
+						<TouchableOpacity style={prenomina.prenominaYearContainer}>
+							<View style={prenomina.prenominaSearchIconContainer}>
 								<Icon
 									name="search"
 									size={13}
 									style={prenomina.prenominaSearchIcon}
 								></Icon>
 							</View>
-							<Text style={prenomina.prenominaSearchText}>
-								{selectedYear}
-							</Text>
+							<Text style={prenomina.prenominaSearchText}>{selectedYear}</Text>
 						</TouchableOpacity>
 						{/* Boton Semana */}
-						<TouchableOpacity
-							style={prenomina.prenominaWeekContainer}
-						>
-							<View
-								style={prenomina.prenominaSearchIconContainer}
-							>
+						<TouchableOpacity style={prenomina.prenominaWeekContainer}>
+							<View style={prenomina.prenominaSearchIconContainer}>
 								<Icon
 									name="search"
 									size={13}
@@ -365,49 +425,45 @@ function Prenomina() {
 					<View style={prenomina.prenominaContainer}>
 						{/* Horas */}
 						<TouchableOpacity
-							style={prenomina.prenominaCantidadElementContainer}
+							style={prenomina.prenominaElementContainer}
 						>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidadTitle}>
-									Horas
-								</Text>
+							<View style={prenomina.prenominaElementTitleContainer}>
+								<Text style={prenomina.prenominaElementTitleText}>Horas</Text>
 							</View>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidad}>
-									47.50
+							<View style={prenomina.prenominaElementDataContainer}>
+								<Text style={prenomina.prenominaElementDataText}>
+									{getMonto("horas")}
 								</Text>
 							</View>
 						</TouchableOpacity>
 						{/* Extras */}
 						<TouchableOpacity
 							style={[
-								prenomina.prenominaCantidadElementContainer,
+								prenomina.prenominaElementContainer,
 								{ backgroundColor: COLORS.flatlistElement1 },
 							]}
 						>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidadTitle}>
-									Extras
-								</Text>
+							<View style={prenomina.prenominaElementTitleContainer}>
+								<Text style={prenomina.prenominaElementTitleText}>Extras</Text>
 							</View>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidad}>
-									0.00
+							<View style={prenomina.prenominaElementDataContainer}>
+								<Text style={prenomina.prenominaElementDataText}>
+									{getMonto("extras")}
 								</Text>
 							</View>
 						</TouchableOpacity>
 						{/* Incidencias */}
 						<TouchableOpacity
-							style={prenomina.prenominaCantidadElementContainer}
+							style={prenomina.prenominaElementContainer}
 						>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidadTitle}>
+							<View style={prenomina.prenominaElementTitleContainer}>
+								<Text style={prenomina.prenominaElementTitleText}>
 									Incidencias
 								</Text>
 							</View>
-							<View style={prenomina.prenominaCantidadBox}>
-								<Text style={prenomina.prenominaCantidad}>
-									0
+							<View style={prenomina.prenominaElementDataContainer}>
+								<Text style={prenomina.prenominaElementDataText}>
+									{getMonto("incidencia")}
 								</Text>
 							</View>
 						</TouchableOpacity>
@@ -422,9 +478,7 @@ function Prenomina() {
 							style={prenomina.buttonBackground}
 							resizeMode={"stretch"}
 						>
-							<Text style={prenomina.buttonText}>
-								Ver detalle
-							</Text>
+							<Text style={prenomina.buttonText}>Ver detalle</Text>
 						</ImageBackground>
 					</TouchableOpacity>
 				</View>
@@ -435,14 +489,8 @@ function Prenomina() {
 					<View style={prenomina.detalleHeader}>
 						<View style={prenomina.detalleHeaderWeekYearRow}>
 							{/* Boton Año */}
-							<TouchableOpacity
-								style={prenomina.prenominaYearContainer}
-							>
-								<View
-									style={
-										prenomina.prenominaSearchIconContainer
-									}
-								>
+							<TouchableOpacity style={prenomina.prenominaYearContainer}>
+								<View style={prenomina.prenominaSearchIconContainer}>
 									<Icon
 										name="search"
 										size={13}
@@ -454,14 +502,8 @@ function Prenomina() {
 								</Text>
 							</TouchableOpacity>
 							{/* Boton Semana */}
-							<TouchableOpacity
-								style={prenomina.prenominaWeekContainer}
-							>
-								<View
-									style={
-										prenomina.prenominaSearchIconContainer
-									}
-								>
+							<TouchableOpacity style={prenomina.prenominaWeekContainer}>
+								<View style={prenomina.prenominaSearchIconContainer}>
 									<Icon
 										name="search"
 										size={13}
@@ -475,13 +517,13 @@ function Prenomina() {
 						</View>
 						<View style={prenomina.detalleHeaderDaysRow}>
 							{/* Botones dias */}
-							<DayButton day="Lunes" value="Lun" />
-							<DayButton day="Martes" value="Mar" />
-							<DayButton day="Miercoles" value="Mie" />
-							<DayButton day="Jueves" value="Jue" />
-							<DayButton day="Viernes" value="Vie" />
-							<DayButton day="Sábado" value="Sab" />
-							<DayButton day="Domingo" value="Dom" />
+							<DayButton day="Sab" dayExt="Sábado" value={0} />
+							<DayButton day="Dom" dayExt="Domingo" value={1} />
+							<DayButton day="Lun" dayExt="Lunes" value={2} />
+							<DayButton day="Mar" dayExt="Martes" value={3} />
+							<DayButton day="Mie" dayExt="Miercoles" value={4} />
+							<DayButton day="Jue" dayExt="Jueves" value={5} />
+							<DayButton day="Vie" dayExt="Viernes" value={6} />
 						</View>
 					</View>
 
@@ -489,77 +531,80 @@ function Prenomina() {
 						{/* Days */}
 						<View style={prenomina.detalleDaysDescContainer}>
 							<Text style={prenomina.detalleDaysDescText}>
-								Dias: Lunes etc etc
+								Dia: {detalles[selectedDay].fec_dia}
 							</Text>
 						</View>
 
 						{/* Habil */}
-						<View style={prenomina.detalleHabilContainer}>
+						<View
+							style={[
+								prenomina.detalleHabilContainer,
+								{
+									backgroundColor:
+										detalles[selectedDay].dia_tipo === 1 ||
+										detalles[selectedDay].dia_tipo === 2
+											? COLORS.black
+											: COLORS.green,
+								},
+							]}
+						>
 							<Text style={[prenomina.detalleHabilText]}>
-								Hábil
+								{detalles[selectedDay].dia_tipo === 1 ||
+								detalles[selectedDay].dia_tipo === 2
+									? "Inhábil"
+									: "Hábil"}
 							</Text>
 						</View>
 
 						{/* Cantidades */}
 						<View style={prenomina.detalleDataContainer}>
 							{/* Horas */}
-							<TouchableOpacity
-								style={
-									prenomina.prenominaCantidadElementContainer
-								}
-							>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text
-										style={prenomina.prenominaCantidadTitle}
-									>
-										Horas
-									</Text>
+							<TouchableOpacity style={prenomina.prenominaElementContainer}>
+								<View style={prenomina.prenominaElementTitleContainer}>
+									<Text style={prenomina.prenominaElementTitleText}>Horas</Text>
 								</View>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text style={prenomina.prenominaCantidad}>
-										47.50
+								<View style={prenomina.prenominaElementDataContainer}>
+									<Text style={prenomina.prenominaElementDataText}>
+										{getMontoArray(detalles, selectedDay, "horas")}
 									</Text>
 								</View>
 							</TouchableOpacity>
 							{/* Extras */}
 							<TouchableOpacity
 								style={[
-									prenomina.prenominaCantidadElementContainer,
+									prenomina.prenominaElementContainer,
 									{
-										backgroundColor:
-											COLORS.flatlistElement1,
+										backgroundColor: COLORS.flatlistElement1,
 									},
 								]}
 							>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text
-										style={prenomina.prenominaCantidadTitle}
-									>
+								<View style={prenomina.prenominaElementTitleContainer}>
+									<Text style={prenomina.prenominaElementTitleText}>
 										Extras
 									</Text>
 								</View>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text style={prenomina.prenominaCantidad}>
-										0.00
+								<View style={prenomina.prenominaElementDataContainer}>
+									<Text style={prenomina.prenominaElementDataText}>
+										{getMontoArray(detalles, selectedDay, "extras")}
 									</Text>
 								</View>
 							</TouchableOpacity>
 							{/* Incidencias */}
-							<TouchableOpacity
-								style={
-									prenomina.prenominaCantidadElementContainer
-								}
-							>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text
-										style={prenomina.prenominaCantidadTitle}
-									>
-										Incidencias
+							<TouchableOpacity style={prenomina.prenominaElementContainer}>
+								<View style={prenomina.prenominaElementTitleContainer}>
+									<Text style={prenomina.prenominaElementTitleText}>
+										Incidencia
 									</Text>
 								</View>
-								<View style={prenomina.prenominaCantidadBox}>
-									<Text style={prenomina.prenominaCantidad}>
-										0
+								<View style={prenomina.prenominaElementDataContainer}>
+									<Text
+										numberOfLines={2}
+										style={[
+											prenomina.prenominaElementDataText,
+											{ fontSize: 14 },
+										]}
+									>
+										{getMontoArray(detalles, selectedDay, "incidencia")}
 									</Text>
 								</View>
 							</TouchableOpacity>
@@ -567,19 +612,14 @@ function Prenomina() {
 
 						<TouchableOpacity
 							onPress={verDetalleHandler}
-							style={[
-								prenomina.buttonContainer,
-								{ height: 0, flex: 1 },
-							]}
+							style={[prenomina.buttonContainer, { height: 0, flex: 1 }]}
 						>
 							<ImageBackground
 								source={require("../../../assets/BOTON_SELECCION.png")}
 								style={prenomina.buttonBackground}
 								resizeMode={"stretch"}
 							>
-								<Text style={prenomina.buttonText}>
-									Solicitar ajuste
-								</Text>
+								<Text style={prenomina.buttonText}>Solicitar ajuste</Text>
 							</ImageBackground>
 						</TouchableOpacity>
 					</View>

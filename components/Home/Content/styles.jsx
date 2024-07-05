@@ -674,31 +674,47 @@ const prenomina = StyleSheet.create({
 		marginTop: "3%",
 		// borderWidth: 1,
 	},
-	prenominaCantidadElementContainer: {
+	prenominaElementContainer: {
 		flex: 1,
 		width: "100%",
 		// height: "8%",
-		justifyContent: "space-around",
+		justifyContent: "space-evenly",
 		alignItems: "center",
+		paddingLeft: "7%",
+		paddingRight: "3%",
 		marginVertical: "1.0%",
 		flexDirection: "row",
 		backgroundColor: COLORS.flatlistElement2,
 	},
-	prenominaCantidadBox: {
-		width: "30%",
+	prenominaElementTitleContainer: {
+		flex: 1,
+		// width: "30%",
 		height: "100%",
-		right: "50%",
+		left: "10%",
 		justifyContent: "center",
 		alignContent: "center",
+		// alignSelf: "flex-end",
+		// borderWidth: 1,
 	},
-	prenominaCantidadTitle: {
+	prenominaElementDataContainer: {
+		flex: 2,
+		// width: "30%",
+		height: "100%",
+		marginLeft:	"5%",
+		// right: "50%",
+		justifyContent: "center",
+		alignContent: "center",
+		// alignSelf: "flex-end",
+		// borderWidth: 1,
+	},
+	prenominaElementTitleText: {
 		fontSize: 17,
 		color: COLORS.black,
 		textAlign: "center",
 	},
-	prenominaCantidad: {
+	prenominaElementDataText: {
 		fontSize: 17,
-		left: "25%",
+		// left: "25%",
 		fontWeight: "bold",
 		color: "black",
 		textAlign: "center",
@@ -817,7 +833,6 @@ const prenomina = StyleSheet.create({
 		marginTop: "2%",
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: COLORS.black,
 		// borderWidth: 1,
 	},
 	detalleHabilText: {
