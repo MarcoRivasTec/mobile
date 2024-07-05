@@ -6,6 +6,8 @@ import Icon from "../icons";
 import COLORS from "../../../constants/colors";
 import { AppContext } from "../../AppContext";
 import fetchPost from "../../fetching";
+import DataModal from "./Prenomina/DataModal";
+import LoadingContent from "../../Animations/LoadingContent";
 
 function getWeekNumber(d) {
 	d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -15,7 +17,15 @@ function getWeekNumber(d) {
 	return weekNo;
 }
 
+const formatDate = (date) => {
+	const day = String(date.getDate()).padStart(2, "0");
+	const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+	const year = date.getFullYear();
+	return `${day}-${month}-${year}`;
+};
+
 function Prenomina() {
+	const today = formatDate(new Date());
 	const { numEmp } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isVerDetalleSelected, setIsVerDetalleSelected] = useState(false);
@@ -23,6 +33,8 @@ function Prenomina() {
 		{
 			nomina: 1,
 			horas: 0,
+			fecha_inicio: today,
+			fecha_fin: today,
 			extras: 0,
 			incidencia: 0,
 		},
@@ -33,7 +45,7 @@ function Prenomina() {
 		{
 			nomina: 0,
 			dia: 1,
-			fec_dia: "Sin dato",
+			fec_dia: today,
 			horas: 0.0,
 			extras: 0.0,
 			incidencia: 0,
@@ -76,12 +88,20 @@ function Prenomina() {
 		setIsVerDetalleSelected(!isVerDetalleSelected);
 	}
 
+	// useEffect(() => {
+	// 	console.log(
+	// 		"Ver detalle has changed: ",
+	// 		JSON.stringify(isVerDetalleSelected, null, 2)
+	// 	);
+	// }, [isVerDetalleSelected]);
+
 	useEffect(() => {
-		console.log(
-			"Ver detalle has changed: ",
-			JSON.stringify(isVerDetalleSelected, null, 2)
-		);
-	}, [isVerDetalleSelected]);
+		console.log(`prenominas fecha changed: ${prenominas[0].fecha_inicio}`);
+		// console.log(
+		// 	`prenominas fecha changed: ${
+		// 		prenominas[selectedWeek - 1].fecha_inicio
+		// 	}`
+	}, [prenominas]);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -103,15 +123,19 @@ function Prenomina() {
 				// 	JSON.stringify(data, null, 2)
 				// );
 				if (data.data.PrenominaYears) {
-					const yearsCount = data.data.PrenominaYears.map((item) => item.year);
-					console.log("Conteo years: ", yearsCount);
+					const yearsCount = data.data.PrenominaYears.map(
+						(item) => item.year
+					);
+					// console.log("Conteo years: ", yearsCount);
 					setYears(yearsCount);
 					// console.log(
 					// 	"Valid years: ",
 					// 	JSON.stringify(data.data.prenominaYears, null, 2)
 					// );
 				} else {
-					console.warn("Error retrieving prenomina years information");
+					console.warn(
+						"Error retrieving prenomina years information"
+					);
 				}
 			} catch (error) {
 				console.error("Error at prenomina years:", error);
@@ -132,6 +156,8 @@ function Prenomina() {
 				query: `query PrenominaSemanal($numEmp: String!, $year: Int!){
 					PrenominaSemanal(numEmp: $numEmp, year: $year) {
 						nomina
+						fecha_inicio
+						fecha_fin
 						horas
 						extras
 						incidencia
@@ -144,41 +170,25 @@ function Prenomina() {
 			};
 			try {
 				const data = await fetchPost({ query });
-				// console.log(
-				// 	"Response data at prenomina semanal:",
-				// 	JSON.stringify(data, null, 2)
-				// );
+				console.log(
+					"Response data at prenomina semanal:",
+					JSON.stringify(data, null, 2)
+				);
 				if (data.data.PrenominaSemanal) {
-					// const normales = data.data.Recibos.filter(
-					// 	(item) => item.nomina >= 1 && item.nomina <= 53
-					// );
-					// const especiales = data.data.Recibos.filter(
-					// 	(item) => item.nomina >= 54 && item.nomina <= 950
-					// );
 					const weeksCount = data.data.PrenominaSemanal.map(
 						(item) => item.nomina
 					);
-					// const nominasCount = especiales.map((item) => item.nomina);
-					data.data.PrenominaSemanal.sort((a, b) => a.nomina - b.nomina);
-					// especiales.sort((a, b) => a.nomina - b.nomina);
-					// const mostRecentNomina = especiales.sort(
-					// 	(a, b) =>
-					// 		new Date(b.fecha.split("-").reverse().join("-")) -
-					// 		new Date(a.fecha.split("-").reverse().join("-"))
-					// )[0].nomina;
-
-					// setSelectedNominaEsp(mostRecentNomina);
-					// console.warn(especiales);
-					// console.log(
-					// 	"Valid nominas: ",
-					// 	JSON.stringify(validNominas, null, 2)
-					// );
+					data.data.PrenominaSemanal.sort(
+						(a, b) => a.nomina - b.nomina
+					);
 					setPrenominas(data.data.PrenominaSemanal);
 					setWeeks(weeksCount);
 					setSelectedWeek(weeksCount[0]);
 					// setWeeks a numero de semanas recibidas en recibos
 				} else {
-					console.warn("Error retrieving prenomina semanal information");
+					console.warn(
+						"Error retrieving prenomina semanal information"
+					);
 				}
 			} catch (error) {
 				console.error("Error at prenomina semanal:", error);
@@ -196,11 +206,11 @@ function Prenomina() {
 
 		if (isVerDetalleSelected === false) return;
 
-		console.log(
-			`Selected week num is: ${selectedWeek} and nomina week is: ${
-				detalles[0].nomina ? detalles[0].nomina : "None"
-			}`
-		);
+		// console.log(
+		// 	`Selected week num is: ${selectedWeek} and nomina week is: ${
+		// 		detalles[0].nomina ? detalles[0].nomina : "None"
+		// 	}`
+		// );
 
 		if (detalles[0].nomina === selectedWeek) return;
 
@@ -233,7 +243,7 @@ function Prenomina() {
 				// console.log("Response data at fondo ahorro:", data);
 				console.log(
 					"Response data at prenomina dias:",
-					JSON.stringify(data, null, 2)
+					data.data.PrenominaDias[0]
 				);
 				if (data.data.PrenominaDias) {
 					setDetalles(data.data.PrenominaDias);
@@ -241,10 +251,10 @@ function Prenomina() {
 
 					// setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
-					console.warn("Error retrieving prenomia dias information");
+					console.warn("Error retrieving prenomina dias information");
 				}
 			} catch (error) {
-				console.error("Error at prenomia dia ahorro:", error);
+				console.error("Error at prenomina dia:", error);
 			}
 		};
 		fetchDataDias();
@@ -296,13 +306,6 @@ function Prenomina() {
 			return handleUndefined();
 		}
 
-		const formatDate = (date) => {
-			const day = String(date.getDate()).padStart(2, "0");
-			const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-			const year = date.getFullYear();
-			return `${day}-${month}-${year}`;
-		};
-
 		switch (tipo) {
 			case "horas":
 				return array[position].horas === undefined
@@ -316,9 +319,10 @@ function Prenomina() {
 				// const today = formatDate(new Date());
 				if (array[position].fec_dia > formatDate(new Date())) {
 					console.log(
-						`Dia array: ${array[position].fec_dia} con type: ${typeof array[
-							position
-						].fec_dia} y dia hoy: ${formatDate(
+						`Dia array: ${
+							array[position].fec_dia
+						} con type: ${typeof array[position]
+							.fec_dia} y dia hoy: ${formatDate(
 							new Date()
 						)} con type: ${typeof formatDate(new Date())}`
 					);
@@ -370,6 +374,43 @@ function Prenomina() {
 		}
 	};
 
+	const formatDateES = (dateStr) => {
+		console.log(dateStr);
+		const [day, month, year] = dateStr.split("-").map(Number);
+		const date = new Date(year, month - 1, day);
+		return new Intl.DateTimeFormat("es-ES", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		}).format(date);
+		// return formattedDate.replace("de ", "de ").replace(", ", " del ");
+	};
+
+	const getDay = (dateStr) => {
+		const [day, month, year] = dateStr.split("-");
+		const date = new Date(`${year}-${month}-${day}T00:00:00`);
+		const daysOfWeek = [
+			"Domingo",
+			"Lunes",
+			"Martes",
+			"Miércoles",
+			"Jueves",
+			"Viernes",
+			"Sábado",
+		];
+		return daysOfWeek[date.getDay()];
+	};
+
+	const diasNombres = [
+		"Sábado",
+		"Domingo",
+		"Lunes",
+		"Martes",
+		"Miércoles",
+		"Jueves",
+		"Viernes",
+	];
+
 	return (
 		<View style={prenomina.container}>
 			{isYearModalVisible && (
@@ -391,106 +432,25 @@ function Prenomina() {
 				/>
 			)}
 			<ContentHeader title="Prenómina"></ContentHeader>
-			{!isVerDetalleSelected && (
-				<View style={prenomina.contentContainer}>
-					{/* Barra Busqueda */}
-					<View style={prenomina.prenominaHeader}>
-						{/* Boton Año */}
-						<TouchableOpacity style={prenomina.prenominaYearContainer}>
-							<View style={prenomina.prenominaSearchIconContainer}>
-								<Icon
-									name="search"
-									size={13}
-									style={prenomina.prenominaSearchIcon}
-								></Icon>
-							</View>
-							<Text style={prenomina.prenominaSearchText}>{selectedYear}</Text>
-						</TouchableOpacity>
-						{/* Boton Semana */}
-						<TouchableOpacity style={prenomina.prenominaWeekContainer}>
-							<View style={prenomina.prenominaSearchIconContainer}>
-								<Icon
-									name="search"
-									size={13}
-									style={prenomina.prenominaSearchIcon}
-								></Icon>
-							</View>
-							<Text style={prenomina.prenominaSearchText}>
-								Semana {selectedWeek}
-							</Text>
-						</TouchableOpacity>
+			{!isVerDetalleSelected &&
+				(isLoading === true ? (
+					<View style={prenomina.contentContainer}>
+						<LoadingContent />
 					</View>
-
-					{/* Cantidades */}
-					<View style={prenomina.prenominaContainer}>
-						{/* Horas */}
-						<TouchableOpacity
-							style={prenomina.prenominaElementContainer}
-						>
-							<View style={prenomina.prenominaElementTitleContainer}>
-								<Text style={prenomina.prenominaElementTitleText}>Horas</Text>
-							</View>
-							<View style={prenomina.prenominaElementDataContainer}>
-								<Text style={prenomina.prenominaElementDataText}>
-									{getMonto("horas")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-						{/* Extras */}
-						<TouchableOpacity
-							style={[
-								prenomina.prenominaElementContainer,
-								{ backgroundColor: COLORS.flatlistElement1 },
-							]}
-						>
-							<View style={prenomina.prenominaElementTitleContainer}>
-								<Text style={prenomina.prenominaElementTitleText}>Extras</Text>
-							</View>
-							<View style={prenomina.prenominaElementDataContainer}>
-								<Text style={prenomina.prenominaElementDataText}>
-									{getMonto("extras")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-						{/* Incidencias */}
-						<TouchableOpacity
-							style={prenomina.prenominaElementContainer}
-						>
-							<View style={prenomina.prenominaElementTitleContainer}>
-								<Text style={prenomina.prenominaElementTitleText}>
-									Incidencias
-								</Text>
-							</View>
-							<View style={prenomina.prenominaElementDataContainer}>
-								<Text style={prenomina.prenominaElementDataText}>
-									{getMonto("incidencia")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-
-					<TouchableOpacity
-						onPress={verDetalleHandler}
-						style={prenomina.buttonContainer}
-					>
-						<ImageBackground
-							source={require("../../../assets/BOTON_SELECCION.png")}
-							style={prenomina.buttonBackground}
-							resizeMode={"stretch"}
-						>
-							<Text style={prenomina.buttonText}>Ver detalle</Text>
-						</ImageBackground>
-					</TouchableOpacity>
-				</View>
-			)}
-			{isVerDetalleSelected && (
-				<View style={prenomina.contentContainer}>
-					{/* Barra Busqueda */}
-					<View style={prenomina.detalleHeader}>
-						<View style={prenomina.detalleHeaderWeekYearRow}>
+				) : (
+					<View style={prenomina.contentContainer}>
+						{/* Barra Busqueda */}
+						<View style={prenomina.prenominaHeader}>
 							{/* Boton Año */}
-							<TouchableOpacity style={prenomina.prenominaYearContainer}>
-								<View style={prenomina.prenominaSearchIconContainer}>
+							<TouchableOpacity
+								onPress={yearModalHandler}
+								style={prenomina.prenominaYearContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaSearchIconContainer
+									}
+								>
 									<Icon
 										name="search"
 										size={13}
@@ -502,8 +462,212 @@ function Prenomina() {
 								</Text>
 							</TouchableOpacity>
 							{/* Boton Semana */}
-							<TouchableOpacity style={prenomina.prenominaWeekContainer}>
-								<View style={prenomina.prenominaSearchIconContainer}>
+							<TouchableOpacity
+								onPress={weekModalHandler}
+								style={prenomina.prenominaWeekContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaSearchIconContainer
+									}
+								>
+									<Icon
+										name="search"
+										size={13}
+										style={prenomina.prenominaSearchIcon}
+									></Icon>
+								</View>
+								<Text style={prenomina.prenominaSearchText}>
+									Semana {selectedWeek}
+								</Text>
+							</TouchableOpacity>
+						</View>
+
+						<View style={prenomina.prenominaDates}>
+							<Text style={prenomina.prenominaDatesText}>
+								{prenominas[selectedWeek - 1] &&
+								prenominas[selectedWeek - 1].fecha_inicio !==
+									undefined ? (
+									`${getDay(
+										prenominas[selectedWeek - 1]
+											.fecha_inicio
+									)} ${
+										formatDateES(prenominas[selectedWeek - 1]
+											.fecha_inicio)
+									} a ${getDay(
+										prenominas[selectedWeek - 1]
+											.fecha_fin
+									)} ${
+										formatDateES(prenominas[selectedWeek - 1]
+											.fecha_fin)
+									}`
+								) : (
+									<LoadingContent />
+								)}
+								{/* {` ${
+										diasNombres[
+											prenom[selectedDay].dia - 1
+										]
+									} `}
+									{formatDateES(
+										detalles[selectedDay].fec_dia
+									)} */}
+							</Text>
+						</View>
+						{/* Cantidades */}
+						<View style={prenomina.prenominaContainer}>
+							{/* Horas */}
+							<TouchableOpacity
+								style={prenomina.prenominaElementContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaElementTitleContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementTitleText
+										}
+									>
+										Horas
+									</Text>
+								</View>
+								<View
+									style={
+										prenomina.prenominaElementDataContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementDataText
+										}
+									>
+										{getMonto("horas")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							{/* Extras */}
+							<TouchableOpacity
+								style={[
+									prenomina.prenominaElementContainer,
+									{
+										backgroundColor:
+											COLORS.flatlistElement1,
+									},
+								]}
+							>
+								<View
+									style={
+										prenomina.prenominaElementTitleContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementTitleText
+										}
+									>
+										Extras
+									</Text>
+								</View>
+								<View
+									style={
+										prenomina.prenominaElementDataContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementDataText
+										}
+									>
+										{getMonto("extras")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							{/* Incidencias */}
+							<TouchableOpacity
+								style={prenomina.prenominaElementContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaElementTitleContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementTitleText
+										}
+									>
+										Incidencias
+									</Text>
+								</View>
+								<View
+									style={
+										prenomina.prenominaElementDataContainer
+									}
+								>
+									<Text
+										style={
+											prenomina.prenominaElementDataText
+										}
+									>
+										{getMonto("incidencia")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						</View>
+
+						<TouchableOpacity
+							onPress={verDetalleHandler}
+							style={prenomina.buttonContainer}
+						>
+							<ImageBackground
+								source={require("../../../assets/BOTON_SELECCION.png")}
+								style={prenomina.buttonBackground}
+								resizeMode={"stretch"}
+							>
+								<Text style={prenomina.buttonText}>
+									Ver detalle
+								</Text>
+							</ImageBackground>
+						</TouchableOpacity>
+					</View>
+				))}
+			{isVerDetalleSelected && (
+				<View style={prenomina.contentContainer}>
+					{/* Barra Busqueda */}
+					<View style={prenomina.detalleHeader}>
+						<View style={prenomina.detalleHeaderWeekYearRow}>
+							{/* Boton Año */}
+							<TouchableOpacity
+								onPress={yearModalHandler}
+								style={prenomina.prenominaYearContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaSearchIconContainer
+									}
+								>
+									<Icon
+										name="search"
+										size={13}
+										style={prenomina.prenominaSearchIcon}
+									/>
+								</View>
+								<Text style={prenomina.prenominaSearchText}>
+									{selectedYear}
+								</Text>
+							</TouchableOpacity>
+							{/* Boton Semana */}
+							<TouchableOpacity
+								onPress={weekModalHandler}
+								style={prenomina.prenominaWeekContainer}
+							>
+								<View
+									style={
+										prenomina.prenominaSearchIconContainer
+									}
+								>
 									<Icon
 										name="search"
 										size={13}
@@ -527,102 +691,183 @@ function Prenomina() {
 						</View>
 					</View>
 
-					<View style={prenomina.detalleDayContainer}>
-						{/* Days */}
-						<View style={prenomina.detalleDaysDescContainer}>
-							<Text style={prenomina.detalleDaysDescText}>
-								Dia: {detalles[selectedDay].fec_dia}
-							</Text>
-						</View>
+					{isLoading === "true" ? (
+						<LoadingContent />
+					) : (
+						<View style={prenomina.detalleDayContainer}>
+							{/* Days */}
+							<View style={prenomina.detalleDaysDescContainer}>
+								<Text style={prenomina.detalleDaysDescText}>
+									Dia:
+									{` ${
+										diasNombres[
+											detalles[selectedDay].dia - 1
+										]
+									} `}
+									{formatDateES(
+										detalles[selectedDay].fec_dia
+									)}
+								</Text>
+							</View>
 
-						{/* Habil */}
-						<View
-							style={[
-								prenomina.detalleHabilContainer,
-								{
-									backgroundColor:
-										detalles[selectedDay].dia_tipo === 1 ||
-										detalles[selectedDay].dia_tipo === 2
-											? COLORS.black
-											: COLORS.green,
-								},
-							]}
-						>
-							<Text style={[prenomina.detalleHabilText]}>
-								{detalles[selectedDay].dia_tipo === 1 ||
-								detalles[selectedDay].dia_tipo === 2
-									? "Inhábil"
-									: "Hábil"}
-							</Text>
-						</View>
-
-						{/* Cantidades */}
-						<View style={prenomina.detalleDataContainer}>
-							{/* Horas */}
-							<TouchableOpacity style={prenomina.prenominaElementContainer}>
-								<View style={prenomina.prenominaElementTitleContainer}>
-									<Text style={prenomina.prenominaElementTitleText}>Horas</Text>
-								</View>
-								<View style={prenomina.prenominaElementDataContainer}>
-									<Text style={prenomina.prenominaElementDataText}>
-										{getMontoArray(detalles, selectedDay, "horas")}
-									</Text>
-								</View>
-							</TouchableOpacity>
-							{/* Extras */}
-							<TouchableOpacity
+							{/* Habil */}
+							<View
 								style={[
-									prenomina.prenominaElementContainer,
+									prenomina.detalleHabilContainer,
 									{
-										backgroundColor: COLORS.flatlistElement1,
+										backgroundColor:
+											detalles[selectedDay].dia_tipo ===
+												1 ||
+											detalles[selectedDay].dia_tipo === 2
+												? COLORS.black
+												: COLORS.green,
 									},
 								]}
 							>
-								<View style={prenomina.prenominaElementTitleContainer}>
-									<Text style={prenomina.prenominaElementTitleText}>
-										Extras
-									</Text>
-								</View>
-								<View style={prenomina.prenominaElementDataContainer}>
-									<Text style={prenomina.prenominaElementDataText}>
-										{getMontoArray(detalles, selectedDay, "extras")}
-									</Text>
-								</View>
-							</TouchableOpacity>
-							{/* Incidencias */}
-							<TouchableOpacity style={prenomina.prenominaElementContainer}>
-								<View style={prenomina.prenominaElementTitleContainer}>
-									<Text style={prenomina.prenominaElementTitleText}>
-										Incidencia
-									</Text>
-								</View>
-								<View style={prenomina.prenominaElementDataContainer}>
-									<Text
-										numberOfLines={2}
-										style={[
-											prenomina.prenominaElementDataText,
-											{ fontSize: 14 },
-										]}
+								<Text style={[prenomina.detalleHabilText]}>
+									{detalles[selectedDay].dia_tipo === 1 ||
+									detalles[selectedDay].dia_tipo === 2
+										? "Inhábil"
+										: "Hábil"}
+								</Text>
+							</View>
+
+							{/* Cantidades */}
+							<View style={prenomina.detalleDataContainer}>
+								{/* Horas */}
+								<TouchableOpacity
+									style={prenomina.prenominaElementContainer}
+								>
+									<View
+										style={
+											prenomina.prenominaElementTitleContainer
+										}
 									>
-										{getMontoArray(detalles, selectedDay, "incidencia")}
+										<Text
+											style={
+												prenomina.prenominaElementTitleText
+											}
+										>
+											Horas
+										</Text>
+									</View>
+									<View
+										style={
+											prenomina.prenominaElementDataContainer
+										}
+									>
+										<Text
+											style={
+												prenomina.prenominaElementDataText
+											}
+										>
+											{getMontoArray(
+												detalles,
+												selectedDay,
+												"horas"
+											)}
+										</Text>
+									</View>
+								</TouchableOpacity>
+								{/* Extras */}
+								<TouchableOpacity
+									style={[
+										prenomina.prenominaElementContainer,
+										{
+											backgroundColor:
+												COLORS.flatlistElement1,
+										},
+									]}
+								>
+									<View
+										style={
+											prenomina.prenominaElementTitleContainer
+										}
+									>
+										<Text
+											style={
+												prenomina.prenominaElementTitleText
+											}
+										>
+											Extras
+										</Text>
+									</View>
+									<View
+										style={
+											prenomina.prenominaElementDataContainer
+										}
+									>
+										<Text
+											style={
+												prenomina.prenominaElementDataText
+											}
+										>
+											{getMontoArray(
+												detalles,
+												selectedDay,
+												"extras"
+											)}
+										</Text>
+									</View>
+								</TouchableOpacity>
+								{/* Incidencias */}
+								<TouchableOpacity
+									style={prenomina.prenominaElementContainer}
+								>
+									<View
+										style={
+											prenomina.prenominaElementTitleContainer
+										}
+									>
+										<Text
+											style={
+												prenomina.prenominaElementTitleText
+											}
+										>
+											Incidencia
+										</Text>
+									</View>
+									<View
+										style={
+											prenomina.prenominaElementDataContainer
+										}
+									>
+										<Text
+											numberOfLines={2}
+											style={[
+												prenomina.prenominaElementDataText,
+												{ fontSize: 14 },
+											]}
+										>
+											{getMontoArray(
+												detalles,
+												selectedDay,
+												"incidencia"
+											)}
+										</Text>
+									</View>
+								</TouchableOpacity>
+							</View>
+
+							<TouchableOpacity
+								onPress={verDetalleHandler}
+								style={[
+									prenomina.buttonContainer,
+									{ height: 0, flex: 1 },
+								]}
+							>
+								<ImageBackground
+									source={require("../../../assets/BOTON_SELECCION.png")}
+									style={prenomina.buttonBackground}
+									resizeMode={"stretch"}
+								>
+									<Text style={prenomina.buttonText}>
+										Solicitar ajuste
 									</Text>
-								</View>
+								</ImageBackground>
 							</TouchableOpacity>
 						</View>
-
-						<TouchableOpacity
-							onPress={verDetalleHandler}
-							style={[prenomina.buttonContainer, { height: 0, flex: 1 }]}
-						>
-							<ImageBackground
-								source={require("../../../assets/BOTON_SELECCION.png")}
-								style={prenomina.buttonBackground}
-								resizeMode={"stretch"}
-							>
-								<Text style={prenomina.buttonText}>Solicitar ajuste</Text>
-							</ImageBackground>
-						</TouchableOpacity>
-					</View>
+					)}
 				</View>
 			)}
 		</View>

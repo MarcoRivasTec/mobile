@@ -9,10 +9,13 @@ function DataPicker({ onCallback, data, selectedData, setSelectedData }) {
 			selectedValue={selectedData}
 			onValueChange={(itemValue) => {
 				if (itemValue === "Selecciona un valor") {
-					Alert.alert("Opción inválida", "Debes seleccionar un un valor", [
-						{ text: "Entendido" },
-					]);
+					Alert.alert(
+						"Opción inválida",
+						"Debes seleccionar un un valor",
+						[{ text: "Entendido" }]
+					);
 				} else {
+					itemValue = parseInt(itemValue, 10);
 					setSelectedData(itemValue);
 				}
 

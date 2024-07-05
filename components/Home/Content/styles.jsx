@@ -667,6 +667,19 @@ const prenomina = StyleSheet.create({
 		textAlign: "center",
 		color: COLORS.white,
 	},
+	prenominaDates: {
+		height: "15%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "3%",
+		// borderWidth: 1,
+	},
+	prenominaDatesText: {
+		fontSize: 18,
+		fontWeight: "bold"
+		
+	},
 	prenominaContainer: {
 		height: "40%",
 		// flex: 3.5,
