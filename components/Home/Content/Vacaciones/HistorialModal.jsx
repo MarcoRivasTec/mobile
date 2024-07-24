@@ -111,9 +111,9 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	// 	console.log("Selected year update: ", typeof selectedYear);
 	// }, [selectedYear]);
 
-	// useEffect(() => {
-	// 	console.log("Years update: ", years);
-	// }, [years]);
+	useEffect(() => {
+		console.log("Years update: ", years);
+	}, [years]);
 
 	// Render loading or error state if data is not yet available
 	// if (isLoading) {

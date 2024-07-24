@@ -8,21 +8,8 @@ import Loading from "../Animations/Loading";
 import { AppContext } from "../AppContext";
 
 function Ingresar({ nip, navigation }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, setFields } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(false);
-
-	const query = {
-		query: `mutation login($numEmp: String!, $nip: String!){
-			login(numEmp: $numEmp, nip: $nip) {
-				token
-				name
-			}
-		}`,
-		variables: {
-			numEmp: numEmp,
-			nip: nip,
-		},
-	};
 
 	const handleLogin = () => {
 		if (numEmp === "") {
@@ -35,23 +22,42 @@ function Ingresar({ nip, navigation }) {
 		}
 
 		setIsLoading(true);
+		const query = {
+			query: `mutation login($numEmp: String!, $nip: String!){
+				login(numEmp: $numEmp, nip: $nip) {
+					token
+					name
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+				nip: nip,
+			},
+		};
 		fetchPost({ query })
 			.then((data) => {
 				setIsLoading(false);
+				console.log("Response data at ingresoo: ", data);
 				if (data.data.login !== null) {
-					navigation.navigate("Welcome", {
-						name: data.data.login.name
+					setFields({
+						name: data.data.login.name,
+						accessToken: data.data.login.token,
 					});
+					navigation.replace("Welcome");
 				}
-				if (data.errors[0].message) {
+				if (data.errors) {
 					Alert.alert(data.errors[0].message);
 				}
 			})
 			.catch((error) => {
-				setIsLoading(false);
-				// console.warn(error);
+				if (error) {
+					console.error("Error at ingreso", error);
+				}
 				// Alert.alert(error.errors[0].message);
 				// Handle the error
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	};
 

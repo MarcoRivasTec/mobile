@@ -1,5 +1,5 @@
 import { StatusBar } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { home } from "../components/Home/styles";
 import Card from "../components/Home/Card";
@@ -9,14 +9,26 @@ import ContentRenderer from "../components/Home/ContentRenderer";
 import { AppContext } from "../components/AppContext";
 
 const Home = ({ navigation, route }) => {
-	const { name, razon, puesto } = route.params;
-	const { numEmp } = useContext(AppContext);
-	const cardInfo = {
-		name: name,
-		numEmp: numEmp,
-		razon: razon,
-		puesto: puesto,
-	};
+	// const { numEmp, name, razon, puesto } = useContext(AppContext);
+	// const { razon, puesto } = route.params;
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: razon,
+	// 	puesto: puesto,
+	// };
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: "INTERNATIONAL MANUFACTURING SOLUTIONS OPERACIONES",
+	// 	puesto: "TECNICO DE PRODUCCION",
+	// };
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: razon,
+	// 	puesto: puesto,
+	// };
 	useEffect(() => {
 		StatusBar.setHidden(false); // Hide the status bar when the component mounts
 	}, []);
@@ -32,7 +44,7 @@ const Home = ({ navigation, route }) => {
 			{/* Flex de 50 */}
 
 			{/* Contenedor de Card(incluye ) */}
-			<Card cardInfo={cardInfo} />
+			<Card />
 
 			{/* Contenedor acceso rapido */}
 			<Quickbar changeContent={changeContent} />

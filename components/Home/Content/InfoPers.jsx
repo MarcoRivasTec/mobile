@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { infopers } from "./styles";
@@ -9,6 +9,7 @@ import Tallas from "./InfoPers/Tallas";
 import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal";
 import fetchPost from "../../fetching";
 import LoadingContent from "../../Animations/LoadingContent";
+import { AppContext } from "../../AppContext";
 
 function InfoPers() {
 	const { numEmp } = useContext(AppContext);
