@@ -677,8 +677,7 @@ const prenomina = StyleSheet.create({
 	},
 	prenominaDatesText: {
 		fontSize: 18,
-		fontWeight: "bold"
-		
+		fontWeight: "bold",
 	},
 	prenominaContainer: {
 		height: "40%",
@@ -713,7 +712,7 @@ const prenomina = StyleSheet.create({
 		flex: 2,
 		// width: "30%",
 		height: "100%",
-		marginLeft:	"5%",
+		marginLeft: "5%",
 		// right: "50%",
 		justifyContent: "center",
 		alignContent: "center",
@@ -731,24 +730,6 @@ const prenomina = StyleSheet.create({
 		fontWeight: "bold",
 		color: "black",
 		textAlign: "center",
-	},
-	buttonContainer: {
-		width: "30%",
-		// flex: 1,
-		height: "10%",
-		marginTop: "2%",
-		justifyContent: "center",
-		alignItems: "center",
-		// borderWidth: 1,
-	},
-	buttonBackground: {
-		width: "100%",
-		height: "100%",
-		borderRadius: 200,
-		justifyContent: "center",
-		alignItems: "center",
-		overflow: "hidden",
-		position: "absolute",
 	},
 	buttonText: {
 		fontSize: 12,
@@ -815,7 +796,7 @@ const prenomina = StyleSheet.create({
 		color: COLORS.white,
 	},
 	detalleDayContainer: {
-		height: "62%",
+		height: "72%",
 		width: "100%",
 		padding: "2%",
 		marginTop: "6%",
@@ -838,12 +819,53 @@ const prenomina = StyleSheet.create({
 		color: "black",
 		fontWeight: "bold",
 	},
-	detalleHabilContainer: {
+	detalleChecadasContainer: {
+		flex: 1.2,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginVertical: "3%",
+		flexDirection: "row",
+		// borderWidth: 1,
+	},
+	detalleChecadasDatosContainer: {
 		flex: 1,
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.main,
+		borderRightWidth: 1,
+		borderColor: COLORS.flatlistBackground,
+	},
+	detalleChecadasTituloContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderBottomWidth: 1,
+		borderColor: COLORS.flatlistBackground,
+	},
+	detalleChecadasTituloText: {
+		fontSize: 11,
+		color: COLORS.white,
+		fontWeight: "bold",
+	},
+	detalleChecadasDatoContainer: {
+		flex: 1,
+		width: "98%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	detalleChecadasDatoText: {
+		fontSize: 12,
+		color: COLORS.white,
+	},
+	detalleHabilContainer: {
+		flex: 0.8,
 		// height: "6%",
 		width: "20%",
 		borderRadius: 12,
-		marginTop: "2%",
+		marginVertical: "2%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
@@ -855,10 +877,39 @@ const prenomina = StyleSheet.create({
 	},
 	detalleDataContainer: {
 		// height: "40%",
-		flex: 3.5,
+		flex: 3,
 		width: "100%",
-		marginTop: "3%",
+		marginTop: "4%",
+		marginBottom: "5%",
 		// borderWidth: 1,
+	},
+
+	buttonContainer: {
+		width: "30%",
+		// flex: 1,
+		height: "9%",
+		marginTop: "5%",
+		marginBottom: "2%",
+		justifyContent: "center",
+		alignItems: "center",
+
+		// borderWidth: 1,
+	},
+	buttonGradient: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 12,
+	},
+	buttonBackground: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 200,
+		justifyContent: "center",
+		alignItems: "center",
+		overflow: "hidden",
+		position: "absolute",
 	},
 });
 
@@ -977,12 +1028,21 @@ const prestamos = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
-		paddingLeft: "3%",
 		marginVertical: "1%",
 		borderWidth: 1,
 		borderColor: COLORS.grey,
 		borderRadius: 10,
+		paddingLeft: 10,
 		backgroundColor: COLORS.white,
+	},
+	dataInputField: {
+		height: "100%",
+		width: "100%",
+		paddingLeft: 10,
+		justifyContent: "center",
+		alignItems: "flex-start",
+		fontSize: 12,
+
 	},
 	dataRowFieldContainer: {
 		flex: 1,
