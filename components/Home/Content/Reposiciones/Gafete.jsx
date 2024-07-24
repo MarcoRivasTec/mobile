@@ -6,7 +6,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { gafete } from "./styles";
-import Confirm from "./Confirm";
+import Confirm from "../Design/Confirm";
 
 function Gafete({ onCallback, isModalVisible, onExit }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);

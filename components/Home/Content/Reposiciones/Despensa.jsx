@@ -8,7 +8,7 @@ import {
 	TouchableWithoutFeedback,
 } from "react-native";
 import { despensa } from "./styles";
-import Confirm from "./Confirm";
+import Confirm from "../Design/Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 function Despensa({ onCallback, isModalVisible, onExit }) {

@@ -9,7 +9,7 @@ import {
 	TouchableWithoutFeedback,
 } from "react-native";
 import { banorte } from "./styles";
-import Confirm from "./Confirm";
+import Confirm from "../Design/Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 function Banorte({ onCallback, isModalVisible, onExit }) {
