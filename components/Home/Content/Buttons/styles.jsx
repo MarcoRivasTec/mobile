@@ -162,10 +162,8 @@ const buttonAction = StyleSheet.create({
 	text: {
 		width: "100%",
 		paddingHorizontal: "6%",
-		fontSize: 12,
 		fontWeight: "bold",
-		textAlign: "left",
-		fontWeight: "bold",
+		textAlign: "center",
 		color: COLORS.white,
 	},
 });
