@@ -5,7 +5,7 @@ export default function LogoBienvenida() {
 	return (
 		<LottieView
 			source={require("../../assets/animations/loadingcontent.json")}
-			style={{ width: "100%", height: "100%" }}
+			style={{ width: "70%", height: "70%" }}
 			autoPlay
 			speed={1}
 			loop={true}
