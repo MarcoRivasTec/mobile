@@ -1,6 +1,7 @@
 const COLORS = {
     white: "#F2F2F2",
     black: "#333333",
+    green: "#36BA98",
     primary: "#007260",
     secondary: "#39B68D",
     main: "#318388",

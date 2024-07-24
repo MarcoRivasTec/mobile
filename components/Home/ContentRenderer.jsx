@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import SVGLogo from "../../assets/LOGOTECMAMOVIL.svg";
 import { contentRenderer } from "./styles";
@@ -17,7 +17,7 @@ import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
 
-function ContentRenderer({ content, changeContent, navigation }) {
+function ContentRenderer({ content, changeContent }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
@@ -33,7 +33,7 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Directorio />;
 
 			case "Vacaciones":
-				return <Vacaciones navigation={navigation} />;
+				return <Vacaciones />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
@@ -64,7 +64,11 @@ function ContentRenderer({ content, changeContent, navigation }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo height="55%" width="55%" style={contentRenderer.svg}></SVGLogo>
+			<SVGLogo
+				height="55%"
+				width="55%"
+				style={contentRenderer.svg}
+			></SVGLogo>
 			{renderContent()}
 		</View>
 	);
