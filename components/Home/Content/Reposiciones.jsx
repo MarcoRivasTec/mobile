@@ -39,6 +39,7 @@ function Reposiciones() {
 						icon="GAFETE"
 						size={50}
 						title="Solicitar gafete"
+						fontSize={14}
 					></ButtonAction>
 
 					<ButtonAction
@@ -46,6 +47,7 @@ function Reposiciones() {
 						icon="TARJ_BANORTE"
 						size={50}
 						title="Tarjeta Banorte"
+						fontSize={14}
 					></ButtonAction>
 
 					<ButtonAction
@@ -53,6 +55,7 @@ function Reposiciones() {
 						icon="TARJ_DESP"
 						size={50}
 						title="Tarjeta de Despensa"
+						fontSize={14}
 					></ButtonAction>
 				</View>
 			</View>
