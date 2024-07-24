@@ -31,32 +31,34 @@ function Solicitudes() {
 					<ButtonAction
 						toggleModal={vacacionesModalHandler}
 						icon="VACACIONES"
-						size={21}
+						size={40}
+						fontSize={18}
 						title="Solicitar vacaciones"
 					></ButtonAction>
-					<View>
-						{isVacModalVisible && (
-							<SolVacaciones
-								onCallback={vacacionesModalHandler}
-								onExit={vacacionesModalHandler}
-							/>
-						)}
-					</View>
+					<View></View>
 					<ButtonAction
 						toggleModal={permisosModalHandler}
 						icon="VACACIONES"
-						size={21}
+						size={40}
+						fontSize={18}
 						title="Solicitar permisos"
 					></ButtonAction>
-					<View>
-						{isPermModalVisible && (
-							<SolPermisos
-								onCallback={permisosModalHandler}
-								onExit={permisosModalHandler}
-							/>
-						)}
-					</View>
+					<View></View>
 				</View>
+				{isVacModalVisible && (
+					<SolVacaciones
+						onCallback={vacacionesModalHandler}
+						onExit={vacacionesModalHandler}
+						isModalVisible={isVacModalVisible}
+					/>
+				)}
+				{isPermModalVisible && (
+					<SolPermisos
+						onCallback={permisosModalHandler}
+						onExit={permisosModalHandler}
+						isModalVisible={isPermModalVisible}
+					/>
+				)}
 			</View>
 		</View>
 	);
