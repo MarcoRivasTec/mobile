@@ -5,9 +5,10 @@ import WelcomeAnim from "../components/Animations/Welcome";
 import getFirstName from "../components/utils";
 import fetchPost from "../components/fetching";
 import { AppContext } from "../components/AppContext";
+import { Buffer } from "buffer";
 
 const Welcome = ({ navigation }) => {
-	const { numEmp, name, setFields } = useContext(AppContext);
+	const { numEmp, name, setProfileImg, setFields } = useContext(AppContext);
 	const firstName = getFirstName(name);
 	formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
@@ -29,13 +30,14 @@ const Welcome = ({ navigation }) => {
 		// setIsLoading(true);
 		fetchPost({ query })
 			.then((data) => {
-				console.log("Response data at welcome:", data);
+				// console.log("Response data at welcome:", data);
 				if (data.data.UserInfo.puesto) {
-					navigation.replace("Home", {
+					setFields({
+						proyecto: data.data.UserInfo.proyecto.trim(),
 						razon: data.data.UserInfo.razon,
 						puesto: data.data.UserInfo.puesto,
 					});
-					setFields({ proyecto: data.data.UserInfo.proyecto.trim() });
+					navigation.replace("Home");
 				} else {
 					console.warn("Error retrieving user info");
 				}
@@ -47,6 +49,46 @@ const Welcome = ({ navigation }) => {
 				// setIsLoading(false);
 			});
 	};
+
+	const getUserImg = () => {
+		const query = {
+			query: `query ImageBlob($numEmp: String!){
+				ImageBlob(numEmp: $numEmp) {
+					image
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+			},
+		};
+		// setIsLoading(true);
+		fetchPost({ query })
+			.then((data) => {
+				// console.log("Response image data at welcome:", data);
+				if (data.data.ImageBlob === null) {
+					setProfileImg(null);
+				} else {
+					setProfileImg(
+						Buffer.from(
+							data.data.ImageBlob.image,
+							"base64"
+						).toString("base64")
+					);
+					console.log("Image set properly");
+				}
+				// setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error at welcome img:", error);
+				// Handle the error
+				// setIsLoading(false);
+			});
+	};
+
+	useEffect(() => {
+		getUserImg();
+		getUserInfo();
+	}, []);
 
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
@@ -61,9 +103,8 @@ const Welcome = ({ navigation }) => {
 	// }, []);
 
 	const handleAnimationFinish = () => {
-		getUserInfo();
-		// navigation.navigate("Home");
 		StatusBar.setHidden(false);
+		navigation.replace("Home");
 	};
 	return (
 		<View style={{ width: "100%", height: "100%" }}>
@@ -92,7 +133,7 @@ const Welcome = ({ navigation }) => {
 					}}
 				>
 					{" "}
-					{name}!{" "}
+					{formattedName}!{" "}
 				</Text>
 			</Animated.View>
 		</View>
