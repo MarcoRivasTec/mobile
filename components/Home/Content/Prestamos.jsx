@@ -1,122 +1,463 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	TextInput,
+	Alert,
+	TouchableWithoutFeedback,
+	Keyboard,
+} from "react-native";
 import { prestamos } from "./styles";
+import fetchPost from "../../fetching";
 import ContentHeader from "./ContentHeader";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-// import Button from "./Button";
+import { AppContext } from "../../AppContext";
+import LoadingContent from "../../Animations/LoadingContent";
+
+const getWeekDates = (year, weekNumber) => {
+	// Get the first day of the year
+	const firstDayOfYear = new Date(year, 0, 1);
+	const firstSaturdayOfYear = new Date(firstDayOfYear);
+
+	// Find the first Saturday of the year
+	while (firstSaturdayOfYear.getDay() !== 6) {
+		firstSaturdayOfYear.setDate(firstSaturdayOfYear.getDate() + 1);
+	}
+
+	// Calculate the offset for the desired week number
+	const daysOffset = (weekNumber - 1) * 7;
+	const startOfWeek = new Date(
+		firstSaturdayOfYear.setDate(firstSaturdayOfYear.getDate() + daysOffset)
+	);
+	const endOfWeek = new Date(startOfWeek);
+	endOfWeek.setDate(startOfWeek.getDate() + 6); // Last day of the week
+
+	return {
+		firstDay: startOfWeek,
+		lastDay: endOfWeek,
+	};
+};
 
 function Prestamos() {
-	// const { width, height } = Dimensions.get("window");
+	const { numEmp } = useContext(AppContext);
+	const [isLoading, setIsLoading] = useState(true);
+	const currentYear = new Date().getFullYear();
+
+	// Define objects for the 5th and 42nd weeks
+	const startDate = getWeekDates(currentYear, 5);
+	const endDate = getWeekDates(currentYear, 34);
+	const interes = 0.159;
+	const [prestamoData, setPrestamoData] = useState({
+		saldo_fa: 0,
+		prestamo: false,
+	});
+
+	const [prestamoSendData, setPrestamoSendData] = useState({
+		solicita: 0,
+		semanas: 0,
+		intTotal: 0,
+		totPago: 0,
+		dtoSem: 0,
+	});
+	const [availableWeeksCount, setAvailableWeeksCount] = useState();
+	const [isAllowed, setIsAllowed] = useState();
+	const [isCalculated, setIsCalculated] = useState(false);
+
+	const setPrestamoSendDataFields = (fields) => {
+		setPrestamoSendData((prevState) => ({ ...prevState, ...fields }));
+	};
+
+	const fetchDataPrestamo = async () => {
+		const query = {
+			query: `query Prestamo($numEmp: String!){
+				Prestamo(numEmp: $numEmp) {
+					saldo_fa,
+					prestamo
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+			},
+		};
+		try {
+			const data = await fetchPost({ query });
+			console.log(
+				"Response data at prestamo:",
+				JSON.stringify(data, null, 2)
+			);
+			if (data.data.Prestamo) {
+				setPrestamoData(data.data.Prestamo);
+				data.data.Prestamo.prestamo === true &&
+					Alert.alert(
+						"Aviso",
+						"Existe registro de un prestamo este año por lo que no se pueden solicitar más."
+					);
+				// console.log(
+				// 	"Valid years: ",
+				// 	JSON.stringify(data.data.prenominaYears, null, 2)
+				// );
+			} else {
+				console.warn("Error retrieving prestamo information");
+			}
+		} catch (error) {
+			console.error("Error at prestamo fetch:", error);
+		}
+	};
+
+	const getData = async () => {
+		setIsLoading(true);
+		await fetchDataPrestamo();
+		setIsLoading(false);
+	};
+
+	useEffect(() => {
+		getData();
+
+		const today = new Date();
+
+		if (today >= startDate.firstDay && today <= endDate.lastDay) {
+			setIsAllowed(true);
+			const diffInTime = endDate.lastDay - today;
+			const diffInWeeks = Math.ceil(
+				diffInTime / (1000 * 60 * 60 * 24 * 7)
+			);
+
+			setAvailableWeeksCount(diffInWeeks);
+		} else {
+			setIsAllowed(false);
+			Alert.alert(
+				"Fecha fuera de periodo",
+				"No se puede pedir un prestamo en este momento"
+			);
+		}
+	}, []);
+
+	const calculateData = () => {
+		if (prestamoData.prestamo) {
+			Alert.alert(
+				"Préstamo existente",
+				"No se puede pedir otro préstamo"
+			);
+			return;
+		}
+
+		if (isAllowed === false) {
+			Alert.alert(
+				"Fecha fuera de periodo",
+				"No se puede pedir un prestamo en este momento"
+			);
+			return;
+		}
+
+		if (prestamoSendData.solicita === 0) {
+			Alert.alert(
+				"Error",
+				"La cantidad a solicitar debe ser diferente de 0."
+			);
+			return;
+		}
+
+		if (prestamoSendData.solicita < prestamoData.saldo_fa * 0.1) {
+			Alert.alert(
+				"Error",
+				"La cantidad a solicitar debe ser minimo 10% del ahorro disponible."
+			);
+			return;
+		}
+		if (prestamoSendData.solicita > prestamoData.saldo_fa * 0.9) {
+			Alert.alert(
+				"Error",
+				"La cantidad a solicitar no puede ser mayor al 90% del ahorro disponible."
+			);
+			return;
+		}
+		if (prestamoSendData.semanas < 2) {
+			Alert.alert(
+				"Error",
+				"La cantidad de semanas a pagar debe ser mínimo 2."
+			);
+			return;
+		}
+		if (prestamoSendData.semanas > availableWeeksCount) {
+			Alert.alert(
+				"Error",
+				"La cantidad de semanas a pagar excede el limite del periodo."
+			);
+			return;
+		}
+		setPrestamoSendData((prevState) => {
+			const intTotal = parseFloat(
+				(
+					(interes * prevState.semanas * prevState.solicita) /
+					100
+				).toFixed(2)
+			);
+
+			const totPago = parseFloat(
+				(prevState.solicita + intTotal).toFixed(2)
+			);
+
+			const dtoSem = parseFloat((totPago / prevState.semanas).toFixed(2));
+
+			return {
+				...prevState,
+				intTotal,
+				totPago,
+				dtoSem,
+			};
+		});
+		setIsCalculated(true);
+	};
+
+	useEffect(() => {
+		console.log(JSON.stringify(prestamoSendData, null, 2));
+	}, [prestamoSendData]);
+
+	const formatCurrency = (amount) => {
+		return amount.toLocaleString(undefined, {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+	};
 
 	return (
 		<View style={prestamos.container}>
 			<ContentHeader title="Préstamos" />
-			<View style={prestamos.contentContainer}>
-				<View style={prestamos.titleBar}>
-					<View style={prestamos.titleContainer}>
-						<Text style={prestamos.titleText}>Fondo de Ahorro</Text>
+			<TouchableWithoutFeedback
+				onPress={Keyboard.dismiss}
+				accessible={false}
+			>
+				{isLoading ? (
+					<View style={prestamos.contentContainer}>
+						<LoadingContent />
 					</View>
-				</View>
-				<View style={prestamos.infoContainer}>
-					{/* Saldo atual */}
-					<View style={prestamos.dataRowContainer}>
-						<View style={prestamos.dataRowTextContainer}>
-							<Text style={prestamos.dataText}>Saldo actual: </Text>
-						</View>
-						<View
-							style={[
-								prestamos.dataRowFieldContainer,
-								{ alignItems: "flex-start" },
-							]}
-						>
-							<Text style={[prestamos.dataFieldText, { left: "4%" }]}>
-								15,454.80
-							</Text>
-						</View>
-					</View>
-					{/* Solicitud */}
-					<View style={[prestamos.dataContainer, {marginTop: "1%"}]}>
-						<View style={prestamos.dataTextContainer}>
-							<Text style={prestamos.dataText}>
-								¿Cuánto te gustaría solicitar?
-							</Text>
-						</View>
-						<View style={prestamos.dataFieldContainer}>
-							<Text style={prestamos.dataFieldText}>15,454.80</Text>
-						</View>
-					</View>
-
-					{/* Semanas */}
-					<View style={prestamos.dataRowContainer}>
-						<View style={prestamos.dataRowContainer}>
-							<View style={prestamos.dataRowTextContainer}>
-								<Text style={prestamos.dataText}># Semanas</Text>
-							</View>
-							<View style={prestamos.dataRowFieldContainer}>
-								<Text style={prestamos.dataFieldText}>28</Text>
+				) : (
+					<View style={prestamos.contentContainer}>
+						<View style={prestamos.titleBar}>
+							<View style={prestamos.titleContainer}>
+								<Text style={prestamos.titleText}>
+									Fondo de Ahorro
+								</Text>
 							</View>
 						</View>
-						<View style={prestamos.dataRowContainer}>
-							<View style={prestamos.dataRowTextContainer}>
-								<Text style={prestamos.dataText}>% Interés</Text>
+						<View style={prestamos.infoContainer}>
+							{/* Saldo atual */}
+							<View style={prestamos.dataRowContainer}>
+								<View style={prestamos.dataRowTextContainer}>
+									<Text style={prestamos.dataText}>
+										Saldo actual:{" "}
+									</Text>
+								</View>
+								<View
+									style={[
+										prestamos.dataRowFieldContainer,
+										{ alignItems: "flex-start" },
+									]}
+								>
+									<Text
+										style={[
+											prestamos.dataFieldText,
+											{ left: "4%" },
+										]}
+									>
+										${" "}
+										{formatCurrency(prestamoData.saldo_fa)}
+									</Text>
+								</View>
 							</View>
-							<View style={prestamos.dataRowFieldContainer}>
-								<Text style={prestamos.dataFieldText}>0.159%</Text>
+							{/* Solicitud */}
+							<View
+								style={[
+									prestamos.dataContainer,
+									{ marginTop: "1%" },
+								]}
+							>
+								<View
+									style={[
+										prestamos.dataTextContainer,
+										{
+											flexDirection: "row",
+											justifyContent: "flex-start",
+										},
+									]}
+								>
+									<Text style={prestamos.dataText}>
+										¿Cuánto te gustaría solicitar?
+									</Text>
+									<Text
+										style={[
+											prestamos.dataText,
+											{
+												fontSize: 12,
+												fontWeight: "200",
+												marginLeft: 4,
+											},
+										]}
+									>
+										(Máximo 90%)
+									</Text>
+								</View>
+								<View
+									style={[
+										prestamos.dataFieldContainer,
+										{ paddingLeft: 0 },
+									]}
+								>
+									<TextInput
+										placeholderTextColor={"gray"}
+										placeholder={`Mínimo de $${formatCurrency(
+											prestamoData.saldo_fa * 0.1
+										)} y máximo de $${formatCurrency(
+											prestamoData.saldo_fa * 0.9
+										)}`}
+										style={prestamos.dataInputField}
+										keyboardType="numeric"
+										value={prestamoSendData.solicita}
+										onChangeText={(text) =>
+											setPrestamoSendDataFields({
+												solicita: +text,
+											})
+										}
+									/>
+								</View>
 							</View>
-						</View>
-					</View>
 
-					{/* Calcular */}
-					<TouchableOpacity style={prestamos.buttonContainer}>
-						<Text style={prestamos.buttonText}>Calcular</Text>
-					</TouchableOpacity>
+							{/* Semanas */}
+							<View style={prestamos.dataRowContainer}>
+								<View style={prestamos.dataRowContainer}>
+									<View
+										style={prestamos.dataRowTextContainer}
+									>
+										<Text style={prestamos.dataText}>
+											# Semanas
+										</Text>
+									</View>
+									<View
+										style={prestamos.dataRowFieldContainer}
+									>
+										<TextInput
+											placeholderTextColor={"gray"}
+											placeholder={`Máx ${availableWeeksCount}`}
+											style={prestamos.dataInputField}
+											value={prestamoSendData.semanas}
+											keyboardType="numeric"
+											onChangeText={(text) =>
+												setPrestamoSendDataFields({
+													semanas: +text,
+												})
+											}
+										/>
+									</View>
+								</View>
+								<View style={prestamos.dataRowContainer}>
+									<View
+										style={prestamos.dataRowTextContainer}
+									>
+										<Text style={prestamos.dataText}>
+											% Interés
+										</Text>
+									</View>
+									<View
+										style={prestamos.dataRowFieldContainer}
+									>
+										<Text style={prestamos.dataFieldText}>
+											{interes}%
+										</Text>
+									</View>
+								</View>
+							</View>
 
-					{/* Totales */}
-					<View style={prestamos.dataContainer}>
-						<View style={prestamos.dataTextContainer}>
-							<Text style={prestamos.dataText}>Interés Total</Text>
-						</View>
-						<View style={prestamos.dataFieldContainer}>
-							<Text style={prestamos.dataFieldText}>0.0%</Text>
-						</View>
-					</View>
-					<View style={prestamos.dataContainer}>
-						<View style={prestamos.dataTextContainer}>
-							<Text style={prestamos.dataText}>Total a pagar</Text>
-						</View>
-						<View style={prestamos.dataFieldContainer}>
-							<Text style={prestamos.dataFieldText}>0.00</Text>
-						</View>
-					</View>
-					<View style={prestamos.dataContainer}>
-						<View style={prestamos.dataTextContainer}>
-							<Text style={prestamos.dataText}>Descuento semanal</Text>
-						</View>
-						<View style={prestamos.dataFieldContainer}>
-							<Text style={prestamos.dataFieldText}>0.00</Text>
-						</View>
-					</View>
+							{/* Calcular */}
+							<TouchableOpacity
+								onPress={calculateData}
+								style={prestamos.buttonContainer}
+							>
+								<Text style={prestamos.buttonText}>
+									Calcular
+								</Text>
+							</TouchableOpacity>
 
-					<View style={prestamos.agreementContainer}>
-						<BouncyCheckbox size={30} fillColor="pink" />
-						<View style={prestamos.agreementTextContainer}>
-							<Text adjustsFontSizeToFit={true} style={prestamos.agreementText}>
-								Estoy de acuerdo con los importes de interés y descuento semanal
-								calculado en este documento, realizo la solicitud al Comité,
-								quienes pueden ACEPTAR o NEGAR mi petición según el Reglamento
-								lo estipule.
-							</Text>
+							{/* Totales */}
+							<View style={prestamos.dataContainer}>
+								<View style={prestamos.dataTextContainer}>
+									<Text style={prestamos.dataText}>
+										Interés Total
+									</Text>
+								</View>
+								<View style={prestamos.dataFieldContainer}>
+									<Text style={prestamos.dataFieldText}>
+										${" "}
+										{formatCurrency(
+											prestamoSendData.intTotal
+										)}
+									</Text>
+								</View>
+							</View>
+							<View style={prestamos.dataContainer}>
+								<View style={prestamos.dataTextContainer}>
+									<Text style={prestamos.dataText}>
+										Total a pagar
+									</Text>
+								</View>
+								<View style={prestamos.dataFieldContainer}>
+									<Text style={prestamos.dataFieldText}>
+										${" "}
+										{formatCurrency(
+											prestamoSendData.totPago
+										)}
+									</Text>
+								</View>
+							</View>
+							<View style={prestamos.dataContainer}>
+								<View style={prestamos.dataTextContainer}>
+									<Text style={prestamos.dataText}>
+										Descuento semanal
+									</Text>
+								</View>
+								<View style={prestamos.dataFieldContainer}>
+									<Text style={prestamos.dataFieldText}>
+										${" "}
+										{formatCurrency(
+											prestamoSendData.dtoSem
+										)}
+									</Text>
+								</View>
+							</View>
+
+							<View style={prestamos.agreementContainer}>
+								<BouncyCheckbox size={30} fillColor="pink" />
+								<View style={prestamos.agreementTextContainer}>
+									<Text
+										adjustsFontSizeToFit={true}
+										minimumFontScale={0.5}
+										style={prestamos.agreementText}
+									>
+										Estoy de acuerdo con los importes de
+										interés y descuento semanal calculado en
+										este documento, realizo la solicitud al
+										Comité, quienes pueden ACEPTAR o NEGAR
+										mi petición según el Reglamento lo
+										estipule.
+									</Text>
+								</View>
+							</View>
+
+							{/* Calcular */}
+							<TouchableOpacity
+								style={[
+									prestamos.buttonContainer,
+									{ marginTop: "3%", marginBottom: "3%" },
+								]}
+							>
+								<Text style={prestamos.buttonText}>
+									Solicitar
+								</Text>
+							</TouchableOpacity>
 						</View>
 					</View>
-
-					{/* Calcular */}
-					<TouchableOpacity
-						style={[prestamos.buttonContainer, { marginTop: "3%", marginBottom: "3%" }]}
-					>
-						<Text style={prestamos.buttonText}>Solicitar</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
+				)}
+			</TouchableWithoutFeedback>
 		</View>
 	);
 }
