@@ -62,7 +62,7 @@ function Menu({ changeContent }) {
 					title="Línea de Denuncias"
 					icon="DENUNCIA"
 					size={32}
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("LineaDenuncia")}
 				/>
 			</View>
 			{/* Row 4 */}
@@ -73,7 +73,7 @@ function Menu({ changeContent }) {
 					onPress={() => changeContent("Polizas")}
 				/>
 				<SectionButton
-					title="Mensajes"
+					title="Avisos"
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"

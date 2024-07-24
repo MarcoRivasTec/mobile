@@ -1,0 +1,53 @@
+import React from "react";
+import { Alert, Platform } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { modal, layout } from "./styles";
+
+function RegionPicker({ onCallback, region, setRegion }) {
+	// const regionHandler = () => {
+	//     return region
+	// }
+	return (
+		<Picker
+			selectedValue={region}
+			onValueChange={(itemValue) => {
+				{
+					itemValue === "Selecciona la región"
+						? Alert.alert("Opción inválida", "Debes seleccionar una región", [{text: "Entendido"}])
+						: setRegion(itemValue);
+					onCallback && onCallback();
+				}
+			}}
+			style={layout.picker}
+			itemStyle={modal.pickerItemStyle}
+		>
+			{Platform.OS === "android" ? (
+				<Picker.Item
+					label="Selecciona la región"
+					style={{ color: "gray" }}
+					value="Selecciona la región"
+				/>
+			) : null}
+			<Picker.Item label="Amamex" style={modal.pickerItem} value="Amamex" />
+			<Picker.Item
+				label="Cd. Juárez"
+				style={modal.pickerItem}
+				value="Cd. Juárez"
+			/>
+			<Picker.Item
+				label="Monterrey"
+				style={modal.pickerItem}
+				value="Monterrey"
+			/>
+			<Picker.Item
+				label="Monterrey Living Spaces"
+				style={modal.pickerItem}
+				value="Monterrey Living Spaces"
+			/>
+			<Picker.Item label="Saltillo" style={modal.pickerItem} value="Saltillo" />
+			<Picker.Item label="Tijuana" style={modal.pickerItem} value="Tijuana" />
+		</Picker>
+	);
+}
+
+export default RegionPicker;

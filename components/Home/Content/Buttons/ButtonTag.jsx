@@ -16,12 +16,12 @@ function ButtonTag({flex, data, title}) {
 			<View style={buttonTag.textContainer}>
 				<View style={buttonTag.textDataContainer}>
 					<View style={buttonTag.textDataBox}>
-						<Text adjustsFontSizeToFit={true} style={buttonTag.textData}>{data}</Text>
+						<Text adjustsFontSizeToFit={true} minimumFontScale={0.5} numberOfLines={1} style={buttonTag.textData}>{data}</Text>
 					</View>
 				</View>
 				<View style={buttonTag.textTitleContainer}>
 					<View style={buttonTag.textTitleBox}>
-						<Text style={buttonTag.textTitle}>{title}</Text>
+						<Text adjustsFontSizeToFit={true} numberOfLines={3} style={buttonTag.textTitle}>{title}</Text>
 					</View>
 				</View>
 			</View>

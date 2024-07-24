@@ -88,6 +88,12 @@ const data = StyleSheet.create({
 		color: COLORS.white,
 		marginVertical: "-0.8%",
 	},
+	image: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		borderRadius: 100
+	}
 });
 
 const quickbar = StyleSheet.create({
@@ -172,8 +178,8 @@ const navbar = StyleSheet.create({
 		alignItems: "center",
 	},
 	homeBackground: {
-		height: "90%",
-		width: "90%",
+		height: "175%",
+		width: "175%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 50,

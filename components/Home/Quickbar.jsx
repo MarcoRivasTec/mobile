@@ -97,7 +97,10 @@ function Quickbar({ changeContent }) {
 			</TouchableOpacity>
 			{/* Redes */}
 			<TouchableOpacity
-				onPress={() => handlePress("button3")}
+				onPress={() => {
+					handlePress("button3");
+					changeContent("Redes");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View
@@ -171,7 +174,10 @@ function Quickbar({ changeContent }) {
 			</TouchableOpacity>
 			{/* Directorio */}
 			<TouchableOpacity
-				onPress={() => handlePress("button5")}
+				onPress={() => {
+					handlePress("button5");
+					changeContent("Directorio");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View

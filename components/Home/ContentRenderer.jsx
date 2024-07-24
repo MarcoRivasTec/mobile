@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import SVGLogo from "../../assets/LOGOTECMAMOVIL.svg";
 import { contentRenderer } from "./styles";
@@ -9,22 +9,31 @@ import Prenomina from "./Content/Prenomina";
 import Solicitudes from "./Content/Solicitudes";
 import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
-import Polizas from "./Content/Polizas"
+import Polizas from "./Content/Polizas";
 import Prestamos from "./Content/Prestamos";
 import Opiniones from "./Content/Opiniones";
 import Reposiciones from "./Content/Reposiciones";
+import Redes from "./Content/Redes";
+import LineaDenuncia from "./Content/LineaDenuncia";
+import Directorio from "./Content/Directorio";
 
-function ContentRenderer({ content, changeContent, navigation }) {
+function ContentRenderer({ content, changeContent }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
 				return <Menu changeContent={changeContent} />;
+
 			case "InfoPers":
 				return <InfoPers />;
 			case "Area":
 				return <Area />;
+			case "Redes":
+				return <Redes />;
+			case "Directorio":
+				return <Directorio />;
+
 			case "Vacaciones":
-				return <Vacaciones navigation={navigation} />;
+				return <Vacaciones />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
@@ -35,11 +44,11 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Prestamos />;
 			// case "Retiro":
 			// 	return <Retiro />;
-			
+
 			case "Reposiciones":
 				return <Reposiciones />;
-			// case "Denuncias":
-			// 	return <Denuncias />;
+			case "LineaDenuncia":
+				return <LineaDenuncia />;
 			// case "Cartas":
 			// 	return <Cartas />;
 			case "Polizas":
@@ -55,7 +64,11 @@ function ContentRenderer({ content, changeContent, navigation }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo height="55%" width="55%" style={contentRenderer.svg}></SVGLogo>
+			<SVGLogo
+				height="55%"
+				width="55%"
+				style={contentRenderer.svg}
+			></SVGLogo>
 			{renderContent()}
 		</View>
 	);
