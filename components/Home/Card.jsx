@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { data } from "./styles";
@@ -6,9 +6,11 @@ import { data } from "./styles";
 import Icon from "./icons";
 import COLORS from "../../constants/colors";
 import getFirstName from "../utils";
+import { AppContext } from "../AppContext";
 
-function Card({ cardInfo }) {
-	const firstName = getFirstName(cardInfo.name);
+function Card() {
+	const { profileImg, name, numEmp, razon, puesto } = useContext(AppContext);
+	const firstName = getFirstName(name);
 	const formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 	// const [photoExists, setPhotoExists] = useState(require("../../assets/social/imagen.png"));
@@ -43,7 +45,7 @@ function Card({ cardInfo }) {
 						numberOfLines={1}
 						style={data.razonText}
 					>
-						{cardInfo.razon}
+						{razon}
 					</Text>
 				</View>
 			</View>
@@ -59,15 +61,18 @@ function Card({ cardInfo }) {
 				<View style={data.cardDataContainer}>
 					<View style={data.cardAvatarContainer}>
 						<View style={data.cardAvatarBackground}>
-							{/* {photoExists ? ( */}
-							<Image
-								style={data.image}
-								resizeMode="contain"
-								source={require("../../assets/social/imagen.png")}
-							/>
-							{/* ) : ( */}
-							{/* <Icon name="USER" size={36} color="gray"></Icon> */}
-							{/* )} */}
+							{profileImg !== null ? (
+								<Image
+									style={data.image}
+									resizeMode="contain"
+									// source={require("../../assets/social/imagen.png")}
+									source={{
+										uri: `data:image/jpeg;base64,${profileImg}`,
+									}}
+								/>
+							) : (
+								<Icon name="USER" size={36} color="gray"></Icon>
+							)}
 						</View>
 					</View>
 
@@ -81,7 +86,7 @@ function Card({ cardInfo }) {
 								{ fontSize: 16, fontWeight: "bold" },
 							]}
 						>
-							{cardInfo.numEmp}
+							{numEmp}
 						</Text>
 						<Text
 							style={[
@@ -89,7 +94,7 @@ function Card({ cardInfo }) {
 								{ fontSize: 8, marginTop: "0.2%" },
 							]}
 						>
-							{cardInfo.puesto}
+							{puesto}
 						</Text>
 					</View>
 				</View>

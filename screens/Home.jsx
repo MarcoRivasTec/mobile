@@ -9,14 +9,26 @@ import ContentRenderer from "../components/Home/ContentRenderer";
 import { AppContext } from "../components/AppContext";
 
 const Home = ({ navigation, route }) => {
-	const { numEmp, name } = useContext(AppContext);
-	const { razon, puesto } = route.params;
-	const cardInfo = {
-		name: name,
-		numEmp: numEmp,
-		razon: razon,
-		puesto: puesto,
-	};
+	// const { numEmp, name, razon, puesto } = useContext(AppContext);
+	// const { razon, puesto } = route.params;
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: razon,
+	// 	puesto: puesto,
+	// };
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: "INTERNATIONAL MANUFACTURING SOLUTIONS OPERACIONES",
+	// 	puesto: "TECNICO DE PRODUCCION",
+	// };
+	// const cardInfo = {
+	// 	name: name,
+	// 	numEmp: numEmp,
+	// 	razon: razon,
+	// 	puesto: puesto,
+	// };
 	useEffect(() => {
 		StatusBar.setHidden(false); // Hide the status bar when the component mounts
 	}, []);
@@ -32,7 +44,7 @@ const Home = ({ navigation, route }) => {
 			{/* Flex de 50 */}
 
 			{/* Contenedor de Card(incluye ) */}
-			<Card cardInfo={cardInfo} />
+			<Card />
 
 			{/* Contenedor acceso rapido */}
 			<Quickbar changeContent={changeContent} />
