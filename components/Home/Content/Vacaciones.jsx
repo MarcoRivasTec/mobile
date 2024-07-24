@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import { vacaciones } from "./styles";
 import ContentHeader from "./ContentHeader";
@@ -8,18 +8,16 @@ import ButtonAction from "./Buttons/ButtonAction";
 import HistorialModal from "./Vacaciones/HistorialModal";
 import LoadingContent from "../../Animations/LoadingContent";
 import fetchPost from "../../fetching";
+import { AppContext } from "../../AppContext";
 
-function Vacaciones({ numEmp }) {
-	const [isModalVisible, setModalVisible] = useState(false);
-
-	function modalHandler() {
-		setModalVisible(!isModalVisible);
-	}
+function Vacaciones() {
+	const { numEmp } = useContext(AppContext);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [antiguedad, setAntiguedad] = useState({
 		ingreso: "No definido",
-		antiguedad: 0,
-		diasaniv: 0,
+		antiguedad: "",
+		diasaniv: "",
 	});
 
 	const [diasVacs, setDiasVacs] = useState({
@@ -28,35 +26,44 @@ function Vacaciones({ numEmp }) {
 		disponibles: 0,
 	});
 
-	const query = {
-		query: `query Vacaciones($numEmp: String!){
-			Vacaciones(numEmp: $numEmp) {
-				antiguedad {
-					ingreso
-					antiguedad
-					diasaniv
-				}
-				diasvacs {
-					ganados
-					tomados
-					disponibles
-				}
-			}
-		}`,
-		variables: {
-			numEmp: numEmp,
-		},
-	};
+	const [isModalVisible, setModalVisible] = useState(false);
 
-	// New state to manage loading
-	const [isLoading, setIsLoading] = useState(true);
+	function modalHandler() {
+		setModalVisible(!isModalVisible);
+	}
 
 	// Fetch data when component mounts
 	useEffect(() => {
+		const query = {
+			query: `query Vacaciones($numEmp: String!){
+				Vacaciones(numEmp: $numEmp) {
+					antiguedad {
+						ingreso
+						antiguedad
+						diasaniv
+					}
+					diasvacs {
+						ganados
+						tomados
+						disponibles
+					}
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+			},
+		};
 		const fetchData = async () => {
 			try {
 				const data = await fetchPost({ query });
-				console.log("Response data at vacaciones:", data);
+				console.log(
+					"Response data at vacaciones:",
+					data.data.Vacaciones.diasvacs
+				);
+				console.log(
+					"Response data at antiguedad:",
+					data.data.Vacaciones.antiguedad
+				);
 				if (data.data.Vacaciones) {
 					setAntiguedad(data.data.Vacaciones.antiguedad);
 					setDiasVacs(data.data.Vacaciones.diasvacs);
@@ -66,24 +73,18 @@ function Vacaciones({ numEmp }) {
 			} catch (error) {
 				console.error("Error at vacaciones:", error);
 			} finally {
-				console.log(diasVacs.disponibles);
 				setIsLoading(false); // Set loading to false after data is fetched
 			}
 		};
-
-		diasVacs.disponibles = diasVacs.ganados - diasVacs
 		fetchData();
-	}, [numEmp]); // Dependency array includes numEmp to refetch data if numEmp changes
-
-	useEffect(() => {
-		console.log("Dias update: ", diasVacs.disponibles);
-	}, [diasVacs.disponibles]);
+		console.log(diasVacs)
+		console.log(antiguedad)
+	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {
 		return <LoadingContent />;
 	}
-
 	return (
 		<View style={vacaciones.container}>
 			<ContentHeader title="Vacaciones"></ContentHeader>
@@ -97,6 +98,7 @@ function Vacaciones({ numEmp }) {
 					<ButtonInfo
 						data={antiguedad.ingreso}
 						title="Fecha de Ingreso"
+						type="date"
 					/>
 					<ButtonTag
 						data={antiguedad.antiguedad}
@@ -115,8 +117,8 @@ function Vacaciones({ numEmp }) {
 					</Text>
 				</View>
 				<View style={vacaciones.sectionButtonContainer}>
-					<ButtonTag data={diasVacs.ganados} title="Días Tomados" />
-					<ButtonTag data={diasVacs.tomados} title="Días Ganados" />
+					<ButtonTag data={diasVacs.tomados} title="Días Tomados" />
+					<ButtonTag data={diasVacs.ganados} title="Días Ganados" />
 					<ButtonTag
 						data={diasVacs.disponibles}
 						title="Días Disponibles"
