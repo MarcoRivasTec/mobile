@@ -8,6 +8,7 @@ import { AppContext } from "../../AppContext";
 import fetchPost from "../../fetching";
 import DataModal from "./Prenomina/DataModal";
 import LoadingContent from "../../Animations/LoadingContent";
+import { LinearGradient } from "expo-linear-gradient";
 
 function getWeekNumber(d) {
 	d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -411,6 +412,42 @@ function Prenomina() {
 		"Viernes",
 	];
 
+	const ChecadasDato = ({ name, data, position }) => {
+		const formatData = (data) => {
+			if (data === null) {
+				return;
+			}
+			return data.slice(0, 2) + ":" + data.slice(2);
+		};
+		return (
+			<View
+				style={[
+					prenomina.detalleChecadasDatosContainer,
+					position === "first" && {
+						borderTopLeftRadius: 10,
+						borderBottomLeftRadius: 10, // Adjust radius as needed
+					},
+					position === "last" && {
+						borderTopRightRadius: 10,
+						borderBottomRightRadius: 10,
+						borderRightWidth: 0,
+					},
+				]}
+			>
+				<View style={prenomina.detalleChecadasTituloContainer}>
+					<Text style={prenomina.detalleChecadasTituloText}>
+						{name}
+					</Text>
+				</View>
+				<View style={prenomina.detalleChecadasDatoContainer}>
+					<Text style={prenomina.detalleChecadasDatoText}>
+						{formatData(data)}
+					</Text>
+				</View>
+			</View>
+		);
+	};
+
 	return (
 		<View style={prenomina.container}>
 			{isYearModalVisible && (
@@ -491,16 +528,14 @@ function Prenomina() {
 									`${getDay(
 										prenominas[selectedWeek - 1]
 											.fecha_inicio
-									)} ${
-										formatDateES(prenominas[selectedWeek - 1]
-											.fecha_inicio)
-									} a ${getDay(
+									)} ${formatDateES(
 										prenominas[selectedWeek - 1]
-											.fecha_fin
-									)} ${
-										formatDateES(prenominas[selectedWeek - 1]
-											.fecha_fin)
-									}`
+											.fecha_inicio
+									)} a ${getDay(
+										prenominas[selectedWeek - 1].fecha_fin
+									)} ${formatDateES(
+										prenominas[selectedWeek - 1].fecha_fin
+									)}`
 								) : (
 									<LoadingContent />
 								)}
@@ -514,6 +549,7 @@ function Prenomina() {
 									)} */}
 							</Text>
 						</View>
+
 						{/* Cantidades */}
 						<View style={prenomina.prenominaContainer}>
 							{/* Horas */}
@@ -621,15 +657,16 @@ function Prenomina() {
 							onPress={verDetalleHandler}
 							style={prenomina.buttonContainer}
 						>
-							<ImageBackground
-								source={require("../../../assets/BOTON_SELECCION.png")}
-								style={prenomina.buttonBackground}
-								resizeMode={"stretch"}
+							<LinearGradient
+								colors={[COLORS.green, COLORS.primary]}
+								style={prenomina.buttonGradient}
+								start={{ x: 0, y: 0 }}
+								end={{ x: 1, y: 1 }}
 							>
 								<Text style={prenomina.buttonText}>
 									Ver detalle
 								</Text>
-							</ImageBackground>
+							</LinearGradient>
 						</TouchableOpacity>
 					</View>
 				))}
@@ -732,6 +769,28 @@ function Prenomina() {
 								</Text>
 							</View>
 
+							{/* Checadas */}
+							<View style={prenomina.detalleChecadasContainer}>
+								<ChecadasDato
+									name="Entrada 1"
+									data={detalles[selectedDay].entrada_1}
+									position="first"
+								/>
+								<ChecadasDato
+									name="Salida 1"
+									data={detalles[selectedDay].salida_1}
+								/>
+								<ChecadasDato
+									name="Entrada 2"
+									data={detalles[selectedDay].entrada_2}
+								/>
+								<ChecadasDato
+									name="Salida 2"
+									data={detalles[selectedDay].salida_2}
+									position="last"
+								/>
+							</View>
+
 							{/* Cantidades */}
 							<View style={prenomina.detalleDataContainer}>
 								{/* Horas */}
@@ -744,9 +803,10 @@ function Prenomina() {
 										}
 									>
 										<Text
-											style={
-												prenomina.prenominaElementTitleText
-											}
+											style={[
+												prenomina.prenominaElementTitleText,
+												{ fontSize: 15 },
+											]}
 										>
 											Horas
 										</Text>
@@ -785,9 +845,10 @@ function Prenomina() {
 										}
 									>
 										<Text
-											style={
-												prenomina.prenominaElementTitleText
-											}
+											style={[
+												prenomina.prenominaElementTitleText,
+												{ fontSize: 15 },
+											]}
 										>
 											Extras
 										</Text>
@@ -820,9 +881,10 @@ function Prenomina() {
 										}
 									>
 										<Text
-											style={
-												prenomina.prenominaElementTitleText
-											}
+											style={[
+												prenomina.prenominaElementTitleText,
+												{ fontSize: 15 },
+											]}
 										>
 											Incidencia
 										</Text>
@@ -853,18 +915,22 @@ function Prenomina() {
 								onPress={verDetalleHandler}
 								style={[
 									prenomina.buttonContainer,
-									{ height: 0, flex: 1 },
+									{ height: 0, flex: 0.9, marginTop: 0 },
 								]}
 							>
-								<ImageBackground
-									source={require("../../../assets/BOTON_SELECCION.png")}
-									style={prenomina.buttonBackground}
-									resizeMode={"stretch"}
+								<LinearGradient
+									colors={[
+										COLORS.bannerright,
+										COLORS.bannerleft,
+									]}
+									style={prenomina.buttonGradient}
+									start={{ x: 0, y: 0 }}
+									end={{ x: 1, y: 1 }}
 								>
 									<Text style={prenomina.buttonText}>
 										Solicitar ajuste
 									</Text>
-								</ImageBackground>
+								</LinearGradient>
 							</TouchableOpacity>
 						</View>
 					)}
