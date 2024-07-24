@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image } from "react-native";
 import { buttonInfo } from "./styles";
 
-function ButtonInfo({ data, title }) {
+function ButtonInfo({ data, title, type = "number" }) {
 	const formatNumber = (number) => {
 		return number.toLocaleString("en-US", {
 			minimumFractionDigits: 2,
@@ -21,11 +21,11 @@ function ButtonInfo({ data, title }) {
 				<View style={buttonInfo.textDataContainer}>
 					<Text
 						adjustsFontSizeToFit={true}
-						allowFontScaling={true}
+						minimumFontScale={0.5}
 						maxFontSizeMultiplier={1}
 						style={buttonInfo.textData}
 					>
-						${formatNumber(Number(data))}
+						{type === "date" ? data : formatNumber(Number(data))}
 					</Text>
 				</View>
 				<View style={buttonInfo.textTitleContainer}>
