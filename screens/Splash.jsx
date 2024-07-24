@@ -49,7 +49,7 @@ const Splash = ({ navigation }) => {
 	// };
 
 	const handleFinishAnimation = () => {
-		navigation.replace("Home");
+		navigation.replace("Login");
 	};
 
 	const styles = StyleSheet.create({
