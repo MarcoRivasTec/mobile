@@ -7,7 +7,7 @@ export const AppProvider = ({ children }) => {
 		accessToken:
 			"",
 		name: "",
-		numEmp: "", // Add numEmp to the state
+		numEmp: "94327", // Add numEmp to the state
 		proyecto: "",
 		razon: "",
 		puesto: "",
