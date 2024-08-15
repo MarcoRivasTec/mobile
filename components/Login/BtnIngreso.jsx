@@ -37,7 +37,7 @@ function Ingresar({ nip, navigation }) {
 		fetchPost({ query })
 			.then((data) => {
 				setIsLoading(false);
-				console.log("Response data at ingresoo: ", data);
+				// console.log("Response data at ingresoo: ", data);
 				if (data.data.login !== null) {
 					setFields({
 						name: data.data.login.name,

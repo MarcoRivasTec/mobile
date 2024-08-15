@@ -7,25 +7,57 @@ import {
 	TextInput,
 	TouchableWithoutFeedback,
 	Keyboard,
+	Platform,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { solPermisos } from "./styles";
 import Icon from "../../icons";
 import COLORS from "../../../../constants/colors";
+import DownArrow from "../../../Animations/DownArrow";
+import DataPicker from "./DataPicker";
+import DataModal from "./DataModal";
 
-function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
+function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 	const today = new Date();
+	const [type, setType] = useState("Selecciona un tipo");
+	const [isTypeModalVisible, setIsTypeModalVisible] = useState(false);
+	const typeHandler = () => {
+		setIsTypeModalVisible(!isTypeModalVisible);
+	};
+
+	const showTypes = (type) => {
+		switch (type) {
+			case "M":
+				return "Matrimonio";
+			case "T":
+				return "Tramite / Cita";
+			case "P":
+				return "Asunto Personal";
+			case "N":
+				return "Nacimiento hijo(a)";
+			default:
+				return "Selecciona un tipo";
+		}
+	};
+
+	const [days, setDays] = useState(1);
+
+	const daysInput = (input) => {
+		if (/^\d*$/.test(input)) {
+			setDays(input);
+		}
+	};
 
 	const [startDate, setStartDate] = useState(today);
 	const [openStartDate, setOpenStartDate] = useState(false);
 
-	function formatDateString(date) {
+	const formatDateString = (date) => {
 		const day = date.getDate();
 		const month = date.getMonth() + 1;
 		const year = date.getFullYear();
 
 		return `${day}/${month}/${year}`;
-	}
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -88,7 +120,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 												</Text>
 												<Icon
 													name="calendar"
-													size={16}
+													size={18}
 													color="gray"
 													style={solPermisos.icon}
 												/>
@@ -116,9 +148,10 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									{/* Dias Container */}
 									<View style={solPermisos.diasContainer}>
 										<View
-											style={
-												solPermisos.fechaTitleContainer
-											}
+											style={[
+												solPermisos.fechaTitleContainer,
+												{ alignItems: "center" },
+											]}
 										>
 											<Text
 												style={solPermisos.fechaTitle}
@@ -137,9 +170,14 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 												}
 											>
 												<TextInput
-													style={solPermisos.diasText}
+													style={
+														solPermisos.diasTextField
+													}
+													placeholder="#"
 													keyboardType="number-pad"
 													inputMode="numeric"
+													value={days.toString()}
+													onChangeText={daysInput}
 													maxLength={3}
 												></TextInput>
 											</View>
@@ -156,8 +194,41 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 											Tipo
 										</Text>
 									</View>
-									<View style={solPermisos.tipoBox}></View>
+									{Platform.OS === "ios" ? (
+										<TouchableOpacity
+											onPress={typeHandler}
+											style={solPermisos.tipoField}
+										>
+											<Text style={solPermisos.tipoText}>
+												{showTypes(type)}
+											</Text>
+											<View
+												style={
+													solPermisos.tipoIconContainer
+												}
+											>
+												<DownArrow />
+											</View>
+										</TouchableOpacity>
+									) : (
+										<View
+											style={[
+												solPermisos.tipoField,
+												{ width: "100%" },
+											]}
+										>
+											<DataPicker
+												selectedElement={type}
+												setSelectedElement={setType}
+												style={{
+													height: "100%",
+													width: "100%",
+												}}
+											/>
+										</View>
+									)}
 								</View>
+
 								{/* Comentarios */}
 								<View style={solPermisos.comentariosContainer}>
 									<Text style={solPermisos.comentariosTitle}>
@@ -181,6 +252,19 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									</Text>
 								</TouchableOpacity>
 							</View>
+							{isTypeModalVisible && (
+								<DataModal
+									selectedElement={type}
+									setSelectedElement={setType}
+									onCallback={typeHandler}
+									isModalVisible={isTypeModalVisible}
+									style={{
+										position: "absolute",
+										height: "100%",
+										width: "100%",
+									}}
+								/>
+							)}
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
@@ -189,4 +273,4 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	);
 }
 
-export default SolVacaciones;
+export default SolPermisos;

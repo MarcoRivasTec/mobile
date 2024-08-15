@@ -145,7 +145,7 @@ const historialModal = StyleSheet.create({
 	},
 });
 
-const yearModal = StyleSheet.create({
+const dataModal = StyleSheet.create({
 	container: {
 		position: "absolute",
 		flex: 1,
@@ -182,4 +182,4 @@ const yearModal = StyleSheet.create({
 	},
 });
 
-export { historialModal, yearModal };
+export { historialModal, dataModal };

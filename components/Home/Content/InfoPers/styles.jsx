@@ -112,6 +112,7 @@ const familia = StyleSheet.create({
 	},
 	familiaMemberDataText: {
 		fontSize: 11,
+		marginLeft: 4,
 		textAlign: "left",
 		fontWeight: "bold",
 		color: COLORS.black,
@@ -160,7 +161,7 @@ const tallas = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-evenly",
 		alignItems: "center",
-		paddingLeft: "2%",
+		paddingHorizontal: "2%",
 	},
 	prendaContainer: {
 		flex: 1,
@@ -168,12 +169,13 @@ const tallas = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		paddingLeft: "2%",
+		
+		// borderWidth: 1,
 	},
 	prendaIconContainer: {
 		height: "60%",
 		width: "40%",
-		left: "5%",
+		left: 6,
 		backgroundColor: COLORS.primary,
 		borderRadius: 50,
 		justifyContent: "center",
@@ -191,20 +193,27 @@ const tallas = StyleSheet.create({
 		backgroundColor: COLORS.flatlistElement2,
 		borderBottomRightRadius: 50,
 		borderTopRightRadius: 50,
+		// borderWidth: 1,
 	},
 	prendaDataTextContainer: {
-		height: "80%",
-		width: "89%",
-		right: "5%",
+		height: "84%",
+		width: "90%",
+		paddingHorizontal: "3%",
+		right: 4,
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
 	prendaDataText: {
+		// height: "100%",
+		width: "100%",
+		textAlign: "center",
+		// textAlignVertical: "center",
 		fontSize: 11,
 		fontWeight: "bold",
 		color: COLORS.black,
+		// borderWidth: 1,
 	},
 	button: {
 		height: "75%",		

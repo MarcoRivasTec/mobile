@@ -16,6 +16,7 @@ import LoadingContent from "../../../Animations/LoadingContent";
 import DownArrow from "../../../Animations/DownArrow";
 import fetchPost from "../../../fetching";
 import YearModal from "./YearModal";
+import YearPicker from "./YearPicker";
 
 function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	const { numEmp } = useContext(AppContext);

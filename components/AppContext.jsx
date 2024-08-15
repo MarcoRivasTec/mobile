@@ -22,9 +22,9 @@ export const AppProvider = ({ children }) => {
 	// });
 	const [profileImg, setProfileImg] = useState(null);
 
-	useEffect(() => {
-		console.log("Info has changed: ", info);
-	}, [info]);
+	// useEffect(() => {
+	// 	console.log("Info has changed: ", info);
+	// }, [info]);
 
 	const setFields = (fields) => {
 		setInfo((prevState) => ({ ...prevState, ...fields }));

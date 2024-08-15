@@ -8,14 +8,13 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 		<Picker
 			selectedValue={selectedElement}
 			onValueChange={(itemValue) => {
-				if (itemValue === "Selecciona un valor") {
+				if (itemValue === "Selecciona un tipo") {
 					Alert.alert(
 						"Opción inválida",
-						"Debes seleccionar un un valor",
+						"Debes seleccionar un tipo de permiso",
 						[{ text: "Entendido" }]
 					);
 				} else {
-					itemValue = parseInt(itemValue, 10);
 					setSelectedElement(itemValue);
 				}
 
@@ -26,21 +25,31 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 			style={{ width: "100%", height: "100%" }}
 			itemStyle={dataModal.pickerItemStyle}
 		>
-			{Platform.OS === "android" ? (
-				<Picker.Item
-					label="Selecciona un valor"
-					style={{ color: "gray" }}
-					value="Selecciona un valor"
-				/>
-			) : null}
-			{data.map((dataUnit, index) => (
-				<Picker.Item
-					key={dataUnit}
-					label={dataUnit}
-					style={dataModal.pickerItem}
-					value={dataUnit}
-				/>
-			))}
+			<Picker.Item
+				label="Selecciona un tipo"
+				style={{ color: "gray" }}
+				value="Selecciona un tipo"
+			/>
+			<Picker.Item
+				label="Matrimonio"
+				style={dataModal.pickerItem}
+				value="M"
+			/>
+			<Picker.Item
+				label="Tramite / Cita"
+				style={dataModal.pickerItem}
+				value="T"
+			/>
+			<Picker.Item
+				label="Asunto Personal"
+				style={dataModal.pickerItem}
+				value="P"
+			/>
+			<Picker.Item
+				label="Nacimiento hijo(a)"
+				style={dataModal.pickerItem}
+				value="N"
+			/>
 		</Picker>
 	);
 }

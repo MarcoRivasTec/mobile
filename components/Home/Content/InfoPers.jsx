@@ -19,6 +19,45 @@ function InfoPers() {
 	const infonavitHeight = Math.round(height * 0.34);
 	const titleHeight = Math.round(height * 0.036);
 
+	
+	const [identificacion, setIdentificacion] = useState({
+		rfc: "No definido",
+		curp: "No definido",
+		imss: "No definido",
+		genero: "No definido",
+		edocivil: "No definido",
+		cuenta: "No definido",
+	});
+	const [domicilio, setDomicilio] = useState();
+	const [infonavit, setInfonavit] = useState({
+		credito: "No definido",
+		tipo: "No definido",
+		tasa: 0,
+		estatus: "No definido",
+	});
+	
+	const [familiares, setFamiliares] = useState({
+		nombre: "No definido",
+		parentesco: "No definido",
+		fec_nac: "No definido",
+		sexo: "No definido",
+	});
+	
+	const [tallas, setTallas] = useState({
+		playera: "SIN",
+		calzado: "SIN",
+		pantalon: "SIN",
+	});
+	
+	const [availableTallas, setAvailableTallas] = useState([]);
+	
+	const [selectedModal, setSelectedModal] = useState(null);
+	const openModal = (modalName) => setSelectedModal(modalName);
+	const closeModal = () => setSelectedModal(null);
+	
+	// New state to manage loading
+	const [isLoading, setIsLoading] = useState(true);
+	
 	const query = {
 		query: `query InfoPers($numEmp: String!){
 			InfoPers(numEmp: $numEmp) {
@@ -42,6 +81,22 @@ function InfoPers() {
 					tasa
 					estatus
 				}
+				familiares {
+					nombre
+					parentesco
+					fec_nac
+					sexo
+					fec_act
+				}
+				tallas {
+					tipo
+					talla
+				}
+				availableTallas {
+					tipo
+					medida
+					eu_medida
+				}
 			}
 		}`,
 		variables: {
@@ -49,52 +104,62 @@ function InfoPers() {
 		},
 	};
 
-	const [identificacion, setIdentificacion] = useState({
-		rfc: "No definido",
-		curp: "No definido",
-		imss: "No definido",
-		genero: "No definido",
-		edocivil: "No definido",
-		cuenta: "No definido",
-	});
-	const [domicilio, setDomicilio] = useState();
-	const [infonavit, setInfonavit] = useState({
-		credito: "No definido",
-		tipo: "No definido",
-		tasa: 0,
-		estatus: "No definido",
-	});
+	const fetchData = async () => {
+		try {
+			const data = await fetchPost({ query });
+			// console.log("Response data at infopers:", data);
+			if (data.data.InfoPers) {
+				setIdentificacion(data.data.InfoPers.identificacion);
+				setDomicilio(data.data.InfoPers.domicilio);
+				setInfonavit(data.data.InfoPers.infonavit);
+				setFamiliares(data.data.InfoPers.familiares);
+				setAvailableTallas(data.data.InfoPers.availableTallas);
 
-	const [selectedModal, setSelectedModal] = useState(null);
-	const openModal = (modalName) => setSelectedModal(modalName);
-	const closeModal = () => setSelectedModal(null);
-
-	// New state to manage loading
-	const [isLoading, setIsLoading] = useState(true);
-
+				if (data.data.InfoPers.tallas.length !== 0) {
+					const talla1 = data.data.InfoPers.tallas.find(
+						(item) => item.tipo === 1
+					);
+					if (talla1) {
+						setTallas((prevState) => ({
+							...prevState,
+							playera: talla1.talla,
+						}));
+					}
+					const talla2 = data.data.InfoPers.tallas.find((item) => item.tipo === 2);
+					if (talla2) {
+						setTallas((prevState) => ({
+							...prevState,
+							calzado: talla2.talla,
+						}));
+					}
+					const talla3 = data.data.InfoPers.tallas.find((item) => item.tipo === 3);
+					if (talla3) {
+						setTallas((prevState) => ({
+							...prevState,
+							pantalon: talla3.talla,
+						}));
+					}
+				}
+				// console.log(data.data.InfoPers.availableTallas);
+				// console.log(data.data.InfoPers.tallas);
+			} else {
+				console.warn("Error retrieving personal information");
+			}
+		} catch (error) {
+			console.error("Error at infopers:", error);
+		} finally {
+			setIsLoading(false); // Set loading to false after data is fetched
+		}
+	};
+	
 	// Fetch data when component mounts
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = await fetchPost({ query });
-				console.log("Response data at infopers:", data);
-				if (data.data.InfoPers) {
-					setIdentificacion(data.data.InfoPers.identificacion);
-					setDomicilio(data.data.InfoPers.domicilio);
-					setInfonavit(data.data.InfoPers.infonavit);
-					console.log(data.data.InfoPers.infonavit);
-				} else {
-					console.warn("Error retrieving personal information");
-				}
-			} catch (error) {
-				console.error("Error at infopers:", error);
-			} finally {
-				setIsLoading(false); // Set loading to false after data is fetched
-			}
-		};
-
 		fetchData();
-	}, [numEmp]); // Dependency array includes numEmp to refetch data if numEmp changes
+	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
+
+	useEffect(() => {
+		console.log(familiares);
+	}, [familiares]);
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {
@@ -244,22 +309,27 @@ function InfoPers() {
 
 					{/* Tallas */}
 					<Tallas
+						tallasPrendas={tallas}
+						list={availableTallas}
 						selectedModal={selectedModal}
 						width={width}
 						height={height}
 						titleHeight={titleHeight}
 						openModal={openModal}
 						closeModal={closeModal}
+						updateData={fetchData}
 					/>
 
 					{/* Familia */}
 					<Familia
+						data={familiares}
 						selectedModal={selectedModal}
 						width={width}
 						height={height}
 						CardRow={CardRow}
 						openModal={openModal}
 						closeModal={closeModal}
+						updateData={fetchData}
 					/>
 				</ScrollView>
 			</View>

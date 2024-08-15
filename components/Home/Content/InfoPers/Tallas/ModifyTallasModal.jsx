@@ -1,31 +1,90 @@
-import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity, TextInput } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { modifyTallasModal } from "./styles";
 import { Picker } from "@react-native-picker/picker";
+import LoadingContent from "../../../../Animations/LoadingContent";
 import DatePicker from "react-native-date-picker";
 import Icon from "../../../icons";
+import { AppContext } from "../../../../AppContext";
+import fetchPost from "../../../../fetching";
 
-function ModifyTallasModal({
-	onCallback,
-	onExit,
-	tallasPrendas,
-	setTallasPrendas,
-}) {
-	const [selectedPlayera, setSelectedPlayera] = useState(tallasPrendas.playera);
-	const [selectedPantalon, setSelectedPantalon] = useState(
-		tallasPrendas.pantalon
-	);
-	const [selectedCalzado, setSelectedCalzado] = useState(tallasPrendas.calzado);
+function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
+	const { numEmp } = useContext(AppContext);
+	const empNum = parseInt(numEmp, 10);
+	const [isLoading, setIsLoading] = useState(false);
+	const [selectedPlayera, setSelectedPlayera] = useState(data.playera);
+	const [selectedPantalon, setSelectedPantalon] = useState(data.pantalon);
+	const [selectedCalzado, setSelectedCalzado] = useState(data.calzado);
 
-	const handleRegister = () => {
-		// Update the playera value in the parent component state
-		setTallasPrendas({
-			...tallasPrendas,
-			playera: selectedPlayera,
-			pantalon: selectedPantalon,
-			calzado: selectedCalzado,
-		});
-		onCallback();
+	// useEffect(() => {
+	// 	console.log("Selected playera: ", selectedPlayera);
+	// 	console.log("Type: ", typeof selectedPlayera);
+	// }, [selectedPlayera]);
+	// useEffect(() => {
+	// 	console.log("Selected pantalon: ", selectedPantalon);
+	// 	console.log("Type: ", typeof selectedPantalon);
+	// }, [selectedPantalon]);
+	// useEffect(() => {
+	// 	console.log("Selected calzado: ", selectedCalzado);
+	// 	console.log("Type: ", typeof selectedCalzado);
+	// }, [selectedCalzado]);
+
+	const handleSave = async () => {
+		setIsLoading(true);
+
+		const updateTallasAndFetch = async (tipo, talla) => {
+			// console.log(`Tipo: ${tipo}, Talla: ${talla}, Num emp: ${empNum}`);
+			let count = 0;
+			const updateTallas = {
+				query: `mutation updateMeasurements($numEmp: Int!, $type: String!, $size: String!) {
+					updateMeasurements(numEmp: $numEmp, type: $type, size: $size)
+				}`,
+				variables: {
+					numEmp: empNum,
+					type: tipo,
+					size: talla,
+				},
+			};
+			try {
+				// console.log("updateTallas before passing: ", updateTallas);
+				const data = await fetchPost({ query: updateTallas });
+				// console.log("Response data at update tallas", data);
+				if (data.data.updateMeasurements) {
+					// Alert.alert("Informacion actualizada")
+				} else {
+					console.warn("Error updating measurements");
+				}
+			} catch (error) {
+				console.error("Error at modify tallas", error);
+			} finally {
+				setIsLoading(false); // Set loading to false after data is fetched
+			}
+		};
+
+		if (data.playera !== selectedPlayera) {
+			count++;
+			// console.log("Enters playera");
+			await updateTallasAndFetch("1", selectedPlayera);
+		}
+		if (data.pantalon !== selectedPantalon) {
+			count++;
+			// console.log("Enters pantalon");
+			await updateTallasAndFetch("3", selectedPantalon);
+		}
+		if (data.calzado !== selectedCalzado) {
+			count++;
+			// console.log("Enters calzado");
+			await updateTallasAndFetch("2", selectedCalzado);
+		}
+
+		if (count > 0) {
+			Alert.alert("Informacion actualizada");
+			updateData();
+			onCallback();
+		}
+		else {
+			Alert.alert("No se modificaron tallas")
+		}
 	};
 
 	return (
@@ -38,524 +97,238 @@ function ModifyTallasModal({
 			>
 				<View style={modifyTallasModal.backgroundContainer}>
 					<View style={modifyTallasModal.modalContainer}>
-						<View style={modifyTallasModal.contentContainer}>
-							{/* Title */}
-							<View style={modifyTallasModal.titleContainer}>
-								<Text style={modifyTallasModal.titleText}>
-									Registro de tallas
-								</Text>
+						{isLoading ? (
+							<View
+								style={[
+									modifyTallasModal.contentContainer,
+									{
+										justifyContent: "center",
+										alignItems: "center",
+									},
+								]}
+							>
+								<LoadingContent />
 							</View>
-
-							{/* Playera */}
-							<View style={modifyTallasModal.sectionContainer}>
-								<View style={modifyTallasModal.sectionTitleContainer}>
-									<Text style={modifyTallasModal.sectionTitleText}>
-										Talla Playera
+						) : (
+							<View style={modifyTallasModal.contentContainer}>
+								{/* Title */}
+								<View style={modifyTallasModal.titleContainer}>
+									<Text style={modifyTallasModal.titleText}>
+										Registro de tallas
 									</Text>
 								</View>
-								<View style={modifyTallasModal.tallaDataContainer}>
-									<Picker
-										selectedValue={selectedPlayera}
-										onValueChange={(itemValue) => setSelectedPlayera(itemValue)}
-										itemStyle={modifyTallasModal.pickerItemStyle}
-										style={modifyTallasModal.pickerTalla}
-									>
-										<Picker.Item
-											label="Selecciona"
-											style={modifyTallasModal.pickerItemTalla}
-											value="{null}"
-										/>
-										<Picker.Item
-											label="MEX: Extra Chico | USA: XS"
-											style={modifyTallasModal.pickerItemTalla}
-											value="XS"
-										/>
-										<Picker.Item
-											label="MEX: Chico | USA: S"
-											style={modifyTallasModal.pickerItemTalla}
-											value="S"
-										/>
-										<Picker.Item
-											label="MEX: Mediano | USA: M"
-											style={modifyTallasModal.pickerItemTalla}
-											value="M"
-										/>
-										<Picker.Item
-											label="MEX: Grande | USA: L"
-											style={modifyTallasModal.pickerItemTalla}
-											value="L"
-										/>
-										<Picker.Item
-											label="MEX: Extra Grande | USA: XL"
-											style={modifyTallasModal.pickerItemTalla}
-											value="XL"
-										/>
-										<Picker.Item
-											label="MEX | USA: XXL"
-											style={modifyTallasModal.pickerItemTalla}
-											value="XXL"
-										/>
-										<Picker.Item
-											label="MEX | USA: XXXL"
-											style={modifyTallasModal.pickerItemTalla}
-											value="XXXL"
-										/>
-									</Picker>
-								</View>
-							</View>
 
-							{/* Pantalon */}
-							<View style={modifyTallasModal.sectionContainer}>
-								<View style={modifyTallasModal.sectionTitleContainer}>
-									<Text style={modifyTallasModal.sectionTitleText}>
-										Talla Pantalón
-									</Text>
-								</View>
-								<View style={modifyTallasModal.tallaDataContainer}>
-									<Picker
-										selectedValue={selectedPantalon}
-										onValueChange={(itemValue) =>
-											setSelectedPantalon(itemValue)
+								{/* Playera */}
+								<View
+									style={modifyTallasModal.sectionContainer}
+								>
+									<View
+										style={
+											modifyTallasModal.sectionTitleContainer
 										}
-										itemStyle={modifyTallasModal.pickerItemStyle}
-										style={modifyTallasModal.pickerTalla}
 									>
-										<Picker.Item
-											label="Selecciona"
-											style={modifyTallasModal.pickerItemTalla}
-											value="{null}"
-										/>
-										<Picker.Item
-											label="MEX | USA: 26x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="26x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 26x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="26x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 26x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="26x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 26x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="26x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 26x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="26x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 28x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="28x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 30x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="30x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 32x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="32x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 34x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="34x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 36x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="36x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 38x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="38x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 40x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="40x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 42x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="42x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 44x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="44x36"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x26"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x26"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x28"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x28"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x30"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x30"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x32"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x32"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x34"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x34"
-										/>
-										<Picker.Item
-											label="MEX | USA: 46x36"
-											style={modifyTallasModal.pickerItemTalla}
-											value="46x36"
-										/>
-									</Picker>
-								</View>
-							</View>
-
-							{/* Calzado */}
-							<View style={modifyTallasModal.sectionContainer}>
-								<View style={modifyTallasModal.sectionTitleContainer}>
-									<Text style={modifyTallasModal.sectionTitleText}>
-										Talla Calzado
-									</Text>
-								</View>
-								<View style={modifyTallasModal.tallaDataContainer}>
-									<Picker
-										selectedValue={selectedCalzado}
-										onValueChange={(itemValue) => setSelectedCalzado(itemValue)}
-										itemStyle={modifyTallasModal.pickerItemStyle}
-										style={modifyTallasModal.pickerTalla}
+										<Text
+											style={
+												modifyTallasModal.sectionTitleText
+											}
+										>
+											Talla Playera
+										</Text>
+									</View>
+									<View
+										style={
+											modifyTallasModal.tallaDataContainer
+										}
 									>
-										<Picker.Item
-											label="MEX: 5 | USA: 7"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 5 | USA: 7"
-										/>
-										<Picker.Item
-											label="MEX: 5.5 | USA: 7.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 5.5 | USA: 7.5"
-										/>
-										<Picker.Item
-											label="MEX: 6 | USA: 8"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 6 | USA: 8"
-										/>
-										<Picker.Item
-											label="MEX: 6.5 | USA: 8.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 6.5 | USA: 8.5"
-										/>
-										<Picker.Item
-											label="MEX: 7 | USA: 9"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 7 | USA: 9"
-										/>
-										<Picker.Item
-											label="MEX: 7.5 | USA: 9.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 7.5 | USA: 9.5"
-										/>
-										<Picker.Item
-											label="MEX: 8 | USA: 10"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 8 | USA: 10"
-										/>
-										<Picker.Item
-											label="MEX: 8.5 | USA: 10.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 8.5 | USA: 10.5"
-										/>
-										<Picker.Item
-											label="MEX: 9 | USA: 11"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 9 | USA: 11"
-										/>
-										<Picker.Item
-											label="MEX: 9.5 | USA: 11.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 9.5 | USA: 11.5"
-										/>
-										<Picker.Item
-											label="MEX: 10 | USA: 12"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 10 | USA: 12"
-										/>
-										<Picker.Item
-											label="MEX: 10.5 | USA: 12.5"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 10.5 | USA: 12.5"
-										/>
-										<Picker.Item
-											label="MEX: 11 | USA: 13"
-											style={modifyTallasModal.pickerItemTalla}
-											value="MEX: 11 | USA: 13"
-										/>
-									</Picker>
+										<Picker
+											selectedValue={selectedPlayera}
+											onValueChange={(itemValue) =>
+												setSelectedPlayera(itemValue)
+											}
+											itemStyle={
+												modifyTallasModal.pickerItemStyle
+											}
+											style={
+												modifyTallasModal.pickerTalla
+											}
+										>
+											<Picker.Item
+												label="Selecciona"
+												style={
+													modifyTallasModal.pickerItemTalla
+												}
+												value="{null}"
+											/>
+											{list
+												.filter(
+													(item) => item.tipo === 1
+												)
+												.map((item, index) => (
+													<Picker.Item
+														key={index}
+														label={`MEX: ${item.medida} | USA: ${item.eu_medida}`}
+														style={
+															modifyTallasModal.pickerItemTalla
+														}
+														value={item.medida}
+													/>
+												))}
+										</Picker>
+									</View>
+								</View>
+
+								{/* Pantalon */}
+								<View
+									style={modifyTallasModal.sectionContainer}
+								>
+									<View
+										style={
+											modifyTallasModal.sectionTitleContainer
+										}
+									>
+										<Text
+											style={
+												modifyTallasModal.sectionTitleText
+											}
+										>
+											Talla Pantalón
+										</Text>
+									</View>
+									<View
+										style={
+											modifyTallasModal.tallaDataContainer
+										}
+									>
+										<Picker
+											selectedValue={selectedPantalon}
+											onValueChange={(itemValue) =>
+												setSelectedPantalon(itemValue)
+											}
+											itemStyle={
+												modifyTallasModal.pickerItemStyle
+											}
+											style={
+												modifyTallasModal.pickerTalla
+											}
+										>
+											<Picker.Item
+												label="Selecciona"
+												style={
+													modifyTallasModal.pickerItemTalla
+												}
+												value="{null}"
+											/>
+											{list
+												.filter(
+													(item) => item.tipo === 3
+												)
+												.map((item, index) => (
+													<Picker.Item
+														key={index}
+														label={`MEX | USA: ${item.medida}`}
+														style={
+															modifyTallasModal.pickerItemTalla
+														}
+														value={item.medida}
+													/>
+												))}
+										</Picker>
+									</View>
+								</View>
+
+								{/* Calzado */}
+								<View
+									style={modifyTallasModal.sectionContainer}
+								>
+									<View
+										style={
+											modifyTallasModal.sectionTitleContainer
+										}
+									>
+										<Text
+											style={
+												modifyTallasModal.sectionTitleText
+											}
+										>
+											Talla Calzado
+										</Text>
+									</View>
+									<View
+										style={
+											modifyTallasModal.tallaDataContainer
+										}
+									>
+										<Picker
+											selectedValue={selectedCalzado}
+											onValueChange={(itemValue) =>
+												setSelectedCalzado(itemValue)
+											}
+											itemStyle={
+												modifyTallasModal.pickerItemStyle
+											}
+											style={
+												modifyTallasModal.pickerTalla
+											}
+										>
+											<Picker.Item
+												label="Selecciona"
+												style={
+													modifyTallasModal.pickerItemTalla
+												}
+												value="{null}"
+											/>
+											{list
+												.filter(
+													(item) => item.tipo === 2
+												)
+												.map((item, index) => (
+													<Picker.Item
+														key={index}
+														label={`MEX: ${item.medida} | USA: ${item.eu_medida}`}
+														style={
+															modifyTallasModal.pickerItemTalla
+														}
+														value={item.medida}
+													/>
+												))}
+										</Picker>
+									</View>
+								</View>
+
+								{/* Buttons */}
+								<View
+									style={modifyTallasModal.buttonsContainer}
+								>
+									<TouchableOpacity
+										onPress={handleSave}
+										style={
+											modifyTallasModal.registrarButton
+										}
+									>
+										<Text
+											style={
+												modifyTallasModal.registrarButtonText
+											}
+										>
+											Registrar
+										</Text>
+									</TouchableOpacity>
+
+									<TouchableOpacity
+										onPress={onExit}
+										style={modifyTallasModal.exitButton}
+									>
+										<Text
+											style={
+												modifyTallasModal.exitButtonText
+											}
+										>
+											Volver
+										</Text>
+									</TouchableOpacity>
 								</View>
 							</View>
-
-							{/* Buttons */}
-							<View style={modifyTallasModal.buttonsContainer}>
-								<TouchableOpacity
-									onPress={handleRegister}
-									style={modifyTallasModal.registrarButton}
-								>
-									<Text style={modifyTallasModal.registrarButtonText}>
-										Registrar
-									</Text>
-								</TouchableOpacity>
-
-								<TouchableOpacity
-									onPress={onExit}
-									style={modifyTallasModal.exitButton}
-								>
-									<Text style={modifyTallasModal.exitButtonText}>Volver</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
+						)}
 					</View>
 				</View>
 			</Modal>

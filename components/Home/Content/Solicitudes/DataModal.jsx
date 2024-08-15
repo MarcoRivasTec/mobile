@@ -42,3 +42,4 @@ function DataModal({
 }
 
 export default DataModal;
+

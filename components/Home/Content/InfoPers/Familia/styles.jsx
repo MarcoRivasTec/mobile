@@ -38,8 +38,8 @@ const addMemberModal = StyleSheet.create({
 		marginTop: "4%",
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
-		borderWidth: 1,
-		borderColor: "black"
+		// borderWidth: 1,
+		// borderColor: "black"
 	},
 	titleText: {
 		fontSize: 22,
@@ -90,7 +90,7 @@ const addMemberModal = StyleSheet.create({
 	nombreDataText: {
 		width: "100%",
 		height: "100%",
-		paddingLeft: 5,
+		paddingLeft: 10,
 		paddingRight: 5,
 		fontSize: 12,
 		color: COLORS.gray,

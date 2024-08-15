@@ -453,8 +453,8 @@ function Prenomina() {
 			{isYearModalVisible && (
 				<DataModal
 					data={years}
-					selectedData={selectedYear}
-					setSelectedData={setSelectedYear}
+					selectedElement={selectedYear}
+					setSelectedElement={setSelectedYear}
 					onCallback={yearModalHandler}
 					isDataModalVisible={isYearModalVisible}
 				/>
@@ -462,8 +462,8 @@ function Prenomina() {
 			{isWeekModalVisible && (
 				<DataModal
 					data={weeks}
-					selectedData={selectedWeek}
-					setSelectedData={setSelectedWeek}
+					selectedElement={selectedWeek}
+					setSelectedElement={setSelectedWeek}
 					onCallback={weekModalHandler}
 					isDataModalVisible={isWeekModalVisible}
 				/>
