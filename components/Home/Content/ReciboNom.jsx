@@ -6,10 +6,10 @@ import ButtonInfo from "./Buttons/ButtonInfo";
 import Icon from "../icons";
 import COLORS from "../../../constants/colors";
 import fetchPost from "../../fetching";
-import { AppContext } from "../../AppContext";
 import LoadingContent from "../../Animations/LoadingContent";
 import DataModal from "./ReciboNom/DataModal";
 import { Ionicons } from "@expo/vector-icons";
+import { HomeContext } from "../../HomeContext";
 //import HistorialModal from "./Vacaciones/HistorialModal";
 
 function getWeekNumber(d) {
@@ -21,7 +21,7 @@ function getWeekNumber(d) {
 }
 
 function ReciboNom() {
-	const { numEmp, proyecto } = useContext(AppContext);
+	const { numEmp, proyecto } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [fondoAhorro, setFondoAhorro] = useState({
 		saldo_ca: 0,
@@ -163,12 +163,12 @@ function ReciboNom() {
 	// 	console.log("Recibos has changed: ", JSON.stringify(recibos, null, 2));
 	// }, [recibos]);
 
-	useEffect(() => {
-		console.log(
-			"Recibos especiales has changed: ",
-			JSON.stringify(recibosEsp, null, 2)
-		);
-	}, [recibosEsp]);
+	// useEffect(() => {
+	// 	console.log(
+	// 		"Recibos especiales has changed: ",
+	// 		JSON.stringify(recibosEsp, null, 2)
+	// 	);
+	// }, [recibosEsp]);
 
 	// useEffect(() => {
 	// 	console.log("Selected nomina especial changed: ", selectedNominaEsp);

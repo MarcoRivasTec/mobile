@@ -16,6 +16,7 @@ import Reposiciones from "./Content/Reposiciones";
 import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
+import TecmaIdeas from "./Content/TecmaIdeas";
 
 function ContentRenderer({ content, changeContent }) {
 	function renderContent() {
@@ -29,6 +30,8 @@ function ContentRenderer({ content, changeContent }) {
 				return <Area />;
 			case "Redes":
 				return <Redes />;
+			case "Ideas":
+				return <TecmaIdeas />;
 			case "Directorio":
 				return <Directorio />;
 

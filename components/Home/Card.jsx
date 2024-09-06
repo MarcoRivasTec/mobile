@@ -6,10 +6,10 @@ import { data } from "./styles";
 import Icon from "./icons";
 import COLORS from "../../constants/colors";
 import getFirstName from "../utils";
-import { AppContext } from "../AppContext";
+import { HomeContext } from "../HomeContext";
 
 function Card() {
-	const { profileImg, name, numEmp, razon, puesto } = useContext(AppContext);
+	const { profileImg, name, numEmp, razon, puesto } = useContext(HomeContext);
 	const firstName = getFirstName(name);
 	const formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();

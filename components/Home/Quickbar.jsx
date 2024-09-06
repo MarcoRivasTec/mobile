@@ -42,7 +42,9 @@ function Quickbar({ changeContent }) {
 							name="INFO_PERS"
 							size={20}
 							color={
-								isQuickbarButtonPressed("button1") ? COLORS.white : COLORS.main
+								isQuickbarButtonPressed("button1")
+									? COLORS.white
+									: COLORS.main
 							}
 						/>
 					</View>
@@ -80,7 +82,9 @@ function Quickbar({ changeContent }) {
 							name="AREA"
 							size={18}
 							color={
-								isQuickbarButtonPressed("button2") ? COLORS.white : COLORS.main
+								isQuickbarButtonPressed("button2")
+									? COLORS.white
+									: COLORS.main
 							}
 						/>
 					</View>
@@ -118,7 +122,9 @@ function Quickbar({ changeContent }) {
 							name="REDES"
 							size={25}
 							color={
-								isQuickbarButtonPressed("button3") ? COLORS.white : COLORS.main
+								isQuickbarButtonPressed("button3")
+									? COLORS.white
+									: COLORS.main
 							}
 							style={{ top: "4%" }}
 						/>
@@ -137,7 +143,10 @@ function Quickbar({ changeContent }) {
 			</TouchableOpacity>
 			{/* Tecma Ideas */}
 			<TouchableOpacity
-				onPress={() => handlePress("button4")}
+				onPress={() => {
+					handlePress("button4");
+					changeContent("Ideas");
+				}}
 				style={quickbar.buttonContainer}
 			>
 				<View
@@ -155,7 +164,9 @@ function Quickbar({ changeContent }) {
 							name="IDEAS"
 							size={26}
 							color={
-								isQuickbarButtonPressed("button4") ? COLORS.white : COLORS.main
+								isQuickbarButtonPressed("button4")
+									? COLORS.white
+									: COLORS.main
 							}
 							style={{ top: "4%" }}
 						/>
@@ -195,7 +206,9 @@ function Quickbar({ changeContent }) {
 							name="DIRECTORIO"
 							size={24}
 							color={
-								isQuickbarButtonPressed("button5") ? COLORS.white : COLORS.main
+								isQuickbarButtonPressed("button5")
+									? COLORS.white
+									: COLORS.main
 							}
 						/>
 					</View>

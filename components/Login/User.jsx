@@ -7,9 +7,9 @@ import Icon from "../Home/icons";
 import { AppContext } from "../AppContext";
 
 function User() {
-	const { numEmp, setFields } = useContext(AppContext);
+	const { numEmp, setInfoFields } = useContext(AppContext);
 
-	const setNumEmp = createSetInputValue(setFields, "numEmp");
+	const setNumEmp = createSetInputValue(setInfoFields, "numEmp");
 
 	return (
 		<KeyboardAvoidingView

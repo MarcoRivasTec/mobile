@@ -3,50 +3,46 @@ import { StyleSheet, ImageBackground, StatusBar, View } from "react-native";
 import React, { useEffect } from "react";
 import LogoBienvenida from "../components/Animations/LogoSplash";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+// SplashScreen.preventAutoHideAsync();
 
 const Splash = ({ navigation }) => {
 	useEffect(() => {
 		StatusBar.setHidden(true); // Hide the status bar when the component mounts
 	}, []);
 
-	const [fontsLoaded] = useFonts({
+	// useEffect(() => {
+	// 	if (fontsLoaded || error) {
+	// 		SplashScreen.hideAsync()
+	// 			.then(() => {
+	// 				console.log("Splash screen hidden");
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log("Error hiding splash screen: ", err);
+	// 			});
+	// 	}
+	// }, [fontsLoaded, error]);
+
+	const [fontsLoaded, error] = useFonts({
 		IcoMoon: require("../assets/icons/icomoon/icomoon.ttf"),
+		"Montserrat-BlackItalic": require("../assets/fonts/Montserrat/Montserrat-BlackItalic.ttf"),
+		"Montserrat-Medium": require("../assets/fonts/Montserrat/Montserrat-Medium.ttf"),
+		"Roboto-Black": require("../assets/fonts/Roboto/Roboto-Black.ttf"),
+		"Roboto-Medium": require("../assets/fonts/Roboto/Roboto-Medium.ttf"),
+		"Roboto-Regular": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
 	});
 
-	if (!fontsLoaded) {
-		return null;
+	if (!fontsLoaded && !error) {
+		// return <LogoBienvenida onFinish={handleFinishAnimation} />;
+		return null
+		// return (
+		// 	<ImageBackground
+		// 		source={require("../assets/splash.png")} // Replace with your splash art image
+		// 		style={{ flex: 1, resizeMode: "cover" }}
+		// 	/>
+		// );
 	}
-	// useEffect(() => {
-	// 	const timer = setTimeout(() => {
-	// 		checkSplashStatus();
-	// 	}, 1000);
-
-	// 	return () => clearTimeout(timer);
-	// }, []);
-
-	// const checkSplashStatus = async () => {
-	// 	try {
-	// 		const splashShown = await AsyncStorage.getItem("splashShown");
-	// 		if (splashShown !== null) {
-	// 			// If splash screen has been shown before, navigate to the next screen
-	// 			navigation.replace("Login");
-	// 		} else {
-	// 			markSplashAsShown();
-	// 			navigation.replace("Login");
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error checking splash status:", error);
-	// 	}
-	// };
-
-	// const markSplashAsShown = async () => {
-	// 	try {
-	// 		// Store in AsyncStorage that the splash screen has been shown
-	// 		await AsyncStorage.setItem("splashShown", "true");
-	// 	} catch (error) {
-	// 		console.error("Error marking splash as shown:", error);
-	// 	}
-	// };
 
 	const handleFinishAnimation = () => {
 		navigation.replace("Login");
@@ -55,20 +51,13 @@ const Splash = ({ navigation }) => {
 	const styles = StyleSheet.create({
 		background: {
 			flex: 1,
-			resizeMode: "cover",
-			borderRadius: 15,
-			overflow: "hidden",
+			resizeMode: "contain",
+			// borderRadius: 15,
+			// overflow: "hidden",
 		},
 	});
 
 	return (
-		// <ImageBackground
-		//   source={require("../assets/backgrounds/FONDOSPLASH.png")}
-		//   style={styles.background}
-		// >
-		//   {/* Logo */}
-		//   <Logo></Logo>
-		// </ImageBackground>
 		<View style={{ flex: 1 }}>
 			<LogoBienvenida onFinish={handleFinishAnimation} />
 		</View>

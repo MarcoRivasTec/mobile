@@ -7,8 +7,8 @@ import fetchPost from "../fetching";
 import Loading from "../Animations/Loading";
 import { AppContext } from "../AppContext";
 
-function Ingresar({ nip, navigation }) {
-	const { numEmp, setFields } = useContext(AppContext);
+function Ingresar({ nip, navigation, region }) {
+	const { numEmp } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleLogin = () => {
@@ -18,6 +18,14 @@ function Ingresar({ nip, navigation }) {
 		}
 		if (nip === "") {
 			Alert.alert("Debes introducir tu NIP");
+			return;
+		}
+		if(region === "Selecciona"){
+			Alert.alert("Opción incorrecta", "Selecciona una región");
+			return;
+		}
+		if(region !== "JRZ"){
+			Alert.alert("Región inhabilitada", "Selecciona otra región");
 			return;
 		}
 
@@ -39,11 +47,18 @@ function Ingresar({ nip, navigation }) {
 				setIsLoading(false);
 				// console.log("Response data at ingresoo: ", data);
 				if (data.data.login !== null) {
-					setFields({
-						name: data.data.login.name,
-						accessToken: data.data.login.token,
+					// setFields({
+					// 	name: data.data.login.name,
+					// 	accessToken: data.data.login.token,
+					// });
+					console.log(JSON.stringify(data.data.login, null, 1));
+					navigation.replace("WelcomeHome", {
+						screen: "Welcome",
+						params: {
+							name: data.data.login.name,
+							accessToken: data.data.login.token,
+						},
 					});
-					navigation.replace("Welcome");
 				}
 				if (data.errors) {
 					Alert.alert(data.errors[0].message);

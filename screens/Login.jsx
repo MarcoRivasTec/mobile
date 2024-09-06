@@ -18,7 +18,7 @@ import { login } from "./styles";
 
 const Login = ({ navigation }) => {
 	const [nip, setNip] = useState("940471");
-	const [region, setRegion] = useState("Selecciona la región");
+	const [region, setRegion] = useState("JRZ");
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	function modalHandler() {
@@ -56,7 +56,7 @@ const Login = ({ navigation }) => {
 					<Checkbox />
 
 					{/* Boton ingreso */}
-					<Ingresar nip={nip} navigation={navigation} />
+					<Ingresar region={region} nip={nip} navigation={navigation} />
 
 					{/* Restablecer */}
 					<ResetPass navigation={navigation} />

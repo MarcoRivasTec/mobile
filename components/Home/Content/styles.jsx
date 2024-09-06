@@ -295,6 +295,35 @@ const redes = StyleSheet.create({
 	},
 });
 
+const ideas = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	contentContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingLeft: "4%",
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	animContainer: {
+
+	},
+});
+
 const directorio = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -1375,6 +1404,7 @@ export {
 	infopers,
 	area,
 	redes,
+	ideas,
 	directorio,
 	vacaciones,
 	reciboNom,

@@ -6,6 +6,26 @@ import DownArrow from "../Animations/DownArrow";
 import RegionPicker from "./RegionPicker";
 
 function Region({ modalHandler, region, setRegion }) {
+	const returnRegion = (region) => {
+		switch (region) {
+			case "Selecciona":
+				return "Selecciona una opción";
+			case "JRZ":
+				return "Cd. Juárez";
+			case "MTY":
+				return "Monterrey";
+			case "MTYLS":
+				return "Monterrey Living Spaces";
+			case "AMX":
+				return "Amamamex";
+			case "TIJ":
+				return "Tijuana";
+			case "SALT":
+				return "Saltillo";
+			default:
+				break;
+		}
+	};
 	return (
 		<View style={layout.fieldContainer}>
 			<View style={layout.iconBox}>
@@ -13,9 +33,7 @@ function Region({ modalHandler, region, setRegion }) {
 			</View>
 			{Platform.OS === "ios" ? (
 				<TouchableOpacity onPress={modalHandler} style={layout.field}>
-					<Text style={layout.fieldText}>
-						{region}
-					</Text>
+					<Text style={layout.fieldText}>{returnRegion(region)}</Text>
 					<View style={layout.arrowContainer}>
 						<DownArrow />
 					</View>

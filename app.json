@@ -1,38 +1,42 @@
 {
-  "expo": {
-    "name": "TecmaMovil",
-    "slug": "TecmaMovil",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.marcotecma.TecmaMovil"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.marcotecma.TecmaMovil",
-      "softwareKeyboardLayoutMode": "pan"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
-      }
-    }
-  }
+	"expo": {
+		"name": "TecmaMovil",
+		"slug": "TecmaMovil",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.tecma.TecmaMovilConnect",
+			"infoPlist": {
+				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name."
+			},
+			"entitlements": {
+				"com.apple.developer.device-information.user-assigned-device-name": true
+			}
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.marcotecma.TecmaMovil",
+			"softwareKeyboardLayoutMode": "pan"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
+			}
+		}
+	}
 }

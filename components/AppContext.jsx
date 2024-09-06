@@ -1,37 +1,64 @@
 import React, { createContext, useEffect, useState } from "react";
+import * as Device from "expo-device";
+import { Dimensions } from "react-native";
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+	const { width, height } = Dimensions.get("window");
 	const [info, setInfo] = useState({
-		accessToken:
-			"",
-		name: "",
+		// accessToken: "",
+		// name: "",
 		numEmp: "94327", // Add numEmp to the state
-		proyecto: "",
-		razon: "",
-		puesto: "",
+		platform: "",
+		deviceName: null,
+		deviceType: null,
+		brand: null,
+		model: null,
+		systemVersion: null,
+		width: width,
+		height: height,
+
+		// proyecto: "",
+		// razon: "",
+		// puesto: "",
 	});
 
-	// const [info, setInfo] = useState({
-	// 	accessToken:
-	// 		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTQzMjcsIm5hbWUiOiJNQVJDT1MiLCJpYXQiOjE3MTk1OTE3MTgsImV4cCI6MTcxOTU5NTMxOH0.1dqxePDn9VcszLI4OLeVOQTdKA9I_cIlJq8K0hkYLg4",
-	// 	name: "MARCOS",
-	// 	numEmp: "94327", // Add numEmp to the state
-	// 	proyecto: "H03",
-	// });
-	const [profileImg, setProfileImg] = useState(null);
-
-	// useEffect(() => {
-	// 	console.log("Info has changed: ", info);
-	// }, [info]);
-
-	const setFields = (fields) => {
+	const setInfoFields = (fields) => {
 		setInfo((prevState) => ({ ...prevState, ...fields }));
 	};
 
+	useEffect(() => {
+		const fetchDeviceInfo = async () => {
+			const deviceName = Device.deviceName;
+			const deviceType =
+				Device.deviceType === 1
+					? "PHONE"
+					: Device.deviceType === 2
+					? "TABLET"
+					: "DESKTOP";
+			const brand = Device.brand;
+			const model = Device.modelName;
+			const systemVersion = Device.osVersion;
+
+			setInfoFields({
+				deviceName: deviceName,
+				deviceType: deviceType,
+				brand: brand,
+				model: model,
+				systemVersion: systemVersion,
+			});
+		};
+
+		fetchDeviceInfo();
+	}, []);
+
+	useEffect(() => {
+		console.log("Info has changed: ", JSON.stringify(info, null, 1));
+	}, [info]);
+
 	return (
-		<AppContext.Provider value={{ ...info, profileImg, setProfileImg, setFields }}>
+		<AppContext.Provider value={{ ...info, setInfoFields }}>
 			{children}
 		</AppContext.Provider>
 	);

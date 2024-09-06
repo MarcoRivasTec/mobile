@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ImageBackground } from "react-native";
+import { View, Text, ImageBackground, Linking } from "react-native";
 import { linea } from "./styles";
 import ContentHeader from "./ContentHeader";
 import ButtonAction from "./Buttons/ButtonAction";

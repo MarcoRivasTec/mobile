@@ -1,16 +1,29 @@
 import { Text, Animated, StyleSheet, View, StatusBar } from "react-native";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
 import getFirstName from "../components/utils";
 import fetchPost from "../components/fetching";
-import { AppContext } from "../components/AppContext";
 import { Buffer } from "buffer";
+import { HomeContext } from "../components/HomeContext";
+import { AppContext } from "../components/AppContext";
 
-const Welcome = ({ navigation }) => {
-	const { numEmp, name, setProfileImg, setFields } = useContext(AppContext);
+const Welcome = ({ navigation, route }) => {
+	const { name, accessToken } = route.params;
+	const { numEmp } = useContext(AppContext);
+	const { setProfileImg, setDataFields } = useContext(HomeContext);
+	const [animFinish, setAnimFinish] = useState(false);
+	const [infoFetched, setInfoFetched] = useState(false);
+
+	const handleAnimationFinish = () => {
+		setAnimFinish(!animFinish);
+	};
+	// setDataFields({
+	// 	accessToken: accessToken,
+	// 	name: name,
+	// });
 	const firstName = getFirstName(name);
-	formattedName =
+	const formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -18,9 +31,16 @@ const Welcome = ({ navigation }) => {
 		const query = {
 			query: `query UserInfo($numEmp: String!){
 				UserInfo(numEmp: $numEmp) {
+					apellido_pat
+					apellido_mat
 					razon
-					puesto
+					planta
+					area
 					proyecto
+					supervisor
+					nomina
+					puesto
+					turno
 				}
 			}`,
 			variables: {
@@ -32,12 +52,23 @@ const Welcome = ({ navigation }) => {
 			.then((data) => {
 				// console.log("Response data at welcome:", data);
 				if (data.data.UserInfo.puesto) {
-					setFields({
-						proyecto: data.data.UserInfo.proyecto.trim(),
+					setDataFields({
+						accessToken: accessToken,
+						name: name,
+						numEmp: numEmp,
+						surname_1: data.data.UserInfo.apellido_pat,
+						surname_2: data.data.UserInfo.apellido_mat,
 						razon: data.data.UserInfo.razon,
+						planta: data.data.UserInfo.planta,
+						area: data.data.UserInfo.area,
+						proyecto: data.data.UserInfo.proyecto.trim(),
+						supervisor: data.data.UserInfo.supervisor,
+						nomina: data.data.UserInfo.nomina,
 						puesto: data.data.UserInfo.puesto,
+						turno: data.data.UserInfo.turno,
 					});
-					navigation.replace("Home");
+					setInfoFetched(!infoFetched);
+					// navigation.replace("Home");
 				} else {
 					console.warn("Error retrieving user info");
 				}
@@ -86,6 +117,14 @@ const Welcome = ({ navigation }) => {
 	};
 
 	useEffect(() => {
+		if (infoFetched === true && animFinish === true) {
+			StatusBar.setHidden(false);
+			navigation.replace("Home");
+		}
+	}, [infoFetched, animFinish]);
+
+	useEffect(() => {
+		StatusBar.setHidden(false); // Hide the status bar when the component mounts
 		getUserImg();
 		getUserInfo();
 	}, []);
@@ -93,7 +132,7 @@ const Welcome = ({ navigation }) => {
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
-			duration: 1000, // Adjust the duration as needed
+			duration: 2000, // Adjust the duration as needed
 			useNativeDriver: true, // Enable native driver for better performance
 		}).start();
 	}, [fadeAnim]);
@@ -102,15 +141,18 @@ const Welcome = ({ navigation }) => {
 	// 	StatusBar.setHidden(true); // Hide the status bar when the component mounts
 	// }, []);
 
-	const handleAnimationFinish = () => {
-		StatusBar.setHidden(false);
-		navigation.replace("Home");
-	};
 	return (
-		<View style={{ width: "100%", height: "100%" }}>
+		<View
+			style={{
+				position: "absolute",
+				width: "100%",
+				height: "100%",
+				zIndex: 2,
+			}}
+		>
 			<WelcomeAnim
-				style={{ position: "absolute", width: "100%", height: "100%" }}
-				onFinish={() => handleAnimationFinish()}
+				style={{ position: "absolute", zIndex: 1 }}
+				onFinish={handleAnimationFinish}
 			/>
 			<Animated.View style={[styles.container, { opacity: fadeAnim }]}>
 				<Text
@@ -147,7 +189,7 @@ const styles = StyleSheet.create({
 		bottom: "12%",
 		justifyContent: "flex-end",
 		alignItems: "center",
-		zIndex: 1,
+		zIndex: 2,
 	},
 });
 
