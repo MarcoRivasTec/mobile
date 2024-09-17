@@ -5,11 +5,11 @@ import { Dimensions } from "react-native";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-	const { width, height } = Dimensions.get("window");
+	const { width, height } = Dimensions.get("screen");
 	const [info, setInfo] = useState({
 		// accessToken: "",
 		// name: "",
-		numEmp: "94327", // Add numEmp to the state
+		numEmp: "", // Add numEmp to the state
 		platform: "",
 		deviceName: null,
 		deviceType: null,

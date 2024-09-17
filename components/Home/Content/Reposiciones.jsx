@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text } from "react-native";
 import { reposiciones } from "./styles";
 import ContentHeader from "./ContentHeader";
@@ -6,11 +6,17 @@ import ButtonAction from "./Buttons/ButtonAction";
 import Gafete from "./Reposiciones/Gafete";
 import Banorte from "./Reposiciones/Banorte";
 import Despensa from "./Reposiciones/Despensa";
+import { HomeContext } from "../../HomeContext";
 
 function Reposiciones() {
+	const { sendRequisition } = useContext(HomeContext);
 	const [isGafModalVisible, setGafModalVisible] = useState(false);
 	const [isBanModalVisible, setBanModalVisible] = useState(false);
 	const [isDespModalVisible, setDespModalVisible] = useState(false);
+
+	const tarjetasRequisition = (type, repMotive = null) => {
+		sendRequisition(type, repMotive);
+	};
 
 	function gafeteModalHandler() {
 		setGafModalVisible(!isGafModalVisible);
@@ -61,6 +67,7 @@ function Reposiciones() {
 			</View>
 			{isGafModalVisible && (
 				<Gafete
+					tarjetasRequisition={tarjetasRequisition}
 					onCallback={gafeteModalHandler}
 					onExit={gafeteModalHandler}
 					isModalVisible={isGafModalVisible}
@@ -68,6 +75,7 @@ function Reposiciones() {
 			)}
 			{isBanModalVisible && (
 				<Banorte
+					tarjetasRequisition={tarjetasRequisition}
 					onCallback={banorteModalHandler}
 					onExit={banorteModalHandler}
 					isModalVisible={isBanModalVisible}
@@ -75,6 +83,7 @@ function Reposiciones() {
 			)}
 			{isDespModalVisible && (
 				<Despensa
+					tarjetasRequisition={tarjetasRequisition}
 					onCallback={despensaModalHandler}
 					onExit={despensaModalHandler}
 					isModalVisible={isDespModalVisible}

@@ -13,7 +13,7 @@ function LineaDenuncia() {
 		Linking.openURL(link2);
 	};
 	const handlePress3 = () => {
-		Linking.openURL(link3);
+		Linking.openURL(6561011010);
 	};
 
 	return (

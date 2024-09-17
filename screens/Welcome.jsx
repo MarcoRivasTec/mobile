@@ -35,12 +35,15 @@ const Welcome = ({ navigation, route }) => {
 					apellido_mat
 					razon
 					planta
+					planta_id
 					area
 					proyecto
 					supervisor
 					nomina
 					puesto
+					puesto_id
 					turno
+					clasificacion
 				}
 			}`,
 			variables: {
@@ -51,7 +54,7 @@ const Welcome = ({ navigation, route }) => {
 		fetchPost({ query })
 			.then((data) => {
 				// console.log("Response data at welcome:", data);
-				if (data.data.UserInfo.puesto) {
+				if (data.data.UserInfo.nomina) {
 					setDataFields({
 						accessToken: accessToken,
 						name: name,
@@ -60,12 +63,15 @@ const Welcome = ({ navigation, route }) => {
 						surname_2: data.data.UserInfo.apellido_mat,
 						razon: data.data.UserInfo.razon,
 						planta: data.data.UserInfo.planta,
+						plantaID: data.data.UserInfo.planta_id.trim(),
 						area: data.data.UserInfo.area,
 						proyecto: data.data.UserInfo.proyecto.trim(),
 						supervisor: data.data.UserInfo.supervisor,
 						nomina: data.data.UserInfo.nomina,
 						puesto: data.data.UserInfo.puesto,
+						puestoID: data.data.UserInfo.puesto_id.trim(),
 						turno: data.data.UserInfo.turno,
+						clasificacion: data.data.UserInfo.clasificacion.trim(),
 					});
 					setInfoFetched(!infoFetched);
 					// navigation.replace("Home");
