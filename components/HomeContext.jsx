@@ -38,53 +38,40 @@ export const HomeProvider = ({ children }) => {
 	const sendRequisition = async (
 		letter,
 		repMotive = null,
-		coment = "Pruebas",
+		coment = "TEST",
 		fileName = null,
 		file = null
 	) => {
-		console.log(
-			"Data to be sent: ",
-			data.numEmp,
-			data.name,
-			data.surname_1,
-			data.surname_2,
-			letter,
-			data.plantaID,
-			data.turno,
-			data.proyecto,
-			data.puestoID,
-			data.clasificacion,
-			repMotive,
-			coment,
-			fileName,
-			file
-		);
 		const empNum = parseInt(data.numEmp, 10);
 		const fullName = `${data.name}, ${data.surname_1} ${data.surname_2}`;
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
-					$numEmp: Int!
-					$name: String!
-					$letter: String!
-					$plantId: String!
-					$shift: String!
-					$project: String!
-					$position: String!
-					$clasification: String!
-					$coment: String
-					$repMotive: String
+					$numEmp: Int!,
+					$name: String!,
+					$letter: String!,
+					$plant_id: String!,
+					$shift: String!,
+					$project: String!,
+					$position: String!,
+					$clasification: String!,
+					$coment: String,
+					$repMotive: String,
+					$fileName: String,
+					$file: String,
 					) {
 					sendRequisition(
-						numEmp: $numEmp
-						name: $name
-						letter: $letter
-						plant_id: $plant_id
-						shift: $shift
-						project: $project
-						position: $position
-						clasification: $clasification
-						coment: $coment
-						repMotive: $repMotive
+						numEmp: $numEmp,
+						name: $name,
+						letter: $letter,
+						plant_id: $plant_id,
+						shift: $shift,
+						project: $project,
+						position: $position,
+						clasification: $clasification,
+						coment: $coment,
+						repMotive: $repMotive,
+						fileName: $fileName,
+						file: $file
 					) {
 						pdfFile
 					}
@@ -106,18 +93,15 @@ export const HomeProvider = ({ children }) => {
 		};
 		try {
 			// console.log("Data to be sent: ", requisitionQuery);
-			const data = await fetchPost({ requisitionQuery });
+			const response = await fetchPost({ query: requisitionQuery });
 			console.log(
 				"Response data at sendRequisition:",
-				JSON.stringify(data.data, null, 1)
+				JSON.stringify(response.data, null, 1)
 			);
-			if (data.data) {
-				return data.data.pdfFile;
+			if (response.data) {
+				return response.data.pdfFile;
 			} else {
-				console.warn(
-					"Detail sending requisition information: ",
-					data.data
-				);
+				console.warn("Detail sending requisition information: ", response.data);
 				return false;
 			}
 		} catch (error) {

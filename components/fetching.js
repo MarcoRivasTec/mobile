@@ -1,6 +1,7 @@
 import { ENDPOINT } from "@env";
 
 const fetchPost = async ({ query }) => {
+	// console.log("Query is: ", JSON.stringify(query, null, 1));
 	try {
 		const response = await fetch(ENDPOINT, {
 			method: "POST",
@@ -9,6 +10,7 @@ const fetchPost = async ({ query }) => {
 			},
 			body: JSON.stringify(query),
 		});
+		// console.log("Response data: ", response);
 		return await response.json();
 	} catch (err) {
 		console.warn("Error at fetch: ", err);

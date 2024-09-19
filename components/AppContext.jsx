@@ -9,7 +9,7 @@ export const AppProvider = ({ children }) => {
 	const [info, setInfo] = useState({
 		// accessToken: "",
 		// name: "",
-		numEmp: "", // Add numEmp to the state
+		numEmp: "94327", // Add numEmp to the state
 		platform: "",
 		deviceName: null,
 		deviceType: null,
