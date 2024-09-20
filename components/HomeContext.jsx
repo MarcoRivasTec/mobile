@@ -35,13 +35,13 @@ export const HomeProvider = ({ children }) => {
 
 	const [profileImg, setProfileImg] = useState(null);
 
-	const sendRequisition = async (
+	const sendRequisition = async ({
 		letter,
 		repMotive = null,
 		coment = "TEST",
 		fileName = null,
-		file = null
-	) => {
+		file = null,
+	} = {}) => {
 		const empNum = parseInt(data.numEmp, 10);
 		const fullName = `${data.name}, ${data.surname_1} ${data.surname_2}`;
 		const requisitionQuery = {

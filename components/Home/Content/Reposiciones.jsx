@@ -14,8 +14,8 @@ function Reposiciones() {
 	const [isBanModalVisible, setBanModalVisible] = useState(false);
 	const [isDespModalVisible, setDespModalVisible] = useState(false);
 
-	const tarjetasRequisition = (type, repMotive = null, fileName = null) => {
-		sendRequisition(type, repMotive);
+	const tarjetasRequisition = ({ type, repMotive = null, folio = null }) => {
+		sendRequisition({ type: type, repMotive: repMotive, fileName: folio });
 	};
 
 	function gafeteModalHandler() {
