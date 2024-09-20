@@ -11,7 +11,7 @@ export const AppProvider = ({ children }) => {
 		// name: "",
 		numEmp: "", // Add numEmp to the state
 		platform: "",
-		deviceName: null,
+		// deviceName: null,
 		deviceType: null,
 		brand: null,
 		model: null,
@@ -30,7 +30,7 @@ export const AppProvider = ({ children }) => {
 
 	useEffect(() => {
 		const fetchDeviceInfo = async () => {
-			const deviceName = Device.deviceName;
+			// const deviceName = Device.deviceName;
 			const deviceType =
 				Device.deviceType === 1
 					? "PHONE"
@@ -42,7 +42,7 @@ export const AppProvider = ({ children }) => {
 			const systemVersion = Device.osVersion;
 
 			setInfoFields({
-				deviceName: deviceName,
+				// deviceName: deviceName,
 				deviceType: deviceType,
 				brand: brand,
 				model: model,
