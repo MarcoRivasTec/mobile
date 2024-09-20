@@ -17,9 +17,6 @@
 			"bundleIdentifier": "com.tecma.TecmaMovilConnect",
 			"infoPlist": {
 				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name."
-			},
-			"entitlements": {
-				"com.apple.developer.device-information.user-assigned-device-name": true
 			}
 		},
 		"android": {
