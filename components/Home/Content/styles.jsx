@@ -319,9 +319,7 @@ const ideas = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 	},
-	animContainer: {
-
-	},
+	animContainer: {},
 });
 
 const directorio = StyleSheet.create({
@@ -1075,7 +1073,6 @@ const prestamos = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "flex-start",
 		fontSize: 12,
-
 	},
 	dataRowFieldContainer: {
 		flex: 1,
@@ -1129,6 +1126,40 @@ const prestamos = StyleSheet.create({
 		color: COLORS.black,
 	},
 	bouncyCheckbox: {},
+});
+
+const cartas = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	sectionContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	sectionTitleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "4%",
+	},
+	sectionButtonContainer: {
+		flex: 1,
+		// height: "100%",
+		width: "90%",
+		// top: "3%",
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "center",
+		alignItems: "center",
+		// marginBottom: "-5%"
+		// borderWidth: 1,
+	},
 });
 
 const reposiciones = StyleSheet.create({
@@ -1413,6 +1444,7 @@ export {
 	prenomina,
 	solicitudes,
 	prestamos,
+	cartas,
 	reposiciones,
 	linea,
 	polizas,

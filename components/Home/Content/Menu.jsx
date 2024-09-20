@@ -49,7 +49,7 @@ function Menu({ changeContent }) {
 				<SectionButton
 					title="Cartas"
 					icon="CARTAS"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("Cartas")}
 				/>
 				<SectionButton
 					title="Reposiciones"

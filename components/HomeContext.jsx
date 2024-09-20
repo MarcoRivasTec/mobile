@@ -44,6 +44,7 @@ export const HomeProvider = ({ children }) => {
 	} = {}) => {
 		const empNum = parseInt(data.numEmp, 10);
 		const fullName = `${data.name}, ${data.surname_1} ${data.surname_2}`;
+		console.log("Arguments: ", letter, repMotive, coment, fileName, file);
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
 					$numEmp: Int!,
@@ -99,9 +100,13 @@ export const HomeProvider = ({ children }) => {
 				JSON.stringify(response.data, null, 1)
 			);
 			if (response.data) {
-				return response.data.pdfFile;
+				// console.log(response.data.sendRequisition.pdfFile);
+				return response.data.sendRequisition.pdfFile;
 			} else {
-				console.warn("Detail sending requisition information: ", response.data);
+				console.warn(
+					"Detail sending requisition information: ",
+					response.data
+				);
 				return false;
 			}
 		} catch (error) {

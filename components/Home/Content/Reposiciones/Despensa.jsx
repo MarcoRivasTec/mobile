@@ -17,6 +17,26 @@ function Despensa({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 
 	const [selectedCheckbox, setSelectedCheckbox] = React.useState("");
 
+	const requestDespensa = async () => {
+		if (selectedCheckbox === "") {
+			Alert.alert("Error", "Debes seleccionar un motivo");
+			return;
+		}
+		const response = await tarjetasRequisition({
+			type: "Despensa",
+			repMotive: selectedCheckbox,
+		});
+		// console.log("Response requestGafete: ", response);
+		if (response === "Done") {
+			confirmationModalHandler();
+		} else {
+			Alert.alert(
+				"Error",
+				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+			);
+		}
+	};
+
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
@@ -167,10 +187,7 @@ function Despensa({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 							{/* Back button */}
 							<View style={despensa.buttonContainer}>
 								<TouchableOpacity
-									onPress={() => {
-										confirmationModalHandler();
-										tarjetasRequisition("Despensa");
-									}}
+									onPress={requestDespensa}
 									style={despensa.button}
 								>
 									<Text style={despensa.textButton}>

@@ -7,12 +7,14 @@ import {
 	TextInput,
 	Keyboard,
 	TouchableWithoutFeedback,
+	Alert,
 } from "react-native";
 import { banorte } from "./styles";
 import Confirm from "./Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
+	const [folio, setFolio] = useState("");
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const checkboxIconSize = 25;
 
@@ -26,6 +28,53 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	const [checkbox6State, setCheckbox6State] = React.useState(false);
 
 	const textInputRef = useRef();
+
+	const requestBanorte = async () => {
+		if (selectedCheckbox === "") {
+			Alert.alert("Error", "Debes seleccionar un motivo");
+			return;
+		}
+		if (
+			selectedCheckbox !== "Vencimiento" &&
+			selectedCheckbox !== "Daño" &&
+			folio === ""
+		) {
+			Alert.alert("Error", "Debes introducir un folio");
+			return;
+		}
+		let response;
+		switch (selectedCheckbox) {
+			case "Vencimiento":
+			case "Daño":
+				response = await tarjetasRequisition({
+					type: "Banorte",
+					repMotive: selectedCheckbox,
+				});
+				break;
+			case "Cajeros":
+			case "Saldos":
+			case "Robo":
+			case "Extravio":
+				response = await tarjetasRequisition({
+					type: "Banorte",
+					repMotive: selectedCheckbox,
+					folio: folio,
+				});
+				break;
+
+			default:
+				break;
+		}
+		// console.log("Response requestGafete: ", response);
+		if (response === "Done") {
+			confirmationModalHandler();
+		} else {
+			Alert.alert(
+				"Error",
+				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+			);
+		}
+	};
 
 	// Function to blur the keyboard
 	const blurKeyboard = () => {
@@ -55,6 +104,10 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 			keyboardDidHideListener.remove();
 		};
 	}, []);
+
+	useEffect(() => {
+		console.log("Folio is: ", folio);
+	}, [folio]);
 
 	const [backContainer, setBackContainerStyle] = useState(
 		banorte.backgroundContainer
@@ -105,29 +158,44 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 				onRequestClose={onCallback}
 				statusBarTranslucent={true}
 			>
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+				<TouchableWithoutFeedback
+					onPress={Keyboard.dismiss}
+					accessible={false}
+				>
 					<View style={backContainer}>
 						<View style={modalTopContainer}>
 							<View style={banorte.contentContainer}>
 								{/* Title */}
 								<View style={banorte.titleContainer}>
-									<Text style={banorte.titleText}>Solicitud de Reposición</Text>
+									<Text style={banorte.titleText}>
+										Solicitud de Reposición
+									</Text>
 								</View>
 
 								{/* Text */}
 								<View style={banorte.textContainer}>
 									<Text style={banorte.text}>
-										<Text style={banorte.subtext}>Se enviará la</Text>
-										<Text style={[banorte.subtext, { fontWeight: "bold" }]}>
+										<Text style={banorte.subtext}>
+											Se enviará la
+										</Text>
+										<Text
+											style={[
+												banorte.subtext,
+												{ fontWeight: "bold" },
+											]}
+										>
 											{" "}
-											Solicitud de Reposición de Tarjeta Banorte{" "}
+											Solicitud de Reposición de Tarjeta
+											Banorte{" "}
 										</Text>
 										<Text style={banorte.subtext}>
 											a tu representante de RH.{"\n"}
 										</Text>
 									</Text>
 
-									<Text style={banorte.text}>Porfavor, indica el motivo:</Text>
+									<Text style={banorte.text}>
+										Porfavor, indica el motivo:
+									</Text>
 
 									<View style={banorte.checkboxGroup}>
 										<BouncyCheckbox
@@ -140,11 +208,20 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox1State === true ? "underline" : "none",
+														checkbox1State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Vencimiento")}
-											isChecked={selectedCheckbox === "Vencimiento"}
+											onPress={() =>
+												setSelectedCheckbox(
+													"Vencimiento"
+												)
+											}
+											isChecked={
+												selectedCheckbox ===
+												"Vencimiento"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
@@ -157,11 +234,17 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox2State === true ? "underline" : "none",
+														checkbox2State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Daño")}
-											isChecked={selectedCheckbox === "Daño"}
+											onPress={() =>
+												setSelectedCheckbox("Daño")
+											}
+											isChecked={
+												selectedCheckbox === "Daño"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
@@ -174,11 +257,17 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox3State === true ? "underline" : "none",
+														checkbox3State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Cajeros")}
-											isChecked={selectedCheckbox === "Cajeros"}
+											onPress={() =>
+												setSelectedCheckbox("Cajeros")
+											}
+											isChecked={
+												selectedCheckbox === "Cajeros"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
@@ -191,11 +280,17 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox4State === true ? "underline" : "none",
+														checkbox4State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Saldos")}
-											isChecked={selectedCheckbox === "Saldos"}
+											onPress={() =>
+												setSelectedCheckbox("Saldos")
+											}
+											isChecked={
+												selectedCheckbox === "Saldos"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
@@ -208,11 +303,17 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox5State === true ? "underline" : "none",
+														checkbox5State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Robo")}
-											isChecked={selectedCheckbox === "Robo"}
+											onPress={() =>
+												setSelectedCheckbox("Robo")
+											}
+											isChecked={
+												selectedCheckbox === "Robo"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
@@ -225,18 +326,25 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 												banorte.checkboxText,
 												{
 													textDecorationLine:
-														checkbox6State === true ? "underline" : "none",
+														checkbox6State === true
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Extravio")}
-											isChecked={selectedCheckbox === "Extravio"}
+											onPress={() =>
+												setSelectedCheckbox("Extravio")
+											}
+											isChecked={
+												selectedCheckbox === "Extravio"
+											}
 											style={banorte.checkbox}
 										></BouncyCheckbox>
 									</View>
 
 									<Text style={banorte.text}>
-										Para las opciones 3 a 6 debes primero hablar al 01-800-
-										BANORTE, te darán un folio a 11 dígitos y asi podrás recibir
+										Para las opciones 3 a 6 debes primero
+										hablar al 01-800- BANORTE, te darán un
+										folio a 11 dígitos y asi podrás recibir
 										tu nueva tarjeta.{"\n"}
 									</Text>
 
@@ -254,15 +362,23 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 										// behavior={Platform.OS === "ios" ? "padding" : "height"}
 										style={banorte.inputContainer}
 									>
-										<View style={banorte.inputTextContainer}>
+										<View
+											style={banorte.inputTextContainer}
+										>
 											<Text style={banorte.inputText}>
-												Por favor, captura el Folio entregado aquí:
+												Por favor, captura el Folio
+												entregado aquí:
 											</Text>
 										</View>
 
 										<TextInput
 											placeholder="Folio de 11 dígitos"
 											style={banorte.inputField}
+											maxLength={11}
+											value={folio}
+											onChangeText={(text) =>
+												setFolio(text)
+											}
 											onFocus={handleFocus}
 											onBlur={handleBlur}
 											ref={textInputRef}
@@ -274,30 +390,40 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 								{/* Back button */}
 								<View style={banorte.buttonContainer}>
 									<TouchableOpacity
-										onPress={() => {
-											confirmationModalHandler();
-											tarjetasRequisition("Banorte");
-										}}
+										onPress={requestBanorte}
 										// onPress={confirmationModalHandler}
 										style={banorte.button}
 									>
-										<Text style={banorte.textButton}>Solicitar</Text>
+										<Text style={banorte.textButton}>
+											Solicitar
+										</Text>
 									</TouchableOpacity>
 									<View>
 										{ConfirmationVisible && (
 											<Confirm
-												isModalVisible={ConfirmationVisible}
-												onCallback={confirmationModalHandler}
-												onExit={confirmationModalHandler}
+												isModalVisible={
+													ConfirmationVisible
+												}
+												onCallback={
+													confirmationModalHandler
+												}
+												onExit={
+													confirmationModalHandler
+												}
 												closeModal={onExit}
 											/>
 										)}
 									</View>
 									<TouchableOpacity
 										onPress={onExit}
-										style={[banorte.button, { backgroundColor: "gray" }]}
+										style={[
+											banorte.button,
+											{ backgroundColor: "gray" },
+										]}
 									>
-										<Text style={banorte.textButton}>Volver</Text>
+										<Text style={banorte.textButton}>
+											Volver
+										</Text>
 									</TouchableOpacity>
 								</View>
 							</View>

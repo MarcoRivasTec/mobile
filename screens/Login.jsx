@@ -17,8 +17,8 @@ import RegionModal from "../components/Login/RegionModal";
 import { login } from "./styles";
 
 const Login = ({ navigation }) => {
-	const [nip, setNip] = useState("940471");
-	const [region, setRegion] = useState("JRZ");
+	const [nip, setNip] = useState("");
+	const [region, setRegion] = useState("Selecciona");
 	// const [region, setRegion] = useState("Selecciona");
 	const [isModalVisible, setIsModalVisible] = useState(false);
 

@@ -12,6 +12,7 @@ import Area from "./Content/Area";
 import Polizas from "./Content/Polizas";
 import Prestamos from "./Content/Prestamos";
 import Opiniones from "./Content/Opiniones";
+import Cartas from "./Content/Cartas";
 import Reposiciones from "./Content/Reposiciones";
 import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
@@ -48,12 +49,12 @@ function ContentRenderer({ content, changeContent }) {
 			// case "Retiro":
 			// 	return <Retiro />;
 
+			case "Cartas":
+				return <Cartas />;
 			case "Reposiciones":
 				return <Reposiciones />;
 			case "LineaDenuncia":
 				return <LineaDenuncia />;
-			// case "Cartas":
-			// 	return <Cartas />;
 			case "Polizas":
 				return <Polizas />;
 			case "Opiniones":

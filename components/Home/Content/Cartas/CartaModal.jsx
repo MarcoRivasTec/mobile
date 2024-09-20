@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
-import { gafete } from "./styles";
-import Confirm from "./Confirm";
+import { cartaModal } from "./styles";
+import Confirm from "../Design/Confirm";
 
-function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
+function CartaModal({
+	text,
+	cartasRequisition,
+	onCallback,
+	isModalVisible,
+	onExit,
+}) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 
-	function confirmationModalHandler() {
-		setConfirmationVisible(!ConfirmationVisible);
-	}
-
-	const requestGafete = async () => {
-		const response = await tarjetasRequisition({ type: "Gafete" });
-		// console.log("Response requestGafete: ", response);
+	const requestCarta = async () => {
+		const response = await cartasRequisition(); // console.log("Response requestGafete: ", response);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -23,64 +24,60 @@ function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 		}
 	};
 
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
+
 	return (
-		<View style={gafete.container}>
+		<View style={cartaModal.container}>
 			<Modal
 				animationType="fade"
 				transparent={true}
 				visible={isModalVisible}
 				onRequestClose={onCallback}
+				statusBarTranslucent={true}
 			>
-				<View style={gafete.backgroundContainer}>
-					<View style={gafete.modalContainer}>
-						<View style={gafete.contentContainer}>
+				<View style={cartaModal.backgroundContainer}>
+					<View style={cartaModal.modalContainer}>
+						<View style={cartaModal.contentContainer}>
 							{/* Title */}
-							<View style={gafete.titleContainer}>
-								<Text style={gafete.titleText}>
+							<View style={cartaModal.titleContainer}>
+								<Text style={cartaModal.titleText}>
 									Solicitud de Reposición
 								</Text>
 							</View>
 
 							{/* Text */}
-							<View style={gafete.textContainer}>
-								<Text style={gafete.text}>
-									<Text style={gafete.text}>
+							<View style={cartaModal.textContainer}>
+								<Text style={cartaModal.text}>
+									<Text style={cartaModal.subtext}>
 										Se enviará la
 									</Text>
 									<Text
 										style={[
-											gafete.text,
+											cartaModal.subtext,
 											{ fontWeight: "bold" },
 										]}
 									>
 										{" "}
-										Solicitud de Reposición de Gafete{" "}
+										Solicitud de {text}{" "}
 									</Text>
-									<Text style={gafete.text}>
+									<Text style={cartaModal.subtext}>
 										a tu representante de RH.{"\n"}
 									</Text>
 								</Text>
-								<Text style={gafete.text}>
-									Recuerda que debes entregar tu gafete
-									dañado, de otra forma tendra un costo.{"\n"}
-								</Text>
-								<Text style={gafete.text}>
-									En 24 hrs. puedes pasar al Departamento de
-									RH por el.{"\n"}
-								</Text>
-								<Text style={gafete.text}>
+								<Text style={cartaModal.subtext}>
 									¿Deseas continuar?
 								</Text>
 							</View>
 
 							{/* Back button */}
-							<View style={gafete.buttonContainer}>
+							<View style={cartaModal.buttonContainer}>
 								<TouchableOpacity
-									onPress={requestGafete}
-									// onPress={confirmationModalHandler}
-									style={gafete.button}
+									onPress={requestCarta}
+									style={cartaModal.button}
 								>
-									<Text style={gafete.textButton}>
+									<Text style={cartaModal.textButton}>
 										Solicitar
 									</Text>
 								</TouchableOpacity>
@@ -99,11 +96,11 @@ function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 								<TouchableOpacity
 									onPress={onExit}
 									style={[
-										gafete.button,
+										cartaModal.button,
 										{ backgroundColor: "gray" },
 									]}
 								>
-									<Text style={gafete.textButton}>
+									<Text style={cartaModal.textButton}>
 										Volver
 									</Text>
 								</TouchableOpacity>
@@ -116,4 +113,4 @@ function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	);
 }
 
-export default Gafete;
+export default CartaModal;
