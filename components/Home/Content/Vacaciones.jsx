@@ -8,10 +8,10 @@ import ButtonAction from "./Buttons/ButtonAction";
 import HistorialModal from "./Vacaciones/HistorialModal";
 import LoadingContent from "../../Animations/LoadingContent";
 import fetchPost from "../../fetching";
-import { AppContext } from "../../AppContext";
+import { HomeContext } from "../../HomeContext";
 
 function Vacaciones() {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const [antiguedad, setAntiguedad] = useState({
@@ -65,7 +65,12 @@ function Vacaciones() {
 					data.data.Vacaciones.antiguedad
 				);
 				if (data.data.Vacaciones) {
-					setAntiguedad(data.data.Vacaciones.antiguedad);
+					// setAntiguedad(data.data.Vacaciones.antiguedad);
+					antiguedad.antiguedad = data.data.Vacaciones.antiguedad.antiguedad;
+					antiguedad.ingreso = data.data.Vacaciones.antiguedad.ingreso;
+					antiguedad.diasaniv = Math.abs(
+						data.data.Vacaciones.antiguedad.diasaniv
+					);
 					setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
 					console.warn("Error retrieving vacaciones information");
@@ -77,8 +82,8 @@ function Vacaciones() {
 			}
 		};
 		fetchData();
-		console.log(diasVacs)
-		console.log(antiguedad)
+		console.log(diasVacs);
+		console.log(antiguedad);
 	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
 
 	// Render loading or error state if data is not yet available
@@ -90,9 +95,7 @@ function Vacaciones() {
 			<ContentHeader title="Vacaciones"></ContentHeader>
 			<View style={vacaciones.sectionContainer}>
 				<View style={vacaciones.sectionTitleContainer}>
-					<Text style={{ fontSize: 22, fontWeight: "bold" }}>
-						Antiguedad
-					</Text>
+					<Text style={{ fontSize: 22, fontWeight: "bold" }}>Antiguedad</Text>
 				</View>
 				<View style={vacaciones.sectionButtonContainer}>
 					<ButtonInfo
@@ -100,10 +103,7 @@ function Vacaciones() {
 						title="Fecha de Ingreso"
 						type="date"
 					/>
-					<ButtonTag
-						data={antiguedad.antiguedad}
-						title="Años de Antigüedad"
-					/>
+					<ButtonTag data={antiguedad.antiguedad} title="Años de Antigüedad" />
 					<ButtonTag
 						data={antiguedad.diasaniv}
 						title="Días para siguiente aniversario"
@@ -112,17 +112,12 @@ function Vacaciones() {
 			</View>
 			<View style={vacaciones.sectionContainer}>
 				<View style={vacaciones.sectionTitleContainer}>
-					<Text style={{ fontSize: 22, fontWeight: "bold" }}>
-						Vacaciones
-					</Text>
+					<Text style={{ fontSize: 22, fontWeight: "bold" }}>Vacaciones</Text>
 				</View>
 				<View style={vacaciones.sectionButtonContainer}>
 					<ButtonTag data={diasVacs.tomados} title="Días Tomados" />
 					<ButtonTag data={diasVacs.ganados} title="Días Ganados" />
-					<ButtonTag
-						data={diasVacs.disponibles}
-						title="Días Disponibles"
-					/>
+					<ButtonTag data={diasVacs.disponibles} title="Días Disponibles" />
 				</View>
 			</View>
 			<View style={vacaciones.historialContainer}>
@@ -140,10 +135,7 @@ function Vacaciones() {
 			</View>
 			<View>
 				{isModalVisible && (
-					<HistorialModal
-						onCallback={modalHandler}
-						onExit={modalHandler}
-					/>
+					<HistorialModal onCallback={modalHandler} onExit={modalHandler} />
 				)}
 			</View>
 		</View>

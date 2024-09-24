@@ -5,6 +5,7 @@ import {
 	Keyboard,
 } from "react-native";
 import React, { useState } from "react";
+import { defPass, defRegion } from "../defaultValues";
 
 import TecmaMovil from "../components/Animations/TecmaMovil";
 import Region from "../components/Login/Region";
@@ -17,8 +18,10 @@ import RegionModal from "../components/Login/RegionModal";
 import { login } from "./styles";
 
 const Login = ({ navigation }) => {
-	const [nip, setNip] = useState("");
-	const [region, setRegion] = useState("Selecciona");
+	const [nip, setNip] = useState(defPass !== "" ? defPass : "");
+	const [region, setRegion] = useState(
+		defRegion !== "" ? defRegion : "Selecciona"
+	);
 	// const [region, setRegion] = useState("Selecciona");
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -31,10 +34,7 @@ const Login = ({ navigation }) => {
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
 			style={login.backgroundContainer}
 		>
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				accessible={false}
-			>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.contentContainer}>
 					{/* Logo */}
 					<View style={login.logoContainer}>

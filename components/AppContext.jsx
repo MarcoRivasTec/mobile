@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useState } from "react";
 import * as Device from "expo-device";
 import { Dimensions } from "react-native";
 
+import { defUsr } from "../defaultValues";
+
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -9,7 +11,7 @@ export const AppProvider = ({ children }) => {
 	const [info, setInfo] = useState({
 		// accessToken: "",
 		// name: "",
-		numEmp: "", // Add numEmp to the state
+		numEmp: defUsr !== "" ? defUsr : "", // Add numEmp to the state
 		platform: "",
 		// deviceName: null,
 		deviceType: null,

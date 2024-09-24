@@ -2,10 +2,11 @@ import { Text, TouchableOpacity, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../constants/colors";
 import { layout } from "./styles";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import fetchPost from "../fetching";
 import Loading from "../Animations/Loading";
 import { AppContext } from "../AppContext";
+import { autoLogin } from "../../defaultValues";
 
 function Ingresar({ nip, navigation, region }) {
 	const { numEmp } = useContext(AppContext);
@@ -20,11 +21,11 @@ function Ingresar({ nip, navigation, region }) {
 			Alert.alert("Debes introducir tu NIP");
 			return;
 		}
-		if(region === "Selecciona"){
+		if (region === "Selecciona") {
 			Alert.alert("Opción incorrecta", "Selecciona una región");
 			return;
 		}
-		if(region !== "JRZ"){
+		if (region !== "JRZ") {
 			Alert.alert("Región inhabilitada", "Selecciona otra región");
 			return;
 		}
@@ -75,6 +76,12 @@ function Ingresar({ nip, navigation, region }) {
 				setIsLoading(false);
 			});
 	};
+
+	useEffect(() => {
+		if (autoLogin) {
+			handleLogin();
+		}
+	}, []);
 
 	return (
 		<LinearGradient
