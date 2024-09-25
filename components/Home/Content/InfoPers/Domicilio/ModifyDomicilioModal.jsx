@@ -1,32 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Modal, View, Text, TouchableOpacity, TextInput } from "react-native";
 import { modifyDomicilioModal } from "./styles";
-import { Picker } from "@react-native-picker/picker";
-import DatePicker from "react-native-date-picker";
-import Icon from "../../../icons";
+import { Ionicons } from "@expo/vector-icons";
+import { HomeContext } from "../../../../HomeContext";
+import COLORS from "../../../../../constants/colors";
 
-function ModifyDomicilioModal({
-	domicilio,
-	setDomicilio,
-	onCallback,
-	onExit,
-	onRegister,
-}) {
-	const [newCalle, setNewCalle] = useState(domicilio.calle);
-	const [newNumero, setNewNumero] = useState(domicilio.numero);
-	const [newColonia, setNewColonia] = useState(domicilio.colonia);
-	const [newTelefono, setNewTelefono] = useState(domicilio.telefono);
+function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
+	const { sendRequisition } = useContext(HomeContext);
 
-	const handleRegister = () => {
-		// Update the playera value in the parent component state
-		setDomicilio({
-			...domicilio,
-			calle: newCalle,
-			numero: newNumero,
-			colonia: newColonia,
-			telefono: newTelefono,
-		});
-		onCallback();
+	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
+
+	const requestChange = async () => {
+		const response = await sendRequisition({ type: "Gafete" });
+		// console.log("Response requestGafete: ", response);
+		if (response === "Done") {
+			confirmationModalHandler();
+		} else {
+			Alert.alert(
+				"Error",
+				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+			);
+		}
 	};
 
 	return (
@@ -41,95 +39,60 @@ function ModifyDomicilioModal({
 					<View style={modifyDomicilioModal.modalContainer}>
 						<View style={modifyDomicilioModal.contentContainer}>
 							{/* Title */}
-							<View style={modifyDomicilioModal.titleContainer}>
-								<Text style={modifyDomicilioModal.titleText}>
-									Modificar dirección
-								</Text>
-							</View>
+							<Text style={modifyDomicilioModal.titleText}>
+								Modificar dirección
+							</Text>
 
-							{/* Calle */}
-							<View style={modifyDomicilioModal.sectionContainer}>
-								<View style={[modifyDomicilioModal.sectionPartContainer, {flex: 2.8, marginRight: "2%"}]}>
-									<View style={modifyDomicilioModal.sectionTitleContainer}>
-										<Text style={modifyDomicilioModal.sectionTitleText}>
-											Calle
-										</Text>
-									</View>
-									<View style={modifyDomicilioModal.dataContainer}>
-										<TextInput
-											inputMode="text"
-											onChangeText={setNewCalle}
-											value={newCalle}
-											autoCapitalize="words"
-											placeholder="Tu dirección aquí"
-											style={modifyDomicilioModal.dataText}
-										></TextInput>
-									</View>
-								</View>
-								<View style={modifyDomicilioModal.sectionPartContainer}>
-									<View style={modifyDomicilioModal.sectionTitleContainer}>
-										<Text style={modifyDomicilioModal.sectionTitleText}>
-											Número
-										</Text>
-									</View>
-									<View style={modifyDomicilioModal.dataContainer}>
-										<TextInput
-											inputMode="text"
-											onChangeText={setNewNumero}
-											autoCapitalize="words"
-											placeholder="N. casa"
-											style={modifyDomicilioModal.dataText}
-										>{newNumero}</TextInput>
-									</View>
-								</View>
-							</View>
+							<Text
+								style={[
+									modifyDomicilioModal.sectionTitleText,
+									{ fontSize: 16, marginTop: 12 },
+								]}
+							>
+								Para actualizar tu dirección deberás subir una
+								imagen o documento PDF de un recibo
+							</Text>
 
-                            <View style={modifyDomicilioModal.sectionContainer}>
-                            <View style={[modifyDomicilioModal.sectionPartContainer, {flex: 1.8, marginRight: "2%"}]}>
-									<View style={modifyDomicilioModal.sectionTitleContainer}>
-										<Text style={modifyDomicilioModal.sectionTitleText}>
-											Colonia
-										</Text>
-									</View>
-									<View style={modifyDomicilioModal.dataContainer}>
-										<TextInput
-											inputMode="text"
-                                            keyboardType="default"
-											onChangeText={setNewColonia}
-											value={newColonia}
-											autoCapitalize="words"
-											placeholder="Tu calle aquí"
-											style={modifyDomicilioModal.dataText}
-										></TextInput>
-									</View>
-								</View>
-								<View style={modifyDomicilioModal.sectionPartContainer}>
-									<View style={modifyDomicilioModal.sectionTitleContainer}>
-										<Text style={modifyDomicilioModal.sectionTitleText}>
-											Teléfono
-										</Text>
-									</View>
-									<View style={modifyDomicilioModal.dataContainer}>
-										<TextInput
-											inputMode="numeric"
-                                            keyboardType="number-pad"
-											onChangeText={setNewTelefono}
-											autoCapitalize="words"
-											placeholder="Teléfono"
-											style={modifyDomicilioModal.dataText}
-										>{newTelefono}</TextInput>
-									</View>
-								</View>
-							</View>
+							<Text style={modifyDomicilioModal.sectionTitleText}>
+								Sube un documento PDF
+							</Text>
+
+							<TouchableOpacity
+								style={modifyDomicilioModal.uploadButton}
+							>
+								<Ionicons
+									name="add-outline"
+									size={32}
+									color={COLORS.flatlistElement1}
+								/>
+							</TouchableOpacity>
+
+							<Text style={modifyDomicilioModal.sectionTitleText}>
+								Sube una imagen
+							</Text>
+
+							<TouchableOpacity
+								style={modifyDomicilioModal.uploadButton}
+							>
+								<Ionicons
+									name="add-outline"
+									size={32}
+									color={COLORS.flatlistElement1}
+								/>
+							</TouchableOpacity>
 
 							{/* Buttons */}
 							<View style={modifyDomicilioModal.buttonsContainer}>
 								<TouchableOpacity
-									onPress={handleRegister}
+									onPress={requestChange}
 									style={modifyDomicilioModal.registrarButton}
 								>
-									<Text style={modifyDomicilioModal.registrarButtonText}>
-										Actualizar
+									<Text
+										style={
+											modifyDomicilioModal.registrarButtonText
+										}
+									>
+										Enviar
 									</Text>
 								</TouchableOpacity>
 
@@ -137,11 +100,24 @@ function ModifyDomicilioModal({
 									onPress={onExit}
 									style={modifyDomicilioModal.exitButton}
 								>
-									<Text style={modifyDomicilioModal.exitButtonText}>
+									<Text
+										style={
+											modifyDomicilioModal.exitButtonText
+										}
+									>
 										Volver
 									</Text>
 								</TouchableOpacity>
 							</View>
+							{ConfirmationVisible && (
+								<Confirm
+									isModalVisible={ConfirmationVisible}
+									onCallback={confirmationModalHandler}
+									onExit={confirmationModalHandler}
+									closeModal={onExit}
+									style={{ flex: 1, position: "absolute" }}
+								/>
+							)}
 						</View>
 					</View>
 				</View>

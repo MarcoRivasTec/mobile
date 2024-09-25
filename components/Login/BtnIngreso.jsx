@@ -79,7 +79,7 @@ function Ingresar({ nip, navigation, region }) {
 
 	useEffect(() => {
 		if (autoLogin) {
-			handleLogin();
+			// handleLogin();
 		}
 	}, []);
 

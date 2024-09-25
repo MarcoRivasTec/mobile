@@ -41,10 +41,35 @@ export const HomeProvider = ({ children }) => {
 		coment = "TEST",
 		fileName = null,
 		file = null,
+		dayToAdjust = null,
+		period = null,
 	} = {}) => {
+		let fullName;
+		if (data.surname_1 !== "" && data.surname_2 !== "") {
+			fullName = `${data.surname_1} ${data.surname_2}, ${data.name}`;
+		}
+		if (data.surname_1 !== "" && data.surname_2 === "") {
+			fullName = `${data.surname_1}, ${data.name}`;
+		}
+		if (data.surname_1 === "" && data.surname_2 !== "") {
+			fullName = `${data.surname_2}, ${data.name}`;
+		}
+		if (data.surname_1 === "" && data.surname_2 === "") {
+			fullName = data.name;
+		}
 		const empNum = parseInt(data.numEmp, 10);
-		const fullName = `${data.name}, ${data.surname_1} ${data.surname_2}`;
-		console.log("Arguments: ", letter, repMotive, coment, fileName, file);
+		// const fullName2 = `${data.surname_1}${data.surname_2 !== "" ? `" "${data.surname_2}` : ""}, ${data.name}`;
+		// const fullName =
+		console.log(
+			"Arguments: ",
+			letter,
+			repMotive,
+			coment,
+			fileName,
+			file,
+			dayToAdjust,
+			period
+		);
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
 					$numEmp: Int!,
@@ -59,6 +84,8 @@ export const HomeProvider = ({ children }) => {
 					$repMotive: String,
 					$fileName: String,
 					$file: String,
+					$day_to_adjust: String,
+					$period: Int
 					) {
 					sendRequisition(
 						numEmp: $numEmp,
@@ -72,7 +99,9 @@ export const HomeProvider = ({ children }) => {
 						coment: $coment,
 						repMotive: $repMotive,
 						fileName: $fileName,
-						file: $file
+						file: $file,
+						day_to_adjust: $day_to_adjust,
+						period: $period
 					) {
 						pdfFile
 					}
@@ -90,6 +119,8 @@ export const HomeProvider = ({ children }) => {
 				coment: coment,
 				fileName: fileName,
 				file: file,
+				day_to_adjust: dayToAdjust,
+				period: period,
 			},
 		};
 		try {

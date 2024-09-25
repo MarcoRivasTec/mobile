@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
 	Modal,
 	View,
@@ -10,67 +10,40 @@ import {
 	Alert,
 } from "react-native";
 import { solicitarAjuste } from "./styles";
-import Confirm from "./Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Confirm from "../Design/Confirm";
+import { HomeContext } from "../../../HomeContext";
 
 function SolicitarAjuste({
-	tarjetasRequisition,
 	onCallback,
 	isModalVisible,
 	onExit,
+	dayToAdjust,
+	period,
 }) {
-	const [folio, setFolio] = useState("");
+	const { sendRequisition } = useContext(HomeContext);
+	const [coment, setComent] = useState("");
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const checkboxIconSize = 25;
 
 	const [selectedCheckbox, setSelectedCheckbox] = React.useState("");
 
-	const [checkbox1State, setCheckbox1State] = React.useState(false);
-	const [checkbox2State, setCheckbox2State] = React.useState(false);
-	const [checkbox3State, setCheckbox3State] = React.useState(false);
-	const [checkbox4State, setCheckbox4State] = React.useState(false);
-	const [checkbox5State, setCheckbox5State] = React.useState(false);
-	const [checkbox6State, setCheckbox6State] = React.useState(false);
-
 	const textInputRef = useRef();
 
-	const requestBanorte = async () => {
+	const requestAjuste = async () => {
+		// console.log(`Day: ${dayToAdjust}, period: ${period}`);
+		// return
 		if (selectedCheckbox === "") {
-			Alert.alert("Error", "Debes seleccionar un motivo");
+			Alert.alert("Error", "Debes seleccionar una opción");
 			return;
 		}
-		if (
-			selectedCheckbox !== "Vencimiento" &&
-			selectedCheckbox !== "Daño" &&
-			folio === ""
-		) {
-			Alert.alert("Error", "Debes introducir un folio");
-			return;
-		}
-		let response;
-		switch (selectedCheckbox) {
-			case "Vencimiento":
-			case "Daño":
-				response = await tarjetasRequisition({
-					type: "Banorte",
-					repMotive: selectedCheckbox,
-				});
-				break;
-			case "Cajeros":
-			case "Saldos":
-			case "Robo":
-			case "Extravio":
-				response = await tarjetasRequisition({
-					type: "Banorte",
-					repMotive: selectedCheckbox,
-					folio: folio,
-				});
-				break;
-
-			default:
-				break;
-		}
-		// console.log("Response requestGafete: ", response);
+		const response = await sendRequisition({
+			letter: "AjustePrenom",
+			repMotive: selectedCheckbox,
+			coment: coment,
+			dayToAdjust: dayToAdjust,
+			period: period,
+		});
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -78,6 +51,7 @@ function SolicitarAjuste({
 				"Error",
 				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
 			);
+			return
 		}
 	};
 
@@ -93,11 +67,6 @@ function SolicitarAjuste({
 		blurKeyboard();
 	};
 
-	// Add event listener for keyboard hide event
-	useEffect(() => {
-		console.log("Selected checkbox is: ", selectedCheckbox);
-	}, [selectedCheckbox]);
-
 	useEffect(() => {
 		const keyboardDidHideListener = Keyboard.addListener(
 			"keyboardDidHide",
@@ -109,10 +78,6 @@ function SolicitarAjuste({
 			keyboardDidHideListener.remove();
 		};
 	}, []);
-
-	useEffect(() => {
-		console.log("Folio is: ", folio);
-	}, [folio]);
 
 	const [backContainer, setBackContainerStyle] = useState(
 		solicitarAjuste.backgroundContainer
@@ -138,22 +103,10 @@ function SolicitarAjuste({
 		setModalContainerStyle(solicitarAjuste.modalContainer);
 	};
 
-	const handleSend = async () => {
-		const data = await tarjetasRequisition("Banorte", selectedCheckbox);
-	};
-
-	const handleCheckboxPress = (checkboxNumber) => {
-		setCheckbox1State(checkboxNumber === 1);
-		setCheckbox2State(checkboxNumber === 2);
-		setCheckbox3State(checkboxNumber === 3);
-		setCheckbox4State(checkboxNumber === 4);
-		setCheckbox5State(checkboxNumber === 5);
-		setCheckbox6State(checkboxNumber === 6);
-	};
-
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
+
 	return (
 		<View style={solicitarAjuste.container}>
 			<Modal
@@ -163,199 +116,200 @@ function SolicitarAjuste({
 				onRequestClose={onCallback}
 				statusBarTranslucent={true}
 			>
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+				<TouchableWithoutFeedback
+					onPress={Keyboard.dismiss}
+					accessible={false}
+				>
 					<View style={backContainer}>
 						<View style={modalTopContainer}>
 							<View style={solicitarAjuste.contentContainer}>
 								{/* Title */}
 								<View style={solicitarAjuste.titleContainer}>
-									<Text style={solicitarAjuste.titleText}>Solicitud de Reposición</Text>
+									<Text style={solicitarAjuste.titleText}>
+										Solicitud de Ajuste
+									</Text>
 								</View>
 
-								{/* Text */}
+								{/* Checkboxes */}
 								<View style={solicitarAjuste.textContainer}>
 									<Text style={solicitarAjuste.text}>
-										<Text style={solicitarAjuste.subtext}>Se enviará la</Text>
-										<Text style={[solicitarAjuste.subtext, { fontWeight: "bold" }]}>
+										<Text style={solicitarAjuste.subtext}>
+											Favor de seleccionar el tipo de
+											ajuste:
+										</Text>
+										{/* <Text
+											style={[
+												solicitarAjuste.subtext,
+												{ fontWeight: "bold" },
+											]}
+										>
 											{" "}
-											Solicitud de Reposición de Tarjeta Banorte{" "}
+											Solicitud de Reposición de Tarjeta
+											Banorte{" "}
 										</Text>
 										<Text style={solicitarAjuste.subtext}>
 											a tu representante de RH.{"\n"}
-										</Text>
+										</Text> */}
 									</Text>
-
-									<Text style={solicitarAjuste.text}>Porfavor, indica el motivo:</Text>
 
 									<View style={solicitarAjuste.checkboxGroup}>
 										<BouncyCheckbox
 											size={checkboxIconSize}
 											fillColor="orange"
 											unFillColor="#FFFFFF"
-											text="1. Vencimiento"
+											text="1. Checada"
 											iconStyle={{ borderColor: "gray" }}
 											textStyle={[
 												solicitarAjuste.checkboxText,
 												{
 													textDecorationLine:
-														checkbox1State === true ? "underline" : "none",
+														selectedCheckbox ===
+														"Checada"
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Vencimiento")}
-											isChecked={selectedCheckbox === "Vencimiento"}
+											onPress={() =>
+												setSelectedCheckbox("Checada")
+											}
+											isChecked={
+												selectedCheckbox === "Checada"
+											}
 											style={solicitarAjuste.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
 											size={checkboxIconSize}
 											fillColor="orange"
 											unFillColor="#FFFFFF"
-											text="2. Daño"
+											text="2. Tiempo Extra"
 											iconStyle={{ borderColor: "gray" }}
 											textStyle={[
 												solicitarAjuste.checkboxText,
 												{
 													textDecorationLine:
-														checkbox2State === true ? "underline" : "none",
+														selectedCheckbox ===
+														"TiempoExt"
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Daño")}
-											isChecked={selectedCheckbox === "Daño"}
+											onPress={() =>
+												setSelectedCheckbox(
+													"TiempoExt"
+												)
+											}
+											isChecked={
+												selectedCheckbox ===
+												"TiempoExt"
+											}
 											style={solicitarAjuste.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
 											size={checkboxIconSize}
 											fillColor="orange"
 											unFillColor="#FFFFFF"
-											text="3. Cajeros"
+											text="3. Falta"
 											iconStyle={{ borderColor: "gray" }}
 											textStyle={[
 												solicitarAjuste.checkboxText,
 												{
 													textDecorationLine:
-														checkbox3State === true ? "underline" : "none",
+														selectedCheckbox ===
+														"Falta"
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Cajeros")}
-											isChecked={selectedCheckbox === "Cajeros"}
+											onPress={() =>
+												setSelectedCheckbox("Falta")
+											}
+											isChecked={
+												selectedCheckbox === "Falta"
+											}
 											style={solicitarAjuste.checkbox}
 										></BouncyCheckbox>
 										<BouncyCheckbox
 											size={checkboxIconSize}
 											fillColor="orange"
 											unFillColor="#FFFFFF"
-											text="4. Saldos no reconocidos"
+											text="4. Otra incidencia (Vacaciones, permiso)"
 											iconStyle={{ borderColor: "gray" }}
 											textStyle={[
 												solicitarAjuste.checkboxText,
 												{
 													textDecorationLine:
-														checkbox4State === true ? "underline" : "none",
+														selectedCheckbox ===
+														"Otra"
+															? "underline"
+															: "none",
 												},
 											]}
-											onPress={() => setSelectedCheckbox("Saldos")}
-											isChecked={selectedCheckbox === "Saldos"}
-											style={solicitarAjuste.checkbox}
-										></BouncyCheckbox>
-										<BouncyCheckbox
-											size={checkboxIconSize}
-											fillColor="orange"
-											unFillColor="#FFFFFF"
-											text="5. Robo"
-											iconStyle={{ borderColor: "gray" }}
-											textStyle={[
-												solicitarAjuste.checkboxText,
-												{
-													textDecorationLine:
-														checkbox5State === true ? "underline" : "none",
-												},
-											]}
-											onPress={() => setSelectedCheckbox("Robo")}
-											isChecked={selectedCheckbox === "Robo"}
-											style={solicitarAjuste.checkbox}
-										></BouncyCheckbox>
-										<BouncyCheckbox
-											size={checkboxIconSize}
-											fillColor="orange"
-											unFillColor="#FFFFFF"
-											text="6. Extravío"
-											iconStyle={{ borderColor: "gray" }}
-											textStyle={[
-												solicitarAjuste.checkboxText,
-												{
-													textDecorationLine:
-														checkbox6State === true ? "underline" : "none",
-												},
-											]}
-											onPress={() => setSelectedCheckbox("Extravio")}
-											isChecked={selectedCheckbox === "Extravio"}
+											onPress={() =>
+												setSelectedCheckbox("Otra")
+											}
+											isChecked={
+												selectedCheckbox === "Otra"
+											}
 											style={solicitarAjuste.checkbox}
 										></BouncyCheckbox>
 									</View>
-
-									<Text style={solicitarAjuste.text}>
-										Para las opciones 3 a 6 debes primero hablar al 01-800-
-										BANORTE, te darán un folio a 11 dígitos y asi podrás recibir
-										tu nueva tarjeta.{"\n"}
-									</Text>
-
-									{/* <Text style={solicitarAjuste.text}>
-										Por favor, captura el Folio entregado aquí:
-									</Text> */}
 								</View>
 
-								{/* <KeyboardAvoidingView */}
-								{selectedCheckbox === "Cajeros" ||
-								selectedCheckbox === "Saldos" ||
-								selectedCheckbox === "Robo" ||
-								selectedCheckbox === "Extravio" ? (
-									<View
-										// behavior={Platform.OS === "ios" ? "padding" : "height"}
-										style={solicitarAjuste.inputContainer}
-									>
-										<View style={solicitarAjuste.inputTextContainer}>
-											<Text style={solicitarAjuste.inputText}>
-												Por favor, captura el Folio entregado aquí:
-											</Text>
-										</View>
-
-										<TextInput
-											placeholder="Folio de 11 dígitos"
-											style={solicitarAjuste.inputField}
-											maxLength={11}
-											value={folio}
-											onChangeText={(text) => setFolio(text)}
-											onFocus={handleFocus}
-											onBlur={handleBlur}
-											ref={textInputRef}
-										/>
-									</View>
-								) : null}
-								{/* </KeyboardAvoidingView> */}
+								<View style={solicitarAjuste.inputContainer}>
+									<TextInput
+										placeholder="Tu comentario aquí.."
+										style={solicitarAjuste.inputField}
+										maxLength={255}
+										multiline={true}
+										value={coment}
+										onChangeText={(text) => setComent(text)}
+										onFocus={handleFocus}
+										onBlur={handleBlur}
+										ref={textInputRef}
+									/>
+								</View>
 
 								{/* Back button */}
 								<View style={solicitarAjuste.buttonContainer}>
 									<TouchableOpacity
-										onPress={requestBanorte}
+										onPress={requestAjuste}
 										// onPress={confirmationModalHandler}
 										style={solicitarAjuste.button}
 									>
-										<Text style={solicitarAjuste.textButton}>Solicitar</Text>
+										<Text
+											style={solicitarAjuste.textButton}
+										>
+											Solicitar
+										</Text>
 									</TouchableOpacity>
 									<View>
 										{ConfirmationVisible && (
 											<Confirm
-												isModalVisible={ConfirmationVisible}
-												onCallback={confirmationModalHandler}
-												onExit={confirmationModalHandler}
+												isModalVisible={
+													ConfirmationVisible
+												}
+												onCallback={
+													confirmationModalHandler
+												}
+												onExit={
+													confirmationModalHandler
+												}
 												closeModal={onExit}
 											/>
 										)}
 									</View>
 									<TouchableOpacity
 										onPress={onExit}
-										style={[solicitarAjuste.button, { backgroundColor: "gray" }]}
+										style={[
+											solicitarAjuste.button,
+											{ backgroundColor: "gray" },
+										]}
 									>
-										<Text style={solicitarAjuste.textButton}>Volver</Text>
+										<Text
+											style={solicitarAjuste.textButton}
+										>
+											Volver
+										</Text>
 									</TouchableOpacity>
 								</View>
 							</View>

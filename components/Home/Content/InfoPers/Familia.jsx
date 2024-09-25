@@ -7,7 +7,7 @@ import AddMemberModal from "./Familia/AddMemberModal";
 import ConfirmModal from "./ConfirmModal";
 import CardRow from "../Design/CardRow";
 import fetchPost from "../../../fetching";
-import { AppContext } from "../../../AppContext";
+import { HomeContext } from "../../../HomeContext";
 
 function Familia({
 	data,
@@ -18,7 +18,7 @@ function Familia({
 	closeModal,
 	updateData,
 }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp } = useContext(HomeContext);
 	const cardHeight = Math.round(height * 0.18);
 	const titleHeight = Math.round(height * 0.036);
 

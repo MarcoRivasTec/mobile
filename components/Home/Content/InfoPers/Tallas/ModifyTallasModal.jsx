@@ -5,11 +5,11 @@ import { Picker } from "@react-native-picker/picker";
 import LoadingContent from "../../../../Animations/LoadingContent";
 import DatePicker from "react-native-date-picker";
 import Icon from "../../../icons";
-import { AppContext } from "../../../../AppContext";
 import fetchPost from "../../../../fetching";
+import { HomeContext } from "../../../../HomeContext";
 
 function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp } = useContext(HomeContext);
 	const empNum = parseInt(numEmp, 10);
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedPlayera, setSelectedPlayera] = useState(data.playera);
@@ -32,9 +32,9 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 	const handleSave = async () => {
 		setIsLoading(true);
 
+		let count = 0;
 		const updateTallasAndFetch = async (tipo, talla) => {
 			// console.log(`Tipo: ${tipo}, Talla: ${talla}, Num emp: ${empNum}`);
-			let count = 0;
 			const updateTallas = {
 				query: `mutation updateMeasurements($numEmp: Int!, $type: String!, $size: String!) {
 					updateMeasurements(numEmp: $numEmp, type: $type, size: $size)
@@ -81,9 +81,8 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 			Alert.alert("Informacion actualizada");
 			updateData();
 			onCallback();
-		}
-		else {
-			Alert.alert("No se modificaron tallas")
+		} else {
+			Alert.alert("No se modificaron tallas");
 		}
 	};
 

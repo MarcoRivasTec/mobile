@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Modal, View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import {
+	Modal,
+	View,
+	Text,
+	TouchableOpacity,
+	TextInput,
+	Alert,
+} from "react-native";
 import { addMemberModal } from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import DatePicker from "react-native-date-picker";
 import Icon from "../../../icons";
-import { AppContext } from "../../../../AppContext";
 import LoadingContent from "../../../../Animations/LoadingContent";
 import fetchPost from "../../../../fetching";
+import { HomeContext } from "../../../../HomeContext";
 
 function AddMemberModal({ onCallback, onExit, updateData }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [nombre, setNombre] = useState("");
 	const [apellidoPaterno, setApellidoPaterno] = useState("");

@@ -9,17 +9,16 @@ import Tallas from "./InfoPers/Tallas";
 import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal";
 import fetchPost from "../../fetching";
 import LoadingContent from "../../Animations/LoadingContent";
-import { AppContext } from "../../AppContext";
+import { HomeContext } from "../../HomeContext";
 
 function InfoPers() {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp } = useContext(HomeContext);
 	const { width, height } = Dimensions.get("window");
 	const infoheight = Math.round(height * 0.4);
 	const domicilioHeight = Math.round(height * 0.3);
 	const infonavitHeight = Math.round(height * 0.34);
 	const titleHeight = Math.round(height * 0.036);
 
-	
 	const [identificacion, setIdentificacion] = useState({
 		rfc: "No definido",
 		curp: "No definido",
@@ -35,29 +34,29 @@ function InfoPers() {
 		tasa: 0,
 		estatus: "No definido",
 	});
-	
+
 	const [familiares, setFamiliares] = useState({
 		nombre: "No definido",
 		parentesco: "No definido",
 		fec_nac: "No definido",
 		sexo: "No definido",
 	});
-	
+
 	const [tallas, setTallas] = useState({
 		playera: "SIN",
 		calzado: "SIN",
 		pantalon: "SIN",
 	});
-	
+
 	const [availableTallas, setAvailableTallas] = useState([]);
-	
+
 	const [selectedModal, setSelectedModal] = useState(null);
 	const openModal = (modalName) => setSelectedModal(modalName);
 	const closeModal = () => setSelectedModal(null);
-	
+
 	// New state to manage loading
 	const [isLoading, setIsLoading] = useState(true);
-	
+
 	const query = {
 		query: `query InfoPers($numEmp: String!){
 			InfoPers(numEmp: $numEmp) {
@@ -125,14 +124,18 @@ function InfoPers() {
 							playera: talla1.talla,
 						}));
 					}
-					const talla2 = data.data.InfoPers.tallas.find((item) => item.tipo === 2);
+					const talla2 = data.data.InfoPers.tallas.find(
+						(item) => item.tipo === 2
+					);
 					if (talla2) {
 						setTallas((prevState) => ({
 							...prevState,
 							calzado: talla2.talla,
 						}));
 					}
-					const talla3 = data.data.InfoPers.tallas.find((item) => item.tipo === 3);
+					const talla3 = data.data.InfoPers.tallas.find(
+						(item) => item.tipo === 3
+					);
 					if (talla3) {
 						setTallas((prevState) => ({
 							...prevState,
@@ -151,7 +154,7 @@ function InfoPers() {
 			setIsLoading(false); // Set loading to false after data is fetched
 		}
 	};
-	
+
 	// Fetch data when component mounts
 	useEffect(() => {
 		fetchData();
