@@ -40,18 +40,41 @@ const modifyDomicilioModal = StyleSheet.create({
 		color: COLORS.black,
 		// borderWidth: 1
 	},
-	uploadButton: {
+	uploadButtonsContainer: {
 		height: 80,
-		width: "50%",
+		width: "100%",
 		marginTop: 15,
+		paddingVertical: 5,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		// borderWidth: 1
+	},
+	uploadButtonContainer: {
+		height: "100%",
+		width: "35%",
+		marginTop: 30,
+		// flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1
+	},
+	uploadButton: {
+		height: "100%",
+		width: "100%",
+		// marginTop: 15,
 		// flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 		borderWidth: 2,
 		borderRadius: 8,
 		borderColor: "gray",
-		alignSelf: "center"
-
+		// alignSelf: "center"
+	},
+	uploadText: {
+		marginTop: 6,
+		fontSize: 15,
+		color: COLORS.black,
 	},
 	sectionTitleText: {
 		marginTop: 18,
@@ -60,21 +83,53 @@ const modifyDomicilioModal = StyleSheet.create({
 		color: COLORS.black,
 		// borderWidth: 1
 	},
-	dataContainer: {
-		flex: 1,
-		width: "100%",
+	previewContainer: {
+		maxHeight: 200,
+		width: "80%",
+		marginTop: 20,
 		justifyContent: "center",
-		alignItems: "flex-start",
-		paddingHorizontal: 5,
-		borderWidth: 1,
-		borderRadius: 12,
-		borderColor: COLORS.flatlistElement1
+		alignItems: "center",
+		// borderWidth: 1
+		alignSelf: "center",
 	},
-	dataText: {
+	imagePreview: {
 		height: "100%",
 		width: "100%",
+		
+	},
+	filePreviewContainer: {
+		height: 50,
+		width: "90%",
+		alignSelf: "center",
+		marginTop: 20,
+		justifyContent: "center",
+		alignItems: "center",
+		padding: 4,
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 8,
+	},
+	fileNameText: {
 		fontSize: 12,
-		color: "black",
+		color: COLORS.black,
+	},
+	resetButton: {
+		// height: 30,
+		paddingVertical: 8,
+		paddingHorizontal: 15,
+		marginTop: 20,
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 12,
+		backgroundColor: COLORS.grey,
+		alignSelf: "center"
+	},
+	resetButtonText: {
+		fontSize: 14,
+		color: COLORS.white,
+		
 	},
 	icon: {
 		position: "absolute",
@@ -83,13 +138,14 @@ const modifyDomicilioModal = StyleSheet.create({
 	},
 	buttonsContainer: {
 		// flex: 1,
-		marginTop: 30,
+		marginTop: 40,
 		height: 40,
 		width: "100%",
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
 		// marginVertical: "3%",
+		// borderWidth: 1
 	},
 	registrarButton: {
 		width: "30%",
@@ -98,7 +154,6 @@ const modifyDomicilioModal = StyleSheet.create({
 		borderRadius: 20,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: COLORS.naranja,
 	},
 	registrarButtonText: {
 		fontSize: 13,
