@@ -37,7 +37,7 @@ export const HomeProvider = ({ children }) => {
 
 	const sendRequisition = async ({
 		letter,
-		repMotive = null,
+		motive = null,
 		coment = "TEST",
 		fileName = null,
 		file = null,
@@ -66,7 +66,7 @@ export const HomeProvider = ({ children }) => {
 		console.log(
 			"Arguments: ",
 			letter,
-			repMotive,
+			motive,
 			coment,
 			fileName,
 			file,
@@ -84,7 +84,7 @@ export const HomeProvider = ({ children }) => {
 					$position: String!,
 					$clasification: String!,
 					$coment: String,
-					$repMotive: String,
+					$motive: String,
 					$fileName: String,
 					$file: String,
 					$day_to_adjust: String,
@@ -103,7 +103,7 @@ export const HomeProvider = ({ children }) => {
 						position: $position,
 						clasification: $clasification,
 						coment: $coment,
-						repMotive: $repMotive,
+						motive: $motive,
 						fileName: $fileName,
 						file: $file,
 						day_to_adjust: $day_to_adjust,
@@ -124,7 +124,7 @@ export const HomeProvider = ({ children }) => {
 				project: data.proyecto,
 				position: data.puestoID,
 				clasification: data.clasificacion,
-				repMotive: repMotive,
+				motive: motive,
 				coment: coment,
 				fileName: fileName,
 				file: file,
@@ -133,6 +133,7 @@ export const HomeProvider = ({ children }) => {
 				start_date: startDate,
 				end_date: endDate,
 				days: days,
+
 			},
 		};
 		try {
@@ -146,7 +147,10 @@ export const HomeProvider = ({ children }) => {
 				// console.log(response.data.sendRequisition.pdfFile);
 				return response.data.sendRequisition.pdfFile;
 			} else {
-				console.warn("Detail sending requisition information: ", response.data);
+				console.warn(
+					"Detail sending requisition information: ",
+					response.data
+				);
 				return false;
 			}
 		} catch (error) {

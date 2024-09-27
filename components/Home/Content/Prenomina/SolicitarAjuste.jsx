@@ -40,7 +40,7 @@ function SolicitarAjuste({
 		const response = await sendRequisition({
 			letter: "AjustePrenom",
 			repMotive: selectedCheckbox,
-			coment: coment,
+			coment: coment === "" ? null : coment,
 			dayToAdjust: dayToAdjust,
 			period: period,
 		});
@@ -51,7 +51,7 @@ function SolicitarAjuste({
 				"Error",
 				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
 			);
-			return
+			return;
 		}
 	};
 
@@ -194,13 +194,10 @@ function SolicitarAjuste({
 												},
 											]}
 											onPress={() =>
-												setSelectedCheckbox(
-													"TiempoExt"
-												)
+												setSelectedCheckbox("TiempoExt")
 											}
 											isChecked={
-												selectedCheckbox ===
-												"TiempoExt"
+												selectedCheckbox === "TiempoExt"
 											}
 											style={solicitarAjuste.checkbox}
 										></BouncyCheckbox>

@@ -25,30 +25,32 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 			style={{ width: "100%", height: "100%" }}
 			itemStyle={dataModal.pickerItemStyle}
 		>
-			<Picker.Item
-				label="Selecciona un tipo"
-				style={{ color: "gray" }}
-				value="Selecciona un tipo"
-			/>
+			{Platform.OS === "android" ? (
+				<Picker.Item
+					label="Selecciona un valor"
+					style={{ color: "gray" }}
+					value="Selecciona un valor"
+				/>
+			) : null}
 			<Picker.Item
 				label="Matrimonio"
 				style={dataModal.pickerItem}
-				value="M"
+				value="MAT"
 			/>
 			<Picker.Item
 				label="Tramite / Cita"
 				style={dataModal.pickerItem}
-				value="T"
+				value="TRA"
 			/>
 			<Picker.Item
 				label="Asunto Personal"
 				style={dataModal.pickerItem}
-				value="P"
+				value="PER"
 			/>
 			<Picker.Item
 				label="Nacimiento hijo(a)"
 				style={dataModal.pickerItem}
-				value="N"
+				value="NAC"
 			/>
 		</Picker>
 	);
