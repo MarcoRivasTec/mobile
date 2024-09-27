@@ -43,6 +43,9 @@ export const HomeProvider = ({ children }) => {
 		file = null,
 		dayToAdjust = null,
 		period = null,
+		startDate = null,
+		endDate = null,
+		days = null,
 	} = {}) => {
 		let fullName;
 		if (data.surname_1 !== "" && data.surname_2 !== "") {
@@ -85,7 +88,10 @@ export const HomeProvider = ({ children }) => {
 					$fileName: String,
 					$file: String,
 					$day_to_adjust: String,
-					$period: Int
+					$period: Int,
+					$start_date: String,
+					$end_date: String,
+					$days: Int
 					) {
 					sendRequisition(
 						numEmp: $numEmp,
@@ -101,7 +107,10 @@ export const HomeProvider = ({ children }) => {
 						fileName: $fileName,
 						file: $file,
 						day_to_adjust: $day_to_adjust,
-						period: $period
+						period: $period,
+						start_date: $start_date,
+						end_date: $end_date,
+						days: $days
 					) {
 						pdfFile
 					}
@@ -121,6 +130,9 @@ export const HomeProvider = ({ children }) => {
 				file: file,
 				day_to_adjust: dayToAdjust,
 				period: period,
+				start_date: startDate,
+				end_date: endDate,
+				days: days,
 			},
 		};
 		try {
@@ -134,10 +146,7 @@ export const HomeProvider = ({ children }) => {
 				// console.log(response.data.sendRequisition.pdfFile);
 				return response.data.sendRequisition.pdfFile;
 			} else {
-				console.warn(
-					"Detail sending requisition information: ",
-					response.data
-				);
+				console.warn("Detail sending requisition information: ", response.data);
 				return false;
 			}
 		} catch (error) {

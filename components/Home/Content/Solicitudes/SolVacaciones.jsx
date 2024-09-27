@@ -12,17 +12,24 @@ import DatePicker from "react-native-date-picker";
 import { solVacaciones } from "./styles";
 import Icon from "../../icons";
 import COLORS from "../../../../constants/colors";
+import Confirm from "../Design/Confirm";
 
 function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	const today = new Date();
 	let tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
 
-	const [startDate, setStartDate] = useState(today);
+	const [startDate, setStartDate] = useState(tomorrow);
 	const [openStartDate, setOpenStartDate] = useState(false);
 
 	const [endDate, setEndDate] = useState(tomorrow);
 	const [openEndDate, setOpenEndDate] = useState(false);
+
+	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
 
 	function formatDateString(date) {
 		const day = date.getDate();
@@ -32,6 +39,53 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 		return `${day}/${month}/${year}`;
 	}
 
+	const requestVacaciones = async () => {
+		if (selectedCheckbox === "") {
+			Alert.alert("Error", "Debes seleccionar un motivo");
+			return;
+		}
+		if (
+			selectedCheckbox !== "Vencimiento" &&
+			selectedCheckbox !== "Daño" &&
+			folio === ""
+		) {
+			Alert.alert("Error", "Debes introducir un folio");
+			return;
+		}
+		let response;
+		switch (selectedCheckbox) {
+			case "Vencimiento":
+			case "Daño":
+				response = await tarjetasRequisition({
+					type: "Banorte",
+					repMotive: selectedCheckbox,
+				});
+				break;
+			case "Cajeros":
+			case "Saldos":
+			case "Robo":
+			case "Extravio":
+				response = await tarjetasRequisition({
+					type: "Banorte",
+					repMotive: selectedCheckbox,
+					folio: folio,
+				});
+				break;
+
+			default:
+				break;
+		}
+		// console.log("Response requestGafete: ", response);
+		if (response === "Done") {
+			confirmationModalHandler();
+		} else {
+			Alert.alert(
+				"Error",
+				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+			);
+		}
+	};
+
 	return (
 		<View style={{ flex: 1 }}>
 			<Modal
@@ -40,10 +94,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 				visible={isVacModalVisible}
 				onRequestClose={onCallback}
 			>
-				<TouchableWithoutFeedback
-					onPress={Keyboard.dismiss}
-					accessible={false}
-				>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 					<View style={solVacaciones.backgroundContainer}>
 						<View style={solVacaciones.modalContainer}>
 							<View style={solVacaciones.contentContainer}>
@@ -58,25 +109,15 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 								<View style={solVacaciones.cantidadContainer}>
 									{/* Dias derecho */}
 									<TouchableOpacity
-										style={
-											solVacaciones.cantidadElementContainer
-										}
+										style={solVacaciones.cantidadElementContainer}
 									>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={
-													solVacaciones.cantidadTitle
-												}
-											>
+											<Text style={solVacaciones.cantidadTitle}>
 												Días Derecho
 											</Text>
 										</View>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={solVacaciones.cantidad}
-											>
-												18.00
-											</Text>
+											<Text style={solVacaciones.cantidad}>18.00</Text>
 										</View>
 									</TouchableOpacity>
 									{/* Dias pagados */}
@@ -84,49 +125,30 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 										style={[
 											solVacaciones.cantidadElementContainer,
 											{
-												backgroundColor:
-													COLORS.flatlistElement1,
+												backgroundColor: COLORS.flatlistElement1,
 											},
 										]}
 									>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={
-													solVacaciones.cantidadTitle
-												}
-											>
+											<Text style={solVacaciones.cantidadTitle}>
 												Días Pagados
 											</Text>
 										</View>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={solVacaciones.cantidad}
-											>
-												29.00
-											</Text>
+											<Text style={solVacaciones.cantidad}>29.00</Text>
 										</View>
 									</TouchableOpacity>
 									{/* Saldo actual */}
 									<TouchableOpacity
-										style={
-											solVacaciones.cantidadElementContainer
-										}
+										style={solVacaciones.cantidadElementContainer}
 									>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={
-													solVacaciones.cantidadTitle
-												}
-											>
+											<Text style={solVacaciones.cantidadTitle}>
 												Saldo Actual
 											</Text>
 										</View>
 										<View style={solVacaciones.cantidadBox}>
-											<Text
-												style={solVacaciones.cantidad}
-											>
-												-11.00
-											</Text>
+											<Text style={solVacaciones.cantidad}>-11.00</Text>
 										</View>
 									</TouchableOpacity>
 								</View>
@@ -136,39 +158,17 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									{/* Fecha inicio */}
 									<View style={solVacaciones.fechaContainer}>
 										{/* Fecha title */}
-										<View
-											style={
-												solVacaciones.fechaTitleContainer
-											}
-										>
-											<Text
-												style={solVacaciones.fechaTitle}
-											>
-												Fecha Inicio
-											</Text>
+										<View style={solVacaciones.fechaTitleContainer}>
+											<Text style={solVacaciones.fechaTitle}>Fecha Inicio</Text>
 										</View>
 										{/* Fecha button */}
-										<View
-											style={
-												solVacaciones.fechaDateContainer
-											}
-										>
+										<View style={solVacaciones.fechaDateContainer}>
 											<TouchableOpacity
-												onPress={() =>
-													setOpenStartDate(true)
-												}
-												style={
-													solVacaciones.fechaButton
-												}
+												onPress={() => setOpenStartDate(true)}
+												style={solVacaciones.fechaButton}
 											>
-												<Text
-													style={
-														solVacaciones.fechaText
-													}
-												>
-													{formatDateString(
-														startDate
-													)}
+												<Text style={solVacaciones.fechaText}>
+													{formatDateString(startDate)}
 												</Text>
 												<Icon
 													name="calendar"
@@ -199,96 +199,36 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									</View>
 									{/* Dias Container */}
 									<View style={solVacaciones.diasContainer}>
-										<View
-											style={
-												solVacaciones.fechaTitleContainer
-											}
-										>
-											<Text
-												style={solVacaciones.fechaTitle}
-											>
-												Días
-											</Text>
+										<View style={solVacaciones.fechaTitleContainer}>
+											<Text style={solVacaciones.fechaTitle}>Días</Text>
 										</View>
-										<View
-											style={
-												solVacaciones.diasBottomContainer
-											}
-										>
-											<View
-												style={
-													solVacaciones.diasSeparatorContainer
-												}
-											>
-												<Text
-													style={
-														solVacaciones.diasSeparator
-													}
-												>
-													→
+										<View style={solVacaciones.diasBottomContainer}>
+											<View style={solVacaciones.diasSeparatorContainer}>
+												<Text style={solVacaciones.diasSeparator}>→</Text>
+											</View>
+											<View style={solVacaciones.diasTextContainer}>
+												<Text style={solVacaciones.diasText}>
+													{endDate.getDate() - startDate.getDate() + 1}
 												</Text>
 											</View>
-											<View
-												style={
-													solVacaciones.diasTextContainer
-												}
-											>
-												<Text
-													style={
-														solVacaciones.diasText
-													}
-												>
-													{endDate.getDate() -
-														startDate.getDate() +
-														1}
-												</Text>
-											</View>
-											<View
-												style={
-													solVacaciones.diasSeparatorContainer
-												}
-											>
-												<Text
-													style={
-														solVacaciones.diasSeparator
-													}
-												>
-													→
-												</Text>
+											<View style={solVacaciones.diasSeparatorContainer}>
+												<Text style={solVacaciones.diasSeparator}>→</Text>
 											</View>
 										</View>
 									</View>
 									{/* Fecha Regreso */}
 									<View style={solVacaciones.fechaContainer}>
-										<View
-											style={
-												solVacaciones.fechaTitleContainer
-											}
-										>
-											<Text
-												style={solVacaciones.fechaTitle}
-											>
+										<View style={solVacaciones.fechaTitleContainer}>
+											<Text style={solVacaciones.fechaTitle}>
 												Fecha Regreso
 											</Text>
 										</View>
-										<View
-											style={
-												solVacaciones.fechaDateContainer
-											}
-										>
+										<View style={solVacaciones.fechaDateContainer}>
 											<TouchableOpacity
-												onPress={() =>
-													setOpenEndDate(true)
-												}
-												style={
-													solVacaciones.fechaButton
-												}
+												onPress={() => setOpenEndDate(true)}
+												style={solVacaciones.fechaButton}
 											>
-												<Text
-													style={
-														solVacaciones.fechaText
-													}
-												>
+												<Text style={solVacaciones.fechaText}>
 													{formatDateString(endDate)}
 												</Text>
 												<Icon
@@ -411,19 +351,13 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 								</View>
 
 								{/* Comentarios */}
-								<View
-									style={solVacaciones.comentariosContainer}
-								>
-									<Text
-										style={solVacaciones.comentariosTitle}
-									>
+								<View style={solVacaciones.comentariosContainer}>
+									<Text style={solVacaciones.comentariosTitle}>
 										Comentarios
 									</Text>
 									<TextInput
 										placeholder="Tu comentario aquí ..."
-										style={
-											solVacaciones.comentariosTitleText
-										}
+										style={solVacaciones.comentariosTitleText}
 										multiline={true}
 										numberOfLines={5}
 									></TextInput>
@@ -434,11 +368,17 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									onPress={onExit}
 									style={solVacaciones.exitButton}
 								>
-									<Text style={solVacaciones.textExitButton}>
-										Volver
-									</Text>
+									<Text style={solVacaciones.textExitButton}>Volver</Text>
 								</TouchableOpacity>
 							</View>
+							{ConfirmationVisible && (
+								<Confirm
+									isModalVisible={ConfirmationVisible}
+									onCallback={confirmationModalHandler}
+									onExit={confirmationModalHandler}
+									closeModal={onExit}
+								/>
+							)}
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
