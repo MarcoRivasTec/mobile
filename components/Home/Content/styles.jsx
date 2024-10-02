@@ -20,6 +20,37 @@ const menu = StyleSheet.create({
 const header = StyleSheet.create({
 	container: {
 		flex: 1,
+		width: "95%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	titleContainer: {
+		height: "100%",
+		// width: "35%",
+		paddingRight: 24,
+		paddingLeft: 8,
+		borderBottomRightRadius: 50,
+		backgroundColor: COLORS.main,
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	title: {
+		bottom: "10%",
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 12,
+		alignSelf: "center",
+		// borderWidth: 1
+	},
+});
+
+const header1 = StyleSheet.create({
+	container: {
+		flex: 1,
 		justifyContent: "center",
 		alignContent: "flex-start",
 		width: "95%",
@@ -1128,6 +1159,84 @@ const prestamos = StyleSheet.create({
 	bouncyCheckbox: {},
 });
 
+const retiro = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	contentContainer: {
+		flex: 19,
+		width: "92%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	titleContainer: {
+		height: "auto",
+		// flex: 0.3,
+		// height: "6%",
+		width: "100%",
+		marginTop: "4%",
+		// borderWidth: 1,
+		// borderRadius: 10,
+		justifyContent: "flex-start",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	textContainer: {
+		// height: 450,
+		// flex: 4,
+		// height: "60%",
+		// borderWidth: 1,
+		paddingTop: 10,
+		paddingBottom: 10,
+		width: "100%",
+		marginTop: "2%",
+		// marginBottom: "1%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+	},
+	textSubContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+	},
+	text: {
+		// flex: 1,
+		fontSize: 16,
+		textAlign: "left",
+		// borderWidth: 1,
+		color: COLORS.black,
+	},
+	subtext: {
+		fontSize: 16,
+		color: COLORS.black,
+	},
+	button: {
+		backgroundColor: COLORS.naranja,
+		// width: "50%",
+		marginTop: 15,
+		paddingVertical: 8,
+		paddingHorizontal: 20,
+		borderRadius: 12,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	textButton: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+});
+
 const cartas = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -1444,6 +1553,7 @@ export {
 	prenomina,
 	solicitudes,
 	prestamos,
+	retiro,
 	cartas,
 	reposiciones,
 	linea,

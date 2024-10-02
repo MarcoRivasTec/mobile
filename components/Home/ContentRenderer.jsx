@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import SVGLogo from "../../assets/LOGOTECMAMOVIL.svg";
 import { contentRenderer } from "./styles";
@@ -11,6 +11,7 @@ import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
 import Polizas from "./Content/Polizas";
 import Prestamos from "./Content/Prestamos";
+import RetiroAhorro from "./Content/RetiroAhorro";
 import Opiniones from "./Content/Opiniones";
 import Cartas from "./Content/Cartas";
 import Reposiciones from "./Content/Reposiciones";
@@ -20,6 +21,7 @@ import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 
 function ContentRenderer({ content, changeContent }) {
+
 	function renderContent() {
 		switch (content) {
 			case "Menu":
@@ -35,7 +37,6 @@ function ContentRenderer({ content, changeContent }) {
 				return <TecmaIdeas />;
 			case "Directorio":
 				return <Directorio />;
-
 			case "Vacaciones":
 				return <Vacaciones />;
 			case "ReciboNom":
@@ -46,9 +47,8 @@ function ContentRenderer({ content, changeContent }) {
 				return <Solicitudes />;
 			case "Prestamos":
 				return <Prestamos />;
-			// case "Retiro":
-			// 	return <Retiro />;
-
+			case "RetiroAhorro":
+				return <RetiroAhorro/>
 			case "Cartas":
 				return <Cartas />;
 			case "Reposiciones":
@@ -68,11 +68,7 @@ function ContentRenderer({ content, changeContent }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo
-				height="55%"
-				width="55%"
-				style={contentRenderer.svg}
-			></SVGLogo>
+			<SVGLogo height="55%" width="55%" style={contentRenderer.svg}></SVGLogo>
 			{renderContent()}
 		</View>
 	);

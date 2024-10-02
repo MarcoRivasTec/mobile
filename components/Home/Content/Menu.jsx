@@ -41,7 +41,7 @@ function Menu({ changeContent }) {
 				<SectionButton
 					title="Retiro de Ahorro"
 					icon="RETIRO_AHORRO"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() => changeContent("RetiroAhorro")}
 				/>
 			</View>
 			{/* Row 3 */}

@@ -8,6 +8,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 	Platform,
+	Alert,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { solPermisos } from "./styles";
@@ -29,6 +30,12 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 	const today = new Date();
 	const [motive, setMotive] = useState("Selecciona un tipo");
 	const [isTypeModalVisible, setIsTypeModalVisible] = useState(false);
+	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
+
 	const typeHandler = () => {
 		setIsTypeModalVisible(!isTypeModalVisible);
 	};
@@ -37,20 +44,35 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 		setIsLoading(true);
 		if (days === 0) {
 			Alert.alert("Error", "El número de días no puede ser 0");
+			setIsLoading(false);
 			return;
 		}
 		if (motive === "Selecciona un tipo") {
 			Alert.alert("Error", "Debes seleccionar un motivo");
+			setIsLoading(false);
 			return;
 		}
-		const response = await sendRequisition({
+
+		const requisitionData = {
 			letter: "PermisoDias",
 			startDate: startDate,
 			motive: motive,
 			days: days,
-			coment: coment === "" ? null : coment,
-		});
-		// console.log("Response requestGafete: ", response);
+		};
+
+		if (coment !== "") {
+			requisitionData.coment = coment;
+		}
+
+		const response = await sendRequisition(requisitionData);
+		// const response = await sendRequisition({
+		// 	letter: "PermisoDias",
+		// 	startDate: startDate,
+		// 	motive: motive,
+		// 	days: days,
+		// 	coment: coment === "" ? null : coment,
+		// });
+		console.log("Response at solpermisos: ", response);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -102,10 +124,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				visible={isVacModalVisible}
 				onRequestClose={onCallback}
 			>
-				<TouchableWithoutFeedback
-					onPress={Keyboard.dismiss}
-					accessible={false}
-				>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 					<View style={solPermisos.backgroundContainer}>
 						<View style={solPermisos.modalContainer}>
 							{isLoading ? (
@@ -124,45 +143,19 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 									{/* Fechas */}
 									<View style={solPermisos.fechasContainer}>
 										{/* Fecha inicio */}
-										<View
-											style={solPermisos.fechaContainer}
-										>
+										<View style={solPermisos.fechaContainer}>
 											{/* Fecha title */}
-											<View
-												style={
-													solPermisos.fechaTitleContainer
-												}
-											>
-												<Text
-													style={
-														solPermisos.fechaTitle
-													}
-												>
-													Fecha Inicio
-												</Text>
+											<View style={solPermisos.fechaTitleContainer}>
+												<Text style={solPermisos.fechaTitle}>Fecha Inicio</Text>
 											</View>
 											{/* Fecha button */}
-											<View
-												style={
-													solPermisos.fechaDateContainer
-												}
-											>
+											<View style={solPermisos.fechaDateContainer}>
 												<TouchableOpacity
-													onPress={() =>
-														setOpenStartDate(true)
-													}
-													style={
-														solPermisos.fechaButton
-													}
+													onPress={() => setOpenStartDate(true)}
+													style={solPermisos.fechaButton}
 												>
-													<Text
-														style={
-															solPermisos.fechaText
-														}
-													>
-														{formatDateString(
-															startDate
-														)}
+													<Text style={solPermisos.fechaText}>
+														{formatDateString(startDate)}
 													</Text>
 													<Icon
 														name="calendar"
@@ -199,28 +192,12 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 													{ alignItems: "center" },
 												]}
 											>
-												<Text
-													style={
-														solPermisos.fechaTitle
-													}
-												>
-													Días
-												</Text>
+												<Text style={solPermisos.fechaTitle}>Días</Text>
 											</View>
-											<View
-												style={
-													solPermisos.diasBottomContainer
-												}
-											>
-												<View
-													style={
-														solPermisos.diasTextContainer
-													}
-												>
+											<View style={solPermisos.diasBottomContainer}>
+												<View style={solPermisos.diasTextContainer}>
 													<TextInput
-														style={
-															solPermisos.diasTextField
-														}
+														style={solPermisos.diasTextField}
 														placeholder="#"
 														keyboardType="number-pad"
 														inputMode="numeric"
@@ -235,44 +212,23 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 
 									{/* Tipo */}
 									<View style={solPermisos.tipoContainer}>
-										<View
-											style={
-												solPermisos.tipoTitleContainer
-											}
-										>
-											<Text
-												style={
-													solPermisos.tipoTitleText
-												}
-											>
-												Tipo
-											</Text>
+										<View style={solPermisos.tipoTitleContainer}>
+											<Text style={solPermisos.tipoTitleText}>Tipo</Text>
 										</View>
 										{Platform.OS === "ios" ? (
 											<TouchableOpacity
 												onPress={typeHandler}
 												style={solPermisos.tipoField}
 											>
-												<Text
-													style={solPermisos.tipoText}
-												>
+												<Text style={solPermisos.tipoText}>
 													{showTypes(motive)}
 												</Text>
-												<View
-													style={
-														solPermisos.tipoIconContainer
-													}
-												>
+												<View style={solPermisos.tipoIconContainer}>
 													<DownArrow />
 												</View>
 											</TouchableOpacity>
 										) : (
-											<View
-												style={[
-													solPermisos.tipoField,
-													{ width: "100%" },
-												]}
-											>
+											<View style={[solPermisos.tipoField, { width: "100%" }]}>
 												<DataPicker
 													selectedElement={motive}
 													setSelectedElement={setMotive}
@@ -286,26 +242,18 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 									</View>
 
 									{/* Comentarios */}
-									<View
-										style={solPermisos.comentariosContainer}
-									>
-										<Text
-											style={solPermisos.comentariosTitle}
-										>
+									<View style={solPermisos.comentariosContainer}>
+										<Text style={solPermisos.comentariosTitle}>
 											Comentarios
 										</Text>
 										<TextInput
 											placeholder="Tu comentario aquí ..."
-											style={
-												solPermisos.comentariosTitleText
-											}
+											style={solPermisos.comentariosTitleText}
 											multiline={true}
 											numberOfLines={5}
 											maxLength={255}
 											value={coment}
-											onChangeText={(text) =>
-												setComent(text)
-											}
+											onChangeText={(text) => setComent(text)}
 										></TextInput>
 									</View>
 
@@ -316,32 +264,22 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 											style={[
 												solPermisos.button,
 												{
-													backgroundColor:
-														COLORS.green,
+													backgroundColor: COLORS.green,
 												},
 											]}
 										>
-											<Text
-												style={solPermisos.buttonText}
-											>
-												Solicitar
-											</Text>
+											<Text style={solPermisos.buttonText}>Solicitar</Text>
 										</TouchableOpacity>
 										<TouchableOpacity
 											onPress={onExit}
 											style={[
 												solPermisos.button,
 												{
-													backgroundColor:
-														COLORS.naranja,
+													backgroundColor: COLORS.naranja,
 												},
 											]}
 										>
-											<Text
-												style={solPermisos.buttonText}
-											>
-												Volver
-											</Text>
+											<Text style={solPermisos.buttonText}>Volver</Text>
 										</TouchableOpacity>
 									</View>
 								</View>
@@ -357,6 +295,14 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 										height: "100%",
 										width: "100%",
 									}}
+								/>
+							)}
+							{ConfirmationVisible && (
+								<Confirm
+									isModalVisible={ConfirmationVisible}
+									onCallback={confirmationModalHandler}
+									onExit={confirmationModalHandler}
+									closeModal={onExit}
 								/>
 							)}
 						</View>

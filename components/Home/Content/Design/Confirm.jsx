@@ -7,7 +7,7 @@ function Confirm({
 	isModalVisible,
 	onCallback,
 	onExit,
-	closeModal,
+	closeModal = null,
 	customTitle,
 	customText,
 }) {
@@ -17,7 +17,7 @@ function Confirm({
 		if (isModalVisible) {
 			timeoutId = setTimeout(() => {
 				onExit();
-				closeModal();
+				closeModal !== null && closeModal();
 			}, 3000);
 		}
 
@@ -43,18 +43,16 @@ function Confirm({
 							</View>
 
 							{/* Text */}
-							<View style={confirm.textContainer}>
-								<Text style={confirm.text}>
-									{customTitle
-										? customTitle
-										: "Tu solicitud ha sido enviada exitosamente"}
-								</Text>
-								<Text style={confirm.lowerText}>
-									{customText
-										? customText
-										: "Recibirás una notificación cuando haya sido procesada."}
-								</Text>
-							</View>
+							<Text style={confirm.text}>
+								{customTitle
+									? customTitle
+									: "Tu solicitud ha sido enviada exitosamente"}
+							</Text>
+							<Text style={confirm.lowerText}>
+								{customText
+									? customText
+									: "Recibirás una notificación cuando haya sido procesada."}
+							</Text>
 						</View>
 					</View>
 				</View>

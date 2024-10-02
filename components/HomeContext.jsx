@@ -64,14 +64,16 @@ export const HomeProvider = ({ children }) => {
 		// const fullName2 = `${data.surname_1}${data.surname_2 !== "" ? `" "${data.surname_2}` : ""}, ${data.name}`;
 		// const fullName =
 		console.log(
-			"Arguments: ",
-			letter,
-			motive,
-			coment,
-			fileName,
-			file,
-			dayToAdjust,
-			period
+			`Arguments:
+			letter: ${letter},
+			motive: ${motive},
+			coment: ${coment},
+			fileName: ${fileName},
+			daytoadjust: ${dayToAdjust},			
+			period: ${period},
+			start date: ${startDate},
+			end date: ${endDate},
+			days: ${days}`
 		);
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
@@ -133,28 +135,26 @@ export const HomeProvider = ({ children }) => {
 				start_date: startDate,
 				end_date: endDate,
 				days: days,
-
 			},
 		};
 		try {
 			// console.log("Data to be sent: ", requisitionQuery);
 			const response = await fetchPost({ query: requisitionQuery });
+			const pdfFile = response?.data?.sendRequisition?.pdfFile;
 			console.log(
 				"Response data at sendRequisition:",
-				JSON.stringify(response.data, null, 1)
+				JSON.stringify(response, null, 1)
 			);
-			if (response.data) {
+			if (pdfFile) {
 				// console.log(response.data.sendRequisition.pdfFile);
-				return response.data.sendRequisition.pdfFile;
+				return pdfFile;
 			} else {
-				console.warn(
-					"Detail sending requisition information: ",
-					response.data
-				);
+				console.warn("Detail sending requisition information: ", response?.data);
 				return false;
 			}
 		} catch (error) {
 			console.error("Error sending requisition information:", error);
+			return false;
 		}
 	};
 
