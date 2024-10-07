@@ -16,6 +16,11 @@ function CartaModal({
 		const response = await cartasRequisition(); // console.log("Response requestGafete: ", response);
 		if (response === "Done") {
 			confirmationModalHandler();
+		} else if (response === "Existing requisition") {
+			Alert.alert(
+				"Importante",
+				"Ya existe una solicitud en espera a ser procesada. Danos tiempo para atenderte."
+			);
 		} else {
 			Alert.alert(
 				"Error",

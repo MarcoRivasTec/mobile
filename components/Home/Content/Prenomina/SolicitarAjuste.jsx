@@ -37,11 +37,15 @@ function SolicitarAjuste({
 			Alert.alert("Error", "Debes seleccionar una opción");
 			return;
 		}
+
+		const [day, month, year] = dayToAdjust.split("-").map(Number);
+		const formattedDay = new Date(year, month - 1, day);		
+
 		const response = await sendRequisition({
 			letter: "AjustePrenom",
-			repMotive: selectedCheckbox,
+			motive: selectedCheckbox,
 			coment: coment === "" ? null : coment,
-			dayToAdjust: dayToAdjust,
+			dayToAdjust: formattedDay,
 			period: period,
 		});
 		if (response === "Done") {

@@ -51,7 +51,8 @@ function Confirm({
 							<Text style={confirm.lowerText}>
 								{customText
 									? customText
-									: "Recibirás una notificación cuando haya sido procesada."}
+									: "Recuerda pasar a tu departamento de Recursos Humanos por tu documento al finalizar tu turno."}
+								{/* : "Recibirás una notificación cuando haya sido procesada."} */}
 							</Text>
 						</View>
 					</View>

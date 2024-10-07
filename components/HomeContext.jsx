@@ -11,6 +11,7 @@ export const HomeProvider = ({ children }) => {
 		name: "",
 		surname_1: "",
 		surname_2: "",
+		sexo: "",
 		razon: "",
 
 		planta: "",

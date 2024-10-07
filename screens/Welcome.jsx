@@ -33,6 +33,7 @@ const Welcome = ({ navigation, route }) => {
 				UserInfo(numEmp: $numEmp) {
 					apellido_pat
 					apellido_mat
+					sexo
 					razon
 					planta
 					planta_id
@@ -61,6 +62,7 @@ const Welcome = ({ navigation, route }) => {
 						numEmp: numEmp,
 						surname_1: data.data.UserInfo.apellido_pat,
 						surname_2: data.data.UserInfo.apellido_mat,
+						sexo: data.data.UserInfo.sexo,
 						razon: data.data.UserInfo.razon,
 						planta: data.data.UserInfo.planta,
 						plantaID: data.data.UserInfo.planta_id.trim(),
