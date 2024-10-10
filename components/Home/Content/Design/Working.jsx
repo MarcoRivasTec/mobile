@@ -28,7 +28,7 @@ function Working({
 
 							{/* Text */}
 							<Text style={working.text}>
-								"Procesando ..."
+								Procesando ...
 							</Text>
 						</View>
 					</View>
