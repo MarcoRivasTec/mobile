@@ -61,7 +61,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 			startDate: startDate,
 			endDate: endDate,
 			motive: motive,
-			days: days,
+			days: +days,
 		};
 
 		if (coment !== "") {
