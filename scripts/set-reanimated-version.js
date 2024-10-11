@@ -27,15 +27,21 @@ console.log("Setting react-native-reanimated to 3.9.0-rc.1 for build");
 updateReanimatedVersion("3.9.0-rc.1");
 
 // Determine which command to run
-const isPrebuild = process.env.EXPO_PREBUILD;
-const isPrebuildClean = process.env.EXPO_PREBUILD_CLEAN;
+const isAndroidPrebuild = process.env.EXPO_PREBUILD_ANDROID;
+const isAndroidPrebuildClean = process.env.EXPO_PREBUILD_ANDROID_CLEAN;
+const isIOSPrebuild = process.env.EXPO_IOS_PREBUILD;
+const isIOSPrebuildClean = process.env.EXPO_PREBUILD_IOS_CLEAN;
 const isEASBuild = process.env.EAS_BUILD;
 let command = "";
 
-if (isPrebuild) {
+if (isAndroidPrebuild) {
 	command = "npx expo prebuild --platform android";
-} else if (isPrebuildClean) {
+} else if (isAndroidPrebuildClean) {
 	command = "npx expo prebuild --clean --platform android";
+} else if (isIOSPrebuild) {
+	command = "npx expo prebuild --platform ios";
+} else if (isIOSPrebuildClean) {
+	command = "npx expo prebuild --clean --platform ios";
 } else if (isEASBuild) {
 	command = "eas build --profile preview --platform android";
 }
