@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import * as Linking from "expo-linking";
+// import * as Linking from "expo-linking";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 // import FileViewer from "react-native-file-viewer";

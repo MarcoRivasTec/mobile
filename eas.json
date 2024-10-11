@@ -1,21 +1,28 @@
 {
-  "cli": {
-    "version": ">= 7.8.0"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "android": {
-        "buildType": "apk"
-      },
-      "distribution": "internal"
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
-  }
+	"cli": {
+		"version": ">= 7.8.0"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal"
+		},
+		"preview": {
+			"android": {
+				"buildType": "apk"
+			},
+			"distribution": "internal",
+			"env": {
+				"ENDPOINT": "http://10.3.0.254:4000/graphql"
+			}
+		},
+		"production": {
+			"android": {
+				"buildType": "apk"
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
 }
