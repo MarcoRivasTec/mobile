@@ -9,8 +9,8 @@
     "web": "expo start --web",
     "pb-a": "set EXPO_PREBUILD_ANDROID=1 && node scripts/set-reanimated-version.js",
     "pb-ac": "set EXPO_PREBUILD_ANDROID_CLEAN=1 && node scripts/set-reanimated-version.js",
-    "pb-i": "EXPO_PREBUILD_IOS=1 && node scripts/set-reanimated-version.js",
-    "pb-ic": "EXPO_PREBUILD_IOS_CLEAN=1 && node scripts/set-reanimated-version.js",
+    "pb-i": "EXPO_PREBUILD_IOS=1 node scripts/set-reanimated-version.js",
+    "pb-ic": "EXPO_PREBUILD_IOS_CLEAN=1 node scripts/set-reanimated-version.js",
     "eas-android": "set EAS_BUILD=1 && node scripts/set-reanimated-version.js"
   },
   "dependencies": {
