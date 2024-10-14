@@ -39,7 +39,7 @@ export const HomeProvider = ({ children }) => {
 	const sendRequisition = async ({
 		letter,
 		motive = null,
-		coment = "TEST",
+		coment = null,
 		fileName = null,
 		file = null,
 		dayToAdjust = null,
