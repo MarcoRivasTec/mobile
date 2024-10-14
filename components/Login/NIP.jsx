@@ -6,7 +6,7 @@ import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "../Home/icons";
 
-function NIP({nip, setNip}) {
+function NIP({nip, setNip, placeholder = null}) {
 	const [isNipShown, setIsNipShown] = useState(true);
 
 	return (
@@ -16,7 +16,7 @@ function NIP({nip, setNip}) {
 			</View>
 			<View style={layout.field}>
 				<TextInput
-					placeholder="NIP"
+					placeholder={placeholder ? placeholder : "NIP"}
 					placeholderTextColor={COLORS.placeholder}
 					keyboardType="number-pad"
 					inputMode="numeric"
