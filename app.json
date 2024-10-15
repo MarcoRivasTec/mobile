@@ -1,7 +1,7 @@
 {
 	"expo": {
-		"name": "TecmaMovil",
-		"slug": "TecmaMovil",
+		"name": "TECMAMovil Connect",
+		"slug": "TECMAMovil Connect",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
@@ -16,7 +16,10 @@
 			"supportsTablet": true,
 			"bundleIdentifier": "com.tecma.TecmaMovilConnect",
 			"infoPlist": {
-				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name."
+				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
+				"NSAppTransportSecurity": {
+					"NSAllowsArbitraryLoads": true
+				}
 			}
 		},
 		"android": {
@@ -24,7 +27,7 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"package": "com.tecma.TecmaMovilConnect",
+			"package": "com.tecma.TECMAMovilConnect",
 			"softwareKeyboardLayoutMode": "pan"
 		},
 		"web": {

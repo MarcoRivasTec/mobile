@@ -26,7 +26,7 @@ import { API_ENDPOINT } from "@env";
 
 const Restablece = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [numEmp, setNumEmp] = useState(API_ENDPOINT ? API_ENDPOINT : "");
+	const [numEmp, setNumEmp] = useState("");
 	const [rfc, setRFC] = useState("");
 	const [nip, setNip] = useState("");
 	const [nip2, setNip2] = useState("");
