@@ -9,7 +9,7 @@ import {
 	TextInput,
 	Text,
 	Pressable,
-    Alert,
+	Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
@@ -22,10 +22,11 @@ import fetchPost from "../components/fetching";
 import COLORS from "../constants/colors";
 import Icon from "../components/Home/icons";
 import Loading from "../components/Animations/Loading";
+import { API_ENDPOINT } from "@env";
 
 const Restablece = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [numEmp, setNumEmp] = useState("");
+	const [numEmp, setNumEmp] = useState(API_ENDPOINT ? API_ENDPOINT : "");
 	const [rfc, setRFC] = useState("");
 	const [nip, setNip] = useState("");
 	const [nip2, setNip2] = useState("");
@@ -94,18 +95,12 @@ const Restablece = ({ navigation }) => {
 						return;
 					}
 					case "Invalid RFC": {
-						Alert.alert(
-							"Error",
-							"El RFC proporcionado es incorrecto."
-						);
+						Alert.alert("Error", "El RFC proporcionado es incorrecto.");
 						setIsLoading(false);
 						return;
 					}
 					case "Invalid NIP": {
-						Alert.alert(
-							"Error",
-							"El NIP proporcionado es incorrecto."
-						);
+						Alert.alert("Error", "El NIP proporcionado es incorrecto.");
 						setIsLoading(false);
 						return;
 					}
@@ -132,10 +127,7 @@ const Restablece = ({ navigation }) => {
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
 			style={login.backgroundContainer}
 		>
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				accessible={false}
-			>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.contentContainer}>
 					{/* Logo */}
 					<View style={login.logoContainer}>
@@ -145,17 +137,9 @@ const Restablece = ({ navigation }) => {
 					{/* Num Emp */}
 					<KeyboardAvoidingView
 						behavior={Platform.OS === "ios" ? "padding" : "height"}
-						style={[
-							layout.fieldContainer,
-							{ marginVertical: "0%" },
-						]}
+						style={[layout.fieldContainer, { marginVertical: "0%" }]}
 					>
-						<View
-							style={[
-								layout.iconBox,
-								{ backgroundColor: COLORS.primary },
-							]}
-						>
+						<View style={[layout.iconBox, { backgroundColor: COLORS.primary }]}>
 							<Icon name="USER" size={20} style={layout.icon} />
 						</View>
 						<View style={layout.field}>
@@ -165,9 +149,7 @@ const Restablece = ({ navigation }) => {
 								keyboardType="number-pad"
 								inputMode="numeric"
 								value={numEmp}
-								onChangeText={(text) =>
-									handleTextChange(text, setNumEmp)
-								}
+								onChangeText={(text) => handleTextChange(text, setNumEmp)}
 								maxLength={12}
 								style={layout.userInput}
 							/>
@@ -177,17 +159,9 @@ const Restablece = ({ navigation }) => {
 					{/* RFC */}
 					<KeyboardAvoidingView
 						behavior={Platform.OS === "ios" ? "padding" : "height"}
-						style={[
-							layout.fieldContainer,
-							{ marginVertical: "0%" },
-						]}
+						style={[layout.fieldContainer, { marginVertical: "0%" }]}
 					>
-						<View
-							style={[
-								layout.iconBox,
-								{ backgroundColor: COLORS.primary },
-							]}
-						>
+						<View style={[layout.iconBox, { backgroundColor: COLORS.primary }]}>
 							<Icon name="USER" size={20} style={layout.icon} />
 						</View>
 						<View style={layout.field}>
@@ -205,11 +179,7 @@ const Restablece = ({ navigation }) => {
 					{/* NIP */}
 					<NIP nip={nip} setNip={setNip} placeholder="Nuevo NIP" />
 
-					<NIP
-						nip={nip2}
-						setNip={setNip2}
-						placeholder="Tu NIP de nuevo"
-					/>
+					<NIP nip={nip2} setNip={setNip2} placeholder="Tu NIP de nuevo" />
 
 					{/* Restablecer button */}
 					<LinearGradient
@@ -219,13 +189,8 @@ const Restablece = ({ navigation }) => {
 						end={{ x: 1, y: 0 }}
 					>
 						{isLoading === false ? (
-							<TouchableOpacity
-								style={layout.button}
-								onPress={handleReset}
-							>
-								<Text style={layout.buttonText}>
-									Restablecer
-								</Text>
+							<TouchableOpacity style={layout.button} onPress={handleReset}>
+								<Text style={layout.buttonText}>Restablecer</Text>
 							</TouchableOpacity>
 						) : (
 							<TouchableOpacity style={layout.button}>
