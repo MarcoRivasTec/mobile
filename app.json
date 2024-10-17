@@ -1,7 +1,7 @@
 {
 	"expo": {
 		"name": "TECMAMovil Connect",
-		"slug": "TECMAMovil Connect",
+		"slug": "TECMAMovilConnect",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
@@ -44,6 +44,14 @@
 				{
 					"android": {
 						"usesCleartextTraffic": true
+					},
+
+					"ios": {
+						"infoPlist": {
+							"NSAppTransportSecurity": {
+								"NSAllowsArbitraryLoads": true
+							}
+						}
 					}
 				}
 			]
