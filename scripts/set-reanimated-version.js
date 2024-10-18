@@ -2,14 +2,26 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// Path to your package.json file
+// Paths
 const packageJsonPath = path.resolve(__dirname, "..", "package.json");
+const envFilePath = path.resolve(__dirname, "../env", ".env");
 
 // Function to update the reanimated version
 function updateReanimatedVersion(version) {
 	const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
 	packageJson.dependencies["react-native-reanimated"] = version;
 	fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+}
+
+// Function to update the API_ENDPOINT in the .env file
+function updateEnvApiEndpoint(newEndpoint) {
+	let envContent = fs.readFileSync(envFilePath, "utf-8");
+	envContent = envContent.replace(
+		/API_ENDPOINT=.*/,
+		`API_ENDPOINT=${newEndpoint}`
+	);
+	fs.writeFileSync(envFilePath, envContent);
+	console.log(`API_ENDPOINT updated to ${newEndpoint}`);
 }
 
 // Function to run a command and handle errors
@@ -21,6 +33,13 @@ function runCommand(command) {
 		process.exit(1);
 	}
 }
+
+// Store the original API_ENDPOINT
+const originalEndpoint = "http://10.3.1.187:8083/papitecma";
+const newEndpoint = "http://201.174.7.187:8083/papitecma";
+
+// Update API_ENDPOINT before build
+updateEnvApiEndpoint(newEndpoint);
 
 // Update the version to 3.9.0-rc.1
 console.log("Setting react-native-reanimated to 3.9.0-rc.1 for build");
@@ -51,9 +70,11 @@ if (command) {
 	try {
 		runCommand(command);
 	} finally {
-		// Restore the version to 3.10.1 after the build process
+		// Restore the version and API_ENDPOINT after the build process
 		console.log("Restoring react-native-reanimated to 3.10.1");
 		updateReanimatedVersion("3.10.1");
+		console.log("Restoring original API_ENDPOINT");
+		updateEnvApiEndpoint(originalEndpoint);
 	}
 } else {
 	console.log("No build command found. Skipping build.");
