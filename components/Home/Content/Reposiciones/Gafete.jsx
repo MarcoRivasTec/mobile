@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { gafete } from "./styles";
 import Confirm from "./Confirm";
+import Working from "../Design/Working";
 
 function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
 
 	const requestGafete = async () => {
+		setIsWorkingModalVisible(true);
 		const response = await tarjetasRequisition({ type: "Gafete" });
 		// console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -109,6 +113,9 @@ function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 								</TouchableOpacity>
 							</View>
 						</View>
+						{isWorkingModalVisible && (
+							<Working isModalVisible={isWorkingModalVisible} />
+						)}
 					</View>
 				</View>
 			</Modal>

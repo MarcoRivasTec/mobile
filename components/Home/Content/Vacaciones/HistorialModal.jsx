@@ -19,7 +19,7 @@ import YearModal from "./YearModal";
 import YearPicker from "./YearPicker";
 
 function HistorialModal({ onCallback, isModalVisible, onExit }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, region } = useContext(AppContext);
 	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 	const [years, setYears] = useState([]);
 	const [historial, setHistorial] = useState([]);
@@ -36,8 +36,8 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	useEffect(() => {
 		setIsLoading(true);
 		const query = {
-			query: `query HistorialVacaciones($numEmp: String!, $year: Int!){
-				HistorialVacaciones(numEmp: $numEmp, year: $year) {
+			query: `query HistorialVacaciones($numEmp: String!, $region: String!, $year: Int!){
+				HistorialVacaciones(numEmp: $numEmp, region: $region, year: $year) {
 					yearly {
 						id
 						dias
@@ -48,6 +48,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 				year: selectedYear,
 			},
 		};
@@ -73,8 +74,8 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 	useEffect(() => {
 		setIsLoading(true);
 		const query = {
-			query: `query HistorialYears($numEmp: String!){
-				HistorialYears(numEmp: $numEmp) {
+			query: `query HistorialYears($numEmp: String!, $region: String!){
+				HistorialYears(numEmp: $numEmp, region: $region) {
 					years {
 						id
 						year
@@ -83,6 +84,7 @@ function HistorialModal({ onCallback, isModalVisible, onExit }) {
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 			},
 		};
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { cartaModal } from "./styles";
 import Confirm from "../Design/Confirm";
+import Working from "../Design/Working";
 
 function CartaModal({
 	text,
@@ -11,9 +12,12 @@ function CartaModal({
 	onExit,
 }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	const requestCarta = async () => {
+		setIsWorkingModalVisible(true);
 		const response = await cartasRequisition(); // console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else if (response === "Existing requisition") {
@@ -111,6 +115,9 @@ function CartaModal({
 								</TouchableOpacity>
 							</View>
 						</View>
+						{isWorkingModalVisible && (
+							<Working isModalVisible={isWorkingModalVisible} />
+						)}
 					</View>
 				</View>
 			</Modal>

@@ -13,11 +13,13 @@ import DatePicker from "react-native-date-picker";
 import Icon from "../../../icons";
 import LoadingContent from "../../../../Animations/LoadingContent";
 import fetchPost from "../../../../fetching";
-import { HomeContext } from "../../../../HomeContext";
+import { AppContext } from "../../../../AppContext";
+import Working from "../../Design/Working";
 
 function AddMemberModal({ onCallback, onExit, updateData }) {
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const [nombre, setNombre] = useState("");
 	const [apellidoPaterno, setApellidoPaterno] = useState("");
 	const [apellidoMaterno, setApellidoMaterno] = useState("");
@@ -87,16 +89,18 @@ function AddMemberModal({ onCallback, onExit, updateData }) {
 		// 	`Name is: ${nombre} ${apellidoPaterno} ${apellidoMaterno}, numEmp: ${+numEmp}`
 		// );
 		const addFamilyMemberCall = async () => {
+			setIsWorkingModalVisible(true);
 			const fullName = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
 			// console.log(
 			// 	`Nombre: ${fullName}, numEmp: ${talla}, Num emp: ${empNum}`
 			// );
 			const addFamilyQuery = {
-				query: `mutation addFamilyMember($numEmp: Int!, $name: String!, $kin: Int!, $sex: String!, $birth: String!) {
-					addFamilyMember(numEmp: $numEmp, name: $name, kin: $kin, sex: $sex, birth: $birth)
+				query: `mutation addFamilyMember($numEmp: Int!, $region: String!, $name: String!, $kin: Int!, $sex: String!, $birth: String!) {
+					addFamilyMember(numEmp: $numEmp, region: $region, name: $name, kin: $kin, sex: $sex, birth: $birth)
 				}`,
 				variables: {
 					numEmp: +numEmp,
+					region: region,
 					name: fullName,
 					kin: +parentesco,
 					sex: sexo,
@@ -106,6 +110,7 @@ function AddMemberModal({ onCallback, onExit, updateData }) {
 			try {
 				// console.log("updateTallas before passing: ", updateTallas);
 				const data = await fetchPost({ query: addFamilyQuery });
+				setIsWorkingModalVisible(false);
 				// console.log("Response data at add family member", data, typeof data.data.addFamilyMember);
 				if (data.data.addFamilyMember) {
 					Alert.alert("Informacion actualizada");
@@ -489,6 +494,12 @@ function AddMemberModal({ onCallback, onExit, updateData }) {
 										</Text>
 									</TouchableOpacity>
 								</View>
+
+								{isWorkingModalVisible && (
+									<Working
+										isModalVisible={isWorkingModalVisible}
+									/>
+								)}
 							</View>
 						)}
 					</View>

@@ -9,10 +9,10 @@ import Tallas from "./InfoPers/Tallas";
 import ModifyDomicilioModal from "./InfoPers/Domicilio/ModifyDomicilioModal";
 import fetchPost from "../../fetching";
 import LoadingContent from "../../Animations/LoadingContent";
-import { HomeContext } from "../../HomeContext";
+import { AppContext } from "../../AppContext";
 
 function InfoPers() {
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
 	const { width, height } = Dimensions.get("window");
 	const infoheight = Math.round(height * 0.4);
 	const domicilioHeight = Math.round(height * 0.3);
@@ -58,8 +58,8 @@ function InfoPers() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const query = {
-		query: `query InfoPers($numEmp: String!){
-			InfoPers(numEmp: $numEmp) {
+		query: `query InfoPers($numEmp: String!, $region: String!){
+			InfoPers(numEmp: $numEmp, region: $region) {
 				identificacion {
 					rfc
 					curp
@@ -100,6 +100,7 @@ function InfoPers() {
 		}`,
 		variables: {
 			numEmp: numEmp,
+			region: region,
 		},
 	};
 
@@ -160,9 +161,9 @@ function InfoPers() {
 		fetchData();
 	}, []); // Dependency array includes numEmp to refetch data if numEmp changes
 
-	useEffect(() => {
-		console.log(familiares);
-	}, [familiares]);
+	// useEffect(() => {
+	// 	console.log(familiares);
+	// }, [familiares]);
 
 	// Render loading or error state if data is not yet available
 	if (isLoading) {

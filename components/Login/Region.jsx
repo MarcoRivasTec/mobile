@@ -14,13 +14,11 @@ function Region({ modalHandler, region, setRegion }) {
 				return "Cd. Juárez";
 			case "MTY":
 				return "Monterrey";
-			case "MTYLS":
-				return "Monterrey Living Spaces";
 			case "AMX":
 				return "Amamamex";
 			case "TIJ":
 				return "Tijuana";
-			case "SALT":
+			case "SAL":
 				return "Saltillo";
 			default:
 				break;

@@ -7,7 +7,7 @@ import AddMemberModal from "./Familia/AddMemberModal";
 import ConfirmModal from "./ConfirmModal";
 import CardRow from "../Design/CardRow";
 import fetchPost from "../../../fetching";
-import { HomeContext } from "../../../HomeContext";
+import { AppContext } from "../../../AppContext";
 
 function Familia({
 	data,
@@ -18,17 +18,18 @@ function Familia({
 	closeModal,
 	updateData,
 }) {
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
 	const cardHeight = Math.round(height * 0.18);
 	const titleHeight = Math.round(height * 0.036);
 
 	const removeFamilyMember = async ({ pariente }) => {
 		const removeFamilyQuery = {
-			query: `mutation removeFamilyMember($numEmp: Int!, $name: String!, $date: String!) {
-					removeFamilyMember(numEmp: $numEmp, name: $name, date: $date)
+			query: `mutation removeFamilyMember($numEmp: Int!, $region: String!,  $name: String!, $date: String!) {
+					removeFamilyMember(numEmp: $numEmp, region: $region, name: $name, date: $date)
 				}`,
 			variables: {
 				numEmp: +numEmp,
+				region: region,
 				name: pariente.nombre,
 				date: pariente.fec_act,
 			},

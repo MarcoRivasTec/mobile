@@ -17,9 +17,12 @@ import Confirm from "../Design/Confirm";
 import LoadingContent from "../../../Animations/LoadingContent";
 import fetchPost from "../../../fetching";
 import { HomeContext } from "../../../HomeContext";
+import { AppContext } from "../../../AppContext";
+import Working from "../Design/Working";
 
 function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
-	const { numEmp, sendRequisition } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
+	const { sendRequisition } = useContext(HomeContext);
 	const today = new Date();
 	let tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
@@ -38,12 +41,13 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	const [openEndDate, setOpenEndDate] = useState(false);
 
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(true);
 		const query = {
-			query: `query Vacaciones($numEmp: String!){
-				Vacaciones(numEmp: $numEmp) {
+			query: `query Vacaciones($numEmp: String!, $region: String!){
+				Vacaciones(numEmp: $numEmp, region: $region) {
 					diasvacs {
 						ganados
 						tomados
@@ -53,6 +57,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 			},
 		};
 		const fetchData = async () => {
@@ -107,7 +112,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 			);
 			return;
 		}
-
+		setIsWorkingModalVisible(true);
 		const requisitionData = {
 			letter: "Vacaciones",
 			startDate: startDate,
@@ -120,6 +125,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 		}
 		const response = await sendRequisition(requisitionData);
 		// console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -549,6 +555,11 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									onCallback={confirmationModalHandler}
 									onExit={confirmationModalHandler}
 									closeModal={onExit}
+								/>
+							)}
+							{isWorkingModalVisible && (
+								<Working
+									isModalVisible={isWorkingModalVisible}
 								/>
 							)}
 						</View>

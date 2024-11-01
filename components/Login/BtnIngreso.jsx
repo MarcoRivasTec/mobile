@@ -9,7 +9,7 @@ import { AppContext } from "../AppContext";
 import { autoLogin } from "../../defaultValues";
 
 function Ingresar({ nip, navigation, region }) {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, setInfoFields } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleLogin = () => {
@@ -25,21 +25,18 @@ function Ingresar({ nip, navigation, region }) {
 			Alert.alert("Opción incorrecta", "Selecciona una región");
 			return;
 		}
-		if (region !== "JRZ") {
-			Alert.alert("Región inhabilitada", "Selecciona otra región");
-			return;
-		}
 
 		setIsLoading(true);
 		const query = {
-			query: `mutation login($numEmp: String!, $nip: String!){
-				login(numEmp: $numEmp, nip: $nip) {
+			query: `mutation login($numEmp: String!, $nip: String!, $region: String!){
+				login(numEmp: $numEmp, nip: $nip, region: $region) {
 					token
 					name
 				}
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 				nip: nip,
 			},
 		};
@@ -53,6 +50,7 @@ function Ingresar({ nip, navigation, region }) {
 					// 	accessToken: data.data.login.token,
 					// });
 					console.log(JSON.stringify(data.data.login, null, 1));
+					setInfoFields({ region: region });
 					navigation.replace("WelcomeHome", {
 						screen: "Welcome",
 						params: {
@@ -79,7 +77,7 @@ function Ingresar({ nip, navigation, region }) {
 
 	useEffect(() => {
 		if (autoLogin) {
-			// handleLogin();
+			handleLogin();
 		}
 	}, []);
 

@@ -28,7 +28,7 @@ const formatDate = (date) => {
 
 function Prenomina() {
 	const today = formatDate(new Date());
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, region } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isVerDetalleSelected, setIsVerDetalleSelected] = useState(false);
 	const [prenominas, setPrenominas] = useState([
@@ -104,12 +104,12 @@ function Prenomina() {
 		}
 	}
 
-	// useEffect(() => {
-	// 	console.log(
-	// 		"Ver detalle has changed: ",
-	// 		JSON.stringify(isVerDetalleSelected, null, 2)
-	// 	);
-	// }, [isVerDetalleSelected]);
+	useEffect(() => {
+		console.log(
+			"Selected week is: ",
+			JSON.stringify(selectedWeek, null, 2)
+		);
+	}, [selectedWeek]);
 
 	useEffect(() => {
 		console.log(`prenominas fecha changed: ${prenominas[0].fecha_inicio}`);
@@ -127,13 +127,14 @@ function Prenomina() {
 		setIsLoading(true);
 		const fetchDataYears = async () => {
 			const query = {
-				query: `query PrenominaYears($numEmp: String!){
-					PrenominaYears(numEmp: $numEmp) {
+				query: `query PrenominaYears($numEmp: String!, $region: String!){
+					PrenominaYears(numEmp: $numEmp, region: $region) {
 						year
 					}
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 				},
 			};
 			try {
@@ -173,8 +174,8 @@ function Prenomina() {
 		setIsLoading(true);
 		const fetchDataSemana = async () => {
 			const query = {
-				query: `query PrenominaSemanal($numEmp: String!, $year: Int!){
-					PrenominaSemanal(numEmp: $numEmp, year: $year) {
+				query: `query PrenominaSemanal($numEmp: String!, $region: String!, $year: Int!){
+					PrenominaSemanal(numEmp: $numEmp, region: $region, year: $year) {
 						nomina
 						fecha_inicio
 						fecha_fin
@@ -185,6 +186,7 @@ function Prenomina() {
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 					year: selectedYear,
 				},
 			};
@@ -244,8 +246,8 @@ function Prenomina() {
 
 		const fetchDataDias = async () => {
 			const query = {
-				query: `query PrenominaDias($numEmp: String!, $week: Int!, $year: Int!){
-					PrenominaDias(numEmp: $numEmp, week: $week, year: $year) {
+				query: `query PrenominaDias($numEmp: String!, $region: String!, $week: Int!, $year: Int!){
+					PrenominaDias(numEmp: $numEmp, region: $region, week: $week, year: $year) {
 						nomina
 						dia
 						fec_dia
@@ -262,6 +264,7 @@ function Prenomina() {
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 					week: selectedWeek,
 					year: selectedYear,
 				},
@@ -381,29 +384,37 @@ function Prenomina() {
 				maximumFractionDigits: 2,
 			});
 		};
-		adjustedWeek = selectedWeek - 1;
+		// adjustedWeek = selectedWeek - 1;
 
 		const handleUndefined = () => {
 			return "Sin dato";
 		};
 
-		if (prenominas[adjustedWeek] === undefined) {
+		const prenomina = prenominas.find(
+			(item) => item.nomina === Number(selectedWeek)
+		);
+
+		// if (prenominas[adjustedWeek] === undefined) {
+		// 	return handleUndefined();
+		// }
+
+		if (!prenomina) {
 			return handleUndefined();
 		}
 
 		switch (tipo) {
 			case "horas":
-				return prenominas[adjustedWeek].horas === undefined
+				return prenomina.horas === undefined
 					? handleUndefined()
-					: `${formatNumber(prenominas[adjustedWeek].horas)}`;
+					: `${formatNumber(prenomina.horas)}`;
 			case "extras":
-				return prenominas[adjustedWeek].extras === undefined
+				return prenomina.extras === undefined
 					? handleUndefined()
-					: `${formatNumber(prenominas[adjustedWeek].extras)}`;
+					: `${formatNumber(prenomina.extras)}`;
 			case "incidencia":
-				return prenominas[adjustedWeek].incidencia === undefined
+				return prenomina.incidencia === undefined
 					? handleUndefined()
-					: `${prenominas[adjustedWeek].incidencia}`;
+					: `${prenomina.incidencia}`;
 			default:
 				return "";
 		}
@@ -419,6 +430,19 @@ function Prenomina() {
 			year: "numeric",
 		}).format(date);
 		// return formattedDate.replace("de ", "de ").replace(", ", " del ");
+	};
+
+	const getWeek = () => {
+		const prenomina = prenominas.find(
+			(item) => item.nomina === Number(selectedWeek)
+		);
+		if (prenomina && prenomina.fecha_inicio !== undefined) {
+			return `${getDay(prenomina.fecha_inicio)} ${formatDateES(
+				prenomina.fecha_inicio
+			)} a ${getDay(prenomina.fecha_fin)} ${formatDateES(
+				prenomina.fecha_fin
+			)}`;
+		} else return "";
 	};
 
 	const getDay = (dateStr) => {
@@ -556,20 +580,8 @@ function Prenomina() {
 
 						<View style={prenomina.prenominaDates}>
 							<Text style={prenomina.prenominaDatesText}>
-								{prenominas[selectedWeek - 1] &&
-								prenominas[selectedWeek - 1].fecha_inicio !==
-									undefined ? (
-									`${getDay(
-										prenominas[selectedWeek - 1]
-											.fecha_inicio
-									)} ${formatDateES(
-										prenominas[selectedWeek - 1]
-											.fecha_inicio
-									)} a ${getDay(
-										prenominas[selectedWeek - 1].fecha_fin
-									)} ${formatDateES(
-										prenominas[selectedWeek - 1].fecha_fin
-									)}`
+								{getWeek() !== undefined ? (
+									getWeek()
 								) : (
 									<LoadingContent />
 								)}

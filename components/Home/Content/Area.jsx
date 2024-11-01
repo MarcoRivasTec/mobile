@@ -8,11 +8,11 @@ import LoadingContent from "../../Animations/LoadingContent";
 import { AppContext } from "../../AppContext";
 
 function Area() {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, region } = useContext(AppContext);
 
 	const query = {
-		query: `query Area($numEmp: String!){
-			Area(numEmp: $numEmp) {
+		query: `query Area($numEmp: String!, $region: String!){
+			Area(numEmp: $numEmp, region: $region) {
 					puesto
 					turno
 					ingreso
@@ -25,6 +25,7 @@ function Area() {
 		}`,
 		variables: {
 			numEmp: numEmp,
+			region: region,
 		},
 	};
 

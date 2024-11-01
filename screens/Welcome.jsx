@@ -10,7 +10,7 @@ import { AppContext } from "../components/AppContext";
 
 const Welcome = ({ navigation, route }) => {
 	const { name, accessToken } = route.params;
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, region } = useContext(AppContext);
 	const { setProfileImg, setDataFields } = useContext(HomeContext);
 	const [animFinish, setAnimFinish] = useState(false);
 	const [infoFetched, setInfoFetched] = useState(false);
@@ -29,8 +29,8 @@ const Welcome = ({ navigation, route }) => {
 
 	const getUserInfo = () => {
 		const query = {
-			query: `query UserInfo($numEmp: String!){
-				UserInfo(numEmp: $numEmp) {
+			query: `query UserInfo($numEmp: String! $region: String!){
+				UserInfo(numEmp: $numEmp, region: $region) {
 					apellido_pat
 					apellido_mat
 					sexo
@@ -49,13 +49,14 @@ const Welcome = ({ navigation, route }) => {
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 			},
 		};
 		// setIsLoading(true);
 		fetchPost({ query })
 			.then((data) => {
-				// console.log("Response data at welcome:", data);
-				if (data.data.UserInfo.nomina) {
+				console.log("Response data at welcome:", data);
+				if (data.data.UserInfo) {
 					setDataFields({
 						accessToken: accessToken,
 						name: name,
@@ -91,13 +92,14 @@ const Welcome = ({ navigation, route }) => {
 
 	const getUserImg = () => {
 		const query = {
-			query: `query ImageBlob($numEmp: String!){
-				ImageBlob(numEmp: $numEmp) {
+			query: `query ImageBlob($numEmp: String!, $region: String!){
+				ImageBlob(numEmp: $numEmp, region: $region) {
 					image
 				}
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 			},
 		};
 		// setIsLoading(true);

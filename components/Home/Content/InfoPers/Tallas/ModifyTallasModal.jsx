@@ -3,15 +3,15 @@ import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { modifyTallasModal } from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import LoadingContent from "../../../../Animations/LoadingContent";
-import DatePicker from "react-native-date-picker";
-import Icon from "../../../icons";
 import fetchPost from "../../../../fetching";
-import { HomeContext } from "../../../../HomeContext";
+import { AppContext } from "../../../../AppContext";
+import Working from "../../Design/Working";
 
 function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
 	const empNum = parseInt(numEmp, 10);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const [selectedPlayera, setSelectedPlayera] = useState(data.playera);
 	const [selectedPantalon, setSelectedPantalon] = useState(data.pantalon);
 	const [selectedCalzado, setSelectedCalzado] = useState(data.calzado);
@@ -30,17 +30,18 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 	// }, [selectedCalzado]);
 
 	const handleSave = async () => {
-		setIsLoading(true);
+		setIsWorkingModalVisible(true);
 
 		let count = 0;
 		const updateTallasAndFetch = async (tipo, talla) => {
 			// console.log(`Tipo: ${tipo}, Talla: ${talla}, Num emp: ${empNum}`);
 			const updateTallas = {
-				query: `mutation updateMeasurements($numEmp: Int!, $type: String!, $size: String!) {
-					updateMeasurements(numEmp: $numEmp, type: $type, size: $size)
+				query: `mutation updateMeasurements($numEmp: Int!, $region: String!, $type: String!, $size: String!) {
+					updateMeasurements(numEmp: $numEmp, region: $region, type: $type, size: $size)
 				}`,
 				variables: {
 					numEmp: empNum,
+					region: region,
 					type: tipo,
 					size: talla,
 				},
@@ -48,6 +49,7 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 			try {
 				// console.log("updateTallas before passing: ", updateTallas);
 				const data = await fetchPost({ query: updateTallas });
+				setIsWorkingModalVisible(false);
 				// console.log("Response data at update tallas", data);
 				if (data.data.updateMeasurements) {
 					// Alert.alert("Informacion actualizada")
@@ -57,7 +59,6 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 			} catch (error) {
 				console.error("Error at modify tallas", error);
 			} finally {
-				setIsLoading(false); // Set loading to false after data is fetched
 			}
 		};
 
@@ -326,6 +327,12 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 										</Text>
 									</TouchableOpacity>
 								</View>
+
+								{isWorkingModalVisible && (
+									<Working
+										isModalVisible={isWorkingModalVisible}
+									/>
+								)}
 							</View>
 						)}
 					</View>

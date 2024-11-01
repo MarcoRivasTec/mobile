@@ -12,6 +12,7 @@ export const AppProvider = ({ children }) => {
 		// accessToken: "",
 		// name: "",
 		numEmp: defUsr !== "" ? defUsr : "", // Add numEmp to the state
+		region: "",
 		platform: "",
 		// deviceName: null,
 		deviceType: null,

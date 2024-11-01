@@ -15,6 +15,7 @@ import Working from "./Design/Working";
 import DataModal from "./ReciboNom/DataModal";
 import { Ionicons } from "@expo/vector-icons";
 import { HomeContext } from "../../HomeContext";
+import { AppContext } from "../../AppContext";
 //import HistorialModal from "./Vacaciones/HistorialModal";
 
 function getWeekNumber(d) {
@@ -26,7 +27,8 @@ function getWeekNumber(d) {
 }
 
 function ReciboNom() {
-	const { numEmp, proyecto } = useContext(HomeContext);
+	const { numEmp, region } = useContext(AppContext);
+	const { proyecto } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [fondoAhorro, setFondoAhorro] = useState({
 		saldo_ca: 0,
@@ -90,11 +92,13 @@ function ReciboNom() {
 		const payrollQuery = {
 			query: `mutation generatePayroll(
 					$numEmp: Int!,
+					$region: String!,
 					$period: Int!,
 					$year: Int!
 					) {
 					generatePayroll(
 						numEmp: $numEmp,
+						region: $region,
 						period: $period,
 						year: $year
 					) {
@@ -105,6 +109,7 @@ function ReciboNom() {
 					}`,
 			variables: {
 				numEmp: +numEmp,
+				region: region,
 				period: period,
 				year: selectedYear,
 			},
@@ -193,29 +198,34 @@ function ReciboNom() {
 				maximumFractionDigits: 2,
 			});
 		};
-		adjustedWeek = selectedWeek - 1;
+		// adjustedWeek = selectedWeek - 1;
+
+		// console.log("Adjusted week is: ", adjustedWeek);
+		// console.log("Adjusted week is: ", adjustedWeek);
 
 		const handleUndefined = () => {
 			return "No definido";
 		};
 
-		if (recibos[adjustedWeek] === undefined) {
+		const nominaObject = recibos.find((recibo) => recibo.nomina === selectedWeek);
+
+		if (!nominaObject) {
 			return handleUndefined();
 		}
 
 		switch (tipo) {
 			case "per":
-				return recibos[adjustedWeek].percepciones === undefined
+				return nominaObject.percepciones === undefined
 					? handleUndefined()
-					: `$${formatNumber(recibos[adjustedWeek].percepciones)}`;
+					: `$${formatNumber(nominaObject.percepciones)}`;
 			case "ded":
-				return recibos[adjustedWeek].deducciones === undefined
+				return nominaObject.deducciones === undefined
 					? handleUndefined()
-					: `$${formatNumber(recibos[adjustedWeek].deducciones)}`;
+					: `$${formatNumber(nominaObject.deducciones)}`;
 			case "neto":
-				return recibos[adjustedWeek].neto === undefined
+				return nominaObject.neto === undefined
 					? handleUndefined()
-					: `$${formatNumber(recibos[adjustedWeek].neto)}`;
+					: `$${formatNumber(nominaObject.neto)}`;
 			default:
 				return "";
 		}
@@ -299,8 +309,8 @@ function ReciboNom() {
 	useEffect(() => {
 		const fetchDataAhorro = async () => {
 			const query = {
-				query: `query FondoAhorro($numEmp: String!){
-					FondoAhorro(numEmp: $numEmp) {
+				query: `query FondoAhorro($numEmp: String!, $region: String!){
+					FondoAhorro(numEmp: $numEmp, region: $region) {
 						saldo_fa
 						saldo_ca
 						saldo_pr
@@ -308,6 +318,7 @@ function ReciboNom() {
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 				},
 			};
 			try {
@@ -325,13 +336,14 @@ function ReciboNom() {
 		};
 		const fetchDataRecibosYears = async () => {
 			const query = {
-				query: `query RecibosYears($numEmp: String!){
-					RecibosYears(numEmp: $numEmp) {
+				query: `query RecibosYears($numEmp: String!, $region: String!){
+					RecibosYears(numEmp: $numEmp, region: $region) {
 						year
 					}
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 				},
 			};
 			try {
@@ -359,8 +371,8 @@ function ReciboNom() {
 		setIsLoading(true);
 		const fetchData = async () => {
 			const query = {
-				query: `query Recibos($numEmp: String!, $year: String!, $proy: String!){
-					Recibos(numEmp: $numEmp, year: $year, proy: $proy) {
+				query: `query Recibos($numEmp: String!, $region: String!, $year: String!, $proy: String!){
+					Recibos(numEmp: $numEmp, region: $region, year: $year, proy: $proy) {
 						nomina
 						percepciones
 						deducciones
@@ -370,32 +382,57 @@ function ReciboNom() {
 				}`,
 				variables: {
 					numEmp: numEmp,
+					region: region,
 					year: selectedYear.toString(),
 					proy: proyecto,
 				},
 			};
 			try {
+				console.log("Query for Recibos is: ", query);
 				const data = await fetchPost({ query });
 				// console.log(
 				// 	"Response data at recibos:",
 				// 	JSON.stringify(data, null, 2)
 				// );
 				if (data.data.Recibos) {
+					console.log(
+						"Recibos info is: ",
+						JSON.stringify(data.data.Recibos, null, 1)
+					);
 					const normales = data.data.Recibos.filter(
 						(item) => item.nomina >= 1 && item.nomina <= 53
 					);
+					console.log("normales read: ", normales);
 					const especiales = data.data.Recibos.filter(
 						(item) => item.nomina >= 54 && item.nomina <= 950
 					);
+					// console.log("especiales read: ");
 					const weeksCount = normales.map((item) => item.nomina);
+					// console.log("weekscount read: ");
 					const nominasCount = especiales.map((item) => item.nomina);
+					// console.log("nominas count read: ");
 					normales.sort((a, b) => a.nomina - b.nomina);
 					especiales.sort((a, b) => a.nomina - b.nomina);
-					const mostRecentNomina = especiales.sort(
-						(a, b) =>
-							new Date(b.fecha.split("-").reverse().join("-")) -
-							new Date(a.fecha.split("-").reverse().join("-"))
-					)[0].nomina;
+					// console.log("sorting done: ");
+					// const today = new Date();
+					// let mostRecentNomina = {
+					// 	nomina: "Sin nomina",
+					// 	percepciones: "No definido",
+					// 	deducciones: "No definido",
+					// 	neto: "No definido",
+					// 	fecha: today,
+					// };
+					let mostRecentNomina = "No hay";
+					if (especiales.length > 0) {
+						mostRecentNomina = especiales.sort(
+							(a, b) =>
+								new Date(
+									b.fecha.split("-").reverse().join("-")
+								) -
+								new Date(a.fecha.split("-").reverse().join("-"))
+						)[0].nomina;
+					}
+					// console.log("most recent nomina: ");
 
 					setSelectedNominaEsp(mostRecentNomina);
 					// console.warn(especiales);
@@ -460,7 +497,6 @@ function ReciboNom() {
 			)}
 			{isWorkingModalVisible && (
 				<Working
-					// onCallback={nominaEspModalHandler}
 					isModalVisible={isWorkingModalVisible}
 				/>
 			)}
@@ -602,102 +638,117 @@ function ReciboNom() {
 						</View>
 					</TouchableOpacity>
 				</View>
-				<View
-					style={[reciboNom.nominaContainer, { marginTop: "2.5%" }]}
-				>
-					{/* Barra Busqueda */}
-					<View style={reciboNom.nominaHeader}>
-						<TouchableOpacity
-							onPress={nominaEspModalHandler}
-							style={[reciboNom.nominaWeekContainer, { left: 0 }]}
-						>
-							<View style={reciboNom.nominaSearchIconContainer}>
-								<Icon
-									name="search"
-									size={13}
-									style={reciboNom.nominaSearchIcon}
-								></Icon>
-							</View>
-							<Text style={reciboNom.nominaSearchText}>
-								Nom {selectedNominaEsp}
-							</Text>
-						</TouchableOpacity>
-					</View>
-
-					{/* Cantidades */}
-					<View style={reciboNom.nominaCantidadContainer}>
-						<TouchableOpacity
-							style={reciboNom.nominaCantidadElementContainer}
-						>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Percepciones
-								</Text>
-							</View>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidad}>
-									{/* ${recibos[selectedWeek].percepciones} */}
-									{getMontoEsp("per")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={[
-								reciboNom.nominaCantidadElementContainer,
-								{ backgroundColor: COLORS.flatlistElement1 },
-							]}
-						>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Deducciones
-								</Text>
-							</View>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidad}>
-									{/* ${recibos[selectedWeek].deducciones} */}
-									{getMontoEsp("ded")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={reciboNom.nominaCantidadElementContainer}
-						>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Neto
-								</Text>
-							</View>
-							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidad}>
-									{/* ${recibos[selectedWeek].neto} */}
-									{getMontoEsp("neto")}
-								</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-
-					{/* Generar recibo */}
-					<TouchableOpacity
-						onPress={() => sendPayrollRequest(selectedNominaEsp)}
-						style={reciboNom.nominaGenerarContainer}
+				{selectedNominaEsp !== "No hay" && (
+					<View
+						style={[
+							reciboNom.nominaContainer,
+							{ marginTop: "2.5%" },
+						]}
 					>
-						<View style={reciboNom.nominaGenerarButton}>
-							<Ionicons
-								name="document"
-								size={16}
-								color={COLORS.white}
-							/>
-							<Text style={reciboNom.nominaGenerarText}>
-								Generar recibo{"   "}
-							</Text>
-							<Ionicons
-								name="arrow-forward"
-								size={16}
-								color={COLORS.white}
-							/>
+						{/* Barra Busqueda */}
+						<View style={reciboNom.nominaHeader}>
+							<TouchableOpacity
+								onPress={nominaEspModalHandler}
+								style={[
+									reciboNom.nominaWeekContainer,
+									{ left: 0 },
+								]}
+							>
+								<View
+									style={reciboNom.nominaSearchIconContainer}
+								>
+									<Icon
+										name="search"
+										size={13}
+										style={reciboNom.nominaSearchIcon}
+									></Icon>
+								</View>
+								<Text style={reciboNom.nominaSearchText}>
+									Nom {selectedNominaEsp}
+								</Text>
+							</TouchableOpacity>
 						</View>
-					</TouchableOpacity>
-				</View>
+
+						{/* Cantidades */}
+						<View style={reciboNom.nominaCantidadContainer}>
+							<TouchableOpacity
+								style={reciboNom.nominaCantidadElementContainer}
+							>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidadTitle}>
+										Percepciones
+									</Text>
+								</View>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidad}>
+										{/* ${recibos[selectedWeek].percepciones} */}
+										{getMontoEsp("per")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={[
+									reciboNom.nominaCantidadElementContainer,
+									{
+										backgroundColor:
+											COLORS.flatlistElement1,
+									},
+								]}
+							>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidadTitle}>
+										Deducciones
+									</Text>
+								</View>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidad}>
+										{/* ${recibos[selectedWeek].deducciones} */}
+										{getMontoEsp("ded")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={reciboNom.nominaCantidadElementContainer}
+							>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidadTitle}>
+										Neto
+									</Text>
+								</View>
+								<View style={reciboNom.nominaCantidadBox}>
+									<Text style={reciboNom.nominaCantidad}>
+										{/* ${recibos[selectedWeek].neto} */}
+										{getMontoEsp("neto")}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						</View>
+
+						{/* Generar recibo */}
+						<TouchableOpacity
+							onPress={() =>
+								sendPayrollRequest(selectedNominaEsp)
+							}
+							style={reciboNom.nominaGenerarContainer}
+						>
+							<View style={reciboNom.nominaGenerarButton}>
+								<Ionicons
+									name="document"
+									size={16}
+									color={COLORS.white}
+								/>
+								<Text style={reciboNom.nominaGenerarText}>
+									Generar recibo{"   "}
+								</Text>
+								<Ionicons
+									name="arrow-forward"
+									size={16}
+									color={COLORS.white}
+								/>
+							</View>
+						</TouchableOpacity>
+					</View>
+				)}
 			</View>
 		</View>
 	);

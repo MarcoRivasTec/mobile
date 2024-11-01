@@ -5,8 +5,6 @@ import LoadingContent from "../../../Animations/LoadingContent";
 
 function Working({
 	isModalVisible,
-	onCallback,
-	onExit,
 }) {
 	return (
 		<View style={working.container}>
@@ -14,7 +12,6 @@ function Working({
 				animationType="fade"
 				transparent={true}
 				visible={isModalVisible}
-				onRequestClose={onCallback}
 			>
 				<View style={working.backgroundContainer}>
 					<View style={working.modalContainer}>

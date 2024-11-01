@@ -1,10 +1,12 @@
 // NewContext.js
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import fetchPost from "./fetching";
+import { AppContext } from "./AppContext";
 
 export const HomeContext = createContext();
 
 export const HomeProvider = ({ children }) => {
+	const { region } = useContext(AppContext);
 	const [data, setData] = useState({
 		accessToken: "",
 		numEmp: "",
@@ -79,6 +81,7 @@ export const HomeProvider = ({ children }) => {
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
 					$numEmp: Int!,
+					$region: String!,
 					$name: String!,
 					$letter: String!,
 					$plant_id: String!,
@@ -98,6 +101,7 @@ export const HomeProvider = ({ children }) => {
 					) {
 					sendRequisition(
 						numEmp: $numEmp,
+						region: $region,
 						name: $name,
 						letter: $letter,
 						plant_id: $plant_id,
@@ -120,6 +124,7 @@ export const HomeProvider = ({ children }) => {
 					}`,
 			variables: {
 				numEmp: empNum,
+				region: region,
 				name: fullName,
 				letter: letter,
 				plant_id: data.plantaID,
@@ -150,7 +155,10 @@ export const HomeProvider = ({ children }) => {
 				// console.log(response.data.sendRequisition.pdfFile);
 				return pdfFile;
 			} else {
-				console.warn("Detail sending requisition information: ", response?.data);
+				console.warn(
+					"Detail sending requisition information: ",
+					response?.data
+				);
 				return false;
 			}
 		} catch (error) {

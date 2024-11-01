@@ -40,7 +40,7 @@ const getWeekDates = (year, weekNumber) => {
 };
 
 function Prestamos() {
-	const { numEmp } = useContext(AppContext);
+	const { numEmp, region } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const currentYear = new Date().getFullYear();
 
@@ -70,14 +70,15 @@ function Prestamos() {
 
 	const fetchDataPrestamo = async () => {
 		const query = {
-			query: `query Prestamo($numEmp: String!){
-				Prestamo(numEmp: $numEmp) {
+			query: `query Prestamo($numEmp: String!, $region: String!){
+				Prestamo(numEmp: $numEmp, region: $region) {
 					saldo_fa,
 					prestamo
 				}
 			}`,
 			variables: {
 				numEmp: numEmp,
+				region: region,
 			},
 		};
 		try {

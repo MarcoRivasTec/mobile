@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import {
-	Modal,
-	View,
-	Text,
-	TouchableOpacity,
-	Keyboard,
-	TouchableWithoutFeedback,
-} from "react-native";
+import { Modal, View, Text, TouchableOpacity } from "react-native";
 import { despensa } from "./styles";
 import Confirm from "./Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Working from "../Design/Working";
 
 function Despensa({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const checkboxIconSize = 25;
 
 	const [selectedCheckbox, setSelectedCheckbox] = React.useState("");
@@ -22,11 +17,13 @@ function Despensa({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 			Alert.alert("Error", "Debes seleccionar un motivo");
 			return;
 		}
+		setIsWorkingModalVisible(true);
 		const response = await tarjetasRequisition({
 			type: "Despensa",
 			repMotive: selectedCheckbox,
 		});
 		// console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -219,6 +216,9 @@ function Despensa({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 								</TouchableOpacity>
 							</View>
 						</View>
+						{isWorkingModalVisible && (
+							<Working isModalVisible={isWorkingModalVisible} />
+						)}
 					</View>
 				</View>
 			</Modal>

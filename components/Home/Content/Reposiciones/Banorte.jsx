@@ -12,10 +12,12 @@ import {
 import { banorte } from "./styles";
 import Confirm from "./Confirm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Working from "../Design/Working";
 
 function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	const [folio, setFolio] = useState("");
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const checkboxIconSize = 25;
 
 	const [selectedCheckbox, setSelectedCheckbox] = React.useState("");
@@ -43,6 +45,7 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 			return;
 		}
 		let response;
+		setIsWorkingModalVisible(true);
 		switch (selectedCheckbox) {
 			case "Vencimiento":
 			case "Daño":
@@ -66,6 +69,7 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 				break;
 		}
 		// console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -427,6 +431,11 @@ function Banorte({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 									</TouchableOpacity>
 								</View>
 							</View>
+							{isWorkingModalVisible && (
+								<Working
+									isModalVisible={isWorkingModalVisible}
+								/>
+							)}
 						</View>
 					</View>
 				</TouchableWithoutFeedback>

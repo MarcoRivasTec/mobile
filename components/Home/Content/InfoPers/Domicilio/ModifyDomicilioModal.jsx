@@ -15,10 +15,12 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import Confirm from "../../Design/Confirm";
+import Working from "../../Design/Working";
 
 function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 	const { sendRequisition } = useContext(HomeContext);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const [base64file, setBase64File] = useState(null);
 	const [fileType, setFileType] = useState(null);
 	const [fileName, setFileName] = useState(""); // Track the file name for PDF or image
@@ -33,12 +35,13 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 			Alert.alert("Error", "Debes subir un archivo PDF o imagen.");
 			return;
 		}
-
+		setIsWorkingModalVisible(true);
 		const response = await sendRequisition({
 			letter: "Domicilio",
 			fileName: fileType === "image/jpeg" ? "image.jpg" : "document.pdf",
 			file: base64file,
 		});
+		setIsWorkingModalVisible(false);
 
 		if (response === "Done") {
 			confirmationModalHandler();
@@ -276,6 +279,9 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 								/>
 							)}
 						</View>
+						{isWorkingModalVisible && (
+							<Working isModalVisible={isWorkingModalVisible} />
+						)}
 					</View>
 				</View>
 			</Modal>

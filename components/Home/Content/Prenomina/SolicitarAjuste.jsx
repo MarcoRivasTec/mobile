@@ -13,6 +13,7 @@ import { solicitarAjuste } from "./styles";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Confirm from "../Design/Confirm";
 import { HomeContext } from "../../../HomeContext";
+import Working from "../Design/Working";
 
 function SolicitarAjuste({
 	onCallback,
@@ -24,6 +25,7 @@ function SolicitarAjuste({
 	const { sendRequisition } = useContext(HomeContext);
 	const [coment, setComent] = useState("");
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 	const checkboxIconSize = 25;
 
 	const [selectedCheckbox, setSelectedCheckbox] = React.useState("");
@@ -38,8 +40,9 @@ function SolicitarAjuste({
 			return;
 		}
 
+		setIsWorkingModalVisible(true);
 		const [day, month, year] = dayToAdjust.split("-").map(Number);
-		const formattedDay = new Date(year, month - 1, day);		
+		const formattedDay = new Date(year, month - 1, day);
 
 		const response = await sendRequisition({
 			letter: "AjustePrenom",
@@ -48,6 +51,7 @@ function SolicitarAjuste({
 			dayToAdjust: formattedDay,
 			period: period,
 		});
+		setIsWorkingModalVisible(false);
 		if (response === "Done") {
 			confirmationModalHandler();
 		} else {
@@ -313,6 +317,11 @@ function SolicitarAjuste({
 										</Text>
 									</TouchableOpacity>
 								</View>
+								{isWorkingModalVisible && (
+									<Working
+										isModalVisible={isWorkingModalVisible}
+									/>
+								)}
 							</View>
 						</View>
 					</View>

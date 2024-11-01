@@ -20,6 +20,7 @@ import DataModal from "./DataModal";
 import { HomeContext } from "../../../HomeContext";
 import LoadingContent from "../../../Animations/LoadingContent";
 import Confirm from "../Design/Confirm";
+import Working from "../Design/Working";
 
 function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 	const { numEmp, sendRequisition } = useContext(HomeContext);
@@ -31,6 +32,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 	const [motive, setMotive] = useState("Selecciona un tipo");
 	const [isTypeModalVisible, setIsTypeModalVisible] = useState(false);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
@@ -41,7 +43,6 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 	};
 
 	const requestPermiso = async () => {
-		setIsLoading(true);
 		if (days === 0) {
 			Alert.alert("Error", "El número de días no puede ser 0");
 			setIsLoading(false);
@@ -53,6 +54,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 			return;
 		}
 
+		setIsWorkingModalVisible(true);
 		const endDate = new Date(startDate);
 		endDate.setDate(endDate.getDate() + parseInt(days, 10));
 
@@ -76,6 +78,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 		// 	days: days,
 		// 	coment: coment === "" ? null : coment,
 		// });
+		setIsWorkingModalVisible(false);
 		console.log("Response at solpermisos: ", response);
 		if (response === "Done") {
 			confirmationModalHandler();
@@ -85,7 +88,6 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
 			);
 		}
-		setIsLoading(false);
 	};
 
 	const showTypes = (motive) => {
@@ -372,6 +374,14 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 											</Text>
 										</TouchableOpacity>
 									</View>
+
+									{isWorkingModalVisible && (
+										<Working
+											isModalVisible={
+												isWorkingModalVisible
+											}
+										/>
+									)}
 								</View>
 							)}
 							{isTypeModalVisible && (
