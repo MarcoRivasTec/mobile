@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Splash, Login, Welcome, Home, Restablece } from "./screens";
 import { AppProvider } from "./components/AppContext";
 import { HomeProvider } from "./components/HomeContext";
+import FlashMessage from "react-native-flash-message";
 
 // const Stack = createNativeStackNavigator();
 
@@ -115,6 +116,8 @@ export default function App() {
 					/>
 				</MainStack.Navigator>
 			</NavigationContainer>
+
+			<FlashMessage position="top" />
 		</AppProvider>
 	);
 }
