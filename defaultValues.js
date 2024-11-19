@@ -1,9 +1,9 @@
-const defUsr = "37499";
+const defUsr = "";
 // const defUsr = "999991110";
-const defPass = "371004";
+const defPass = "";
 // const defPass = "990595";
 // const defRegion = "";
-const defRegion = "TIJ";
+const defRegion = "";
 const autoLogin = false;
 
 export { defPass, defUsr, defRegion, autoLogin };

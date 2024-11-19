@@ -8,10 +8,9 @@ import Navbar from "../components/Home/Navbar";
 import ContentRenderer from "../components/Home/ContentRenderer";
 
 const Home = ({ navigation }) => {
-
-	// useEffect(() => {
-	// 	StatusBar.setHidden(false); // Hide the status bar when the component mounts
-	// }, []);
+	useEffect(() => {
+		StatusBar.setHidden(false);
+	}, []);
 
 	const [currentContent, setCurrentContent] = useState("Menu");
 

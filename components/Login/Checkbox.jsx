@@ -1,11 +1,11 @@
 import { View } from "react-native";
 import { layout } from "./styles";
-import React, { useState } from "react";
+import React from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import COLORS from "../../constants/colors";
 
-function Checkbox() {
-	const [checkboxState, setCheckboxState] = React.useState(false);
+function Checkbox({ checkboxState, setCheckboxState }) {
+	// const [checkboxState, setCheckboxState] = useState(false);
 
 	return (
 		<View style={layout.checkboxContainer}>

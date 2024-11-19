@@ -55,7 +55,7 @@ const Welcome = ({ navigation, route }) => {
 		// setIsLoading(true);
 		fetchPost({ query })
 			.then((data) => {
-				console.log("Response data at welcome:", data);
+				// console.log("Response data at welcome:", data);
 				if (data.data.UserInfo) {
 					setDataFields({
 						accessToken: accessToken,
@@ -134,7 +134,7 @@ const Welcome = ({ navigation, route }) => {
 	}, [infoFetched, animFinish]);
 
 	useEffect(() => {
-		StatusBar.setHidden(false); // Hide the status bar when the component mounts
+		// StatusBar.setHidden(true);
 		getUserImg();
 		getUserInfo();
 	}, []);

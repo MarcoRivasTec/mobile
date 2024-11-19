@@ -13,7 +13,7 @@ function User() {
 
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			behavior={Platform.OS === "ios" ? "padding" : "padding"}
 			style={[layout.fieldContainer, { marginVertical: "0%" }]}
 		>
 			<View style={[layout.iconBox, { backgroundColor: COLORS.primary }]}>
