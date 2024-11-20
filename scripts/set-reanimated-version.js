@@ -35,8 +35,8 @@ function runCommand(command) {
 }
 
 // Store the original API_ENDPOINT
-const originalEndpoint = "http://10.3.1.187:8083/papitecma";
-const newEndpoint = "http://201.174.7.187:8083/papitecma";
+const originalEndpoint = `"http://201.174.7.187:8083/papitecma"`;
+const newEndpoint = `"http://201.174.7.187:8083/papitecma"`;
 
 // Update API_ENDPOINT before build
 updateEnvApiEndpoint(newEndpoint);

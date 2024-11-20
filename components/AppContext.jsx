@@ -73,9 +73,9 @@ export const AppProvider = ({ children }) => {
 		loadCredentials();
 	}, []);
 
-	useEffect(() => {
-		console.log("Info has changed: ", JSON.stringify(info, null, 1));
-	}, [info]);
+	// useEffect(() => {
+	// 	console.log("Info has changed: ", JSON.stringify(info, null, 1));
+	// }, [info]);
 
 	return (
 		<AppContext.Provider value={{ ...info, setInfoFields }}>
