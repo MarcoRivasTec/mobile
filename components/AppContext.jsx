@@ -10,6 +10,10 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
 	const { width, height } = Dimensions.get("screen");
+	// const playStoreURI = "market://details?id=com.tecma.TECMAMovilConnect";
+	const playStoreURI =
+		"https://play.google.com/store/apps/details?id=com.tecma.TECMAMovilConnect";
+	const appStoreURI = "https://apps.apple.com/app/id6736772143";
 	const [info, setInfo] = useState({
 		// accessToken: "",
 		// name: "",
@@ -24,8 +28,6 @@ export const AppProvider = ({ children }) => {
 		width: width,
 		height: height,
 		appVersion: appConfig.expo.version,
-		playStoreURI: "market://details?id=com.tecma.TECMAMovilConnect",
-		appStoreURI: "https://apps.apple.com/app/id6736772143",
 
 		// proyecto: "",
 		// razon: "",
@@ -78,7 +80,9 @@ export const AppProvider = ({ children }) => {
 	// }, [info]);
 
 	return (
-		<AppContext.Provider value={{ ...info, setInfoFields }}>
+		<AppContext.Provider
+			value={{ ...info, setInfoFields, playStoreURI, appStoreURI }}
+		>
 			{children}
 		</AppContext.Provider>
 	);

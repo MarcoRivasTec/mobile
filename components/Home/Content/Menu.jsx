@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { menu } from "./styles";
 import SectionButton from "./Menu/SectionButton";
+import { showMessage } from "react-native-flash-message";
 
 function Menu({ changeContent }) {
 	return (
@@ -77,7 +78,16 @@ function Menu({ changeContent }) {
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"
-					// onPress={() => changeContent("Solicitudes")}
+					onPress={() =>
+						showMessage({
+							message: "Esta sección está temporalmente deshabilitada",
+							type: "info",
+							duration: 3000,
+							position: "bottom",
+							icon: { icon: "info", position: "right" },
+							// statusBarHeight: 40,
+						})
+					}
 				/>
 				<SectionButton
 					title="Opiniones"

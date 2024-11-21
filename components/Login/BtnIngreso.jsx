@@ -20,79 +20,92 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 		appStoreURI,
 		platform,
 	} = useContext(AppContext);
+	const [versionCheck, setVersionCheck] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [canContinue, setCanContinue] = useState(false);
 
-	useEffect(() => {
-		const query = {
-			query: `query Versions($currVer: String!){
-				Versions(currVer: $currVer) {
-					upToDate
-					critical					
-				}
-			}`,
-			variables: {
-				currVer: appVersion,
-			},
-		};
-
-		const openStore = async () => {
-			try {
-				await Linking.openURL(
-					platform === "ios" ? appStoreURI : playStoreURI
-				);
-			} catch (error) {
-				console.error("Failed to open store: ", error);
+	const query = {
+		query: `query Versions($currVer: String!){
+			Versions(currVer: $currVer) {
+				upToDate
+				critical					
 			}
-		};
+		}`,
+		variables: {
+			currVer: appVersion,
+		},
+	};
 
-		const fetchData = async () => {
-			try {
-				const data = await fetchPost({ query });
-				console.log("Response data at Versions:", data);
-				if (data.data.Versions) {
-					if (data.data.Versions.upToDate === false) {
-						if (data.data.Versions.critical === true) {
-							showMessage({
-								message:
-									"La aplicación tiene una actualización importante",
-								description:
-									"Deberás actualizar para poder continuar. Toca aquí para actualizar",
-								type: "danger",
-								duration: 20000,
-								icon: { icon: "warning", position: "right" },
-								onPress: openStore,
-							});
-						} else {
-							setCanContinue(true);
-							showMessage({
-								message:
-									"La aplicación tiene una nueva actualización",
-								description:
-									"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
-								type: "warning",
-								duration: 20000,
-								icon: { icon: "warning", position: "right" },
-								onPress: openStore,
-							});
-						}
+	const fetchData = async () => {
+		try {
+			const data = await fetchPost({ query });
+			console.log("Response data at Versions:", data);
+			if (data.data.Versions) {
+				if (data.data.Versions.upToDate === false) {
+					if (data.data.Versions.critical === true) {
+						showMessage({
+							message: "La aplicación tiene una actualización importante",
+							description:
+								"Deberás actualizar para poder continuar. Toca aquí para actualizar",
+							type: "danger",
+							duration: 20000,
+							icon: { icon: "warning", position: "right" },
+							onPress: () => {
+								openStore();
+							},
+						});
 					} else {
 						setCanContinue(true);
+						showMessage({
+							message: "La aplicación tiene una nueva actualización",
+							description:
+								"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
+							type: "warning",
+							duration: 20000,
+							icon: { icon: "warning", position: "right" },
+							onPress: () => {
+								openStore();
+							},
+						});
 					}
 				} else {
-					console.warn("Error retrieving app version information");
+					setCanContinue(true);
 				}
-			} catch (error) {
-				console.error("Error at Versions:", error);
-			} finally {
-				// setIsLoading(false);
+			} else {
+				showMessage({
+					message: "Error de conexión",
+					description:
+						"Hubo un problema al contactar nuestros servidores, revisa tu conexión a internet.",
+					type: "warning",
+					duration: 10000,
+					icon: { icon: "warning", position: "right" },
+				});
+				console.warn("Error retrieving app version information");
 			}
-		};
+		} catch (error) {
+			console.error("Error at Versions:", error);
+		} finally {
+			// setIsLoading(false);
+		}
+	};
 
+	const openStore = async () => {
+		try {
+			console.log("Platform is");
+			await Linking.openURL(platform === "ios" ? appStoreURI : playStoreURI);
+		} catch (error) {
+			console.error("Failed to open store: ", error);
+		}
+	};
+
+	useEffect(() => {
+		setVersionCheck(true);
 		fetchData();
+		setVersionCheck(false);
 	}, []);
 
 	const handleLogin = () => {
+		// console.log("Prueba");
 		if (!canContinue) {
 			showMessage({
 				message: "La aplicación tiene una actualización importante",
@@ -186,13 +199,13 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 			start={{ x: 0, y: 0 }}
 			end={{ x: 1, y: 0 }}
 		>
-			{isLoading === false ? (
-				<TouchableOpacity style={layout.button} onPress={handleLogin}>
-					<Text style={layout.buttonText}>Ingresar</Text>
-				</TouchableOpacity>
-			) : (
+			{isLoading || versionCheck ? (
 				<TouchableOpacity style={layout.button}>
 					<Loading />
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity style={layout.button} onPress={handleLogin}>
+					<Text style={layout.buttonText}>Ingresar</Text>
 				</TouchableOpacity>
 			)}
 		</LinearGradient>

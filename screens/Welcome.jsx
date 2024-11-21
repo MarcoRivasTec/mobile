@@ -128,7 +128,7 @@ const Welcome = ({ navigation, route }) => {
 
 	useEffect(() => {
 		if (infoFetched === true && animFinish === true) {
-			StatusBar.setHidden(false);
+			// StatusBar.setHidden(false);
 			navigation.replace("Home");
 		}
 	}, [infoFetched, animFinish]);

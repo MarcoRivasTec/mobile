@@ -1,19 +1,74 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, ImageBackground, Linking } from "react-native";
 import { linea } from "./styles";
 import ContentHeader from "./ContentHeader";
 import ButtonAction from "./Buttons/ButtonAction";
 import Denuncia from "../../Animations/Denuncia";
+import { HomeContext } from "../../HomeContext";
 
 function LineaDenuncia() {
+	const { region } = useContext(HomeContext);
+	const phoneNumber =
+		region === "TIJ"
+			? "8116010519"
+			: region === "MTY" || region === "SAL"
+			? "6647983328"
+			: "6563755037"; // Telefono central
+
 	const handlePress1 = () => {
-		Linking.openURL(link1);
+		const email = "t.escuchamos@tecma.com"; // Replace with the recipient's email
+		const subject = "Necesito hacer una denuncia"; // Subject of the email
+		const url = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+
+		Linking.canOpenURL(url)
+			.then((supported) => {
+				if (supported) {
+					return Linking.openURL(url);
+				} else {
+					Alert.alert(
+						"Error",
+						"No existe algun servicio o programa para enviar correo"
+					);
+				}
+			})
+			.catch((err) => console.error("An error occurred", err));
 	};
 	const handlePress2 = () => {
-		Linking.openURL(link2);
+		// const phoneNumber = "6561011010"; // Telefono west?
+
+		const url = `whatsapp://send?phone=${phoneNumber}`;
+
+		Linking.canOpenURL(url)
+			.then((supported) => {
+				if (supported) {
+					return Linking.openURL(url);
+				} else {
+					Alert.alert(
+						"Error",
+						"WhatsApp no está instalado en este dispositivo"
+					);
+				}
+			})
+			.catch((err) => console.error("An error occurred", err));
 	};
 	const handlePress3 = () => {
-		Linking.openURL(6561011010);
+		// const phoneNumber = "6563755037"; // Telefono central
+		// const phoneNumber = "6561011010"; // Telefono west?
+
+		const url = `whatsapp://send?phone=${phoneNumber}`;
+
+		Linking.canOpenURL(url)
+			.then((supported) => {
+				if (supported) {
+					return Linking.openURL(url);
+				} else {
+					Alert.alert(
+						"Error",
+						"WhatsApp no está instalado en este dispositivo"
+					);
+				}
+			})
+			.catch((err) => console.error("An error occurred", err));
 	};
 
 	return (

@@ -21,7 +21,6 @@ import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 
 function ContentRenderer({ content, changeContent }) {
-
 	function renderContent() {
 		switch (content) {
 			case "Menu":
@@ -48,7 +47,7 @@ function ContentRenderer({ content, changeContent }) {
 			case "Prestamos":
 				return <Prestamos />;
 			case "RetiroAhorro":
-				return <RetiroAhorro/>
+				return <RetiroAhorro />;
 			case "Cartas":
 				return <Cartas />;
 			case "Reposiciones":
@@ -57,6 +56,10 @@ function ContentRenderer({ content, changeContent }) {
 				return <LineaDenuncia />;
 			case "Polizas":
 				return <Polizas />;
+			// case "Avisos": {
+
+			// 	return;
+			// }
 			case "Opiniones":
 				return <Opiniones />;
 			// case "CambioNIP":
