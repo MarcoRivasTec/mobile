@@ -27,7 +27,7 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"package": "com.tecma.TECMAMovilConnect",
+			"package": "com.tecma.TecmaMovilConnect",
 			"softwareKeyboardLayoutMode": "pan"
 		},
 		"web": {
