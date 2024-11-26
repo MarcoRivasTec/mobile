@@ -5,7 +5,7 @@ export default function Bell() {
 	return (
 		<LottieView
 			source={require("../../assets/animations/bell.json")}
-			style={{ height: 20, width: 20 }}
+			style={{ height: 32, width: 32 }}
 			autoPlay
 			loop={true}
 		/>

@@ -41,20 +41,20 @@ const Home = ({ navigation }) => {
 			try {
 				const data = await fetchPost({ query: encuestasQuery });
 				console.log("Data is: ", data);
-				if (region === "JRZ") {
+				// if (region === "JRZ") {
+				if (data.data.Encuestas && data.data.Encuestas.length > 1) {
 					console.log("Correct", region);
 					// setNotifs(data.data.Encuestas.length);
 					showMessage({
 						message: "Tienes notificaciones !",
-						description: `Tienes ${
-							data.data.Encuestas.length > 1 && "más de "
+						description: `Tienes${
+							data.data.Encuestas.length > 1 ? "más de " : " "
 						}una encuesta pendiente por responder`,
 						type: "info",
-						duration: 3000,
+						duration: 20000,
 						position: "top",
 						statusBarHeight: 30,
 						icon: () => <Bell />,
-						// statusBarHeight: 40,
 					});
 				}
 			} catch (error) {
