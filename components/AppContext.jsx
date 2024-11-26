@@ -17,7 +17,7 @@ export const AppProvider = ({ children }) => {
 	const [info, setInfo] = useState({
 		// accessToken: "",
 		// name: "",
-		numEmp: "", // Add numEmp to the state
+		numEmp: "", 
 		region: "",
 		platform: Platform.OS,
 		// deviceName: null,

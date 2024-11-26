@@ -1,21 +1,94 @@
 import { StatusBar } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { home } from "../components/Home/styles";
 import Card from "../components/Home/Card";
 import Quickbar from "../components/Home/Quickbar";
 import Navbar from "../components/Home/Navbar";
 import ContentRenderer from "../components/Home/ContentRenderer";
+import { showMessage } from "react-native-flash-message";
+import { AppContext } from "../components/AppContext";
+import Bell from "../components/Animations/Bell";
+import fetchPost from "../components/fetching";
 
 const Home = ({ navigation }) => {
+	const { numEmp, region } = useContext(AppContext);
+	const [notifs, setNotifs] = useState(0);
+
 	useEffect(() => {
 		StatusBar.setHidden(false);
+
+		const updateNotifications = async () => {
+			const encuestasQuery = {
+				query: `query Encuestas(
+							$numEmp: String!,
+							$region: String!,
+						) {
+							Encuestas(
+								numEmp: $numEmp,
+								region: $region,
+							) {
+								encuesta
+								titulo
+								preguntas
+							}
+						}`,
+				variables: {
+					numEmp: numEmp,
+					region: region,
+				},
+			};
+			try {
+				const data = await fetchPost({ query: encuestasQuery });
+				console.log("Data is: ", data);
+				if (region === "JRZ") {
+					console.log("Correct", region);
+					// setNotifs(data.data.Encuestas.length);
+					showMessage({
+						message: "Tienes notificaciones !",
+						description: `Tienes ${
+							data.data.Encuestas.length > 1 && "más de "
+						}una encuesta pendiente por responder`,
+						type: "info",
+						duration: 3000,
+						position: "top",
+						statusBarHeight: 30,
+						icon: () => <Bell />,
+						// statusBarHeight: 40,
+					});
+				}
+			} catch (error) {
+				showMessage({
+					message:
+						"Hubo un problema al actualizar tus notificaciones",
+					type: "warning",
+					duration: 3000,
+					position: "top",
+					statusBarHeight: 30,
+					icon: { icon: "info", position: "right" },
+					// statusBarHeight: 40,
+				});
+			}
+		};
+
+		updateNotifications();
 	}, []);
 
 	const [currentContent, setCurrentContent] = useState("Menu");
 
 	const changeContent = (content) => {
 		setCurrentContent(content);
+	};
+
+	const temporarilyDisabled = () => {
+		showMessage({
+			message: "Esta función está temporalmente deshabilitada",
+			type: "info",
+			duration: 3000,
+			position: "bottom",
+			icon: (props) => <Bell />,
+			// statusBarHeight: 40,
+		});
 	};
 
 	return (
@@ -26,7 +99,7 @@ const Home = ({ navigation }) => {
 			<Card />
 
 			{/* Contenedor acceso rapido */}
-			<Quickbar changeContent={changeContent} />
+			<Quickbar notifs={notifs} changeContent={changeContent} />
 
 			{/* Contenedor modulos/apartados */}
 			<ContentRenderer
