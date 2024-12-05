@@ -18,16 +18,17 @@ function Encuestas({ encuestasDisp, isLoading }) {
 
 	const confirmationModalHandler = async () => {
 		setConfirmationVisible(!ConfirmationVisible);
-	}
+	};
 
 	const encuestaHandler = () => {
 		setEncuestaVisible(!encuestaVisible);
-	}
+	};
 
-	const handleEncuesta = async () => {
-		await confirmationModalHandler()
-		encuestaHandler()
-		console.log("ID encuesta es: ", survey.encuesta);
+	const handleEncuesta = () => {
+		confirmationModalHandler();
+		setTimeout(() => {
+			encuestaHandler();
+		});
 	};
 
 	return isLoading ? (
@@ -56,7 +57,8 @@ function Encuestas({ encuestasDisp, isLoading }) {
 						key={encuesta.encuesta}
 						onPress={() => {
 							setSurvey(encuesta);
-							confirmationModalHandler();
+							// confirmationModalHandler();
+							confirmationModalHandler()
 						}}
 						style={[
 							encuestas.encuestaContainer,

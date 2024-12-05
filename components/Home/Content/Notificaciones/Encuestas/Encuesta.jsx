@@ -209,9 +209,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible }) {
 				);
 			}
 		} else {
-			alert(
-				"Por favor, responde todas las preguntas antes de continuar."
-			);
+			Alert.alert("Importante", "Debes responder a todas las preguntas para poder terminar la encuesta.")
 		}
 	};
 
