@@ -37,7 +37,7 @@ function ContentRenderer({ content, changeContent }) {
 			case "Directorio":
 				return <Directorio />;
 			case "Vacaciones":
-				return <Vacaciones />;
+				return <Vacaciones changeContent={changeContent} />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
