@@ -211,6 +211,16 @@ function Prestamos() {
 		setIsCalculated(true);
 	};
 
+	const requestLoan = () => {
+		if (isCalculated) {
+		} else {
+			Alert.alert(
+				"Error",
+				"Debes calcular primero tu solicitud de préstamo"
+			);
+		}
+	};
+
 	useEffect(() => {
 		console.log(JSON.stringify(prestamoSendData, null, 2));
 	}, [prestamoSendData]);
@@ -446,6 +456,7 @@ function Prestamos() {
 
 							{/* Calcular */}
 							<TouchableOpacity
+								onPress={requestLoan}
 								style={[
 									prestamos.buttonContainer,
 									{ marginTop: "3%", marginBottom: "3%" },

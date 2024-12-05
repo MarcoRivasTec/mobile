@@ -15,6 +15,7 @@ const COLORS = {
     azul: "#318388",
     azul: "#F5F5F5",
     rosa: "rgba(190, 32, 46, 0.6)",
+    rosaFull: "#ef233c",
     familiaRemove: "#EF3D57",
     flatlistBackground: "rgba(225,225,225, 1)",
     // flatlistBackground: "rgba(222,222,222, 1)",

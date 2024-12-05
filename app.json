@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "TECMAMovil Connect",
 		"slug": "TECMAMovilConnect",
-		"version": "1.0.0d",
+		"version": "1.0.2",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",

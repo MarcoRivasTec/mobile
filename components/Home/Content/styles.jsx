@@ -460,6 +460,72 @@ const directorio = StyleSheet.create({
 	},
 });
 
+const notificaciones = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	titleContainer: {
+		height: "5%",
+		width: "95%",
+		// width: "35%",
+		// paddingRight: 24,
+		// paddingLeft: 8,
+		// borderBottomRightRadius: 50,
+		backgroundColor: COLORS.white,
+		justifyContent: "center",
+		alignItems: "center",
+		borderTopWidth: 0,
+		borderWidth: 2,
+		borderColor: COLORS.main,
+		// borderColor: "black"
+	},
+	title: {
+		color: COLORS.main,
+		fontFamily: "Montserrat-Medium",
+		fontSize: 17,
+		bottom: "5%",
+	},
+	tabsContainer: {
+		height: "5%",
+		width: "95%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1
+	},
+	tabContainer: {
+		flex: 1,
+		// height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderBottomRightRadius: 16,
+		borderBottomLeftRadius: 16,
+		borderWidth: 1,
+		borderTopWidth: 0,
+		borderColor: COLORS.main,
+	},
+	tabText: {
+		color: COLORS.white,
+		fontFamily: "Montserrat-Medium",
+		// fontSize: 12,
+	},
+	
+	contentContainer: {
+		// flex: 19,
+		height: "90%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+});
+
 const vacaciones = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -1548,6 +1614,7 @@ export {
 	redes,
 	ideas,
 	directorio,
+	notificaciones,
 	vacaciones,
 	reciboNom,
 	prenomina,

@@ -8,6 +8,7 @@ export default function Bell() {
 			style={{ height: 32, width: 32 }}
 			autoPlay
 			loop={true}
+			speed={0.85}
 		/>
 	);
 }

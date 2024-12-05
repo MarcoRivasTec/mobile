@@ -10,7 +10,7 @@ import LoadingContent from "../../Animations/LoadingContent";
 import fetchPost from "../../fetching";
 import { AppContext } from "../../AppContext";
 
-function Vacaciones() {
+function Vacaciones({ changeContent }) {
 	const { numEmp, region } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -135,6 +135,7 @@ function Vacaciones() {
 			</View>
 			<View style={vacaciones.historialContainer}>
 				<ButtonAction
+					toggleModal={() => changeContent("Solicitudes")}
 					title="Solicitar vacaciones ó permisos"
 					icon="VACACIONES"
 					size={25}
@@ -144,7 +145,7 @@ function Vacaciones() {
 					title="Ver historial de vacaciones"
 					icon="history"
 					size={33}
-				></ButtonAction>
+				/>
 			</View>
 			<View>
 				{isModalVisible && (
