@@ -16,7 +16,7 @@ import fetchPost from "../../../../fetching";
 import { HomeContext } from "../../../../HomeContext";
 import Confirm from "../../Design/Confirm";
 
-function Encuesta({ surveyData, onCallback, onExit, isVisible }) {
+function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }) {
 	const { region, platform } = useContext(AppContext);
 	const { numEmp } = useContext(HomeContext);
 	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
@@ -276,6 +276,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible }) {
 									onExit={confirmationModalHandler}
 									closeModal={() => {
 										onExit();
+										updateEncuestas();
 									}}
 									customTitle="Encuesta enviada"
 									customText="Gracias por tu participación!"

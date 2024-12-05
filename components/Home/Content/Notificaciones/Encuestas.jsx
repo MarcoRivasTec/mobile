@@ -1,17 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { encuestas } from "./styles";
-import Confirm from "../Design/Confirm";
-import { HomeContext } from "../../../HomeContext";
-import ContentHeader from "../ContentHeader";
 import Working from "../Design/Working";
-import { AppContext } from "../../../AppContext";
 import LoadingContent from "../../../Animations/LoadingContent";
 import ConfirmModal from "../InfoPers/ConfirmModal";
 import Encuesta from "./Encuestas/Encuesta";
 
-function Encuestas({ encuestasDisp, isLoading }) {
-	const { height } = useContext(AppContext);
+function Encuestas({ encuestasDisp, isLoading, updateEncuestas}) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [encuestaVisible, setEncuestaVisible] = useState(false);
 	const [survey, setSurvey] = useState(null);
@@ -90,6 +85,7 @@ function Encuestas({ encuestasDisp, isLoading }) {
 					onExit={encuestaHandler}
 					isVisible={encuestaVisible}
 					surveyData={survey}
+					updateEncuestas={updateEncuestas}
 					// style={navbar.modal}
 				/>
 			)}

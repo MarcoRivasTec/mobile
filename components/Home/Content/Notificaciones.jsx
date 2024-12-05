@@ -18,76 +18,77 @@ function Notificaciones() {
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
 	const [notifsAvisos, setNotifsAvisos] = useState(0);
 
-	useEffect(() => {
-		console.log("Available encuestas: ", encuestas);
-	}, [encuestas]);
+	const updateNotifications = async () => {
+		const encuestasQuery = {
+			query: `query Encuestas(
+						$numEmp: String!,
+						$region: String!,
+					) {
+						Encuestas(
+							numEmp: $numEmp,
+							region: $region,
+						) {
+							encuesta
+							titulo
+							preguntas
+						}
+					}`,
+			variables: {
+				numEmp: numEmp,
+				region: region,
+			},
+		};
+		try {
+			const data = await fetchPost({ query: encuestasQuery });
+			console.log("Data is: ", JSON.stringify(data, null, 1));
+			// if (region === "JRZ") {
+			if (data.data.Encuestas && data.data.Encuestas.length > 0) {
+				console.log("Correct", region);
+				// console.log("Data is: ", data.data.Encuestas);
+				setEncuestas(data.data.Encuestas);
+				setNotifsEncuestas(data.data.Encuestas.length);
+				// showMessage({
+				// 	message: "Tienes notificaciones !",
+				// 	description: `Tienes${
+				// 		data.data.Encuestas.length > 1 ? " más de " : " "
+				// 	}una encuesta pendiente por responder`,
+				// 	type: "info",
+				// 	duration: 20000,
+				// 	position: "top",
+				// 	statusBarHeight: 30,
+				// 	style: {
+				// 		// backgroundColor: COLORS.second,
+				// 		backgroundColor: "white",
+				// 		borderBottomLeftRadius: 15,
+				// 		borderBottomRightRadius: 15,
+				// 		borderWidth: 1,
+				// 		borderColor: COLORS.main
+				// 	},
+				// 	textStyle: { color: COLORS.main },
+				// 	titleStyle: { color: COLORS.main },
+				// 	icon: () => <Bell />,
+				// });
+			}
+		} catch (error) {
+			// showMessage({
+			// 	message:
+			// 		"Hubo un problema al actualizar tus notificaciones",
+			// 	type: "warning",
+			// 	duration: 3000,
+			// 	position: "top",
+			// 	statusBarHeight: 30,
+			// 	icon: { icon: "info", position: "right" },
+			// 	// statusBarHeight: 40,
+			// });
+		}
+	};
+
+	// useEffect(() => {
+	// 	console.log("Available encuestas: ", encuestas);
+	// }, [encuestas]);
 
 	useEffect(() => {
 		console.log("Entering notifications");
-		const updateNotifications = async () => {
-			const encuestasQuery = {
-				query: `query Encuestas(
-							$numEmp: String!,
-							$region: String!,
-						) {
-							Encuestas(
-								numEmp: $numEmp,
-								region: $region,
-							) {
-								encuesta
-								titulo
-								preguntas
-							}
-						}`,
-				variables: {
-					numEmp: numEmp,
-					region: region,
-				},
-			};
-			try {
-				const data = await fetchPost({ query: encuestasQuery });
-				console.log("Data is: ", JSON.stringify(data, null, 1));
-				// if (region === "JRZ") {
-				if (data.data.Encuestas && data.data.Encuestas.length > 0) {
-					console.log("Correct", region);
-					// console.log("Data is: ", data.data.Encuestas);
-					setEncuestas(data.data.Encuestas);
-					setNotifsEncuestas(data.data.Encuestas.length);
-					// showMessage({
-					// 	message: "Tienes notificaciones !",
-					// 	description: `Tienes${
-					// 		data.data.Encuestas.length > 1 ? " más de " : " "
-					// 	}una encuesta pendiente por responder`,
-					// 	type: "info",
-					// 	duration: 20000,
-					// 	position: "top",
-					// 	statusBarHeight: 30,
-					// 	style: {
-					// 		// backgroundColor: COLORS.second,
-					// 		backgroundColor: "white",
-					// 		borderBottomLeftRadius: 15,
-					// 		borderBottomRightRadius: 15,
-					// 		borderWidth: 1,
-					// 		borderColor: COLORS.main
-					// 	},
-					// 	textStyle: { color: COLORS.main },
-					// 	titleStyle: { color: COLORS.main },
-					// 	icon: () => <Bell />,
-					// });
-				}
-			} catch (error) {
-				// showMessage({
-				// 	message:
-				// 		"Hubo un problema al actualizar tus notificaciones",
-				// 	type: "warning",
-				// 	duration: 3000,
-				// 	position: "top",
-				// 	statusBarHeight: 30,
-				// 	icon: { icon: "info", position: "right" },
-				// 	// statusBarHeight: 40,
-				// });
-			}
-		};
 
 		updateNotifications();
 		setIsLoading(false);
@@ -155,6 +156,7 @@ function Notificaciones() {
 					<Encuestas
 						encuestasDisp={encuestas}
 						isLoading={isLoading}
+						updateEncuestas={updateNotifications}
 					/>
 				)}
 				{activeTab === "Avisos" && <Avisos />}
