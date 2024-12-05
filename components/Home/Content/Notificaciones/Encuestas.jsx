@@ -16,7 +16,7 @@ function Encuestas({ encuestasDisp, isLoading }) {
 	const [encuestaVisible, setEncuestaVisible] = useState(false);
 	const [survey, setSurvey] = useState(null);
 
-	const confirmationModalHandler = () => {
+	const confirmationModalHandler = async () => {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
 
@@ -25,7 +25,7 @@ function Encuestas({ encuestasDisp, isLoading }) {
 	}
 
 	const handleEncuesta = async () => {
-		confirmationModalHandler()
+		await confirmationModalHandler()
 		encuestaHandler()
 		console.log("ID encuesta es: ", survey.encuesta);
 	};
