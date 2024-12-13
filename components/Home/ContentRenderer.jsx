@@ -72,11 +72,11 @@ function ContentRenderer({ content, changeContent }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo
+			{/* <SVGLogo
 				height="55%"
 				width="55%"
 				style={contentRenderer.svg}
-			></SVGLogo>
+			></SVGLogo> */}
 			{renderContent()}
 		</View>
 	);

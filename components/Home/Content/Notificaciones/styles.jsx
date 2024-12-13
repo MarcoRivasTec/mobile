@@ -90,8 +90,9 @@ const avisos = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: "100%",
-		justifyContent: "flex-start",
+		justifyContent: "center",
 		alignItems: "center",
+		// backgroundColor: COLORS.main
 		// borderWidth: 1,
 		// borderColor: "purple"
 	},
@@ -104,21 +105,16 @@ const avisos = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
-	scrollContainer: {
-		height: "92%",
-		// borderWidth: 1,
-		width: "100%",
-	},
-	scrollContentContainer: {
-		flexGrow: 1,
-	},
-	registroContainer: {
-		width: "100%",
-		marginTop: "2%",
-		justifyContent: "flex-start",
+	titleContainer: {
+		flex: 1,
+		width: "90%",
+		justifyContent: "center",
 		alignItems: "center",
-		// borderWidth: 1,
-		// borderColor: "red"
+	},
+	titleText: {
+		fontSize: 30,
+		fontFamily: "Montserrat-SemiBold",
+		textAlign: "center",
 	},
 });
 

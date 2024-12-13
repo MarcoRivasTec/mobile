@@ -78,16 +78,17 @@ function Menu({ changeContent }) {
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"
-					onPress={() =>
-						showMessage({
-							message: "Esta sección está temporalmente deshabilitada",
-							type: "info",
-							duration: 3000,
-							position: "bottom",
-							icon: { icon: "info", position: "right" },
-							// statusBarHeight: 40,
-						})
-					}
+					onPress={() => changeContent("Notificaciones")}
+					// onPress={() =>
+					// 	showMessage({
+					// 		message: "Esta sección está temporalmente deshabilitada",
+					// 		type: "info",
+					// 		duration: 3000,
+					// 		position: "bottom",
+					// 		icon: { icon: "info", position: "right" },
+					// 		// statusBarHeight: 40,
+					// 	})
+					
 				/>
 				<SectionButton
 					title="Opiniones"

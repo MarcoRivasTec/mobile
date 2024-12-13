@@ -332,6 +332,8 @@ const ideas = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: COLORS.main,
+		// borderWidth: 2
 	},
 	contentContainer: {
 		flex: 19,
@@ -514,7 +516,7 @@ const notificaciones = StyleSheet.create({
 		fontFamily: "Montserrat-Medium",
 		// fontSize: 12,
 	},
-	
+
 	contentContainer: {
 		// flex: 19,
 		height: "90%",
@@ -1588,6 +1590,17 @@ const opiniones = StyleSheet.create({
 		fontWeight: "bold",
 		color: COLORS.black,
 		textAlign: "left",
+	},
+	remainingChars: {
+		marginTop: "1%",
+		alignSelf: "flex-end",
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+	},
+	noRemainingChars: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		color: "red",
 	},
 	buttonContainer: {
 		flex: 0.2,

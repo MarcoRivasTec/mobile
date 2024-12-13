@@ -14,6 +14,7 @@ import ContentHeader from "./ContentHeader";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { AppContext } from "../../AppContext";
 import LoadingContent from "../../Animations/LoadingContent";
+import COLORS from "../../../constants/colors";
 
 const getWeekDates = (year, weekNumber) => {
 	// Get the first day of the year
@@ -83,10 +84,7 @@ function Prestamos() {
 		};
 		try {
 			const data = await fetchPost({ query });
-			console.log(
-				"Response data at prestamo:",
-				JSON.stringify(data, null, 2)
-			);
+			console.log("Response data at prestamo:", JSON.stringify(data, null, 2));
 			if (data.data.Prestamo) {
 				setPrestamoData(data.data.Prestamo);
 				data.data.Prestamo.prestamo === true &&
@@ -120,9 +118,7 @@ function Prestamos() {
 		if (today >= startDate.firstDay && today <= endDate.lastDay) {
 			setIsAllowed(true);
 			const diffInTime = endDate.lastDay - today;
-			const diffInWeeks = Math.ceil(
-				diffInTime / (1000 * 60 * 60 * 24 * 7)
-			);
+			const diffInWeeks = Math.ceil(diffInTime / (1000 * 60 * 60 * 24 * 7));
 
 			setAvailableWeeksCount(diffInWeeks);
 		} else {
@@ -136,10 +132,7 @@ function Prestamos() {
 
 	const calculateData = () => {
 		if (prestamoData.prestamo) {
-			Alert.alert(
-				"Préstamo existente",
-				"No se puede pedir otro préstamo"
-			);
+			Alert.alert("Préstamo existente", "No se puede pedir otro préstamo");
 			return;
 		}
 
@@ -152,10 +145,7 @@ function Prestamos() {
 		}
 
 		if (prestamoSendData.solicita === 0) {
-			Alert.alert(
-				"Error",
-				"La cantidad a solicitar debe ser diferente de 0."
-			);
+			Alert.alert("Error", "La cantidad a solicitar debe ser diferente de 0.");
 			return;
 		}
 
@@ -174,10 +164,7 @@ function Prestamos() {
 			return;
 		}
 		if (prestamoSendData.semanas < 2) {
-			Alert.alert(
-				"Error",
-				"La cantidad de semanas a pagar debe ser mínimo 2."
-			);
+			Alert.alert("Error", "La cantidad de semanas a pagar debe ser mínimo 2.");
 			return;
 		}
 		if (prestamoSendData.semanas > availableWeeksCount) {
@@ -189,15 +176,10 @@ function Prestamos() {
 		}
 		setPrestamoSendData((prevState) => {
 			const intTotal = parseFloat(
-				(
-					(interes * prevState.semanas * prevState.solicita) /
-					100
-				).toFixed(2)
+				((interes * prevState.semanas * prevState.solicita) / 100).toFixed(2)
 			);
 
-			const totPago = parseFloat(
-				(prevState.solicita + intTotal).toFixed(2)
-			);
+			const totPago = parseFloat((prevState.solicita + intTotal).toFixed(2));
 
 			const dtoSem = parseFloat((totPago / prevState.semanas).toFixed(2));
 
@@ -214,10 +196,7 @@ function Prestamos() {
 	const requestLoan = () => {
 		if (isCalculated) {
 		} else {
-			Alert.alert(
-				"Error",
-				"Debes calcular primero tu solicitud de préstamo"
-			);
+			Alert.alert("Error", "Debes calcular primero tu solicitud de préstamo");
 		}
 	};
 
@@ -235,10 +214,7 @@ function Prestamos() {
 	return (
 		<View style={prestamos.container}>
 			<ContentHeader title="Préstamos" />
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				accessible={false}
-			>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				{isLoading ? (
 					<View style={prestamos.contentContainer}>
 						<LoadingContent />
@@ -247,18 +223,14 @@ function Prestamos() {
 					<View style={prestamos.contentContainer}>
 						<View style={prestamos.titleBar}>
 							<View style={prestamos.titleContainer}>
-								<Text style={prestamos.titleText}>
-									Fondo de Ahorro
-								</Text>
+								<Text style={prestamos.titleText}>Fondo de Ahorro</Text>
 							</View>
 						</View>
 						<View style={prestamos.infoContainer}>
 							{/* Saldo atual */}
 							<View style={prestamos.dataRowContainer}>
 								<View style={prestamos.dataRowTextContainer}>
-									<Text style={prestamos.dataText}>
-										Saldo actual:{" "}
-									</Text>
+									<Text style={prestamos.dataText}>Saldo actual: </Text>
 								</View>
 								<View
 									style={[
@@ -266,24 +238,13 @@ function Prestamos() {
 										{ alignItems: "flex-start" },
 									]}
 								>
-									<Text
-										style={[
-											prestamos.dataFieldText,
-											{ left: "4%" },
-										]}
-									>
-										${" "}
-										{formatCurrency(prestamoData.saldo_fa)}
+									<Text style={[prestamos.dataFieldText, { left: "4%" }]}>
+										$ {formatCurrency(prestamoData.saldo_fa)}
 									</Text>
 								</View>
 							</View>
 							{/* Solicitud */}
-							<View
-								style={[
-									prestamos.dataContainer,
-									{ marginTop: "1%" },
-								]}
-							>
+							<View style={[prestamos.dataContainer, { marginTop: "1%" }]}>
 								<View
 									style={[
 										prestamos.dataTextContainer,
@@ -310,10 +271,7 @@ function Prestamos() {
 									</Text>
 								</View>
 								<View
-									style={[
-										prestamos.dataFieldContainer,
-										{ paddingLeft: 0 },
-									]}
+									style={[prestamos.dataFieldContainer, { paddingLeft: 0 }]}
 								>
 									<TextInput
 										placeholderTextColor={"gray"}
@@ -337,19 +295,17 @@ function Prestamos() {
 							{/* Semanas */}
 							<View style={prestamos.dataRowContainer}>
 								<View style={prestamos.dataRowContainer}>
-									<View
-										style={prestamos.dataRowTextContainer}
-									>
-										<Text style={prestamos.dataText}>
-											# Semanas
-										</Text>
+									<View style={prestamos.dataRowTextContainer}>
+										<Text style={prestamos.dataText}># Semanas</Text>
 									</View>
-									<View
-										style={prestamos.dataRowFieldContainer}
-									>
+									<View style={prestamos.dataRowFieldContainer}>
 										<TextInput
 											placeholderTextColor={"gray"}
-											placeholder={`Máx ${availableWeeksCount}`}
+											placeholder={
+												availableWeeksCount
+													? `Máx ${availableWeeksCount}`
+													: `No disp.`
+											}
 											style={prestamos.dataInputField}
 											value={prestamoSendData.semanas}
 											keyboardType="numeric"
@@ -362,19 +318,11 @@ function Prestamos() {
 									</View>
 								</View>
 								<View style={prestamos.dataRowContainer}>
-									<View
-										style={prestamos.dataRowTextContainer}
-									>
-										<Text style={prestamos.dataText}>
-											% Interés
-										</Text>
+									<View style={prestamos.dataRowTextContainer}>
+										<Text style={prestamos.dataText}>% Interés</Text>
 									</View>
-									<View
-										style={prestamos.dataRowFieldContainer}
-									>
-										<Text style={prestamos.dataFieldText}>
-											{interes}%
-										</Text>
+									<View style={prestamos.dataRowFieldContainer}>
+										<Text style={prestamos.dataFieldText}>{interes}%</Text>
 									</View>
 								</View>
 							</View>
@@ -384,72 +332,53 @@ function Prestamos() {
 								onPress={calculateData}
 								style={prestamos.buttonContainer}
 							>
-								<Text style={prestamos.buttonText}>
-									Calcular
-								</Text>
+								<Text style={prestamos.buttonText}>Calcular</Text>
 							</TouchableOpacity>
 
 							{/* Totales */}
 							<View style={prestamos.dataContainer}>
 								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>
-										Interés Total
-									</Text>
+									<Text style={prestamos.dataText}>Interés Total</Text>
 								</View>
 								<View style={prestamos.dataFieldContainer}>
 									<Text style={prestamos.dataFieldText}>
-										${" "}
-										{formatCurrency(
-											prestamoSendData.intTotal
-										)}
+										$ {formatCurrency(prestamoSendData.intTotal)}
 									</Text>
 								</View>
 							</View>
 							<View style={prestamos.dataContainer}>
 								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>
-										Total a pagar
-									</Text>
+									<Text style={prestamos.dataText}>Total a pagar</Text>
 								</View>
 								<View style={prestamos.dataFieldContainer}>
 									<Text style={prestamos.dataFieldText}>
-										${" "}
-										{formatCurrency(
-											prestamoSendData.totPago
-										)}
+										$ {formatCurrency(prestamoSendData.totPago)}
 									</Text>
 								</View>
 							</View>
 							<View style={prestamos.dataContainer}>
 								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>
-										Descuento semanal
-									</Text>
+									<Text style={prestamos.dataText}>Descuento semanal</Text>
 								</View>
 								<View style={prestamos.dataFieldContainer}>
 									<Text style={prestamos.dataFieldText}>
-										${" "}
-										{formatCurrency(
-											prestamoSendData.dtoSem
-										)}
+										$ {formatCurrency(prestamoSendData.dtoSem)}
 									</Text>
 								</View>
 							</View>
 
 							<View style={prestamos.agreementContainer}>
-								<BouncyCheckbox size={30} fillColor="pink" />
+								<BouncyCheckbox size={30} fillColor={COLORS.naranja} />
 								<View style={prestamos.agreementTextContainer}>
 									<Text
 										adjustsFontSizeToFit={true}
 										minimumFontScale={0.5}
 										style={prestamos.agreementText}
 									>
-										Estoy de acuerdo con los importes de
-										interés y descuento semanal calculado en
-										este documento, realizo la solicitud al
-										Comité, quienes pueden ACEPTAR o NEGAR
-										mi petición según el Reglamento lo
-										estipule.
+										Estoy de acuerdo con los importes de interés y descuento
+										semanal calculado en este documento, realizo la solicitud al
+										Comité, quienes pueden ACEPTAR o NEGAR mi petición según el
+										Reglamento lo estipule.
 									</Text>
 								</View>
 							</View>
@@ -462,9 +391,7 @@ function Prestamos() {
 									{ marginTop: "3%", marginBottom: "3%" },
 								]}
 							>
-								<Text style={prestamos.buttonText}>
-									Solicitar
-								</Text>
+								<Text style={prestamos.buttonText}>Solicitar</Text>
 							</TouchableOpacity>
 						</View>
 					</View>

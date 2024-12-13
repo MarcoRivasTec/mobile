@@ -7,12 +7,13 @@ import COLORS from "../../../constants/colors";
 import Encuestas from "./Notificaciones/Encuestas";
 import { HomeContext } from "../../HomeContext";
 import fetchPost from "../../fetching";
+import Avisos from "./Notificaciones/Avisos";
 
-function Notificaciones() {
+function Notificaciones({ section = "Encuestas" }) {
 	const { height, region } = useContext(AppContext);
 	const { numEmp } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState("Encuestas");
+	const [activeTab, setActiveTab] = useState(section);
 	const [encuestas, setEncuestas] = useState([]);
 
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
@@ -105,8 +106,7 @@ function Notificaciones() {
 				style={[
 					notificaciones.tabContainer,
 					{
-						backgroundColor:
-							activeTab === title ? COLORS.main : COLORS.white,
+						backgroundColor: activeTab === title ? COLORS.main : COLORS.white,
 						height: activeTab === title ? "100%" : "75%",
 						marginRight: isLast ? 0 : "4%",
 					},
@@ -116,10 +116,7 @@ function Notificaciones() {
 					style={[
 						notificaciones.tabText,
 						{
-							color:
-								activeTab === title
-									? COLORS.white
-									: COLORS.main,
+							color: activeTab === title ? COLORS.white : COLORS.main,
 							fontSize: activeTab === title ? 14 : 10,
 						},
 					]}
@@ -140,7 +137,7 @@ function Notificaciones() {
 				{[
 					{ title: "Encuestas", notificationCount: notifsEncuestas },
 					{ title: "Avisos", notificationCount: notifsAvisos },
-					{ title: "Eventos", notificationCount: notifsEncuestas },
+					// { title: "Eventos", notificationCount: notifsEncuestas },
 				].map((tab, index, array) => (
 					<Tab
 						key={tab.title}
@@ -159,7 +156,7 @@ function Notificaciones() {
 						updateEncuestas={updateNotifications}
 					/>
 				)}
-				{activeTab === "Avisos" && <Avisos />}
+				{activeTab === "Avisos" && <Avisos isLoading={isLoading} />}
 			</View>
 		</View>
 	);

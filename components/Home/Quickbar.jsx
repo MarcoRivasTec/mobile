@@ -136,7 +136,7 @@ function Quickbar({ changeContent, notifs }) {
 					<Text
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
-						numberOfLines={2}
+						numberOfLines={1}
 						style={[quickbar.text, { fontSize: 12 }]}
 					>
 						Redes

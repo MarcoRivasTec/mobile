@@ -34,13 +34,13 @@ function Navbar({ changeContent, navigation }) {
 					</TouchableOpacity>
 				</View>
 				<View style={navbar.boxRight}>
-					<TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
+					{/* <TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
 						<Ionicons
 							name="notifications-outline"
 							size={16}
 							color={COLORS.white}
 						/>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 					<TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
 						<Ionicons name="settings-outline" size={16} color={COLORS.white} />
 					</TouchableOpacity>
