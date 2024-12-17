@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
 	const { width, height } = Dimensions.get("screen");
 	// const playStoreURI = "market://details?id=com.tecma.TECMAMovilConnect";
 	const playStoreURI =
-		"https://play.google.com/store/apps/details?id=com.tecma.TECMAMovilConnect";
+		"https://play.google.com/store/apps/details?id=com.tecma.movilconnect";
 	const appStoreURI = "https://apps.apple.com/app/id6736772143";
 	const [info, setInfo] = useState({
 		// accessToken: "",

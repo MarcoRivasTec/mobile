@@ -3,16 +3,10 @@ import { Modal, View, Text } from "react-native";
 import { working } from "./styles";
 import LoadingContent from "../../../Animations/LoadingContent";
 
-function Working({
-	isModalVisible,
-}) {
+function Working({ isModalVisible, text = "Procesando ..." }) {
 	return (
 		<View style={working.container}>
-			<Modal
-				animationType="fade"
-				transparent={true}
-				visible={isModalVisible}
-			>
+			<Modal animationType="fade" transparent={true} visible={isModalVisible}>
 				<View style={working.backgroundContainer}>
 					<View style={working.modalContainer}>
 						<View style={working.contentContainer}>
@@ -24,9 +18,7 @@ function Working({
 							</View>
 
 							{/* Text */}
-							<Text style={working.text}>
-								Procesando ...
-							</Text>
+							<Text style={working.text}>{text}</Text>
 						</View>
 					</View>
 				</View>

@@ -19,6 +19,7 @@ import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
+import Notificaciones from "./Content/Notificaciones";
 
 function ContentRenderer({ content, changeContent }) {
 	function renderContent() {
@@ -34,10 +35,10 @@ function ContentRenderer({ content, changeContent }) {
 				return <Redes />;
 			case "Ideas":
 				return <TecmaIdeas />;
-			case "Directorio":
-				return <Directorio />;
+			case "Notificaciones":
+				return <Notificaciones />;
 			case "Vacaciones":
-				return <Vacaciones />;
+				return <Vacaciones changeContent={changeContent} />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
@@ -71,7 +72,11 @@ function ContentRenderer({ content, changeContent }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo height="55%" width="55%" style={contentRenderer.svg}></SVGLogo>
+			{/* <SVGLogo
+				height="55%"
+				width="55%"
+				style={contentRenderer.svg}
+			></SVGLogo> */}
 			{renderContent()}
 		</View>
 	);

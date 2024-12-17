@@ -27,7 +27,6 @@ function RetiroAhorro() {
 				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
 			);
 		}
-		onExit();
 	};
 
 	return (

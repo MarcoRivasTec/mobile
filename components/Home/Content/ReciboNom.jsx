@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Alert,
+	PermissionsAndroid,
+	Linking,
+} from "react-native";
 // import * as Linking from "expo-linking";
-import * as Sharing from "expo-sharing";
+// import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-// import FileViewer from "react-native-file-viewer";
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
+// import * as IntentLauncher from "expo-intent-launcher";
+// import OpenFile from "react-native-open-file";
 import { reciboNom } from "./styles";
 import ContentHeader from "./ContentHeader";
 import ButtonInfo from "./Buttons/ButtonInfo";
@@ -16,6 +26,7 @@ import DataModal from "./ReciboNom/DataModal";
 import { Ionicons } from "@expo/vector-icons";
 import { HomeContext } from "../../HomeContext";
 import { AppContext } from "../../AppContext";
+
 //import HistorialModal from "./Vacaciones/HistorialModal";
 
 function getWeekNumber(d) {
@@ -27,7 +38,8 @@ function getWeekNumber(d) {
 }
 
 function ReciboNom() {
-	const { numEmp, region } = useContext(AppContext);
+	const { numEmp, region, platform } = useContext(AppContext);
+	// console.log("Platform is: ", platform);
 	const { proyecto } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [fondoAhorro, setFondoAhorro] = useState({
@@ -83,12 +95,9 @@ function ReciboNom() {
 
 	const sendPayrollRequest = async (period) => {
 		setIsWorkingModalVisible(true);
-		// return
 		console.log(
 			`Year: ${selectedYear}, Week: ${selectedWeek}, Special week: ${selectedNominaEsp}`
 		);
-		// console.log(typeof numEmp, typeof period, typeof selectedYear);
-		// return;
 		const payrollQuery = {
 			query: `mutation generatePayroll(
 					$numEmp: Int!,
@@ -115,64 +124,34 @@ function ReciboNom() {
 			},
 		};
 		try {
-			// console.log("Data to be sent: ", requisitionQuery);
 			const response = await fetchPost({ query: payrollQuery });
-			// console.log("Response: ", response.data.generatePayroll.pdfData);
 			const pdfBase64 = response?.data?.generatePayroll?.pdfData;
 			const pdfName = response?.data?.generatePayroll?.pdfName;
 			setIsWorkingModalVisible(false);
 			if (response?.data?.generatePayroll?.success && pdfBase64) {
-				const filePath = `${FileSystem.documentDirectory}${pdfName}`;
+				try {
+					const tempFilePath = `${RNFS.DocumentDirectoryPath}/${pdfName}`;
+					const publicFilePath = `${RNFS.DownloadDirectoryPath}/${pdfName}`;
 
-				await FileSystem.writeAsStringAsync(filePath, pdfBase64, {
-					encoding: FileSystem.EncodingType.Base64,
-				});
+					await RNFS.writeFile(tempFilePath, pdfBase64, "base64");
 
-				console.log("PDF saved");
-
-				// const fileInfo = await FileSystem.getInfoAsync(filePath);
-				// if (fileInfo.exists) {
-				// 	await Linking.openURL(filePath);
-				// } else {
-				// 	Alert.alert("Error", "The file could not be found");
-				// }
-				// ````` Funciona `````
-				if (await Sharing.isAvailableAsync()) {
-					await Sharing.shareAsync(filePath);
-				} else {
-					Alert.alert("Sharing is not available on this device");
+					await RNFS.moveFile(tempFilePath, publicFilePath);
+					const fileExists = await RNFS.exists(publicFilePath);
+					if (fileExists) {
+						await FileViewer.open(publicFilePath);
+					} else {
+						console.warn("File not found in public directory after move");
+					}
+				} catch (error) {
+					console.error("Error saving file:", error);
+					throw error;
 				}
-
-				// try {
-				// 	const isExisting = await FileSystem.getInfoAsync(filePath);
-				// 	if (isExisting.exists) {
-				// 		Linking.openURL(filePath);
-				// 	} else {
-				// 		console.warn("File does not exist");
-				// 	}
-				// } catch (error) {
-				// 	console.error("Error opening PDF in browser:", error);
-				// }
-
-				// FileViewer.open(filePath)
-				// 	.then(() => {
-				// 		console.log("PDF successfully opened");
-				// 	})
-				// 	.catch((error) => {
-				// 		console.error("Error opening PDF:", error);
-				// 	});
-
-				// Optionally open the PDF (if needed)
-				// You could use expo-intent-launcher or expo-sharing to open/view the file.
 			} else {
 				Alert.alert(
 					"Error",
 					"Hubo un problema con tu solicitud, vuelve a intentarlo en 1 minuto"
 				);
-				console.warn(
-					"Detail retrieving payroll information: ",
-					response?.data
-				);
+				console.warn("Detail retrieving payroll information: ", response?.data);
 			}
 		} catch (error) {
 			console.error("Error retrieving payroll information:", error);
@@ -207,7 +186,9 @@ function ReciboNom() {
 			return "No definido";
 		};
 
-		const nominaObject = recibos.find((recibo) => recibo.nomina === selectedWeek);
+		const nominaObject = recibos.find(
+			(recibo) => recibo.nomina === selectedWeek
+		);
 
 		if (!nominaObject) {
 			return handleUndefined();
@@ -350,9 +331,7 @@ function ReciboNom() {
 				const data = await fetchPost({ query });
 				// console.log("Response data at fondo ahorro:", data);
 				if (data.data.RecibosYears) {
-					const yearsCount = data.data.RecibosYears.map(
-						(item) => item.year
-					);
+					const yearsCount = data.data.RecibosYears.map((item) => item.year);
 					setYears(yearsCount);
 					// setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
@@ -388,21 +367,21 @@ function ReciboNom() {
 				},
 			};
 			try {
-				console.log("Query for Recibos is: ", query);
+				// console.log("Query for Recibos is: ", query);
 				const data = await fetchPost({ query });
 				// console.log(
 				// 	"Response data at recibos:",
 				// 	JSON.stringify(data, null, 2)
 				// );
 				if (data.data.Recibos) {
-					console.log(
-						"Recibos info is: ",
-						JSON.stringify(data.data.Recibos, null, 1)
-					);
+					// console.log(
+					// 	"Recibos info is: ",
+					// 	JSON.stringify(data.data.Recibos, null, 1)
+					// );
 					const normales = data.data.Recibos.filter(
 						(item) => item.nomina >= 1 && item.nomina <= 53
 					);
-					console.log("normales read: ", normales);
+					// console.log("normales read: ", normales);
 					const especiales = data.data.Recibos.filter(
 						(item) => item.nomina >= 54 && item.nomina <= 950
 					);
@@ -426,9 +405,7 @@ function ReciboNom() {
 					if (especiales.length > 0) {
 						mostRecentNomina = especiales.sort(
 							(a, b) =>
-								new Date(
-									b.fecha.split("-").reverse().join("-")
-								) -
+								new Date(b.fecha.split("-").reverse().join("-")) -
 								new Date(a.fecha.split("-").reverse().join("-"))
 						)[0].nomina;
 					}
@@ -496,9 +473,7 @@ function ReciboNom() {
 				/>
 			)}
 			{isWorkingModalVisible && (
-				<Working
-					isModalVisible={isWorkingModalVisible}
-				/>
+				<Working isModalVisible={isWorkingModalVisible} />
 			)}
 
 			<ContentHeader title="Recibo de Nómina" />
@@ -511,19 +486,13 @@ function ReciboNom() {
 						</Text>
 					</View>
 					<View style={reciboNom.sectionButtonContainer}>
-						<ButtonInfo
-							data={fondoAhorro.saldo_fa}
-							title="Acumulado"
-						/>
+						<ButtonInfo data={fondoAhorro.saldo_fa} title="Acumulado" />
 						<ButtonInfo
 							data={fondoAhorro.saldo_pr}
 							title="Saldo préstamo ahorro"
 						/>
 						{fondoAhorro.saldo_ca != 0 ? (
-							<ButtonInfo
-								data={fondoAhorro.saldo_ca}
-								title="Caja de Ahorro"
-							/>
+							<ButtonInfo data={fondoAhorro.saldo_ca} title="Caja de Ahorro" />
 						) : (
 							<View style={{ flex: 1 }} />
 						)}
@@ -543,9 +512,7 @@ function ReciboNom() {
 									style={reciboNom.nominaSearchIcon}
 								></Icon>
 							</View>
-							<Text style={reciboNom.nominaSearchText}>
-								{selectedYear}
-							</Text>
+							<Text style={reciboNom.nominaSearchText}>{selectedYear}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={weekModalHandler}
@@ -566,13 +533,9 @@ function ReciboNom() {
 
 					{/* Cantidades */}
 					<View style={reciboNom.nominaCantidadContainer}>
-						<TouchableOpacity
-							style={reciboNom.nominaCantidadElementContainer}
-						>
+						<TouchableOpacity style={reciboNom.nominaCantidadElementContainer}>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Percepciones
-								</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>Percepciones</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -588,9 +551,7 @@ function ReciboNom() {
 							]}
 						>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Deducciones
-								</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>Deducciones</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -599,13 +560,9 @@ function ReciboNom() {
 								</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity
-							style={reciboNom.nominaCantidadElementContainer}
-						>
+						<TouchableOpacity style={reciboNom.nominaCantidadElementContainer}>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>
-									Neto
-								</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>Neto</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -622,41 +579,30 @@ function ReciboNom() {
 						style={reciboNom.nominaGenerarContainer}
 					>
 						<View style={reciboNom.nominaGenerarButton}>
-							<Ionicons
-								name="document"
-								size={16}
-								color={COLORS.white}
-							/>
-							<Text style={reciboNom.nominaGenerarText}>
-								Generar recibo{"   "}
+							<Ionicons name="document" size={16} color={COLORS.white} />
+							<Text
+								style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+							>
+								Generar recibo
 							</Text>
 							<Ionicons
 								name="arrow-forward"
 								size={16}
 								color={COLORS.white}
+								style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
 							/>
 						</View>
 					</TouchableOpacity>
 				</View>
 				{selectedNominaEsp !== "No hay" && (
-					<View
-						style={[
-							reciboNom.nominaContainer,
-							{ marginTop: "2.5%" },
-						]}
-					>
+					<View style={[reciboNom.nominaContainer, { marginTop: "2.5%" }]}>
 						{/* Barra Busqueda */}
 						<View style={reciboNom.nominaHeader}>
 							<TouchableOpacity
 								onPress={nominaEspModalHandler}
-								style={[
-									reciboNom.nominaWeekContainer,
-									{ left: 0 },
-								]}
+								style={[reciboNom.nominaWeekContainer, { left: 0 }]}
 							>
-								<View
-									style={reciboNom.nominaSearchIconContainer}
-								>
+								<View style={reciboNom.nominaSearchIconContainer}>
 									<Icon
 										name="search"
 										size={13}
@@ -690,15 +636,12 @@ function ReciboNom() {
 								style={[
 									reciboNom.nominaCantidadElementContainer,
 									{
-										backgroundColor:
-											COLORS.flatlistElement1,
+										backgroundColor: COLORS.flatlistElement1,
 									},
 								]}
 							>
 								<View style={reciboNom.nominaCantidadBox}>
-									<Text style={reciboNom.nominaCantidadTitle}>
-										Deducciones
-									</Text>
+									<Text style={reciboNom.nominaCantidadTitle}>Deducciones</Text>
 								</View>
 								<View style={reciboNom.nominaCantidadBox}>
 									<Text style={reciboNom.nominaCantidad}>
@@ -711,9 +654,7 @@ function ReciboNom() {
 								style={reciboNom.nominaCantidadElementContainer}
 							>
 								<View style={reciboNom.nominaCantidadBox}>
-									<Text style={reciboNom.nominaCantidadTitle}>
-										Neto
-									</Text>
+									<Text style={reciboNom.nominaCantidadTitle}>Neto</Text>
 								</View>
 								<View style={reciboNom.nominaCantidadBox}>
 									<Text style={reciboNom.nominaCantidad}>
@@ -726,24 +667,21 @@ function ReciboNom() {
 
 						{/* Generar recibo */}
 						<TouchableOpacity
-							onPress={() =>
-								sendPayrollRequest(selectedNominaEsp)
-							}
+							onPress={() => sendPayrollRequest(selectedNominaEsp)}
 							style={reciboNom.nominaGenerarContainer}
 						>
 							<View style={reciboNom.nominaGenerarButton}>
-								<Ionicons
-									name="document"
-									size={16}
-									color={COLORS.white}
-								/>
-								<Text style={reciboNom.nominaGenerarText}>
-									Generar recibo{"   "}
+								<Ionicons name="document" size={16} color={COLORS.white} />
+								<Text
+									style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+								>
+									Generar recibo
 								</Text>
 								<Ionicons
 									name="arrow-forward"
 									size={16}
 									color={COLORS.white}
+									style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
 								/>
 							</View>
 						</TouchableOpacity>

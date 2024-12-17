@@ -10,6 +10,8 @@ import { showMessage } from "react-native-flash-message";
 import { AppContext } from "../components/AppContext";
 import Bell from "../components/Animations/Bell";
 import fetchPost from "../components/fetching";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
+import COLORS from "../constants/colors";
 
 const Home = ({ navigation }) => {
 	const { numEmp, region } = useContext(AppContext);
@@ -40,20 +42,30 @@ const Home = ({ navigation }) => {
 			};
 			try {
 				const data = await fetchPost({ query: encuestasQuery });
-				console.log("Data is: ", data);
+				// console.log("Data is: ", data);
 				// if (region === "JRZ") {
 				if (data.data.Encuestas && data.data.Encuestas.length > 1) {
 					console.log("Correct", region);
-					// setNotifs(data.data.Encuestas.length);
+					setNotifs(data.data.Encuestas.length);
 					showMessage({
 						message: "Tienes notificaciones !",
 						description: `Tienes${
-							data.data.Encuestas.length > 1 ? "más de " : " "
+							data.data.Encuestas.length > 1 ? " más de " : " "
 						}una encuesta pendiente por responder`,
 						type: "info",
 						duration: 20000,
 						position: "top",
 						statusBarHeight: 30,
+						style: {
+							// backgroundColor: COLORS.second,
+							backgroundColor: "white",
+							borderBottomLeftRadius: 15,
+							borderBottomRightRadius: 15,
+							borderWidth: 1,
+							borderColor: COLORS.main
+						},
+						textStyle: { color: COLORS.main },
+						titleStyle: { color: COLORS.main },
 						icon: () => <Bell />,
 					});
 				}

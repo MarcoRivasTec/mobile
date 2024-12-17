@@ -9,18 +9,9 @@ function TecmaIdeas() {
 		Linking.openURL("https://www.tecmaideas.com");
 	};
 	return (
-		<View style={ideas.container}>
-			{/* <ContentHeader title="Redes" /> */}
-			<TouchableOpacity onPress={handlePress} style={ideas.contentContainer}>
-				{/* <View style={redes.titleContainer}>
-					<Text style={redes.titleText}>
-						Síguenos en nuestras Redes Sociales
-					</Text>
-				</View>
-				 */}
-				<TecmaIdeasAnim />
-			</TouchableOpacity>
-		</View>
+		<TouchableOpacity onPress={handlePress} style={ideas.container}>
+			<TecmaIdeasAnim />
+		</TouchableOpacity>
 	);
 }
 
