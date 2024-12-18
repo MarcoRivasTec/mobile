@@ -8,13 +8,14 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import QRCodeStyled from "react-native-qrcode-styled";
-import { gafete } from "./styles";
+import { getGafeteStyle } from "./styles";
 import { HomeContext } from "../components/HomeContext";
 import AD from "react-native-vector-icons/AntDesign";
 import COLORS, { BLACK } from "../constants/colors";
 import { AppContext } from "../components/AppContext";
 import LoadingContent from "../components/Animations/LoadingContent";
 import fetchPost from "../components/fetching";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const formatDate = (date) => {
 	const day = String(date.getDate()).padStart(2, "0");
@@ -36,6 +37,7 @@ const formatTime = (date) => {
 };
 
 const GafeteQR = ({ navigation }) => {
+
 	const {
 		profileImg,
 		razon,
@@ -46,7 +48,10 @@ const GafeteQR = ({ navigation }) => {
 		numEmp,
 		planta,
 	} = useContext(HomeContext);
-	const { region } = useContext(AppContext);
+	const { region, platform } = useContext(AppContext);
+	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
+	console.log(statusBarHeight)
+	const gafete = getGafeteStyle(statusBarHeight)
 	const today = new Date();
 	const date = formatDate(today);
 	const time = formatTime(today);
@@ -58,6 +63,7 @@ const GafeteQR = ({ navigation }) => {
 	// }
 
 	useEffect(() => {
+		StatusBar.setHidden(true, 'slide')
 		const getQRData = async () => {
 			console.log("Requesting data");
 			const qrQuery = {
@@ -85,7 +91,7 @@ const GafeteQR = ({ navigation }) => {
 				console.log("Data is: ", data);
 				// if (region === "JRZ") {
 				if (data.data.requestQRData.success) {
-					console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
+					// console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
 					setQRData(data.data.requestQRData.data.qr);
 					setEmpInfo({
 						ingreso: data.data.requestQRData.data.ingreso,
@@ -112,12 +118,13 @@ const GafeteQR = ({ navigation }) => {
 		<View style={gafete.container}>
 			<ImageBackground
 				source={require("../assets/backgrounds/GAFETEFULL.jpg")}
+				resizeMode="cover"
 				style={gafete.backgroundContainer}
 			/>
 
 			<View style={gafete.contentContainer}>
 				{/* Logos */}
-				<View style={[gafete.dataContainer, { height: "13%" }]}>
+				<View style={[gafete.dataContainer, { height: platform === "ios" ? "11.5%" : "13%" }]}>
 					<Image
 						source={require("../assets/adaptive-icon.png")}
 						style={gafete.logo}
@@ -167,12 +174,12 @@ const GafeteQR = ({ navigation }) => {
 				</View>
 
 				{/* Employee Number */}
-				<View style={[gafete.dataContainer, { height: "3.5%" }]}>
+				<View style={[gafete.dataContainer, { height: platform === "ios" ? "3.4%" : "3.5%" }]}>
 					<Text style={gafete.employeeNumber}>{numEmp}</Text>
 				</View>
 
 				{/* QR Code */}
-				<View style={[gafete.dataContainer, { height: "20.6%" }]}>
+				<View style={[gafete.dataContainer, { height: platform === "ios" ? "19.6%" : "20.6%" }]}>
 					{QRData ? (
 						<QRCodeStyled
 							data={QRData}
@@ -231,7 +238,7 @@ const GafeteQR = ({ navigation }) => {
 				</View>
 
 				{/* Company */}
-				<View style={[gafete.dataContainer, { height: "2.9%" }]}>
+				<View style={[gafete.dataContainer, { height: platform === "ios" ? "2.7%" : "2.9%" }]}>
 					<Text style={gafete.company}>{razon}</Text>
 				</View>
 
@@ -252,7 +259,7 @@ const GafeteQR = ({ navigation }) => {
 				</View>
 
 				{/* Etc */}
-				<View style={[gafete.dataContainer, { height: "4%" }]}>
+				<View style={[gafete.dataContainer, { height: platform === "ios" ? "6.8%" : "4%" }]}>
 					{/* <Text style={{ color: "white" }}>Lorem Ipsum</Text> */}
 				</View>
 			</View>

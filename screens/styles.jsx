@@ -38,13 +38,20 @@ const login = StyleSheet.create({
 		alignItems: "center",
 	},
 });
+const getGafeteStyle = (statusBarHeight) => {
 
-const gafete = StyleSheet.create({
+
+return StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+	},
 	backgroundContainer: {
 		position: "absolute",
 		height: "100%",
 		width: "100%",
-		resizeMode: "cover",
 		overflow: "hidden",
 	},
 	content: {
@@ -56,16 +63,18 @@ const gafete = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
+		paddingTop: statusBarHeight
 	},
 	dataContainer: {
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
+		borderColor: "white"
 		
 	},
 	logo: {
-		height: "50%",
+		height: "60%",
 		width: "50%",
 	},
 	name: { fontSize: 18 },
@@ -190,7 +199,7 @@ const gafete = StyleSheet.create({
 	},
 	backButton: {
 		position: "absolute",
-		top: 0,
+		top: statusBarHeight,
 		left: 0,
 		height: 70,
 		width: 70,
@@ -198,6 +207,6 @@ const gafete = StyleSheet.create({
 		alignItems: "center",
 		// borderWidth: 1
 	},
-});
+})};
 
-export { login, gafete };
+export { login, getGafeteStyle };
