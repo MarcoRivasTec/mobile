@@ -62,6 +62,7 @@ const gafete = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
+		
 	},
 	logo: {
 		height: "50%",
@@ -69,11 +70,15 @@ const gafete = StyleSheet.create({
 	},
 	name: { fontSize: 18 },
 	imageContainer: {
-		height: "100%",
-		width: "50%",
-		borderRadius: 55,
+		height: "65%",
+		width: "34%",
+		// width: "auto",
+		// borderRadius: 50,
 		justifyContent: "center",
 		alignItems: "center",
+		marginBottom: "1%"
+		// borderWidth: 1,
+		// borderColor: "white",
 		// backgroundColor: "white",
 		// iOS Shadow
 		// shadowColor: "#000",
@@ -94,14 +99,14 @@ const gafete = StyleSheet.create({
 		opacity: 0.1,
 	},
 	image: {
-		height: "80%",
-		width: "80%",
-		// borderRadius: 55,
+		height: "100%",
+		width: "100%",
+		borderRadius: 20,
 		// borderRadius: 100,
 		overflow: "hidden",
 	},
 	jobDescription: {
-		fontFamily: "Montserrat-Light",
+		fontFamily: "Montserrat-Regular",
 		fontSize: 22,
 		color: "white",
 	},
@@ -110,6 +115,12 @@ const gafete = StyleSheet.create({
 		fontSize: 22,
 		color: "white",
 		letterSpacing: 3,
+		bottom: 1
+		// marginBottom: "2%"
+	},
+	QR: {
+		height: "50%",
+		width: "100%",
 	},
 	categoryTitlesContainer: {
 		height: "40%",
@@ -148,6 +159,7 @@ const gafete = StyleSheet.create({
 		fontFamily: "Montserrat-LightItalic",
 		fontSize: 10,
 		color: "white",
+		top: 3,
 	},
 	generadoContainer: {
 		height: "100%",

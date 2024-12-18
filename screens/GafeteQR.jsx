@@ -11,7 +11,10 @@ import QRCodeStyled from "react-native-qrcode-styled";
 import { gafete } from "./styles";
 import { HomeContext } from "../components/HomeContext";
 import AD from "react-native-vector-icons/AntDesign";
-import { BLACK } from "../constants/colors";
+import COLORS, { BLACK } from "../constants/colors";
+import { AppContext } from "../components/AppContext";
+import LoadingContent from "../components/Animations/LoadingContent";
+import fetchPost from "../components/fetching";
 
 const formatDate = (date) => {
 	const day = String(date.getDate()).padStart(2, "0");
@@ -41,18 +44,69 @@ const GafeteQR = ({ navigation }) => {
 		surname_2,
 		puesto,
 		numEmp,
-		plantaID,
+		planta,
 	} = useContext(HomeContext);
+	const { region } = useContext(AppContext);
 	const today = new Date();
 	const date = formatDate(today);
 	const time = formatTime(today);
+	const [QRData, setQRData] = useState(null);
+	const [empInfo, setEmpInfo] = useState(null);
 
 	// function modalHandler() {
 	// 	setIsModalVisible(!isModalVisible);
 	// }
 
-	// useEffect(() => {
-	// }, []);
+	useEffect(() => {
+		const getQRData = async () => {
+			console.log("Requesting data");
+			const qrQuery = {
+				query: `mutation RequestQRData($input: QRInput!) {
+							requestQRData(input: $input) {
+								data {
+									qr
+									ingreso
+									imss
+								}
+								message
+								success
+							}
+						}`,
+				variables: {
+					input: {
+						numEmp: +numEmp,
+						region: region,
+					},
+				},
+			};
+			// console.log("Query is: ", qrQuery);
+			try {
+				const data = await fetchPost({ query: qrQuery });
+				console.log("Data is: ", data);
+				// if (region === "JRZ") {
+				if (data.data.requestQRData.success) {
+					console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
+					setQRData(data.data.requestQRData.data.qr);
+					setEmpInfo({
+						ingreso: data.data.requestQRData.data.ingreso,
+						imss: data.data.requestQRData.data.imss,
+					});
+				}
+			} catch (error) {
+				showMessage({
+					message: "Hubo un problema al generar el codigo QR, intenta de nuevo",
+					type: "warning",
+					duration: 3000,
+					position: "top",
+					statusBarHeight: 30,
+					icon: { icon: "info", position: "right" },
+					// statusBarHeight: 40,
+				});
+			}
+		};
+
+		getQRData();
+	}, []);
 
 	return (
 		<View style={gafete.container}>
@@ -119,27 +173,60 @@ const GafeteQR = ({ navigation }) => {
 
 				{/* QR Code */}
 				<View style={[gafete.dataContainer, { height: "20.6%" }]}>
-					<QRCodeStyled
-						data={"https://www.tecmamovil.com/"}
-						style={{ backgroundColor: "white" }}
-						padding={20}
-						pieceSize={8}
-					/>
+					{QRData ? (
+						<QRCodeStyled
+							data={QRData}
+							style={gafete.QR}
+							
+							// padding={30}
+							// innerEyesOptions={{
+							// 	color: COLORS.naranja,
+							// }}
+							gradient={{
+								type: "linear",
+								options: {
+									start: [0, 0],
+									end: [1, 1],
+									// colors: ["#da0c8b", "#00bfff"],
+									colors: ["#da0c8b", "#00bfff"],
+									locations: [0, 1],
+								},
+							}}
+							// outerEyesOptions={{
+							// 	borderTopLeftRadius: 50,
+							// 	// border: 12,
+							// 	// color: COLORS.naranja,
+							// }}
+							logo={{ href: require("../assets/LOGO TECMAMOVILCONNECT.png") }}
+							pieceSize={5}
+							pieceScale={1.04}
+						/>
+					) : (
+						<LoadingContent />
+					)}
 				</View>
 
 				{/* Info */}
 				<View style={[gafete.dataContainer, { height: "7.6%" }]}>
 					<View style={gafete.categoryTitlesContainer}>
 						<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
-						<Text style={[gafete.category, { flex: 1.5 }]}>Ingreso</Text>
-						<Text style={[gafete.category, { flex: 2 }]}>No. IMSS</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
+						<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
 					</View>
 					<View style={gafete.categoriesContainer}>
-						<Text style={[gafete.categoryData, { flex: 1 }]}>{plantaID}</Text>
-						<Text style={[gafete.categoryData, { flex: 1.5 }]}>20-09-20</Text>
-						<Text style={[gafete.categoryData, { flex: 2 }]}>
-							3002515612045
-						</Text>
+						<Text style={[gafete.categoryData, { flex: 1 }]}>{planta}</Text>
+						{empInfo ? (
+							<Text style={[gafete.categoryData, { flex: 1 }]}>20-09-20</Text>
+						) : (
+							<LoadingContent style={{ flex: 1 }} />
+						)}
+						{empInfo ? (
+							<Text style={[gafete.categoryData, { flex: 1.5 }]}>
+								3002515612045
+							</Text>
+						) : (
+							<LoadingContent style={{ flex: 1.5 }} />
+						)}
 					</View>
 				</View>
 
