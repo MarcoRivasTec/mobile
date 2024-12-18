@@ -9,7 +9,7 @@ import {
 } from "react-native";
 // import * as Linking from "expo-linking";
 // import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
+// import * as FileSystem from "expo-file-system";
 import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 // import * as IntentLauncher from "expo-intent-launcher";

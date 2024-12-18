@@ -1,4 +1,4 @@
-import { Text, Animated, StyleSheet, View, StatusBar } from "react-native";
+import { Text, Animated, StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";

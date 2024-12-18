@@ -10,7 +10,6 @@ import { showMessage } from "react-native-flash-message";
 import { AppContext } from "../components/AppContext";
 import Bell from "../components/Animations/Bell";
 import fetchPost from "../components/fetching";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 import COLORS from "../constants/colors";
 
 const Home = ({ navigation }) => {

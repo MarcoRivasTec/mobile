@@ -7,7 +7,7 @@ export default function LogoBienvenida({ onFinish }) {
 			source={require("../../assets/animations/logo_tecmamovil.json")}
 			style={{ width: "100%", height: "100%" }}
 			autoPlay
-			speed={1}
+			speed={3}
 			loop={false}
 			onAnimationFinish={onFinish}
 		/>

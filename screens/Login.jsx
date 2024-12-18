@@ -3,7 +3,7 @@ import {
 	ImageBackground,
 	TouchableWithoutFeedback,
 	Keyboard,
-	StatusBar,
+	StatusBar
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";

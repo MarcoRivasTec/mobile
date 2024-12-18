@@ -26,7 +26,7 @@ const Splash = ({ navigation }) => {
 
 	const [fontsLoaded, error] = useFonts({
 		IcoMoon: require("../assets/icons/icomoon/icomoon.ttf"),
-		"Montserrat-BlackItalic": require("../assets/fonts/Montserrat/Montserrat-BlackItalic.ttf"),
+		"Montserrat-LightItalic": require("../assets/fonts/Montserrat/Montserrat-LightItalic.ttf"),
 		"Montserrat-Medium": require("../assets/fonts/Montserrat/Montserrat-Medium.ttf"),
 		"Montserrat-Black": require("../assets/fonts/Montserrat/Montserrat-Black.ttf"),
 		"Montserrat-Bold": require("../assets/fonts/Montserrat/Montserrat-Bold.ttf"),
