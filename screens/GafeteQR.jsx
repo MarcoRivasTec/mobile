@@ -46,7 +46,7 @@ const GafeteQR = ({ navigation }) => {
 		numEmp,
 		planta,
 	} = useContext(HomeContext);
-	const { region } = useContext(AppContext);
+	const { region, platform } = useContext(AppContext);
 	const today = new Date();
 	const date = formatDate(today);
 	const time = formatTime(today);
@@ -58,6 +58,7 @@ const GafeteQR = ({ navigation }) => {
 	// }
 
 	useEffect(() => {
+		if (platform === "ios") StatusBar.setHidden(false);
 		const getQRData = async () => {
 			console.log("Requesting data");
 			const qrQuery = {
@@ -177,7 +178,6 @@ const GafeteQR = ({ navigation }) => {
 						<QRCodeStyled
 							data={QRData}
 							style={gafete.QR}
-							
 							// padding={30}
 							// innerEyesOptions={{
 							// 	color: COLORS.naranja,
