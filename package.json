@@ -4,7 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
+    "stc": "expo start -c",
+    "and": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "pb-a": "set EXPO_PREBUILD_ANDROID=1 && node scripts/set-reanimated-version.js",
@@ -40,6 +41,7 @@
     "react-native-bouncy-checkbox": "^4.0.0",
     "react-native-date-picker": "^5.0.0",
     "react-native-dotenv": "^3.4.11",
+    "react-native-fast-shadow": "^0.1.1",
     "react-native-file-viewer": "^2.1.5",
     "react-native-flash-message": "^0.4.2",
     "react-native-fs": "^2.20.0",

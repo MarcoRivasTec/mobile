@@ -16,6 +16,9 @@ import { AppContext } from "../components/AppContext";
 import LoadingContent from "../components/Animations/LoadingContent";
 import fetchPost from "../components/fetching";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ShadowedView } from "react-native-fast-shadow";
+import { showMessage } from "react-native-flash-message";
+import { LinearGradient } from "expo-linear-gradient";
 
 const formatDate = (date) => {
 	const day = String(date.getDate()).padStart(2, "0");
@@ -47,9 +50,14 @@ const GafeteQR = ({ navigation }) => {
 		numEmp,
 		planta,
 	} = useContext(HomeContext);
-	const { region, platform } = useContext(AppContext);
+	const { region, platform, width } = useContext(AppContext);
+	// console.log("Device width is: ", width);
+	const [arrowHeight, setArrowHeight] = useState(0);
+	const [whiteHeight, setWhiteHeight] = useState(0);
+	const pictureSize = width * 0.45;
+	const pictureRadius = pictureSize * 0.33;
 	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
-	console.log(statusBarHeight);
+	// console.log(statusBarHeight);
 	const gafete = getGafeteStyle(statusBarHeight);
 	const today = new Date();
 	const date = formatDate(today);
@@ -64,7 +72,7 @@ const GafeteQR = ({ navigation }) => {
 	useEffect(() => {
 		if (platform === "ios") StatusBar.setHidden(false);
 		const getQRData = async () => {
-			console.log("Requesting data");
+			// console.log("Requesting data");
 			const qrQuery = {
 				query: `mutation RequestQRData($input: QRInput!) {
 							requestQRData(input: $input) {
@@ -87,7 +95,7 @@ const GafeteQR = ({ navigation }) => {
 			// console.log("Query is: ", qrQuery);
 			try {
 				const data = await fetchPost({ query: qrQuery });
-				console.log("Data is: ", data);
+				// console.log("Data is: ", data);
 				// if (region === "JRZ") {
 				if (data.data.requestQRData.success) {
 					// console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
@@ -99,8 +107,7 @@ const GafeteQR = ({ navigation }) => {
 				}
 			} catch (error) {
 				showMessage({
-					message:
-						"Hubo un problema al generar el codigo QR, intenta de nuevo",
+					message: "Hubo un problema al generar el codigo QR, intenta de nuevo",
 					type: "warning",
 					duration: 3000,
 					position: "top",
@@ -115,219 +122,248 @@ const GafeteQR = ({ navigation }) => {
 	}, []);
 
 	useEffect(() => {
-		console.log("QR Data is: ", QRData);
+		// console.log("QR Data is: ", QRData);
 	}, [QRData]);
 
-	{
-		QRData ? (
-			<View style={gafete.container}>
-				<View style={gafete.whiteBackground}>
-					<View
+	return QRData ? (
+		<View style={gafete.container}>
+			<View
+				style={gafete.whiteBackground}
+				onLayout={(event) => {
+					const { height } = event.nativeEvent.layout;
+					setWhiteHeight(height);
+					// console.log("Picture height is: ", height);
+				}}
+			></View>
+
+			<View
+				style={gafete.arrowBackground}
+				onLayout={(event) => {
+					const { height } = event.nativeEvent.layout;
+					setArrowHeight(height);
+					// console.log("Picture height is: ", height);
+				}}
+			>
+				<ImageBackground
+					source={require("../assets/backgrounds/GAFETEFONDO.png")}
+					resizeMode="cover"
+					style={gafete.backgroundContainer}
+				/>
+			</View>
+
+			{/* Picture */}
+			{arrowHeight != 0 && (
+				<View
+					style={{
+						position: "absolute",
+						height: pictureSize,
+						width: pictureSize,
+						bottom: arrowHeight - pictureSize / 2,
+						// borderWidth: 2,
+						// borderRadius: 150,
+						alignSelf: "center",
+					}}
+				>
+					{/* <View
 						style={[
-							gafete.dataContainer,
-							{
-								height: platform === "ios" ? "11.5%" : "13%",
-							},
+							gafete.imageContainerShadow,
+							{ borderRadius: pictureRadius },
 						]}
+					/> */}
+					<ShadowedView
+						style={[gafete.imageContainer, { borderRadius: pictureRadius }]}
 					>
 						<Image
-							source={require("../assets/adaptive-icon.png")}
-							style={gafete.logo}
+							style={[gafete.image, { borderRadius: pictureRadius }]}
+							resizeMode="cover"
+							// source={require("../../assets/social/imagen.png")}
+							source={{
+								uri: `data:image/jpeg;base64,${profileImg}`,
+							}}
 						/>
-					</View>
-
-					{/* Name */}
-					<View style={[gafete.dataContainer, { height: "8%" }]}>
-						<Text
-							style={{
-								fontFamily: "Montserrat-ExtraBold",
-								fontSize: 28,
-								color: BLACK.b2,
-							}}
-						>
-							{name}
-						</Text>
-						<Text
-							style={{
-								fontFamily: "Montserrat-Light",
-								fontSize: 22,
-								color: BLACK.b2,
-							}}
-						>
-							{surname_1} {surname_2}
-						</Text>
-					</View>
+					</ShadowedView>
 				</View>
-				<View style={gafete.arrowBackground}>
-					<ImageBackground
-						source={require("../assets/backgrounds/GAFETEFONDO.png")}
-						resizeMode="cover"
-						style={gafete.backgroundContainer}
+			)}
+
+			<View
+				style={[gafete.topContainer, { height: whiteHeight - pictureSize / 2 }]}
+			>
+				{/* Back button */}
+				<TouchableOpacity
+					onPress={() => navigation.goBack()}
+					style={gafete.backButton}
+				>
+					<AD name="arrowleft" size={25} />
+				</TouchableOpacity>
+
+				{/* Logo */}
+				<View style={[gafete.dataContainer, { height: "40%" }]}>
+					<Image
+						source={require("../assets/adaptive-icon.png")}
+						style={gafete.logo}
 					/>
-					{/* <TouchableOpacity
-						onPress={() => navigation.goBack()}
-						style={gafete.backButton}
+				</View>
+
+				{/* Name */}
+				<View style={[gafete.dataContainer, { height: "60%" }]}>
+					<Text
+						style={{
+							fontFamily: "Montserrat-ExtraBold",
+							fontSize: 28,
+							color: BLACK.b2,
+						}}
 					>
-						<AD name="arrowleft" size={25} />
-					</TouchableOpacity> */}
-					{/* Logos */}
-
-					{/* Picture */}
-					<View style={[gafete.dataContainer, { height: "28%" }]}>
-						{/* <View style={gafete.imageContainerShadow} /> */}
-						<View style={gafete.imageContainer}>
-							<Image
-								style={gafete.image}
-								resizeMode="contain"
-								// source={require("../../assets/social/imagen.png")}
-								source={{
-									uri: `data:image/jpeg;base64,${profileImg}`,
-								}}
-							/>
-						</View>
-					</View>
-
-					{/* Job Description */}
-					<View style={[gafete.dataContainer, { height: "9.5%" }]}>
-						<Text style={gafete.jobDescription}>{puesto}</Text>
-					</View>
-
-					{/* Employee Number */}
-					<View
-						style={[
-							gafete.dataContainer,
-							{
-								height: platform === "ios" ? "3.4%" : "3.5%",
-							},
-						]}
+						{name}
+					</Text>
+					<Text
+						style={{
+							fontFamily: "Montserrat-Light",
+							fontSize: 22,
+							color: BLACK.b2,
+						}}
 					>
-						<Text style={gafete.employeeNumber}>{numEmp}</Text>
-					</View>
+						{surname_1} {surname_2}
+					</Text>
+				</View>
+			</View>
 
-					{/* QR Code */}
-					<View
-						style={[
-							gafete.dataContainer,
-							{
-								height: platform === "ios" ? "19.6%" : "20.6%",
-							},
-						]}
+			<View
+				style={[
+					gafete.bottomContainer,
+					{ height: arrowHeight - pictureSize / 2 },
+				]}
+			>
+				{/* Job Description */}
+				<View
+					style={[gafete.dataContainer, { height: "18%", marginTop: "4%" }]}
+				>
+					<Text style={gafete.jobDescription}>{puesto}</Text>
+				</View>
+
+				{/* Employee Number */}
+				<View style={[gafete.dataContainer, { height: "8%" }]}>
+					<View style={gafete.employeeNumberBackground} />
+					<Text style={gafete.employeeNumber}>{numEmp}</Text>
+				</View>
+
+				{/* QR Code */}
+				<View style={[gafete.dataContainer, { height: "40%" }]}>
+					{QRData ? (
+						<QRCodeStyled
+							data={QRData}
+							style={gafete.QR}
+							pieceBorderRadius={2.5}
+							outerEyesOptions={{
+								topLeft: {
+									borderRadius: [15, 15, 0, 15],
+									color: "#30565E",
+								},
+								topRight: {
+									borderRadius: [15, 15, 15],
+									color: "#30565E",
+								},
+								bottomLeft: {
+									borderRadius: [15, 0, 15, 15],
+									color: "#30565E",
+								},
+							}}
+							innerEyesOptions={{
+								borderRadius: 7,
+								scale: 0.85,
+								color: "#30565E",
+								// color: "blue"
+							}}
+							logo={{
+								href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
+							}}
+							gradient={{
+								type: "radial",
+								options: {
+									center: [0.5, 0.5],
+									radius: [1, 1],
+									colors: ["#467479", "#30565E"],
+									locations: [0, 1],
+								},
+							}}
+							pieceSize={4.5}
+							pieceScale={1}
+						/>
+					) : (
+						<LoadingContent />
+					)}
+				</View>
+
+				{/* Info */}
+				<View style={[gafete.dataContainer, { height: "14%" }]}>
+					<LinearGradient
+						colors={["#01121C", "#18343F"]}
+						style={gafete.categoryTitlesContainer}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 0, y: 1 }}
 					>
-						{QRData ? (
-							<QRCodeStyled
-								data={QRData}
-								style={gafete.QR}
-								// padding={30}
-								// innerEyesOptions={{
-								// 	color: COLORS.naranja,
-								// }}
-								gradient={{
-									type: "linear",
-									options: {
-										start: [0, 0],
-										end: [1, 1],
-										// colors: ["#da0c8b", "#00bfff"],
-										colors: ["#da0c8b", "#00bfff"],
-										locations: [0, 1],
-									},
-								}}
-								// outerEyesOptions={{
-								// 	borderTopLeftRadius: 50,
-								// 	// border: 12,
-								// 	// color: COLORS.naranja,
-								// }}
-								logo={{
-									href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
-								}}
-								pieceSize={5}
-								pieceScale={1.04}
-							/>
+						<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
+						<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
+					</LinearGradient>
+					{/* <View style={gafete.categoryTitlesContainer}></View> */}
+					<LinearGradient
+						colors={["#2B4954", "#4A6D76"]}
+						style={gafete.categoriesContainer}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 0, y: 1 }}
+					>
+						<Text style={[gafete.categoryData, { flex: 1 }]}>{planta}</Text>
+						{empInfo ? (
+							<Text style={[gafete.categoryData, { flex: 1 }]}>20-09-20</Text>
 						) : (
-							<LoadingContent />
+							<LoadingContent style={{ flex: 1 }} />
 						)}
-					</View>
+						{empInfo ? (
+							<Text style={[gafete.categoryData, { flex: 1.5 }]}>
+								3002515612045
+							</Text>
+						) : (
+							<LoadingContent style={{ flex: 1.5 }} />
+						)}
+					</LinearGradient>
+				</View>
 
-					{/* Info */}
-					<View style={[gafete.dataContainer, { height: "7.6%" }]}>
-						<View style={gafete.categoryTitlesContainer}>
-							<Text style={[gafete.category, { flex: 1 }]}>
-								Planta
-							</Text>
-							<Text style={[gafete.category, { flex: 1 }]}>
-								Ingreso
-							</Text>
-							<Text style={[gafete.category, { flex: 1.5 }]}>
-								No. IMSS
-							</Text>
-						</View>
-						<View style={gafete.categoriesContainer}>
-							<Text style={[gafete.categoryData, { flex: 1 }]}>
-								{planta}
-							</Text>
-							{empInfo ? (
-								<Text
-									style={[gafete.categoryData, { flex: 1 }]}
-								>
-									20-09-20
-								</Text>
-							) : (
-								<LoadingContent style={{ flex: 1 }} />
-							)}
-							{empInfo ? (
-								<Text
-									style={[gafete.categoryData, { flex: 1.5 }]}
-								>
-									3002515612045
-								</Text>
-							) : (
-								<LoadingContent style={{ flex: 1.5 }} />
-							)}
-						</View>
-					</View>
+				{/* Company */}
+				<View style={[gafete.dataContainer, { height: "6%" }]}>
+					<Text style={gafete.company}>{razon}</Text>
+				</View>
 
-					{/* Company */}
-					<View
-						style={[
-							gafete.dataContainer,
-							{
-								height: platform === "ios" ? "2.7%" : "2.9%",
-							},
-						]}
-					>
-						<Text style={gafete.company}>{razon}</Text>
-					</View>
-
-					{/* QR info */}
-					<View
-						style={[
-							gafete.dataContainer,
-							{ height: "2.9%", flexDirection: "row" },
-						]}
-					>
+				{/* QR info */}
+				<View
+					style={[
+						gafete.dataContainer,
+						{
+							height: "6%",
+							flexDirection: "row",
+							backgroundColor: COLORS.flatlistElement1,
+						},
+					]}
+				>
+					<View style={gafete.generadoShadowContainer}>
 						<View style={gafete.generadoContainer}>
 							<Text style={gafete.generado}>GENERADO</Text>
 						</View>
-						<View style={gafete.generadoDataContainer}>
-							<Text style={gafete.generadoData}>{date}</Text>
-							<Text style={gafete.generadoData}>{time}</Text>
-						</View>
 					</View>
-
-					{/* Etc */}
-					<View
-						style={[
-							gafete.dataContainer,
-							{ height: platform === "ios" ? "6.8%" : "4%" },
-						]}
-					></View>
+					<View style={gafete.generadoDataContainer}>
+						<Text style={gafete.generadoData}>{date}</Text>
+						<Text style={gafete.generadoData}>{time}</Text>
+					</View>
 				</View>
+
+				{/* Etc */}
+				<View style={[gafete.dataContainer, { flex: 1 }]} />
 			</View>
-		) : (
-			<View style={gafete.container}>
-				<LoadingContent />
-			</View>
-		);
-	}
+		</View>
+	) : (
+		<View style={gafete.container}>
+			<LoadingContent />
+		</View>
+	);
 };
 
 export default GafeteQR;

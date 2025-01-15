@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import COLORS from "../constants/colors";
+import COLORS, { BLACK } from "../constants/colors";
 
 const login = StyleSheet.create({
 	backgroundContainer: {
@@ -46,8 +46,8 @@ const getGafeteStyle = (statusBarHeight) => {
 			width: "100%",
 			justifyContent: "center",
 			alignItems: "center",
-			borderWidth: 1,
-			backgroundColor: "black",
+			// borderWidth: 1,
+			backgroundColor: "white",
 		},
 		backgroundContainer: {
 			position: "absolute",
@@ -58,15 +58,15 @@ const getGafeteStyle = (statusBarHeight) => {
 			alignItems: "center",
 		},
 		whiteBackground: {
-			height: "30%",
+			height: "35%",
 			width: "100%",
-			justifyContent: "center",
-			alignItems: "center",
 		},
 		arrowBackground: {
-			height: "70%",
+			height: "65%",
 			width: "100%",
-			justifyContent: "center",
+			// borderWidth: 1,
+			borderColor: "white",
+			justifyContent: "flex-end",
 			alignItems: "center",
 		},
 		content: {
@@ -74,75 +74,110 @@ const getGafeteStyle = (statusBarHeight) => {
 			width: "100%",
 		},
 		contentContainer: {
+			position: "absolute",
 			height: "100%",
+			width: "100%",
+			justifyContent: "flex-start",
+			alignItems: "center",
+			// paddingTop: statusBarHeight,
+		},
+		topContainer: {
+			position: "absolute",
+			width: "100%",
+			top: 0,
+			// borderWidth: 1,
+		},
+		bottomContainer: {
+			position: "absolute",
+			width: "100%",
+			bottom: 0,
+			// borderWidth: 1,
+		},
+		dataContainer: {
+			// flex: 1,
 			width: "100%",
 			justifyContent: "center",
 			alignItems: "center",
-			paddingTop: statusBarHeight,
+			// borderWidth: 1,
+			// borderColor: "white",
 		},
-		dataContainer: {
+		logo: {
+			height: "70%",
+			width: "40%",
+		},
+		name: { fontSize: 18 },
+		imageContainer: {
+			height: "100%",
 			width: "100%",
+			padding: 5,
+			// borderRadius: 40,
 			justifyContent: "center",
 			alignItems: "center",
 			// borderWidth: 1,
 			borderColor: "white",
+			backgroundColor: "white",
+			shadowOffset: { width: 2, height: 4 }, // X: 0, Y: 4
+			shadowOpacity: 0.4,
+			shadowRadius: 5,
 		},
-		logo: {
-			height: "60%",
-			width: "50%",
-		},
-		name: { fontSize: 18 },
-		imageContainer: {
-			height: "65%",
-			width: "34%",
-			// width: "auto",
-			// borderRadius: 50,
-			justifyContent: "center",
-			alignItems: "center",
-			marginBottom: "1%",
-			// borderWidth: 1,
-			// borderColor: "white",
-			// backgroundColor: "white",
-			// iOS Shadow
-			// shadowColor: "#000",
-			// shadowOffset: { width: 0, height: 4 }, // X: 0, Y: 4
-			// shadowOpacity: 0.3,
-			// shadowRadius: 5,
-			// // Android Shadow
-			// elevation: 1,
-		},
+		// imageContainer: {
+		// 	height: "100%",
+		// 	width: "100%",
+		// 	padding: 5,
+		// 	// borderRadius: 40,
+		// 	justifyContent: "center",
+		// 	alignItems: "center",
+		// 	borderWidth: 1,
+		// 	borderColor: "white",
+		// 	backgroundColor: "white",
+		// 	// iOS Shadow
+		// 	shadowColor: "#000",
+
+		// 	// Android Shadow
+		// 	elevation: 50,
+		// },
 		imageContainerShadow: {
 			position: "absolute",
 			height: "100%",
-			width: "50%",
-			borderRadius: 55,
+			width: "100%",
+			// borderRadius: 40,
 			backgroundColor: "#000",
-			top: 2,
-			left: 98,
+			top: 4,
+			left: 4,
 			opacity: 0.1,
 		},
 		image: {
 			height: "100%",
+			// height: 150,
+			// width: 150,
 			width: "100%",
-			borderRadius: 20,
+			// borderRadius: 40,
 			// borderRadius: 100,
 			overflow: "hidden",
 		},
 		jobDescription: {
-			fontFamily: "Montserrat-Regular",
+			fontFamily: "Montserrat-Light",
 			fontSize: 22,
 			color: "white",
 		},
+		employeeNumberBackground: {
+			position: "absolute",
+			height: "100%",
+			width: "60%",
+			borderTopLeftRadius: 50,
+			borderBottomRightRadius: 50,
+			backgroundColor: "black",
+			opacity: 0.4,
+		},
 		employeeNumber: {
-			fontFamily: "Roboto-Regular",
+			fontFamily: "Roboto-Medium",
 			fontSize: 22,
 			color: "white",
 			letterSpacing: 3,
-			bottom: 1,
 			// marginBottom: "2%"
 		},
 		QR: {
-			height: "50%",
+			height: "100%",
 			width: "100%",
 		},
 		categoryTitlesContainer: {
@@ -151,6 +186,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			flexDirection: "row",
 			justifyContent: "center",
 			alignItems: "center",
+			opacity: 0.9,
 		},
 		categoriesContainer: {
 			height: "60%",
@@ -158,6 +194,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			flexDirection: "row",
 			justifyContent: "center",
 			alignItems: "center",
+			opacity: 0.8,
 		},
 		category: {
 			height: "100%",
@@ -182,15 +219,26 @@ const getGafeteStyle = (statusBarHeight) => {
 			fontFamily: "Montserrat-LightItalic",
 			fontSize: 10,
 			color: "white",
-			top: 3,
+		},
+		generadoShadowContainer: {
+			height: "100%",
+			width: "35%",
+			justifyContent: "center",
+			alignItems: "flex-start",
+			backgroundColor: BLACK.b2,
+			borderTopRightRadius: 40,
+			borderBottomRightRadius: 40,
+			// borderWidth: 1,
 		},
 		generadoContainer: {
 			height: "100%",
-			flex: 1,
+			width: "92%",
+			paddingLeft: "8%",
 			justifyContent: "center",
-			alignItems: "center",
-			// borderWidth: 1,
-			borderColor: "white",
+			alignItems: "flex-start",
+			backgroundColor: BLACK.b4,
+			borderTopRightRadius: 40,
+			borderBottomRightRadius: 40,
 		},
 		generado: {
 			fontFamily: "Montserrat-Bold",
@@ -199,26 +247,29 @@ const getGafeteStyle = (statusBarHeight) => {
 		},
 		generadoDataContainer: {
 			height: "100%",
-			flex: 1.7,
+			width: "65%",
 			flexDirection: "row",
-			justifyContent: "space-around",
+			paddingHorizontal: "3%",
+			justifyContent: "space-between",
 			alignItems: "center",
 			// borderWidth: 1,
 			borderColor: "white",
 		},
 		generadoData: {
 			fontFamily: "Montserrat-Regular",
-			fontSize: 12,
+			fontSize: 14,
 			color: "white",
 		},
 		backButton: {
 			position: "absolute",
-			top: statusBarHeight,
+			top: 0,
+			// top: statusBarHeight,
 			left: 0,
 			height: 70,
 			width: 70,
 			justifyContent: "center",
 			alignItems: "center",
+			zIndex: 2,
 			// borderWidth: 1
 		},
 	});

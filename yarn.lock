@@ -5924,6 +5924,11 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
+react-native-fast-shadow@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-fast-shadow/-/react-native-fast-shadow-0.1.1.tgz#635885c592e5bbc56f4fd6d407e5b48751a1559d"
+  integrity sha512-TsGx0aX1UuaN3FjUAcETVB2+JfrEMMpWlQK2J1BYokEWuOBHjYl4zKWLNsewfmqolSEPm8iEh7N2nsKBX6C/Bw==
+
 react-native-file-viewer@^2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/react-native-file-viewer/-/react-native-file-viewer-2.1.5.tgz#cd4544f573108e79002b5c7e1ebfce4371885250"
