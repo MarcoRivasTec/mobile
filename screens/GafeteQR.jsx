@@ -51,12 +51,12 @@ const GafeteQR = ({ navigation }) => {
 		planta,
 	} = useContext(HomeContext);
 	const { region, platform, width } = useContext(AppContext);
+	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
 	// console.log("Device width is: ", width);
 	const [arrowHeight, setArrowHeight] = useState(0);
 	const [whiteHeight, setWhiteHeight] = useState(0);
 	const pictureSize = width * 0.45;
 	const pictureRadius = pictureSize * 0.33;
-	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
 	// console.log(statusBarHeight);
 	const gafete = getGafeteStyle(statusBarHeight);
 	const today = new Date();
@@ -186,7 +186,13 @@ const GafeteQR = ({ navigation }) => {
 			)}
 
 			<View
-				style={[gafete.topContainer, { height: whiteHeight - pictureSize / 2 }]}
+				style={[
+					gafete.topContainer,
+					{
+						height: whiteHeight - pictureSize / 2,
+						...(platform === "ios" && { top: statusBarHeight }),
+					},
+				]}
 			>
 				{/* Back button */}
 				<TouchableOpacity
