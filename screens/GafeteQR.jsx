@@ -15,7 +15,7 @@ import COLORS, { BLACK } from "../constants/colors";
 import { AppContext } from "../components/AppContext";
 import LoadingContent from "../components/Animations/LoadingContent";
 import fetchPost from "../components/fetching";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ShadowedView } from "react-native-fast-shadow";
 import { showMessage } from "react-native-flash-message";
 import { LinearGradient } from "expo-linear-gradient";
@@ -50,11 +50,19 @@ const GafeteQR = ({ navigation }) => {
 		numEmp,
 		planta,
 	} = useContext(HomeContext);
-	const { region, platform, width } = useContext(AppContext);
-	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
-	// console.log("Device width is: ", width);
-	const [arrowHeight, setArrowHeight] = useState(0);
-	const [whiteHeight, setWhiteHeight] = useState(0);
+	const { region, platform, height, width } = useContext(AppContext);
+	const insets = platform === "ios" ? useSafeAreaInsets() : null;
+	const statusBarHeight =
+		platform === "ios" ? insets.top : StatusBar.currentHeight;
+	console.log("Device width is: ", statusBarHeight);
+	// const arrowHeight =
+	// 	platform === "ios" ? height * 0.65 : height * 0.65;
+	// const whiteHeight =
+	// 	platform === "ios" ? height * 0.35 : height * 0.35;
+	const arrowHeight = platform === "ios" ? height * 0.65 : height * 0.65;
+	const whiteHeight = platform === "ios" ? height * 0.35 : height * 0.35;
+	// const [arrowHeight, setArrowHeight] = useState(0);
+	// const [whiteHeight, setWhiteHeight] = useState(0);
 	const pictureSize = width * 0.45;
 	const pictureRadius = pictureSize * 0.33;
 	// console.log(statusBarHeight);
@@ -64,10 +72,6 @@ const GafeteQR = ({ navigation }) => {
 	const time = formatTime(today);
 	const [QRData, setQRData] = useState(null);
 	const [empInfo, setEmpInfo] = useState(null);
-
-	// function modalHandler() {
-	// 	setIsModalVisible(!isModalVisible);
-	// }
 
 	useEffect(() => {
 		if (platform === "ios") StatusBar.setHidden(false);
@@ -107,7 +111,8 @@ const GafeteQR = ({ navigation }) => {
 				}
 			} catch (error) {
 				showMessage({
-					message: "Hubo un problema al generar el codigo QR, intenta de nuevo",
+					message:
+						"Hubo un problema al generar el codigo QR, intenta de nuevo",
 					type: "warning",
 					duration: 3000,
 					position: "top",
@@ -126,23 +131,25 @@ const GafeteQR = ({ navigation }) => {
 	}, [QRData]);
 
 	return QRData ? (
-		<View style={gafete.container}>
+		<View style={[gafete.container, { height: height }]}>
+			{/* White Background */}
 			<View
-				style={gafete.whiteBackground}
-				onLayout={(event) => {
-					const { height } = event.nativeEvent.layout;
-					setWhiteHeight(height);
-					// console.log("Picture height is: ", height);
-				}}
+				style={[gafete.whiteBackground, { height: whiteHeight }]}
+				// onLayout={(event) => {
+				// 	const { height } = event.nativeEvent.layout;
+				// 	setWhiteHeight(height);
+				// 	// console.log("Picture height is: ", height);
+				// }}
 			></View>
 
+			{/* Arrow Background */}
 			<View
-				style={gafete.arrowBackground}
-				onLayout={(event) => {
-					const { height } = event.nativeEvent.layout;
-					setArrowHeight(height);
-					// console.log("Picture height is: ", height);
-				}}
+				style={[gafete.arrowBackground, { height: arrowHeight }]}
+				// onLayout={(event) => {
+				// 	const { height } = event.nativeEvent.layout;
+				// 	setArrowHeight(height);
+				// 	// console.log("Picture height is: ", height);
+				// }}
 			>
 				<ImageBackground
 					source={require("../assets/backgrounds/GAFETEFONDO.png")}
@@ -171,10 +178,16 @@ const GafeteQR = ({ navigation }) => {
 						]}
 					/> */}
 					<ShadowedView
-						style={[gafete.imageContainer, { borderRadius: pictureRadius }]}
+						style={[
+							gafete.imageContainer,
+							{ borderRadius: pictureRadius },
+						]}
 					>
 						<Image
-							style={[gafete.image, { borderRadius: pictureRadius }]}
+							style={[
+								gafete.image,
+								{ borderRadius: pictureRadius },
+							]}
 							resizeMode="cover"
 							// source={require("../../assets/social/imagen.png")}
 							source={{
@@ -189,7 +202,7 @@ const GafeteQR = ({ navigation }) => {
 				style={[
 					gafete.topContainer,
 					{
-						height: whiteHeight - pictureSize / 2,
+						height: whiteHeight - statusBarHeight - pictureSize / 2,
 						...(platform === "ios" && { top: statusBarHeight }),
 					},
 				]}
@@ -211,7 +224,12 @@ const GafeteQR = ({ navigation }) => {
 				</View>
 
 				{/* Name */}
-				<View style={[gafete.dataContainer, { height: "60%" }]}>
+				<View
+					style={[
+						gafete.dataContainer,
+						{ height: "60%", bottom: "2%" },
+					]}
+				>
 					<Text
 						style={{
 							fontFamily: "Montserrat-ExtraBold",
@@ -241,7 +259,10 @@ const GafeteQR = ({ navigation }) => {
 			>
 				{/* Job Description */}
 				<View
-					style={[gafete.dataContainer, { height: "18%", marginTop: "4%" }]}
+					style={[
+						gafete.dataContainer,
+						{ height: "17%", marginTop: "3%" },
+					]}
 				>
 					<Text style={gafete.jobDescription}>{puesto}</Text>
 				</View>
@@ -307,9 +328,15 @@ const GafeteQR = ({ navigation }) => {
 						start={{ x: 0, y: 0 }}
 						end={{ x: 0, y: 1 }}
 					>
-						<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
-						<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
-						<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>
+							Planta
+						</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>
+							Ingreso
+						</Text>
+						<Text style={[gafete.category, { flex: 1.5 }]}>
+							No. IMSS
+						</Text>
 					</LinearGradient>
 					{/* <View style={gafete.categoryTitlesContainer}></View> */}
 					<LinearGradient
@@ -318,16 +345,36 @@ const GafeteQR = ({ navigation }) => {
 						start={{ x: 0, y: 0 }}
 						end={{ x: 0, y: 1 }}
 					>
-						<Text style={[gafete.categoryData, { flex: 1 }]}>{planta}</Text>
+						<View
+							style={[gafete.categoryDataContainer, { flex: 1 }]}
+						>
+							<Text style={gafete.categoryData}>{planta}</Text>
+						</View>
 						{empInfo ? (
-							<Text style={[gafete.categoryData, { flex: 1 }]}>20-09-20</Text>
+							<View
+								style={[
+									gafete.categoryDataContainer,
+									{ flex: 1 },
+								]}
+							>
+								<Text style={gafete.categoryData}>
+									20-09-20
+								</Text>
+							</View>
 						) : (
 							<LoadingContent style={{ flex: 1 }} />
 						)}
 						{empInfo ? (
-							<Text style={[gafete.categoryData, { flex: 1.5 }]}>
-								3002515612045
-							</Text>
+							<View
+								style={[
+									gafete.categoryDataContainer,
+									{ flex: 1.5 },
+								]}
+							>
+								<Text style={gafete.categoryData}>
+									3002515612045
+								</Text>
+							</View>
 						) : (
 							<LoadingContent style={{ flex: 1.5 }} />
 						)}

@@ -42,7 +42,7 @@ const login = StyleSheet.create({
 const getGafeteStyle = (statusBarHeight) => {
 	return StyleSheet.create({
 		container: {
-			height: "100%",
+			// height: "100%",
 			width: "100%",
 			justifyContent: "center",
 			alignItems: "center",
@@ -58,14 +58,16 @@ const getGafeteStyle = (statusBarHeight) => {
 			alignItems: "center",
 		},
 		whiteBackground: {
-			height: "35%",
+			// height: "35%",
+			// borderWidth: 1,
+			borderColor: "red",
 			width: "100%",
 		},
 		arrowBackground: {
-			height: "65%",
+			// height: "65%",
 			width: "100%",
 			// borderWidth: 1,
-			borderColor: "white",
+			// borderColor: "white",
 			justifyContent: "flex-end",
 			alignItems: "center",
 		},
@@ -86,6 +88,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			width: "100%",
 			top: 0,
 			// borderWidth: 1,
+			borderColor: "red"
 		},
 		bottomContainer: {
 			position: "absolute",
@@ -195,6 +198,8 @@ const getGafeteStyle = (statusBarHeight) => {
 			justifyContent: "center",
 			alignItems: "center",
 			opacity: 0.8,
+			// borderWidth: 1,
+			borderColor: "white"
 		},
 		category: {
 			height: "100%",
@@ -203,17 +208,20 @@ const getGafeteStyle = (statusBarHeight) => {
 			color: "white",
 			// borderWidth: 1,
 			borderColor: "white",
-			textAlign: "center",
+			textAlign: "center"
+		},
+		categoryDataContainer:
+		{
+			width: "100%",
+			justifyContent: "center",
+			alignItems: "center"
 		},
 		categoryData: {
-			height: "100%",
 			fontFamily: "Roboto-Regular",
 			fontSize: 18,
 			color: "white",
 			// borderWidth: 1,
 			borderColor: "white",
-			textAlign: "center",
-			verticalAlign: "middle",
 		},
 		company: {
 			fontFamily: "Montserrat-LightItalic",
