@@ -39,7 +39,7 @@ const login = StyleSheet.create({
 	},
 });
 
-const getGafeteStyle = (statusBarHeight) => {
+const getGafeteStyle = (platform) => {
 	return StyleSheet.create({
 		container: {
 			// height: "100%",
@@ -160,7 +160,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			overflow: "hidden",
 		},
 		jobDescription: {
-			fontFamily: "Montserrat-Light",
+			fontFamily: "Montserrat-Regular",
 			fontSize: 22,
 			color: "white",
 		},
@@ -274,7 +274,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			top: 0,
 			// top: statusBarHeight,
 			left: 0,
-			height: 70,
+			height: platform === "ios" ? 50 : 70,
 			width: 70,
 			justifyContent: "center",
 			alignItems: "center",
