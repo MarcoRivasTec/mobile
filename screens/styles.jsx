@@ -46,7 +46,8 @@ const getGafeteStyle = (statusBarHeight) => {
 			width: "100%",
 			justifyContent: "center",
 			alignItems: "center",
-			// borderWidth: 1,
+			// borderWidth: 2,
+			borderColor: "blue",
 			backgroundColor: "white",
 		},
 		backgroundContainer: {
@@ -67,7 +68,7 @@ const getGafeteStyle = (statusBarHeight) => {
 			// height: "65%",
 			width: "100%",
 			// borderWidth: 1,
-			// borderColor: "white",
+			borderColor: "green",
 			justifyContent: "flex-end",
 			alignItems: "center",
 		},
@@ -87,8 +88,8 @@ const getGafeteStyle = (statusBarHeight) => {
 			position: "absolute",
 			width: "100%",
 			top: 0,
-			// borderWidth: 1,
-			borderColor: "red"
+			// borderWidth: 2,
+			borderColor: "purple"
 		},
 		bottomContainer: {
 			position: "absolute",
