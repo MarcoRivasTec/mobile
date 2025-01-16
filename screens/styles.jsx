@@ -203,7 +203,7 @@ const getGafeteStyle = (platform) => {
 			borderColor: "white"
 		},
 		category: {
-			height: "100%",
+			// height: "100%",
 			fontFamily: "Montserrat-Light",
 			fontSize: 17,
 			color: "white",
