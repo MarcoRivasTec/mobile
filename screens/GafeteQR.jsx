@@ -111,8 +111,7 @@ const GafeteQR = ({ navigation }) => {
 				}
 			} catch (error) {
 				showMessage({
-					message:
-						"Hubo un problema al generar el codigo QR, intenta de nuevo",
+					message: "Hubo un problema al generar el codigo QR, intenta de nuevo",
 					type: "warning",
 					duration: 3000,
 					position: "top",
@@ -189,15 +188,22 @@ const GafeteQR = ({ navigation }) => {
 					<ShadowedView
 						style={[
 							gafete.imageContainer,
-							{ borderRadius: pictureRadius },
+							{
+								borderRadius: pictureRadius,
+								overflow: "hidden",
+							},
 						]}
 					>
 						<Image
 							style={[
 								gafete.image,
-								{ borderRadius: pictureRadius },
+								{
+									borderRadius: pictureRadius,
+									// transform: [{ translateY: pictureSize * 0.15 }],
+									// top: 20
+								},
 							]}
-							resizeMode="cover"
+							resizeMode="contain"
 							// source={require("../../assets/social/imagen.png")}
 							source={{
 								uri: `data:image/jpeg;base64,${profileImg}`,
@@ -213,9 +219,7 @@ const GafeteQR = ({ navigation }) => {
 					{
 						height:
 							platform === "ios"
-								? whiteHeight -
-								  statusBarHeight -
-								  pictureSize / 2
+								? whiteHeight - statusBarHeight - pictureSize / 2
 								: whiteHeight - pictureSize / 2,
 						...(platform === "ios" && { top: statusBarHeight }),
 					},
@@ -238,12 +242,7 @@ const GafeteQR = ({ navigation }) => {
 				</View>
 
 				{/* Name */}
-				<View
-					style={[
-						gafete.dataContainer,
-						{ height: "60%", bottom: "2%" },
-					]}
-				>
+				<View style={[gafete.dataContainer, { height: "60%", bottom: "2%" }]}>
 					<Text
 						style={{
 							fontFamily: "Montserrat-ExtraBold",
@@ -273,10 +272,7 @@ const GafeteQR = ({ navigation }) => {
 			>
 				{/* Job Description */}
 				<View
-					style={[
-						gafete.dataContainer,
-						{ height: "17%", marginTop: "3%" },
-					]}
+					style={[gafete.dataContainer, { height: "17%", marginTop: "3%" }]}
 				>
 					<Text style={gafete.jobDescription}>{puesto}</Text>
 				</View>
@@ -342,15 +338,9 @@ const GafeteQR = ({ navigation }) => {
 						start={{ x: 0, y: 0 }}
 						end={{ x: 0, y: 1 }}
 					>
-						<Text style={[gafete.category, { flex: 1 }]}>
-							Planta
-						</Text>
-						<Text style={[gafete.category, { flex: 1 }]}>
-							Ingreso
-						</Text>
-						<Text style={[gafete.category, { flex: 1.5 }]}>
-							No. IMSS
-						</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
+						<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
+						<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
 					</LinearGradient>
 					{/* <View style={gafete.categoryTitlesContainer}></View> */}
 					<LinearGradient
@@ -359,35 +349,19 @@ const GafeteQR = ({ navigation }) => {
 						start={{ x: 0, y: 0 }}
 						end={{ x: 0, y: 1 }}
 					>
-						<View
-							style={[gafete.categoryDataContainer, { flex: 1 }]}
-						>
+						<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
 							<Text style={gafete.categoryData}>{planta}</Text>
 						</View>
 						{empInfo ? (
-							<View
-								style={[
-									gafete.categoryDataContainer,
-									{ flex: 1 },
-								]}
-							>
-								<Text style={gafete.categoryData}>
-									20-09-20
-								</Text>
+							<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
+								<Text style={gafete.categoryData}>20-09-20</Text>
 							</View>
 						) : (
 							<LoadingContent style={{ flex: 1 }} />
 						)}
 						{empInfo ? (
-							<View
-								style={[
-									gafete.categoryDataContainer,
-									{ flex: 1.5 },
-								]}
-							>
-								<Text style={gafete.categoryData}>
-									3002515612045
-								</Text>
+							<View style={[gafete.categoryDataContainer, { flex: 1.5 }]}>
+								<Text style={gafete.categoryData}>3002515612045</Text>
 							</View>
 						) : (
 							<LoadingContent style={{ flex: 1.5 }} />
@@ -427,7 +401,7 @@ const GafeteQR = ({ navigation }) => {
 			</View>
 		</View>
 	) : (
-		<View style={gafete.container}>
+		<View style={[gafete.container, { height: "100%" }]}>
 			<LoadingContent />
 		</View>
 	);
