@@ -1,4 +1,10 @@
-import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+	View,
+	TextInput,
+	TouchableOpacity,
+	KeyboardAvoidingView,
+	Platform,
+} from "react-native";
 import React, { useState } from "react";
 import { handleTextChange } from "./textCheck";
 import { layout } from "./styles";
@@ -6,11 +12,14 @@ import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "../Home/icons";
 
-function NIP({nip, setNip, placeholder = null}) {
+function NIP({ nip, setNip, placeholder = null, setFocus }) {
 	const [isNipShown, setIsNipShown] = useState(true);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={layout.fieldContainer}>
+		<View
+			// behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={layout.fieldContainer}
+		>
 			<View style={[layout.iconBox, { backgroundColor: COLORS.secondary }]}>
 				<Icon name="PASSWORD" size={26} style={layout.icon} />
 			</View>
@@ -25,6 +34,8 @@ function NIP({nip, setNip, placeholder = null}) {
 					onChangeText={(text) => handleTextChange(text, setNip)}
 					secureTextEntry={isNipShown}
 					style={layout.userInput}
+					onFocus={() => setFocus(true)}
+					onBlur={() => setFocus(false)}
 				/>
 				<TouchableOpacity
 					onPress={() => setIsNipShown(!isNipShown)}
@@ -37,7 +48,7 @@ function NIP({nip, setNip, placeholder = null}) {
 					)}
 				</TouchableOpacity>
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }
 

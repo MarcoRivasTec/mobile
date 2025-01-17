@@ -3,9 +3,10 @@ import {
 	ImageBackground,
 	TouchableWithoutFeedback,
 	Keyboard,
-	StatusBar
+	StatusBar,
+	KeyboardAvoidingView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { defPass, defRegion } from "../defaultValues";
 
@@ -18,8 +19,10 @@ import Checkbox from "../components/Login/Checkbox";
 import ResetPass from "../components/Login/ResetPass";
 import RegionModal from "../components/Login/RegionModal";
 import { login } from "./styles";
+import { AppContext } from "../components/AppContext";
 
 const Login = ({ navigation }) => {
+	const { platform } = useContext(AppContext);
 	// const [nip, setNip] = useState(defPass !== "" ? defPass : "");
 	const [nip, setNip] = useState("");
 	// const [region, setRegion] = useState(
@@ -29,6 +32,7 @@ const Login = ({ navigation }) => {
 	const [checkboxState, setCheckboxState] = useState(false);
 	// const [region, setRegion] = useState("Selecciona");
 	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [isInputFocused, setIsInputFocused] = useState(false);
 
 	function modalHandler() {
 		setIsModalVisible(!isModalVisible);
@@ -54,21 +58,27 @@ const Login = ({ navigation }) => {
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
 			style={login.backgroundContainer}
 		>
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				accessible={false}
-			>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.contentContainer}>
 					{/* Logo */}
-					<View style={login.logoContainer}>
+					<View
+						style={[login.logoContainer, { flex: isInputFocused ? 7 : 10 }]}
+					>
 						<TecmaMovil />
 					</View>
 
 					{/* Content */}
-					<User />
+					<KeyboardAvoidingView
+						style={login.credentialsContainer}
+						behavior="padding"
+						keyboardVerticalOffset={20}
+					>
+						{/* User */}
+						<User setFocus={setIsInputFocused} />
 
-					{/* NIP */}
-					<NIP nip={nip} setNip={setNip} />
+						{/* NIP */}
+						<NIP nip={nip} setNip={setNip} setFocus={setIsInputFocused} />
+					</KeyboardAvoidingView>
 
 					<Region
 						modalHandler={modalHandler}

@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ShadowedView } from "react-native-fast-shadow";
 import { showMessage } from "react-native-flash-message";
 import { LinearGradient } from "expo-linear-gradient";
+import Logo from "../assets/TECMAMOVILCONNECT.svg";
 
 const formatDate = (date) => {
 	const day = String(date.getDate()).padStart(2, "0");
@@ -235,10 +236,12 @@ const GafeteQR = ({ navigation }) => {
 
 				{/* Logo */}
 				<View style={[gafete.dataContainer, { height: "40%" }]}>
-					<Image
+					{/* <Image
 						source={require("../assets/adaptive-icon.png")}
 						style={gafete.logo}
-					/>
+						resizeMethod="resize"
+					/> */}
+					<Logo style={gafete.logo} />
 				</View>
 
 				{/* Name */}
@@ -286,45 +289,67 @@ const GafeteQR = ({ navigation }) => {
 				{/* QR Code */}
 				<View style={[gafete.dataContainer, { height: "40%" }]}>
 					{QRData ? (
-						<QRCodeStyled
-							data={QRData}
-							style={gafete.QR}
-							pieceBorderRadius={2.5}
-							outerEyesOptions={{
-								topLeft: {
-									borderRadius: [15, 15, 0, 15],
+						<View
+							style={{
+								height: "100%",
+								width: "100%",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Logo style={gafete.logoQR} />
+							<QRCodeStyled
+								data={QRData}
+								style={gafete.QR}
+								pieceBorderRadius={2.5}
+								outerEyesOptions={{
+									topLeft: {
+										borderRadius: [15, 15, 0, 15],
+										color: "#30565E",
+									},
+									topRight: {
+										borderRadius: [15, 15, 15],
+										color: "#30565E",
+									},
+									bottomLeft: {
+										borderRadius: [15, 0, 15, 15],
+										color: "#30565E",
+									},
+								}}
+								innerEyesOptions={{
+									borderRadius: 7,
+									scale: 0.85,
 									color: "#30565E",
-								},
-								topRight: {
-									borderRadius: [15, 15, 15],
-									color: "#30565E",
-								},
-								bottomLeft: {
-									borderRadius: [15, 0, 15, 15],
-									color: "#30565E",
-								},
-							}}
-							innerEyesOptions={{
-								borderRadius: 7,
-								scale: 0.85,
-								color: "#30565E",
-								// color: "blue"
-							}}
-							logo={{
-								href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
-							}}
-							gradient={{
-								type: "radial",
-								options: {
-									center: [0.5, 0.5],
-									radius: [1, 1],
-									colors: ["#467479", "#30565E"],
-									locations: [0, 1],
-								},
-							}}
-							pieceSize={4.8}
-							pieceScale={1}
-						/>
+									// color: "blue"
+								}}
+								logo={{
+									href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
+									// href: () => <SvgUri source="https://tecmamovil.com/tecmamovilconnect.svg" />,
+									// padding: 4,
+									hidePieces: true,
+									opacity: 0,
+								}}
+								gradient={{
+									type: "radial",
+									options: {
+										center: [0.5, 0.5],
+										radius: [1, 1],
+										colors: ["#467479", "#30565E"],
+										locations: [0, 1],
+									},
+								}}
+								pieceSize={4.7}
+								pieceScale={1}
+							>
+								{/* {() => (
+									<Logo
+										// width={40} // Adjust size as needed
+										// height={40}
+										style={gafete.logoQR}
+									/>
+								)} */}
+							</QRCodeStyled>
+						</View>
 					) : (
 						<LoadingContent />
 					)}

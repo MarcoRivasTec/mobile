@@ -18,24 +18,19 @@ const login = StyleSheet.create({
 		// borderWidth: 1,
 	},
 	logoContainer: {
-		flex: 10,
+		// flex: 10,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
 	},
-	dataContainer: {
-		flex: 9,
+	credentialsContainer: {
+		flex: 2.6,
 		width: "90%",
-		marginBottom: "3%",
 		justifyContent: "center",
 		alignItems: "center",
-		// borderWidth: 1
-	},
-	userInfoContainer: {
-		flex: 2.5,
-		justifyContent: "center",
-		alignItems: "center",
+		// borderWidth: 1,
+		borderColor: "red",
 	},
 });
 
@@ -89,7 +84,7 @@ const getGafeteStyle = (platform) => {
 			width: "100%",
 			top: 0,
 			// borderWidth: 2,
-			borderColor: "purple"
+			borderColor: "purple",
 		},
 		bottomContainer: {
 			position: "absolute",
@@ -106,8 +101,15 @@ const getGafeteStyle = (platform) => {
 			// borderColor: "white",
 		},
 		logo: {
-			height: "70%",
+			height: "50%",
 			width: "40%",
+		},
+		logoQR: {
+			position: "absolute",
+			height: "9%",
+			width: "9%",
+			alignSelf: "center",
+			zIndex: 2
 		},
 		name: { fontSize: 18 },
 		imageContainer: {
@@ -183,6 +185,8 @@ const getGafeteStyle = (platform) => {
 		QR: {
 			height: "100%",
 			width: "100%",
+			// justifyContent: "center",
+			// alignItems: "center",
 		},
 		categoryTitlesContainer: {
 			height: "40%",
@@ -200,7 +204,7 @@ const getGafeteStyle = (platform) => {
 			alignItems: "center",
 			opacity: 0.8,
 			// borderWidth: 1,
-			borderColor: "white"
+			borderColor: "white",
 		},
 		category: {
 			// height: "100%",
@@ -209,13 +213,12 @@ const getGafeteStyle = (platform) => {
 			color: "white",
 			// borderWidth: 1,
 			borderColor: "white",
-			textAlign: "center"
+			textAlign: "center",
 		},
-		categoryDataContainer:
-		{
+		categoryDataContainer: {
 			width: "100%",
 			justifyContent: "center",
-			alignItems: "center"
+			alignItems: "center",
 		},
 		categoryData: {
 			fontFamily: "Roboto-Regular",

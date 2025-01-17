@@ -9,7 +9,7 @@ const layout = StyleSheet.create({
 	},
 	fieldContainer: {
 		flex: 1,
-		width: "90%",
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// marginVertical: "2%",

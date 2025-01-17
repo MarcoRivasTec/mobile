@@ -25,7 +25,7 @@ function Region({ modalHandler, region, setRegion }) {
 		}
 	};
 	return (
-		<View style={layout.fieldContainer}>
+		<View style={[layout.fieldContainer, { width: "90%" }]}>
 			<View style={layout.iconBox}>
 				<Icon name="REGION" size={26} style={layout.icon} />
 			</View>
