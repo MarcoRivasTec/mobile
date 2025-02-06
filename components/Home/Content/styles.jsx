@@ -587,7 +587,7 @@ const reciboNom = StyleSheet.create({
 		// borderColor: "black"
 	},
 	sectionTitleContainer: {
-		flex: 2,
+		flex: 2.5,
 		width: "100%",
 		top: "3%",
 		justifyContent: "center",

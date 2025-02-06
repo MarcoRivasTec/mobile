@@ -26,6 +26,7 @@ import { API_ENDPOINT } from "@env";
 
 const Restablece = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [numEmp, setNumEmp] = useState("");
 	const [rfc, setRFC] = useState("");
 	const [nip, setNip] = useState("");
@@ -128,9 +129,11 @@ const Restablece = ({ navigation }) => {
 			style={login.backgroundContainer}
 		>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-				<View style={login.contentContainer}>
+				<View style={[login.contentContainer, { width: "90%" }]}>
 					{/* Logo */}
-					<View style={login.logoContainer}>
+					<View
+						style={[login.logoContainer, { flex: isInputFocused ? 7 : 10 }]}
+					>
 						<TecmaMovil />
 					</View>
 
@@ -171,15 +174,27 @@ const Restablece = ({ navigation }) => {
 								value={rfc}
 								onChangeText={(text) => setRFC(text)}
 								maxLength={13}
+								onFocus={() => setIsInputFocused(true)}
+								onBlur={() => setIsInputFocused(false)}
 								style={layout.userInput}
 							/>
 						</View>
 					</KeyboardAvoidingView>
 
 					{/* NIP */}
-					<NIP nip={nip} setNip={setNip} placeholder="Nuevo NIP" />
+					<NIP
+						nip={nip}
+						setNip={setNip}
+						placeholder="Nuevo NIP"
+						setFocus={setIsInputFocused}
+					/>
 
-					<NIP nip={nip2} setNip={setNip2} placeholder="Tu NIP de nuevo" />
+					<NIP
+						nip={nip2}
+						setNip={setNip2}
+						placeholder="Tu NIP de nuevo"
+						setFocus={setIsInputFocused}
+					/>
 
 					{/* Restablecer button */}
 					<LinearGradient

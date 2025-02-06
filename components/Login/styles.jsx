@@ -64,6 +64,7 @@ const layout = StyleSheet.create({
 		fontWeight: "500",
 		fontSize: 14,
 		color: COLORS.black,
+		textTransform: "uppercase"
 	},
 	passEye: {
 		position: "absolute",

@@ -7,8 +7,8 @@ const login = StyleSheet.create({
 		resizeMode: "cover",
 		borderRadius: 15,
 		overflow: "hidden",
-		// justifyContent: "center",
-		// alignItems: "center",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	contentContainer: {
 		width: "100%",
