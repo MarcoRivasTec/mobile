@@ -4,24 +4,43 @@ import * as Clipboard from "expo-clipboard";
 import Icon from "../../icons";
 import { poliza } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
+import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
 
 function Poliza({
 	height,
 	width,
 	title,
 	icon,
-	size = 18,
-	info1,
-	info2,
-	info3,
-	contact1,
-	contactIcon1 = "call",
-	contact2,
-	contactIcon2 = "call",
-	contact3,
-	contactIcon3 = "call",
+	line_1,
+	line_2 = null,
+	line_3 = null,
+	ref_1,
+	icon_ref_1,
+	ref_2 = null,
+	icon_ref_2 = null,
+	ref_3 = null,
+	icon_ref_3 = null,
+	ref_4 = null,
+	icon_ref_4 = null,
 }) {
-	const titleHeight = Math.round(height * 0.036);
+	// console.log(
+	// 	"Passed policy data is: ",
+	// 	title,
+	// 	icon,
+	// 	line_1,
+	// 	line_2,
+	// 	line_3,
+	// 	ref_1,
+	// 	icon_ref_1,
+	// 	ref_2,
+	// 	icon_ref_2
+	// );
+	const iconSize = 22;
+	const refIconSize = 14;
+	const cardHeader = { height: 0.05 * height, width: 0.1 * width };
+	const refHeight = height * 0.03;
+	const cardHeight = Math.round(height * 0.3);
+	const titleHeight = Math.round(height * 0.04);
 	const cardHeaderHeight = Math.round(height * 0.064);
 
 	const handlePress = async (phoneNumber) => {
@@ -33,125 +52,187 @@ function Poliza({
 	};
 
 	return (
-		<View style={[poliza.container]}>
+		<View style={poliza.container}>
 			{/* Title */}
-			<View style={[poliza.titleContainer, { height: titleHeight }]}>
-				<Text style={poliza.titleText}>{title}</Text>
-			</View>
+			<Text style={poliza.titleText}>{title}</Text>
 
 			<View style={poliza.contentContainer}>
-				<View style={poliza.polizaContainer}>
-					{/* Member */}
-					<View style={poliza.cardHeaderContainer}>
-						<View
+				{/* Member */}
+				<View
+					style={[poliza.cardHeaderContainer, { height: cardHeader.height }]}
+				>
+					<View
+						style={[
+							poliza.cardIconContainer,
+							{ height: cardHeader.height, width: cardHeader.height },
+						]}
+					>
+						<IconMCI name={icon} size={iconSize} style={poliza.cardIcon} />
+					</View>
+					<View style={poliza.cardTitleContainer}>
+						<Text
+							adjustsFontSizeToFit={true}
+							numberOfLines={1}
+							style={poliza.cardTitleText}
+						>
+							Contacto
+						</Text>
+					</View>
+				</View>
+
+				{/* Card Content */}
+				<View
+					style={[poliza.cardContainer, { marginTop: cardHeader.height / 2 }]}
+				>
+					<Text
+						style={[
+							poliza.dataText,
+							{ marginTop: (cardHeader.height / 2) * 1.2 },
+						]}
+					>
+						{line_1}
+					</Text>
+					{line_2 ? <Text style={poliza.dataText}>{line_2}</Text> : null}
+					{line_3 ? <Text style={poliza.dataText}>{line_3}</Text> : null}
+
+					<View style={[poliza.dataContactsContainer, { height: refHeight }]}>
+						<TouchableOpacity
+							onPress={() => handlePress(ref_1)}
 							style={[
-								poliza.cardIconContainer,
-								{ height: height * 0.05, width: width * 0.1 },
+								poliza.dataContactContainer,
+								{ width: ref_2 ? "48%" : "100%" },
 							]}
 						>
-							<Icon name={icon} size={size} style={poliza.cardIcon} />
-						</View>
-						<View style={poliza.cardTitleContainer}>
-							<View style={poliza.cardTitleTextContainer}>
+							<View
+								style={[poliza.dataContactIconContainer, { width: refHeight }]}
+							>
+								<IconMCI
+									name={icon_ref_1}
+									size={refIconSize}
+									style={poliza.dataContactIcon}
+								/>
+							</View>
+							<View
+								style={[
+									poliza.dataContactTextContainer,
+									{ paddingHorizontal: "1%" },
+								]}
+							>
 								<Text
 									adjustsFontSizeToFit={true}
 									numberOfLines={1}
-									style={poliza.cardTitleText}
+									style={poliza.dataContactText}
 								>
-									Contacto
+									{ref_1}
 								</Text>
 							</View>
-						</View>
+						</TouchableOpacity>
+						{ref_2 && (
+							<TouchableOpacity
+								onPress={() => handlePress(ref_2)}
+								style={[poliza.dataContactContainer, { width: "48%" }]}
+							>
+								<View
+									style={[
+										poliza.dataContactIconContainer,
+										{ width: refHeight },
+									]}
+								>
+									<IconMCI
+										name={icon_ref_2}
+										size={refIconSize}
+										style={poliza.dataContactIcon}
+									/>
+								</View>
+								<View
+									style={[
+										poliza.dataContactTextContainer,
+										{ paddingHorizontal: "1%" },
+									]}
+								>
+									<Text
+										adjustsFontSizeToFit={true}
+										numberOfLines={1}
+										style={poliza.dataContactText}
+									>
+										{ref_2}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						)}
 					</View>
 
-					{/* Card Content */}
-					<View style={poliza.cardContainer}>
-						<View style={poliza.dataContainer}>
-							{info1 ? (
-								<View style={poliza.dataTextContainer}>
-									<Text style={poliza.dataText}>{info1}</Text>
-								</View>
-							) : null}
-							{info2 ? (
-								<View style={poliza.dataTextContainer}>
-									<Text style={poliza.dataText}>{info2}</Text>
-								</View>
-							) : null}
-							{info3 ? (
-								<View style={poliza.dataTextContainer}>
-									<Text style={poliza.dataText}>{info3}</Text>
-								</View>
-							) : null}
-						</View>
-						{contact1 ? (
-							<View style={poliza.dataContactsContainer}>
-								<TouchableOpacity
-									onPress={() => handlePress(contact1)}
-									style={[poliza.dataContactContainer, { marginRight: "3%" }]}
+					{ref_3 && (
+						<View style={[poliza.dataContactsContainer, { height: refHeight }]}>
+							<TouchableOpacity
+								onPress={() => handlePress(ref_3)}
+								style={[
+									poliza.dataContactContainer,
+									{ width: ref_4 ? "48%" : "100%" },
+								]}
+							>
+								<View
+									style={[
+										poliza.dataContactIconContainer,
+										{ width: refHeight },
+									]}
 								>
-									<View style={poliza.dataContactIconContainer}>
-										<Ionicons
-											name={contactIcon1}
-											size={12}
+									<IconMCI
+										name={icon_ref_3}
+										size={refIconSize}
+										style={poliza.dataContactIcon}
+									/>
+								</View>
+								<View
+									style={[
+										poliza.dataContactTextContainer,
+										{ paddingHorizontal: "1%" },
+									]}
+								>
+									<Text
+										adjustsFontSizeToFit={true}
+										numberOfLines={1}
+										style={poliza.dataContactText}
+									>
+										{ref_3}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							{ref_4 && (
+								<TouchableOpacity
+									onPress={() => handlePress(ref_4)}
+									style={[poliza.dataContactContainer, { width: "48%" }]}
+								>
+									<View
+										style={[
+											poliza.dataContactIconContainer,
+											{ width: refHeight },
+										]}
+									>
+										<IconMCI
+											name={icon_ref_4}
+											size={refIconSize}
 											style={poliza.dataContactIcon}
 										/>
 									</View>
-									<View style={poliza.dataContactTextContainer}>
+									<View
+										style={[
+											poliza.dataContactTextContainer,
+											{ paddingHorizontal: "1%" },
+										]}
+									>
 										<Text
 											adjustsFontSizeToFit={true}
+											numberOfLines={1}
 											style={poliza.dataContactText}
 										>
-											{contact1}
+											{ref_4}
 										</Text>
 									</View>
 								</TouchableOpacity>
-								{contact2 ? (
-									<TouchableOpacity
-										onPress={() => handlePress(contact2)}
-										style={poliza.dataContactContainer}
-									>
-										<View style={poliza.dataContactIconContainer}>
-											<Ionicons
-												name={contactIcon2}
-												size={12}
-												style={poliza.dataContactIcon}
-											/>
-										</View>
-										<View style={poliza.dataContactTextContainer}>
-											<Text
-												adjustsFontSizeToFit={true}
-												style={poliza.dataContactText}
-											>
-												{contact2}
-											</Text>
-										</View>
-									</TouchableOpacity>
-								) : null}
-								{contact3 ? (
-									<TouchableOpacity
-										onPress={() => handlePress(contact3)}
-										style={[poliza.dataContactContainer, { marginLeft: "3%" }]}
-									>
-										<View style={poliza.dataContactIconContainer}>
-											<Ionicons
-												name={contactIcon3}
-												size={12}
-												style={poliza.dataContactIcon}
-											/>
-										</View>
-										<View style={poliza.dataContactTextContainer}>
-											<Text
-												adjustsFontSizeToFit={true}
-												style={poliza.dataContactText}
-											>
-												{contact3}
-											</Text>
-										</View>
-									</TouchableOpacity>
-								) : null}
-							</View>
-						) : null}
-					</View>
+							)}
+						</View>
+					)}
 				</View>
 			</View>
 		</View>
