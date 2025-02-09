@@ -4,6 +4,7 @@ const fetchPost = async ({ query }) => {
 	console.log("Query is: ", JSON.stringify(query, null, 1));
 	console.log("API endpoint is: ", `${API_ENDPOINT}`);
 	try {
+		console.log("Fetching...")
 		const response = await fetch(API_ENDPOINT, {
 			method: "POST",
 			headers: {
@@ -11,7 +12,7 @@ const fetchPost = async ({ query }) => {
 			},
 			body: JSON.stringify(query),
 		});
-		console.log("Response data: ", response);
+		console.log("Response data after fetch: ", JSON.stringify(response, null, 1));
 		return await response.json();
 	} catch (err) {
 		console.warn("Error at fetch: ", err);
