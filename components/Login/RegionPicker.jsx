@@ -21,6 +21,7 @@ function RegionPicker({ onCallback, region, setRegion }) {
 				}
 			}}
 			style={layout.picker}
+			itemStyle={modal.pickerItemStyle}
 		>
 			{Platform.OS === "android" && (
 				<Picker.Item

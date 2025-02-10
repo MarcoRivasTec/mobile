@@ -27,10 +27,13 @@ import { AppContext } from "../components/AppContext";
 import RegionPicker from "../components/Login/RegionPicker";
 import DownArrow from "../components/Animations/DownArrow";
 import { reset } from "./styles";
+import RegionModal from "../components/Login/RegionModal";
 
 const Restablece = ({ navigation }) => {
 	const { platform } = useState(AppContext);
+	console.log("Platform is: ", platform);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [region, setRegion] = useState("Selecciona");
 	const [numEmp, setNumEmp] = useState("");
@@ -86,6 +89,10 @@ const Restablece = ({ navigation }) => {
 		};
 	}, [isInputFocused]);
 
+	function modalHandler() {
+		setIsModalVisible(!isModalVisible);
+	}
+
 	const handleReset = () => {
 		setIsLoading(true);
 		if (numEmp === "") {
@@ -128,7 +135,7 @@ const Restablece = ({ navigation }) => {
 				numEmp: +numEmp,
 				newNIP: +nip,
 				rfc: rfc,
-				region: region
+				region: region,
 			},
 		};
 		fetchPost({ query })
@@ -153,12 +160,18 @@ const Restablece = ({ navigation }) => {
 						return;
 					}
 					case "Invalid RFC": {
-						Alert.alert("Error", "El RFC proporcionado es incorrecto.");
+						Alert.alert(
+							"Error",
+							"El RFC proporcionado es incorrecto."
+						);
 						setIsLoading(false);
 						return;
 					}
 					case "Invalid NIP": {
-						Alert.alert("Error", "El NIP proporcionado es incorrecto.");
+						Alert.alert(
+							"Error",
+							"El NIP proporcionado es incorrecto."
+						);
 						setIsLoading(false);
 						return;
 					}
@@ -180,16 +193,26 @@ const Restablece = ({ navigation }) => {
 			});
 	};
 
+	useEffect(() => {
+		console.log("Modal visibility: ", isModalVisible);
+	}, [isModalVisible]);
+
 	return (
 		<ImageBackground
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
 			style={reset.backgroundContainer}
 		>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+			<TouchableWithoutFeedback
+				onPress={Keyboard.dismiss}
+				accessible={false}
+			>
 				<View style={reset.container}>
 					{/* Logo */}
 					<View
-						style={[reset.logoContainer, { flex: isInputFocused ? 40 : 49 }]}
+						style={[
+							reset.logoContainer,
+							{ flex: isInputFocused ? 40 : 49 },
+						]}
 					>
 						<TecmaMovil />
 					</View>
@@ -205,9 +228,16 @@ const Restablece = ({ navigation }) => {
 						{/* User */}
 						<View style={reset.fieldContainer}>
 							<View
-								style={[reset.iconBox, { backgroundColor: COLORS.primary }]}
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.primary },
+								]}
 							>
-								<Icon name="USER" size={20} style={reset.icon} />
+								<Icon
+									name="USER"
+									size={20}
+									style={reset.icon}
+								/>
 							</View>
 							<View style={reset.field}>
 								<TextInput
@@ -216,7 +246,9 @@ const Restablece = ({ navigation }) => {
 									keyboardType="number-pad"
 									inputMode="numeric"
 									value={numEmp}
-									onChangeText={(text) => handleTextChange(text, setNumEmp)}
+									onChangeText={(text) =>
+										handleTextChange(text, setNumEmp)
+									}
 									maxLength={12}
 									style={reset.userInput}
 									onFocus={() => setIsInputFocused(true)}
@@ -228,16 +260,23 @@ const Restablece = ({ navigation }) => {
 						{/* RFC */}
 						<View style={reset.fieldContainer}>
 							<View
-								style={[reset.iconBox, { backgroundColor: COLORS.primary }]}
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.primary },
+								]}
 							>
-								<Icon name="USER" size={20} style={reset.icon} />
+								<Icon
+									name="USER"
+									size={20}
+									style={reset.icon}
+								/>
 							</View>
 							<View style={reset.field}>
 								<TextInput
 									placeholder="Introduce tu RFC"
 									placeholderTextColor={COLORS.placeholder}
 									value={rfc}
-									onChangeText={(text) => setRFC(text)}
+									onChangeText={(text) => setRFC(text.toUpperCase())}
 									maxLength={13}
 									onFocus={() => setIsInputFocused(true)}
 									onBlur={() => setIsInputFocused(false)}
@@ -249,9 +288,16 @@ const Restablece = ({ navigation }) => {
 						{/* NIP */}
 						<View style={reset.fieldContainer}>
 							<View
-								style={[reset.iconBox, { backgroundColor: COLORS.secondary }]}
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.secondary },
+								]}
 							>
-								<Icon name="PASSWORD" size={26} style={reset.icon} />
+								<Icon
+									name="PASSWORD"
+									size={26}
+									style={reset.icon}
+								/>
 							</View>
 							<View style={reset.field}>
 								<TextInput
@@ -262,31 +308,48 @@ const Restablece = ({ navigation }) => {
 									minLength={6}
 									maxLength={6}
 									value={nip}
-									onChangeText={(text) => handleTextChange(text, setNip)}
+									onChangeText={(text) =>
+										handleTextChange(text, setNip)
+									}
 									secureTextEntry={isNipShown}
 									style={reset.userInput}
 									onFocus={() => setIsInputFocused(true)}
 									onBlur={() => setIsInputFocused(false)}
 								/>
-								<TouchableOpacity
+								{/* <TouchableOpacity
 									onPress={() => setIsNipShown(!isNipShown)}
 									style={reset.passEye}
 								>
 									{isNipShown == true ? (
-										<Ionicons name="eye-off" size={24} color={COLORS.black} />
+										<Ionicons
+											name="eye-off"
+											size={24}
+											color={COLORS.black}
+										/>
 									) : (
-										<Ionicons name="eye" size={24} color={COLORS.black} />
+										<Ionicons
+											name="eye"
+											size={24}
+											color={COLORS.black}
+										/>
 									)}
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 							</View>
 						</View>
 
 						{/* NIP 2 */}
 						<View style={reset.fieldContainer}>
 							<View
-								style={[reset.iconBox, { backgroundColor: COLORS.secondary }]}
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.secondary },
+								]}
 							>
-								<Icon name="PASSWORD" size={26} style={reset.icon} />
+								<Icon
+									name="PASSWORD"
+									size={26}
+									style={reset.icon}
+								/>
 							</View>
 							<View style={reset.field}>
 								<TextInput
@@ -297,7 +360,9 @@ const Restablece = ({ navigation }) => {
 									minLength={6}
 									maxLength={6}
 									value={nip2}
-									onChangeText={(text) => handleTextChange(text, setNip2)}
+									onChangeText={(text) =>
+										handleTextChange(text, setNip2)
+									}
 									secureTextEntry={isNipShown}
 									style={reset.userInput}
 									onFocus={() => setIsInputFocused(true)}
@@ -325,16 +390,24 @@ const Restablece = ({ navigation }) => {
 						<View style={reset.iconBox}>
 							<Icon name="REGION" size={26} style={reset.icon} />
 						</View>
-						{platform === "ios" ? (
-							<TouchableOpacity onPress={modalHandler} style={reset.field}>
-								<Text style={reset.fieldText}>{returnRegion(region)}</Text>
+						{Platform.OS === "ios" ? (
+							<TouchableOpacity
+								onPress={modalHandler}
+								style={reset.field}
+							>
+								<Text style={reset.fieldText}>
+									{returnRegion(region)}
+								</Text>
 								<View style={reset.arrowContainer}>
 									<DownArrow />
 								</View>
 							</TouchableOpacity>
 						) : (
 							<View style={reset.field}>
-								<RegionPicker region={region} setRegion={setRegion} />
+								<RegionPicker
+									region={region}
+									setRegion={setRegion}
+								/>
 							</View>
 						)}
 					</View>
@@ -351,30 +424,37 @@ const Restablece = ({ navigation }) => {
 								<Loading />
 							</TouchableOpacity>
 						) : (
-							<TouchableOpacity style={reset.button} onPress={handleReset}>
-								<Text style={reset.buttonText}>Restablecer</Text>
+							<TouchableOpacity
+								style={reset.button}
+								onPress={handleReset}
+							>
+								<Text style={reset.buttonText}>
+									Restablecer
+								</Text>
 							</TouchableOpacity>
 						)}
 					</LinearGradient>
 
 					{/* Reset link */}
 					<View style={reset.resetContainer}>
-						<Text style={reset.resetText}>Devolver a inicio de sesión</Text>
+						<Text style={reset.resetText}>
+							Devolver a inicio de sesión
+						</Text>
 						<Pressable onPress={() => navigation.navigate("Login")}>
 							<Text style={reset.resetTextLink}>aquí</Text>
 						</Pressable>
 					</View>
 				</View>
 			</TouchableWithoutFeedback>
-
-			{/* {isModalVisible && (
+			{isModalVisible && (
 				<RegionModal
 					region={region}
 					setRegion={setRegion}
 					onCallback={modalHandler}
 					isModalVisible={isModalVisible}
+					style={reset.modal}
 				/>
-			)} */}
+			)}
 		</ImageBackground>
 	);
 };

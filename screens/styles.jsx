@@ -232,14 +232,15 @@ const reset = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		marginVertical: "2%"
+		marginVertical: "2%",
+		// borderWidth: 1,
 	},
 	fieldText: {
 		left: "5%",
-		fontFamily: "Montserrat-Regular",
-		fontSize: 8,
+		fontFamily: "Montserrat-Medium",
+		fontSize: 16,
 		color: COLORS.black,
-		borderWidth: 1,
+		// borderWidth: 1,
 	},
 	iconBox: {
 		flex: 1,
@@ -263,6 +264,7 @@ const reset = StyleSheet.create({
 		justifyContent: "center",
 		borderTopRightRadius: 24,
 		borderBottomRightRadius: 24,
+		// borderWidth: 1,
 	},
 	userInput: {
 		paddingHorizontal: "5%",
@@ -352,6 +354,11 @@ const reset = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.primary,
 		marginLeft: 6,
+	},
+	modal: {
+		position: "absolute",
+		height: "100%",
+		width: "100%",
 	},
 });
 

@@ -163,10 +163,12 @@ const modal = StyleSheet.create({
 		height: "100%",
 	},
 	pickerItem: {
-		fontFamily: "Montserrat-Regular",
+		fontFamily: "Montserrat-Bold",
+		fontSize: 18,
 	},
 	pickerItemStyle: {
-		fontFamily: "Montserrat-Regular",
+		fontSize: 18,
+		fontFamily: "Montserrat-Medium",
 	},
 });
 
