@@ -16,7 +16,7 @@ export default function WelcomeAnim({ onFinish}) {
 			}}
 			autoPlay
 			resizeMode="cover"
-			speed={3}
+			speed={1}
 			loop={false}
 			onAnimationFinish={onFinish}
 		/>
