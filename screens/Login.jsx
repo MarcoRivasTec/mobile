@@ -11,6 +11,7 @@ import {
 	TouchableOpacity,
 	BackHandler,
 	Alert,
+	Linking,
 } from "react-native";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,6 +33,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import RegionPicker from "../components/Login/RegionPicker";
 import Loading from "../components/Animations/Loading";
+import DownArrow from "../components/Animations/DownArrow";
 import fetchPost from "../components/fetching";
 import { showMessage, hideMessage } from "react-native-flash-message";
 
@@ -52,38 +54,245 @@ const Login = ({ navigation }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [versionCheck, setVersionCheck] = useState(false);
-	const [canContinue, setCanContinue] = useState(false);
-
+	const setNumEmp = createSetInputValue(setInfoFields, "numEmp");
 	const inputRef = useRef(null);
 
-	const handleLogin = () => {
-		// console.log("Prueba");
-		if (!canContinue) {
-			showMessage({
-				message: "La aplicación tiene una actualización importante",
-				description: "Deberás actualizar para poder continuar",
-				type: "danger",
-				// duration: 15000,
-				autoHide: false,
-				icon: { icon: "warning", position: "right" },
-			});
-			return;
+	useEffect(() => {
+		StatusBar.setHidden(true);
+		const loadCredentials = async () => {
+			try {
+				const storedRegion = await AsyncStorage.getItem("storedRegion");
+				console.log("Stored region is: ", storedRegion);
+				if (storedRegion) setRegion(storedRegion);
+			} catch (error) {
+				console.error("Failed to load stored employee number: ", error);
+			}
+		};
+
+		loadCredentials();
+		setVersionCheck(true);
+		checkStatus();
+		setVersionCheck(false);
+	}, []);
+
+	const checkStatus = async () => {
+		const status = await checkVersion();
+		switch (status) {
+			case "upToDate":
+				console.log("Case was up to date");
+				break;
+			case "critical":
+				console.log("Case was Critical");
+				showMessage({
+					message: "La aplicación tiene una actualización importante",
+					description:
+						"Deberás actualizar para poder continuar. Toca aquí para actualizar",
+					type: "danger",
+					duration: 20000,
+					icon: { icon: "warning", position: "right" },
+					onPress: () => {
+						openStore();
+					},
+				});
+				break;
+			case "nonCritical":
+				console.log("Case was nonCritical");
+				showMessage({
+					message: "La aplicación tiene una nueva actualización",
+					description:
+						"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
+					type: "warning",
+					duration: 20000,
+					icon: { icon: "warning", position: "right" },
+					onPress: () => {
+						openStore();
+					},
+				});
+				break;
+			case "error":
+				console.log("Case was error");
+				showMessage({
+					message: "Error de conexión",
+					description:
+						"Hubo un problema al contactar nuestros servidores, revisa tu conexión a internet.",
+					type: "warning",
+					duration: 10000,
+					icon: { icon: "warning", position: "right" },
+				});
+				break;
+
+			default:
+				break;
 		}
+	};
+
+	useEffect(() => {
+		const backAction = () => {
+			if (isInputFocused) {
+				if (inputRef.current) {
+					inputRef.current.blur(); // Force blur on input
+				}
+				Keyboard.dismiss();
+				setIsInputFocused(false);
+				return true; // Prevent default back action
+			}
+			return false; // Allows normal back behavior when input is not focused
+		};
+
+		const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
+			setIsInputFocused(false);
+		});
+
+		const backHandler = BackHandler.addEventListener(
+			"hardwareBackPress",
+			backAction
+		);
+
+		return () => {
+			backHandler.remove();
+			keyboardListener.remove();
+		};
+	}, [isInputFocused]);
+
+	const query = {
+		query: `query Versions($currVer: String!){
+			Versions(currVer: $currVer) {
+				upToDate
+				critical					
+			}
+		}`,
+		variables: {
+			currVer: appVersion,
+		},
+	};
+
+	const checkVersion = async () => {
+		try {
+			const data = await fetchPost({ query });
+			console.log("Response data at Versions:", data);
+			if (data.data.Versions) {
+				if (data.data.Versions.upToDate === false) {
+					if (data.data.Versions.critical === true) {
+						console.log("Returning critical");
+						return "critical";
+					} else {
+						console.log("Returning non critical");
+						return "nonCritical";
+					}
+				} else {
+					console.log("Returning up to date");
+					return "upToDate";
+				}
+			} else {
+				console.log("Returning error");
+				return "error";
+				console.warn("Error retrieving app version information");
+			}
+		} catch (error) {
+			console.error("Error at Versions:", error);
+		}
+	};
+
+	const openStore = async () => {
+		try {
+			console.log("Platform is");
+			await Linking.openURL(platform === "ios" ? appStoreURI : playStoreURI);
+		} catch (error) {
+			console.error("Failed to open store: ", error);
+		}
+	};
+
+	const returnRegion = (region) => {
+		switch (region) {
+			case "Selecciona":
+				return "Selecciona una opción";
+			case "JRZ":
+				return "Cd. Juárez";
+			case "MTY":
+				return "Monterrey";
+			case "AMX":
+				return "Amamamex";
+			case "TIJ":
+				return "Tijuana";
+			case "SAL":
+				return "Saltillo";
+			default:
+				break;
+		}
+	};
+
+	function modalHandler() {
+		setIsModalVisible(!isModalVisible);
+	}
+
+	const handleLogin = async () => {
+		// console.log("Prueba");
+
+		setIsLoading(true);
 		if (numEmp === "") {
 			Alert.alert("Debes introducir tu número de empleado o reloj");
+			setIsLoading(false);
 			return;
 		}
 		if (nip === "") {
 			Alert.alert("Debes introducir tu NIP");
+			setIsLoading(false);
 			return;
 		}
 		if (region === "Selecciona") {
 			Alert.alert("Opción incorrecta", "Selecciona una región");
+			setIsLoading(false);
 			return;
 		}
 
-		hideMessage();
-		setIsLoading(true);
+		const status = await checkVersion();
+		console.log("Entering switch case with status: ", status);
+		switch (status) {
+			case "upToDate":
+				break;
+			case "critical":
+				showMessage({
+					message: "La aplicación tiene una actualización importante",
+					description:
+						"Deberás actualizar para poder continuar. Toca aquí para actualizar",
+					type: "danger",
+					duration: 20000,
+					icon: { icon: "warning", position: "right" },
+					onPress: () => {
+						openStore();
+					},
+				});
+				setIsLoading(false);
+				return;
+			case "nonCritical":
+				console.log("non Critical case, showing message");
+				showMessage({
+					message: "La aplicación tiene una nueva actualización",
+					description:
+						"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
+					type: "warning",
+					duration: 20000,
+					icon: { icon: "warning", position: "right" },
+					onPress: () => {
+						openStore();
+					},
+				});
+				break;
+			case "error":
+				showMessage({
+					message: "Error de conexión",
+					description:
+						"Hubo un problema al contactar nuestros servidores, revisa tu conexión a internet.",
+					type: "warning",
+					duration: 10000,
+					icon: { icon: "warning", position: "right" },
+				});
+				setIsLoading(false);
+				return;
+
+			default:
+				break;
+		}
 
 		const query = {
 			query: `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
@@ -139,162 +348,12 @@ const Login = ({ navigation }) => {
 				}
 			})
 			.catch((error) => {
-				if (error) {
-					console.error("Error at ingreso", error);
-				}
-				// Alert.alert(error.errors[0].message);
-				// Handle the error
+				console.error("Error at ingreso", error);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
 	};
-
-	const query = {
-		query: `query Versions($currVer: String!){
-			Versions(currVer: $currVer) {
-				upToDate
-				critical					
-			}
-		}`,
-		variables: {
-			currVer: appVersion,
-		},
-	};
-
-	const fetchData = async () => {
-		try {
-			console.log("\n\nTrying fetch versions");
-			const data = await fetchPost({ query });
-			console.log("Response data at Versions:", data);
-			if (data.data.Versions) {
-				if (data.data.Versions.upToDate === false) {
-					if (data.data.Versions.critical === true) {
-						showMessage({
-							message: "La aplicación tiene una actualización importante",
-							description:
-								"Deberás actualizar para poder continuar. Toca aquí para actualizar",
-							type: "danger",
-							duration: 20000,
-							icon: { icon: "warning", position: "right" },
-							onPress: () => {
-								openStore();
-							},
-						});
-					} else {
-						setCanContinue(true);
-						showMessage({
-							message: "La aplicación tiene una nueva actualización",
-							description:
-								"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
-							type: "warning",
-							duration: 20000,
-							icon: { icon: "warning", position: "right" },
-							onPress: () => {
-								openStore();
-							},
-						});
-					}
-				} else {
-					setCanContinue(true);
-				}
-			} else {
-				showMessage({
-					message: "Error de conexión",
-					description:
-						"Hubo un problema al contactar nuestros servidores, revisa tu conexión a internet.",
-					type: "warning",
-					duration: 10000,
-					icon: { icon: "warning", position: "right" },
-				});
-				console.warn("Error retrieving app version information");
-			}
-		} catch (error) {
-			console.error("Error at Versions:", error);
-		} finally {
-			// setIsLoading(false);
-		}
-	};
-
-	const openStore = async () => {
-		try {
-			console.log("Platform is");
-			await Linking.openURL(platform === "ios" ? appStoreURI : playStoreURI);
-		} catch (error) {
-			console.error("Failed to open store: ", error);
-		}
-	};
-
-	const setNumEmp = createSetInputValue(setInfoFields, "numEmp");
-
-	const returnRegion = (region) => {
-		switch (region) {
-			case "Selecciona":
-				return "Selecciona una opción";
-			case "JRZ":
-				return "Cd. Juárez";
-			case "MTY":
-				return "Monterrey";
-			case "AMX":
-				return "Amamamex";
-			case "TIJ":
-				return "Tijuana";
-			case "SAL":
-				return "Saltillo";
-			default:
-				break;
-		}
-	};
-
-	function modalHandler() {
-		setIsModalVisible(!isModalVisible);
-	}
-
-	useEffect(() => {
-		StatusBar.setHidden(true);
-		const loadCredentials = async () => {
-			try {
-				const storedRegion = await AsyncStorage.getItem("storedRegion");
-				console.log("Stored region is: ", storedRegion);
-				if (storedRegion) setRegion(storedRegion);
-			} catch (error) {
-				console.error("Failed to load stored employee number: ", error);
-			}
-		};
-
-		loadCredentials();
-		setVersionCheck(true);
-		// fetchData();
-		setVersionCheck(false);
-	}, []);
-
-	useEffect(() => {
-		const backAction = () => {
-			if (isInputFocused) {
-				if (inputRef.current) {
-					inputRef.current.blur(); // Force blur on input
-				}
-				Keyboard.dismiss();
-				setIsInputFocused(false);
-				return true; // Prevent default back action
-			}
-			return false; // Allows normal back behavior when input is not focused
-		};
-
-		const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
-			setIsInputFocused(false);
-		});
-
-		const backHandler = BackHandler.addEventListener(
-			"hardwareBackPress",
-			backAction
-		);
-
-		return () => {
-			backHandler.remove();
-			keyboardListener.remove();
-		};
-	}, [isInputFocused]);
 
 	return (
 		<ImageBackground
@@ -432,7 +491,7 @@ const Login = ({ navigation }) => {
 								<Loading />
 							</TouchableOpacity>
 						) : (
-							<TouchableOpacity style={login.button} onPress={fetchData}>
+							<TouchableOpacity style={login.button} onPress={handleLogin}>
 								<Text style={login.buttonText}>Ingresar</Text>
 							</TouchableOpacity>
 						)}

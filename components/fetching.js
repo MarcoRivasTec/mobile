@@ -12,7 +12,7 @@ const fetchPost = async ({ query }) => {
 			},
 			body: JSON.stringify(query),
 		});
-		console.log("Response data after fetch: ", JSON.stringify(response, null, 1));
+		// console.log("Response data after fetch: ", JSON.stringify(response, null, 1));
 		return await response.json();
 	} catch (err) {
 		console.warn("Error at fetch: ", err);
