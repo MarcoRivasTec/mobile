@@ -227,10 +227,15 @@ function Prestamos() {
 					requestedLoan: prestamoSendData.solicita,
 					loanWeeks: prestamoSendData.semanas,
 				});
-				console.log("Response loan: ", JSON.stringify(response, null, 1));
+				console.log("Response loan is: ", JSON.stringify(response, null, 1));
 				setIsWorkingModalVisible(false);
 				if (response === "Done") {
 					confirmationModalHandler();
+				} else if (response === "Wait") {
+					Alert.alert(
+						"Importante",
+						"Tendremos habilitado los préstamos en 2 a 3 días a través de la aplicación móvil, puedes pasar a tu departamento de recursos humanos para más información."
+					);
 				} else {
 					Alert.alert(
 						"Error",
