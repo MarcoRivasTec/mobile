@@ -15,6 +15,10 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { AppContext } from "../../AppContext";
 import LoadingContent from "../../Animations/LoadingContent";
 import COLORS from "../../../constants/colors";
+import { positionStyle } from "react-native-flash-message";
+import Confirm from "./Design/Confirm";
+import Working from "./Design/Working";
+import { HomeContext } from "../../HomeContext";
 
 const getWeekDates = (year, weekNumber) => {
 	// Get the first day of the year
@@ -42,7 +46,11 @@ const getWeekDates = (year, weekNumber) => {
 
 function Prestamos() {
 	const { numEmp, region } = useContext(AppContext);
+	const { sendRequisition } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
+	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
+
 	const currentYear = new Date().getFullYear();
 
 	// Define objects for the 5th and 42nd weeks
@@ -64,6 +72,10 @@ function Prestamos() {
 	const [availableWeeksCount, setAvailableWeeksCount] = useState();
 	const [isAllowed, setIsAllowed] = useState();
 	const [isCalculated, setIsCalculated] = useState(false);
+
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
 
 	const setPrestamoSendDataFields = (fields) => {
 		setPrestamoSendData((prevState) => ({ ...prevState, ...fields }));
@@ -193,10 +205,46 @@ function Prestamos() {
 		setIsCalculated(true);
 	};
 
-	const requestLoan = () => {
-		if (isCalculated) {
-		} else {
+	const requestLoan = async () => {
+		if (!isCalculated) {
 			Alert.alert("Error", "Debes calcular primero tu solicitud de préstamo");
+			return;
+		}
+		try {
+			setIsWorkingModalVisible(true);
+
+			// console.log(
+			// 	`Requested loan and type: ${
+			// 		prestamoSendData.solicita
+			// 	} type: ${typeof prestamoSendData.solicita}, weeks: ${
+			// 		prestamoSendData.semanas
+			// 	} type: ${typeof prestamoSendData.semanas}`
+			// );
+			const requestRetiro = async () => {
+				setIsWorkingModalVisible(true);
+				const response = await sendRequisition({
+					letter: "PtmoFA",
+					requestedLoan: prestamoSendData.solicita,
+					loanWeeks: prestamoSendData.semanas,
+				});
+				console.log("Response loan: ", JSON.stringify(response, null, 1));
+				setIsWorkingModalVisible(false);
+				if (response === "Done") {
+					confirmationModalHandler();
+				} else {
+					Alert.alert(
+						"Error",
+						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
+					);
+				}
+			};
+
+			await requestRetiro();
+		} catch (error) {
+			Alert.alert(
+				"Error",
+				"Ocurrió un problema al solicitar tu préstamo, inténtalo de nuevo."
+			);
 		}
 	};
 
@@ -397,6 +445,20 @@ function Prestamos() {
 					</View>
 				)}
 			</TouchableWithoutFeedback>
+			{ConfirmationVisible && (
+				<Confirm
+					isModalVisible={ConfirmationVisible}
+					onCallback={confirmationModalHandler}
+					onExit={confirmationModalHandler}
+					style={{ position: "absolute" }}
+				/>
+			)}
+			{isWorkingModalVisible && (
+				<Working
+					isModalVisible={isWorkingModalVisible}
+					style={{ position: "absolute" }}
+				/>
+			)}
 		</View>
 	);
 }
