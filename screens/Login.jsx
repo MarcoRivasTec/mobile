@@ -196,9 +196,7 @@ const Login = ({ navigation }) => {
 	const openStore = async () => {
 		try {
 			console.log("Platform is");
-			await Linking.openURL(
-				platform === "ios" ? appStoreURI : playStoreURI
-			);
+			await Linking.openURL(platform === "ios" ? appStoreURI : playStoreURI);
 		} catch (error) {
 			console.error("Failed to open store: ", error);
 		}
@@ -336,8 +334,8 @@ const Login = ({ navigation }) => {
 						accessToken: data.data.login.data.token,
 					},
 				});
-			} else if (data.data.login.message) {
-				Alert.alert(data.data.login.message);
+			} else if (!data.data.login.success) {
+				Alert.alert("Error", `${data.data.login.message}`);
 				return;
 			} else {
 				Alert.alert(
@@ -348,8 +346,8 @@ const Login = ({ navigation }) => {
 			}
 		} catch (error) {
 			console.error("Error at ingreso", error);
-		} finally{
-			setIsLoading(false)
+		} finally {
+			setIsLoading(false);
 		}
 		// fetchPost({ query })
 		// 	.then(async (data) => {
@@ -400,17 +398,11 @@ const Login = ({ navigation }) => {
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
 			style={login.backgroundContainer}
 		>
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				accessible={false}
-			>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.container}>
 					{/* Logo */}
 					<View
-						style={[
-							login.logoContainer,
-							{ flex: isInputFocused ? 40 : 50 },
-						]}
+						style={[login.logoContainer, { flex: isInputFocused ? 40 : 50 }]}
 					>
 						<TecmaMovil />
 					</View>
@@ -426,16 +418,9 @@ const Login = ({ navigation }) => {
 						{/* User */}
 						<View style={login.fieldContainer}>
 							<View
-								style={[
-									login.iconBox,
-									{ backgroundColor: COLORS.primary },
-								]}
+								style={[login.iconBox, { backgroundColor: COLORS.primary }]}
 							>
-								<Icon
-									name="USER"
-									size={20}
-									style={login.icon}
-								/>
+								<Icon name="USER" size={20} style={login.icon} />
 							</View>
 							<View style={login.field}>
 								<TextInput
@@ -444,9 +429,7 @@ const Login = ({ navigation }) => {
 									keyboardType="number-pad"
 									inputMode="numeric"
 									value={numEmp}
-									onChangeText={(text) =>
-										handleTextChange(text, setNumEmp)
-									}
+									onChangeText={(text) => handleTextChange(text, setNumEmp)}
 									maxLength={12}
 									style={login.userInput}
 									onFocus={() => setIsInputFocused(true)}
@@ -458,16 +441,9 @@ const Login = ({ navigation }) => {
 						{/* NIP */}
 						<View style={login.fieldContainer}>
 							<View
-								style={[
-									login.iconBox,
-									{ backgroundColor: COLORS.secondary },
-								]}
+								style={[login.iconBox, { backgroundColor: COLORS.secondary }]}
 							>
-								<Icon
-									name="PASSWORD"
-									size={26}
-									style={login.icon}
-								/>
+								<Icon name="PASSWORD" size={26} style={login.icon} />
 							</View>
 							<View style={login.field}>
 								<TextInput
@@ -477,9 +453,7 @@ const Login = ({ navigation }) => {
 									inputMode="numeric"
 									maxLength={6}
 									value={nip}
-									onChangeText={(text) =>
-										handleTextChange(text, setNip)
-									}
+									onChangeText={(text) => handleTextChange(text, setNip)}
 									secureTextEntry={isNipShown}
 									style={login.userInput}
 									onFocus={() => setIsInputFocused(true)}
@@ -490,17 +464,9 @@ const Login = ({ navigation }) => {
 									style={login.passEye}
 								>
 									{isNipShown == true ? (
-										<Ionicons
-											name="eye-off"
-											size={24}
-											color={COLORS.black}
-										/>
+										<Ionicons name="eye-off" size={24} color={COLORS.black} />
 									) : (
-										<Ionicons
-											name="eye"
-											size={24}
-											color={COLORS.black}
-										/>
+										<Ionicons name="eye" size={24} color={COLORS.black} />
 									)}
 								</TouchableOpacity>
 							</View>
@@ -509,30 +475,18 @@ const Login = ({ navigation }) => {
 						{/* Region */}
 						<View style={login.fieldContainer}>
 							<View style={login.iconBox}>
-								<Icon
-									name="REGION"
-									size={26}
-									style={login.icon}
-								/>
+								<Icon name="REGION" size={26} style={login.icon} />
 							</View>
 							{platform === "ios" ? (
-								<TouchableOpacity
-									onPress={modalHandler}
-									style={login.field}
-								>
-									<Text style={login.fieldText}>
-										{returnRegion(region)}
-									</Text>
+								<TouchableOpacity onPress={modalHandler} style={login.field}>
+									<Text style={login.fieldText}>{returnRegion(region)}</Text>
 									<View style={login.arrowContainer}>
 										<DownArrow />
 									</View>
 								</TouchableOpacity>
 							) : (
 								<View style={login.field}>
-									<RegionPicker
-										region={region}
-										setRegion={setRegion}
-									/>
+									<RegionPicker region={region} setRegion={setRegion} />
 								</View>
 							)}
 						</View>
@@ -570,10 +524,7 @@ const Login = ({ navigation }) => {
 								<Loading />
 							</TouchableOpacity>
 						) : (
-							<TouchableOpacity
-								style={login.button}
-								onPress={handleLogin}
-							>
+							<TouchableOpacity style={login.button} onPress={handleLogin}>
 								<Text style={login.buttonText}>Ingresar</Text>
 							</TouchableOpacity>
 						)}
@@ -581,15 +532,9 @@ const Login = ({ navigation }) => {
 
 					{/* Reset link */}
 					<View style={login.resetContainer}>
-						<Text style={login.resetText}>
-							No recuerdas tu NIP ?
-						</Text>
-						<Pressable
-							onPress={() => navigation.navigate("Restablece")}
-						>
-							<Text style={login.resetTextLink}>
-								Restablécelo
-							</Text>
+						<Text style={login.resetText}>No recuerdas tu NIP ?</Text>
+						<Pressable onPress={() => navigation.navigate("Restablece")}>
+							<Text style={login.resetTextLink}>Restablécelo</Text>
 						</Pressable>
 					</View>
 				</View>

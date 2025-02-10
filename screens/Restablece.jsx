@@ -107,6 +107,11 @@ const Restablece = ({ navigation }) => {
 			Alert.alert("Importante", "Debes introducir tu RFC");
 			return;
 		}
+		if (nip.length !== 6) {
+			Alert.alert("Importante", "Debes introducir un NIP de 6 dígitos");
+			setIsLoading(false);
+			return;
+		}
 		if (nip === "") {
 			Alert.alert("Importante", "Debes introducir un NIP");
 			setIsLoading(false);
@@ -171,6 +176,14 @@ const Restablece = ({ navigation }) => {
 						Alert.alert(
 							"Error",
 							"El NIP proporcionado es incorrecto."
+						);
+						setIsLoading(false);
+						return;
+					}
+					case "Same NIP": {
+						Alert.alert(
+							"Error",
+							"El NIP debe ser diferente del anterior."
 						);
 						setIsLoading(false);
 						return;
@@ -301,7 +314,7 @@ const Restablece = ({ navigation }) => {
 							</View>
 							<View style={reset.field}>
 								<TextInput
-									placeholder="Tu nuevo NIP"
+									placeholder="Tu nuevo NIP (6 dígitos)"
 									placeholderTextColor={COLORS.placeholder}
 									keyboardType="number-pad"
 									inputMode="numeric"
@@ -311,7 +324,7 @@ const Restablece = ({ navigation }) => {
 									onChangeText={(text) =>
 										handleTextChange(text, setNip)
 									}
-									secureTextEntry={isNipShown}
+									secureTextEntry={!isNipShown}
 									style={reset.userInput}
 									onFocus={() => setIsInputFocused(true)}
 									onBlur={() => setIsInputFocused(false)}
@@ -353,7 +366,7 @@ const Restablece = ({ navigation }) => {
 							</View>
 							<View style={reset.field}>
 								<TextInput
-									placeholder="Reintroduce el nuevo NIP"
+									placeholder="Reintroduce el NIP (6 dígitos)"
 									placeholderTextColor={COLORS.placeholder}
 									keyboardType="number-pad"
 									inputMode="numeric"
@@ -363,7 +376,7 @@ const Restablece = ({ navigation }) => {
 									onChangeText={(text) =>
 										handleTextChange(text, setNip2)
 									}
-									secureTextEntry={isNipShown}
+									secureTextEntry={!isNipShown}
 									style={reset.userInput}
 									onFocus={() => setIsInputFocused(true)}
 									onBlur={() => setIsInputFocused(false)}
