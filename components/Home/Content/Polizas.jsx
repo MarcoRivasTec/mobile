@@ -81,7 +81,7 @@ function Polizas() {
 					>
 						{policies.map((policy) => (
 							<Poliza
-								// key={policy.id} // Unique key for each item
+								key={policy.id} // Unique key for each item
 								width={width}
 								height={height}
 								title={policy.policy} // Dynamic title
