@@ -94,10 +94,10 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	}
 
 	const requestVacaciones = async () => {
-		if (diasVacs.disponibles <= 0) {
-			Alert.alert("Error", "No tienes días disponibles para vacaciones");
-			return;
-		}
+		// if (diasVacs.disponibles <= 0) {
+		// 	Alert.alert("Error", "No tienes días disponibles para vacaciones");
+		// 	return;
+		// }
 		if (endDate < startDate) {
 			Alert.alert(
 				"Error",

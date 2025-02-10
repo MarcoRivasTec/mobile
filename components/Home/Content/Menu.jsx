@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import { menu } from "./styles";
 import SectionButton from "./Menu/SectionButton";
-import { showMessage } from "react-native-flash-message";
+import { AppContext } from "../../AppContext";
 
 function Menu({ changeContent, navigation }) {
+	const { region } = useContext(AppContext);
+	console.log("Region is: ", region);
 	return (
 		<View style={menu.container}>
 			{/* Row 1 */}
@@ -42,11 +44,13 @@ function Menu({ changeContent, navigation }) {
 					size={40}
 					onPress={() => changeContent("Prestamos")}
 				/>
-				<SectionButton
-					title="Retiro de Ahorro"
-					icon="RETIRO_AHORRO"
-					onPress={() => changeContent("RetiroAhorro")}
-				/>
+				{region !== "TIJ" && (
+					<SectionButton
+						title="Retiro de Ahorro"
+						icon="RETIRO_AHORRO"
+						onPress={() => changeContent("RetiroAhorro")}
+					/>
+				)}
 			</View>
 			{/* Row 3 */}
 			<View style={menu.row}>
