@@ -98,6 +98,18 @@ const login = StyleSheet.create({
 		right: 12,
 		flex: 1,
 	},
+	arrowContainer: {
+		position: "absolute",
+		top: "7%",
+		right: "1%",
+		justifyContent: "center",
+		alignItems: "center",
+		// alignSelf: "flex-end",
+		height: "100%",
+		width: "15%",
+		// backgroundColor: "white"
+		// flex: 1,
+	},
 
 	// Checkbox
 	checkboxContainer: {
