@@ -370,7 +370,7 @@ const Login = ({ navigation }) => {
 					</View>
 
 					{/* Margin */}
-					<View style={{ flex: 6 }} />
+					<View style={{ flex: isInputFocused ? 1 : 6 }} />
 
 					<KeyboardAvoidingView
 						style={login.credentialsContainer}
@@ -452,11 +452,6 @@ const Login = ({ navigation }) => {
 								</View>
 							)}
 						</View>
-						{/* User */}
-						{/* <User setFocus={setIsInputFocused} /> */}
-
-						{/* NIP */}
-						{/* <NIP nip={nip} setNip={setNip} setFocus={setIsInputFocused} /> */}
 					</KeyboardAvoidingView>
 
 					{/* Margin */}

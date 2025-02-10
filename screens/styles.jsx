@@ -173,6 +173,188 @@ const login = StyleSheet.create({
 	},
 });
 
+const reset = StyleSheet.create({
+	backgroundContainer: {
+		flex: 1,
+		resizeMode: "cover",
+		borderRadius: 15,
+		overflow: "hidden",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	container: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		justifyContent: "space-between",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	logoContainer: {
+		alignSelf: "flex-start",
+		top: 0,
+		// flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	contentContainer: {
+		bottom: 1,
+		// flex: 1,
+		// height: "50%",
+		width: "100%",
+		justifyContent: "flex-end",
+		alignItems: "center",
+		borderWidth: 1,
+	},
+	credentialsContainer: {
+		flex: 22,
+		// height: "42%",
+		width: "90%",
+		justifyContent: "space-between",
+		alignItems: "center",
+		// marginBottom: "1%",
+		// borderWidth: 1,
+		borderColor: "red",
+		// borderWidth: 1
+	},
+	fieldContainer: {
+		height: "23%",
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	regionContainer: {
+		flex: 6.5,
+		width: "90%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		marginVertical: "2%"
+	},
+	fieldText: {
+		left: "5%",
+		fontFamily: "Montserrat-Regular",
+		fontSize: 8,
+		color: COLORS.black,
+		borderWidth: 1,
+	},
+	iconBox: {
+		flex: 1,
+		height: "100%",
+		borderBottomLeftRadius: 24,
+		borderTopLeftRadius: 24,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.naranja,
+	},
+	icon: {
+		left: "4%",
+		color: COLORS.white,
+	},
+	field: {
+		flex: 7,
+		height: "100%",
+		backgroundColor: "white",
+		// backgroundColor: COLORS.white,
+		alignItems: "flex-start",
+		justifyContent: "center",
+		borderTopRightRadius: 24,
+		borderBottomRightRadius: 24,
+	},
+	userInput: {
+		paddingHorizontal: "5%",
+		flex: 7,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		fontFamily: "Montserrat-Medium",
+		fontSize: 14,
+		color: COLORS.black,
+		textTransform: "uppercase",
+	},
+	passEye: {
+		position: "absolute",
+		right: 12,
+		flex: 1,
+	},
+	arrowContainer: {
+		position: "absolute",
+		top: "7%",
+		right: "1%",
+		justifyContent: "center",
+		alignItems: "center",
+		// alignSelf: "flex-end",
+		height: "100%",
+		width: "15%",
+		// backgroundColor: "white"
+		// flex: 1,
+	},
+
+	// Checkbox
+	checkboxContainer: {
+		// height: "10%",
+		flex: 4,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "3%",
+		marginTop: "1%",
+		marginBottom: "4%",
+		// borderWidth: 1,
+	},
+	checkboxText: {
+		textDecorationLine: "none",
+		fontFamily: "Montserrat-Regular",
+	},
+	// Login button
+	buttonContainer: {
+		flex: 5,
+		// height: "12%",
+		width: "90%",
+		borderRadius: 24,
+		// borderWidth: 1,
+		marginBottom: "2%",
+	},
+	button: {
+		height: "100%",
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	buttonText: {
+		fontFamily: "Montserrat-Medium",
+		fontSize: 15,
+		color: "white",
+	},
+	// Reset link
+	resetContainer: {
+		// height: "8%",
+		flex: 3,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		borderColor: "blue",
+		// marginTop: "2%",
+		marginBottom: "3%",
+	},
+	resetText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 15,
+		color: COLORS.black,
+	},
+	resetTextLink: {
+		fontFamily: "Montserrat-Bold",
+		fontSize: 15,
+		color: COLORS.primary,
+		marginLeft: 6,
+	},
+});
+
 const getGafeteStyle = (platform) => {
 	return StyleSheet.create({
 		container: {
@@ -426,4 +608,4 @@ const getGafeteStyle = (platform) => {
 	});
 };
 
-export { login, getGafeteStyle };
+export { login, reset, getGafeteStyle };
