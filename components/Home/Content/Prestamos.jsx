@@ -260,6 +260,12 @@ function Prestamos() {
 							"Ya existe un préstamo registrado en el sistema."
 						);
 						break;
+					case "Existing requisition":
+						Alert.alert(
+							"Importante",
+							"Ya existe una solicitud de préstamo registrada en el sistema, espera el monto solicitado la próxima semana junto con tu depósito de nómina."
+						);
+						break;
 					case "Limit":
 						Alert.alert(
 							"Error",
