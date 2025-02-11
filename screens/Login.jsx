@@ -537,6 +537,9 @@ const Login = ({ navigation }) => {
 							<Text style={login.resetTextLink}>Restablécelo</Text>
 						</Pressable>
 					</View>
+
+					{/* Version */}
+					<Text style={login.version}>v{appVersion}</Text>
 				</View>
 			</TouchableWithoutFeedback>
 

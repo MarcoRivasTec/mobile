@@ -102,7 +102,7 @@ export const HomeProvider = ({ children }) => {
 					$start_date: String,
 					$end_date: String,
 					$days: Int,
-					$requested_loan: Int,
+					$requested_loan: Float,
 					$loan_weeks: Int
 					) {
 					sendRequisition(

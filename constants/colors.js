@@ -35,5 +35,16 @@ const BLACK = {
 	b9: "#181818",
 };
 
-export { BLACK };
+const GRAY = {
+	g1: "#f8f9fa",
+	g2: "#e9ecef",
+	g3: "#dee2e6",
+	g4: "#ced4da",
+	g5: "#adb5bd",
+	g6: "#6c757d",
+	g7: "#495057",
+	g8: "#343a40",
+};
+
+export { BLACK, GRAY };
 export default COLORS;

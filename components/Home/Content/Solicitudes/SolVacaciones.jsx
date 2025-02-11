@@ -196,7 +196,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.tomados}
+													{diasVacs.ganados.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
@@ -233,7 +233,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.ganados}
+													{diasVacs.tomados.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
@@ -266,7 +266,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.disponibles}
+													{diasVacs.disponibles.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>

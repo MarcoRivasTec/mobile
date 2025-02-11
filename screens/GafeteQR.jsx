@@ -103,7 +103,7 @@ const GafeteQR = ({ navigation }) => {
 				// console.log("Data is: ", data);
 				// if (region === "JRZ") {
 				if (data.data.requestQRData.success) {
-					// console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
+					console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
 					setQRData(data.data.requestQRData.data.qr);
 					setEmpInfo({
 						ingreso: data.data.requestQRData.data.ingreso,
@@ -379,14 +379,14 @@ const GafeteQR = ({ navigation }) => {
 						</View>
 						{empInfo ? (
 							<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
-								<Text style={gafete.categoryData}>20-09-20</Text>
+								<Text style={gafete.categoryData}>{empInfo.ingreso}</Text>
 							</View>
 						) : (
 							<LoadingContent style={{ flex: 1 }} />
 						)}
 						{empInfo ? (
 							<View style={[gafete.categoryDataContainer, { flex: 1.5 }]}>
-								<Text style={gafete.categoryData}>3002515612045</Text>
+								<Text style={gafete.categoryData}>{empInfo.imss}</Text>
 							</View>
 						) : (
 							<LoadingContent style={{ flex: 1.5 }} />

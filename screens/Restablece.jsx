@@ -13,7 +13,7 @@ import {
 	BackHandler,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TecmaMovil from "../components/Animations/TecmaMovil";
 import NIP from "../components/Login/NIP";
 import { handleTextChange } from "../components/Login/textCheck";
@@ -30,7 +30,7 @@ import { reset } from "./styles";
 import RegionModal from "../components/Login/RegionModal";
 
 const Restablece = ({ navigation }) => {
-	const { platform } = useState(AppContext);
+	const { platform } = useContext(AppContext);
 	console.log("Platform is: ", platform);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -133,12 +133,12 @@ const Restablece = ({ navigation }) => {
 		}
 
 		const query = {
-			query: `mutation resetNIP($numEmp: Int!, $rfc: String!, $newNIP: Int!, $region: String!){
+			query: `mutation resetNIP($numEmp: Int!, $rfc: String!, $newNIP: String!, $region: String!){
 				resetNIP(numEmp: $numEmp, rfc: $rfc, newNIP: $newNIP, region: $region)
 			}`,
 			variables: {
 				numEmp: +numEmp,
-				newNIP: +nip,
+				newNIP: nip,
 				rfc: rfc,
 				region: region,
 			},
@@ -403,7 +403,7 @@ const Restablece = ({ navigation }) => {
 						<View style={reset.iconBox}>
 							<Icon name="REGION" size={26} style={reset.icon} />
 						</View>
-						{Platform.OS === "ios" ? (
+						{platform === "ios" ? (
 							<TouchableOpacity
 								onPress={modalHandler}
 								style={reset.field}

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import COLORS, { BLACK } from "../constants/colors";
+import COLORS, { BLACK, GRAY } from "../constants/colors";
 
 const login = StyleSheet.create({
 	backgroundContainer: {
@@ -170,6 +170,14 @@ const login = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.primary,
 		marginLeft: 6,
+	},
+	version: {
+		position: "absolute",
+		bottom: 0,
+		// left: "5%",
+		// alignSelf: "flex-start",
+		fontSize: 12,
+		color: GRAY.g5,
 	},
 });
 

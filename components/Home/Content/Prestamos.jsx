@@ -20,7 +20,8 @@ import Confirm from "./Design/Confirm";
 import Working from "./Design/Working";
 import { HomeContext } from "../../HomeContext";
 
-const getWeekDates = (year, weekNumber) => {
+const getWeekDates = async (year, weekNumber) => {
+	console.log("Week number: ", weekNumber);
 	// Get the first day of the year
 	const firstDayOfYear = new Date(year, 0, 1);
 	const firstSaturdayOfYear = new Date(firstDayOfYear);
@@ -38,6 +39,7 @@ const getWeekDates = (year, weekNumber) => {
 	const endOfWeek = new Date(startOfWeek);
 	endOfWeek.setDate(startOfWeek.getDate() + 6); // Last day of the week
 
+	console.log("Start of week: ", startOfWeek, " end of week: ", endOfWeek);
 	return {
 		firstDay: startOfWeek,
 		lastDay: endOfWeek,
@@ -54,8 +56,9 @@ function Prestamos() {
 	const currentYear = new Date().getFullYear();
 
 	// Define objects for the 5th and 42nd weeks
-	const startDate = getWeekDates(currentYear, 5);
-	const endDate = getWeekDates(currentYear, 34);
+	// const [startDate, setStartDate] = useState(0);
+	// const [endDate, setEndDate] = useState(0);
+
 	const interes = 0.159;
 	const [prestamoData, setPrestamoData] = useState({
 		saldo_fa: 0,
@@ -86,7 +89,9 @@ function Prestamos() {
 			query: `query Prestamo($numEmp: String!, $region: String!){
 				Prestamo(numEmp: $numEmp, region: $region) {
 					saldo_fa,
-					prestamo
+					prestamo,
+					initial_week,
+					final_week
 				}
 			}`,
 			variables: {
@@ -98,12 +103,44 @@ function Prestamos() {
 			const data = await fetchPost({ query });
 			console.log("Response data at prestamo:", JSON.stringify(data, null, 2));
 			if (data.data.Prestamo) {
-				setPrestamoData(data.data.Prestamo);
-				data.data.Prestamo.prestamo === true &&
+				setPrestamoData({
+					saldo_fa: data.data.Prestamo.saldo_fa,
+					prestamo: data.data.Prestamo.prestamo,
+				});
+				const startDate = await getWeekDates(
+					currentYear,
+					data.data.Prestamo.initial_week
+				);
+
+				const endDate = await getWeekDates(
+					currentYear,
+					data.data.Prestamo.final_week
+				);
+				// const endDate = getWeekDates(currentYear, 34);
+				if (data.data.Prestamo.prestamo) {
 					Alert.alert(
 						"Aviso",
 						"Existe registro de un prestamo este año por lo que no se pueden solicitar más."
 					);
+					setIsAllowed(false);
+					return;
+				}
+
+				const today = new Date();
+				if (today >= startDate.firstDay && today <= endDate.lastDay) {
+					setIsAllowed(true);
+					const diffInTime = endDate.lastDay - today;
+					const diffInWeeks = Math.ceil(diffInTime / (1000 * 60 * 60 * 24 * 7));
+
+					setAvailableWeeksCount(diffInWeeks);
+				} else {
+					setIsAllowed(false);
+					Alert.alert(
+						"Fecha fuera de periodo",
+						"No se puede pedir un prestamo en este momento"
+					);
+				}
+
 				// console.log(
 				// 	"Valid years: ",
 				// 	JSON.stringify(data.data.prenominaYears, null, 2)
@@ -124,22 +161,6 @@ function Prestamos() {
 
 	useEffect(() => {
 		getData();
-
-		const today = new Date();
-
-		if (today >= startDate.firstDay && today <= endDate.lastDay) {
-			setIsAllowed(true);
-			const diffInTime = endDate.lastDay - today;
-			const diffInWeeks = Math.ceil(diffInTime / (1000 * 60 * 60 * 24 * 7));
-
-			setAvailableWeeksCount(diffInWeeks);
-		} else {
-			setIsAllowed(false);
-			Alert.alert(
-				"Fecha fuera de periodo",
-				"No se puede pedir un prestamo en este momento"
-			);
-		}
 	}, []);
 
 	const calculateData = () => {
@@ -229,18 +250,53 @@ function Prestamos() {
 				});
 				console.log("Response loan is: ", JSON.stringify(response, null, 1));
 				setIsWorkingModalVisible(false);
-				if (response === "Done") {
-					confirmationModalHandler();
-				} else if (response === "Wait") {
-					Alert.alert(
-						"Importante",
-						"Tendremos habilitado los préstamos en 2 a 3 días a través de la aplicación móvil, puedes pasar a tu departamento de recursos humanos para más información."
-					);
-				} else {
-					Alert.alert(
-						"Error",
-						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
-					);
+				switch (response) {
+					case "Done":
+						confirmationModalHandler();
+						break;
+					case "Exists":
+						Alert.alert(
+							"Error",
+							"Ya existe un préstamo registrado en el sistema."
+						);
+						break;
+					case "Limit":
+						Alert.alert(
+							"Error",
+							"El préstamo solicitado está fuera de los límites permitidos."
+						);
+						break;
+					case "LessThan2Weeks":
+						Alert.alert(
+							"Error",
+							"El plazo a pagar el préstamo no puede ser menor a 2 semanas."
+						);
+						break;
+					case "OutOfRange":
+						Alert.alert(
+							"Error",
+							"Fecha fuera de periodo de préstamos, no se puede solicitar en este momento."
+						);
+						break;
+					case "ExceedsPeriod":
+						Alert.alert(
+							"Error",
+							"El plazo de semanas excede el límite permitido."
+						);
+						break;
+					case "Error":
+						Alert.alert(
+							"Error",
+							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
+						);
+						break;
+
+					default:
+						Alert.alert(
+							"Error",
+							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
+						);
+						break;
 				}
 			};
 
@@ -452,6 +508,7 @@ function Prestamos() {
 			</TouchableWithoutFeedback>
 			{ConfirmationVisible && (
 				<Confirm
+					customText="Tu préstamo fue procesado con éxito, espera el monto solicitado la próxima semana junto con tu depósito de nómina."
 					isModalVisible={ConfirmationVisible}
 					onCallback={confirmationModalHandler}
 					onExit={confirmationModalHandler}
