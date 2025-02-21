@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import { menu } from "./styles";
 import SectionButton from "./Menu/SectionButton";
-import { showMessage } from "react-native-flash-message";
+import { AppContext } from "../../AppContext";
 
-function Menu({ changeContent }) {
+function Menu({ changeContent, navigation }) {
+	const { region } = useContext(AppContext);
+	console.log("Region is: ", region);
 	return (
 		<View style={menu.container}>
 			{/* Row 1 */}
 			<View style={[menu.row, { marginTop: "3%" }]}>
 				<SectionButton
-					title="Vacaciones"
-					icon="VACACIONES"
-					onPress={() => changeContent("Vacaciones")}
-					size={30}
+					title="Gafete Digital"
+					iconLibrary="AD"
+					icon="qrcode"
+					marginTop="8%"
+					onPress={() => navigation.navigate("GafeteQR")}
+					size={40}
 				/>
+
 				<SectionButton
 					title="Recibo de Nómina"
 					icon="RECIBO_NOM"
@@ -39,11 +44,13 @@ function Menu({ changeContent }) {
 					size={40}
 					onPress={() => changeContent("Prestamos")}
 				/>
-				<SectionButton
-					title="Retiro de Ahorro"
-					icon="RETIRO_AHORRO"
-					onPress={() => changeContent("RetiroAhorro")}
-				/>
+				{region !== "TIJ" && (
+					<SectionButton
+						title="Retiro de Ahorro"
+						icon="RETIRO_AHORRO"
+						onPress={() => changeContent("RetiroAhorro")}
+					/>
+				)}
 			</View>
 			{/* Row 3 */}
 			<View style={menu.row}>
@@ -60,10 +67,10 @@ function Menu({ changeContent }) {
 					onPress={() => changeContent("Reposiciones")}
 				/>
 				<SectionButton
-					title="Línea de Denuncias"
-					icon="DENUNCIA"
-					size={32}
-					onPress={() => changeContent("LineaDenuncia")}
+					title="Vacaciones"
+					icon="VACACIONES"
+					onPress={() => changeContent("Vacaciones")}
+					size={30}
 				/>
 			</View>
 			{/* Row 4 */}
@@ -74,22 +81,18 @@ function Menu({ changeContent }) {
 					onPress={() => changeContent("Polizas")}
 				/>
 				<SectionButton
+					title="Línea de Denuncias"
+					icon="DENUNCIA"
+					size={32}
+					onPress={() => changeContent("LineaDenuncia")}
+				/>
+				{/* <SectionButton
 					title="Avisos"
 					icon="chatbox-ellipses-outline"
 					size={41}
 					iconLibrary="Ionicons"
 					onPress={() => changeContent("Notificaciones")}
-					// onPress={() =>
-					// 	showMessage({
-					// 		message: "Esta sección está temporalmente deshabilitada",
-					// 		type: "info",
-					// 		duration: 3000,
-					// 		position: "bottom",
-					// 		icon: { icon: "info", position: "right" },
-					// 		// statusBarHeight: 40,
-					// 	})
-					
-				/>
+				/> */}
 				<SectionButton
 					title="Opiniones"
 					icon="OPINIONES"

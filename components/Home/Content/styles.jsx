@@ -587,7 +587,7 @@ const reciboNom = StyleSheet.create({
 		// borderColor: "black"
 	},
 	sectionTitleContainer: {
-		flex: 2,
+		flex: 2.5,
 		width: "100%",
 		top: "3%",
 		justifyContent: "center",
@@ -1478,12 +1478,26 @@ const polizas = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
+	titleContainer: {
+		flex: 1,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleText: {
+		fontSize: 30,
+		fontFamily: "Montserrat-SemiBold",
+		textAlign: "center",
+	},
 	scrollContainer: {
 		flex: 1,
 		width: "100%",
+		
 	},
 	scrollContentContainer: {
 		flexGrow: 1,
+		justifyContent: "flex-start",
+		alignItems: "center"
 	},
 });
 

@@ -94,10 +94,10 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	}
 
 	const requestVacaciones = async () => {
-		if (diasVacs.disponibles <= 0) {
-			Alert.alert("Error", "No tienes días disponibles para vacaciones");
-			return;
-		}
+		// if (diasVacs.disponibles <= 0) {
+		// 	Alert.alert("Error", "No tienes días disponibles para vacaciones");
+		// 	return;
+		// }
 		if (endDate < startDate) {
 			Alert.alert(
 				"Error",
@@ -196,7 +196,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.tomados}
+													{diasVacs.ganados.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
@@ -233,7 +233,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.ganados}
+													{diasVacs.tomados.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
@@ -266,7 +266,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														solVacaciones.cantidad
 													}
 												>
-													{diasVacs.disponibles}
+													{diasVacs.disponibles.toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>

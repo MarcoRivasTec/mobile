@@ -36,7 +36,7 @@ function runCommand(command) {
 
 // Store the original API_ENDPOINT
 const originalEndpoint = `"http://201.174.7.187:8083/papitecma"`;
-const newEndpoint = `"http://201.174.7.187:8083/papitecma"`;
+const newEndpoint = `"https://api.tecmamovilconnect.com/"`;
 
 // Update API_ENDPOINT before build
 updateEnvApiEndpoint(newEndpoint);

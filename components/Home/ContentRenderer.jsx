@@ -21,11 +21,11 @@ import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 import Notificaciones from "./Content/Notificaciones";
 
-function ContentRenderer({ content, changeContent }) {
+function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
-				return <Menu changeContent={changeContent} />;
+				return <Menu changeContent={changeContent} navigation={navigation} />;
 
 			case "InfoPers":
 				return <InfoPers />;

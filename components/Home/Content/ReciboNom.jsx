@@ -9,7 +9,7 @@ import {
 } from "react-native";
 // import * as Linking from "expo-linking";
 // import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
+// import * as FileSystem from "expo-file-system";
 import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 // import * as IntentLauncher from "expo-intent-launcher";
@@ -128,18 +128,22 @@ function ReciboNom() {
 			const pdfBase64 = response?.data?.generatePayroll?.pdfData;
 			const pdfName = response?.data?.generatePayroll?.pdfName;
 			setIsWorkingModalVisible(false);
+			// console.log("Response data is: ", response);
 			if (response?.data?.generatePayroll?.success && pdfBase64) {
 				try {
 					const tempFilePath = `${RNFS.DocumentDirectoryPath}/${pdfName}`;
-					const publicFilePath = `${RNFS.DownloadDirectoryPath}/${pdfName}`;
+					// const publicFilePath = `${RNFS.DownloadDirectoryPath}/${pdfName}`;
 
 					await RNFS.writeFile(tempFilePath, pdfBase64, "base64");
 
-					await RNFS.moveFile(tempFilePath, publicFilePath);
-					const fileExists = await RNFS.exists(publicFilePath);
+					// await RNFS.moveFile(tempFilePath, publicFilePath);
+					// const fileExists = await RNFS.exists(publicFilePath);
+					const fileExists = await RNFS.exists(tempFilePath);
 					if (fileExists) {
-						await FileViewer.open(publicFilePath);
+						await FileViewer.open(tempFilePath);
+						// await FileViewer.open(publicFilePath);
 					} else {
+						Alert.alert("Error", "No se pudo guardar el archivo, intentalo de nuevo.")
 						console.warn("File not found in public directory after move");
 					}
 				} catch (error) {

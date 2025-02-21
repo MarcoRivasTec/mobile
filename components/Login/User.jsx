@@ -6,14 +6,14 @@ import COLORS from "../../constants/colors";
 import Icon from "../Home/icons";
 import { AppContext } from "../AppContext";
 
-function User() {
+function User({ setFocus }) {
 	const { numEmp, setInfoFields } = useContext(AppContext);
 
 	const setNumEmp = createSetInputValue(setInfoFields, "numEmp");
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "padding"}
+		<View
+			// behavior={Platform.OS === "ios" ? "padding" : "padding"}
 			style={[layout.fieldContainer, { marginVertical: "0%" }]}
 		>
 			<View style={[layout.iconBox, { backgroundColor: COLORS.primary }]}>
@@ -29,9 +29,11 @@ function User() {
 					onChangeText={(text) => handleTextChange(text, setNumEmp)}
 					maxLength={12}
 					style={layout.userInput}
+					onFocus={() => setFocus(true)}
+					onBlur={() => setFocus(false)}
 				/>
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }
 

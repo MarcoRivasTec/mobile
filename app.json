@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "TECMA Móvil Connect",
 		"slug": "tecma-movil-connect",
-		"version": "1.0.2",
+		"version": "1.0.4",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
@@ -44,10 +44,6 @@
 			[
 				"expo-build-properties",
 				{
-					"android": {
-						"usesCleartextTraffic": true
-					},
-
 					"ios": {
 						"infoPlist": {
 							"NSAppTransportSecurity": {

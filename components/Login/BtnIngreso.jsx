@@ -132,13 +132,18 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 
 		hideMessage();
 		setIsLoading(true);
+
 		const query = {
-			query: `mutation login($numEmp: String!, $nip: String!, $region: String!){
-				login(numEmp: $numEmp, nip: $nip, region: $region) {
-					token
-					name
-				}
-			}`,
+			query: `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
+						login(numEmp: $numEmp, nip: $nip, region: $region) {
+							success
+							message
+							data {
+								token
+								name
+							}
+						}
+					}`,
 			variables: {
 				numEmp: numEmp,
 				region: region,
@@ -148,8 +153,9 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 		fetchPost({ query })
 			.then(async (data) => {
 				setIsLoading(false);
-				// console.log("Response data at ingresoo: ", data);
-				if (data.data.login !== null) {
+				// console.log("Response data at ingreso: ", data);
+				// return;
+				if (data.data.login.success) {
 					// setFields({
 					// 	name: data.data.login.name,
 					// 	accessToken: data.data.login.token,
@@ -165,13 +171,19 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 					navigation.replace("WelcomeHome", {
 						screen: "Welcome",
 						params: {
-							name: data.data.login.name,
-							accessToken: data.data.login.token,
+							name: data.data.login.data.name,
+							accessToken: data.data.login.data.token,
 						},
 					});
-				}
-				if (data.errors) {
-					Alert.alert(data.errors[0].message);
+				} else if (data.data.login.message) {
+					Alert.alert(data.data.login.message);
+					return;
+				} else {
+					Alert.alert(
+						"Error",
+						"Ocurrió un error inesperado, vuelve a intentarlo."
+					);
+					return;
 				}
 			})
 			.catch((error) => {

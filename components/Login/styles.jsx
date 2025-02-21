@@ -9,7 +9,7 @@ const layout = StyleSheet.create({
 	},
 	fieldContainer: {
 		flex: 1,
-		width: "90%",
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		// marginVertical: "2%",
@@ -33,7 +33,7 @@ const layout = StyleSheet.create({
 	},
 	icon: {
 		left: "4%",
-		color: COLORS.white
+		color: COLORS.white,
 	},
 	field: {
 		flex: 7,
@@ -50,11 +50,12 @@ const layout = StyleSheet.create({
 		// flex: 7,
 		width: "100%",
 		height: "100%",
+		paddingBottom: 2,
 	},
 	pickerItemStyle: {
-		color: "red"
+		color: "red",
 	},
-	pickerItem: {color: "red"},
+	pickerItem: { color: "red" },
 	userInput: {
 		paddingHorizontal: "5%",
 		flex: 7,
@@ -64,6 +65,7 @@ const layout = StyleSheet.create({
 		fontWeight: "500",
 		fontSize: 14,
 		color: COLORS.black,
+		textTransform: "uppercase",
 	},
 	passEye: {
 		position: "absolute",
@@ -159,7 +161,15 @@ const modal = StyleSheet.create({
 	picker: {
 		width: "100%",
 		height: "100%",
-	},	
+	},
+	pickerItem: {
+		fontFamily: "Montserrat-Bold",
+		fontSize: 18,
+	},
+	pickerItemStyle: {
+		fontSize: 18,
+		fontFamily: "Montserrat-Medium",
+	},
 });
 
 export { layout, modal };

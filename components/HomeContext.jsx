@@ -49,6 +49,8 @@ export const HomeProvider = ({ children }) => {
 		startDate = null,
 		endDate = null,
 		days = null,
+		requestedLoan = null,
+		loanWeeks = null,
 	} = {}) => {
 		let fullName;
 		if (data.surname_1 !== "" && data.surname_2 !== "") {
@@ -76,7 +78,9 @@ export const HomeProvider = ({ children }) => {
 			period: ${period},
 			start date: ${startDate},
 			end date: ${endDate},
-			days: ${days}`
+			days: ${days},
+			requestedLoan: ${requestedLoan},
+			loanWeeks: ${loanWeeks}`
 		);
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
@@ -97,7 +101,9 @@ export const HomeProvider = ({ children }) => {
 					$period: Int,
 					$start_date: String,
 					$end_date: String,
-					$days: Int
+					$days: Int,
+					$requested_loan: Float,
+					$loan_weeks: Int
 					) {
 					sendRequisition(
 						numEmp: $numEmp,
@@ -117,7 +123,9 @@ export const HomeProvider = ({ children }) => {
 						period: $period,
 						start_date: $start_date,
 						end_date: $end_date,
-						days: $days
+						days: $days,
+						requested_loan: $requested_loan,
+						loan_weeks: $loan_weeks
 					) {
 						pdfFile
 					}
@@ -141,6 +149,8 @@ export const HomeProvider = ({ children }) => {
 				start_date: startDate,
 				end_date: endDate,
 				days: days,
+				requested_loan: requestedLoan,
+				loan_weeks: loanWeeks,
 			},
 		};
 		try {

@@ -30,12 +30,6 @@ function RegionPicker({ onCallback, region, setRegion }) {
 					value="Selecciona"
 				/>
 			)}
-
-			{/* <Picker.Item
-				label="Selecciona la región"
-				style={{ color: "gray" }}
-				value="Selecciona"
-			/> */}
 			<Picker.Item label="Amamex" style={modal.pickerItem} value="AMX" />
 			<Picker.Item label="Cd. Juárez" style={modal.pickerItem} value="JRZ" />
 			<Picker.Item label="Monterrey" style={modal.pickerItem} value="MTY" />
