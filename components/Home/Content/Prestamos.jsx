@@ -19,30 +19,57 @@ import { positionStyle } from "react-native-flash-message";
 import Confirm from "./Design/Confirm";
 import Working from "./Design/Working";
 import { HomeContext } from "../../HomeContext";
+import { DateTime } from "luxon";
 
 const getWeekDates = async (year, weekNumber) => {
 	console.log("Week number: ", weekNumber);
-	// Get the first day of the year
-	const firstDayOfYear = new Date(year, 0, 1);
-	const firstSaturdayOfYear = new Date(firstDayOfYear);
+
+	// Get the first day of the year in Mountain Time
+	let firstDayOfYear = DateTime.fromObject(
+		{ year, month: 1, day: 1 },
+		{ zone: "America/Denver" }
+	);
+	let firstSaturdayOfYear = firstDayOfYear;
 
 	// Find the first Saturday of the year
-	while (firstSaturdayOfYear.getDay() !== 6) {
-		firstSaturdayOfYear.setDate(firstSaturdayOfYear.getDate() + 1);
+	while (firstSaturdayOfYear.weekday !== 6) {
+		// Saturday is 6 in Luxon
+		firstSaturdayOfYear = firstSaturdayOfYear.plus({ days: 1 });
 	}
 
-	// Calculate the offset for the desired week number
-	const daysOffset = (weekNumber - 1) * 7;
-	const startOfWeek = new Date(
-		firstSaturdayOfYear.setDate(firstSaturdayOfYear.getDate() + daysOffset)
-	);
-	const endOfWeek = new Date(startOfWeek);
-	endOfWeek.setDate(startOfWeek.getDate() + 6); // Last day of the week
+	// Get today's date in Mountain Time
+	let today = DateTime.now().setZone("America/Denver");
 
-	console.log("Start of week: ", startOfWeek, " end of week: ", endOfWeek);
+	// Calculate the number of weeks since the first Saturday of the year
+	let weeksSinceStart = Math.floor(
+		today.diff(firstSaturdayOfYear, "weeks").weeks
+	);
+
+	// Ensure the calculation doesn't move back a full week if today isn't Saturday yet
+	let correctedWeekNumber = weeksSinceStart + 1;
+
+	// Calculate the start of the correct week
+	let startOfWeek = firstSaturdayOfYear.plus({ days: (weekNumber - 1) * 7 });
+
+	// Find the following Friday at 11:59 PM
+	let endOfWeek = startOfWeek.plus({ days: 5 }).set({
+		hour: 23,
+		minute: 59,
+		second: 59,
+	});
+
+	console.log(
+		"Start of week: ",
+		startOfWeek.toISO(),
+		" End of week: ",
+		endOfWeek.toISO(),
+		"Week number: ",
+		correctedWeekNumber
+	);
 	return {
-		firstDay: startOfWeek,
-		lastDay: endOfWeek,
+		firstDay: startOfWeek.toISO(),
+		lastDay: endOfWeek.toISO(),
+		weekNumber: correctedWeekNumber, // Updated week number
 	};
 };
 
@@ -52,6 +79,15 @@ function Prestamos() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
+
+	// const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
+
+	// const startOfWeek = DateTime.fromISO(startDate.firstDay, {
+	// 	zone: "America/Denver",
+	// });
+	// const endOfWeek = DateTime.fromISO(endDate.lastDay, {
+	// 	zone: "America/Denver",
+	// });
 
 	const currentYear = new Date().getFullYear();
 
@@ -91,7 +127,8 @@ function Prestamos() {
 					saldo_fa,
 					prestamo,
 					initial_week,
-					final_week
+					final_week,
+					max_weeks
 				}
 			}`,
 			variables: {
@@ -101,7 +138,7 @@ function Prestamos() {
 		};
 		try {
 			const data = await fetchPost({ query });
-			console.log("Response data at prestamo:", JSON.stringify(data, null, 2));
+			// console.log("Response data at prestamo:", JSON.stringify(data, null, 1));
 			if (data.data.Prestamo) {
 				setPrestamoData({
 					saldo_fa: data.data.Prestamo.saldo_fa,
@@ -126,11 +163,25 @@ function Prestamos() {
 					return;
 				}
 
-				const today = new Date();
-				if (today >= startDate.firstDay && today <= endDate.lastDay) {
+				const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
+
+				const startOfWeek = DateTime.fromISO(startDate.firstDay, {
+					zone: "America/Denver",
+				});
+				const endOfWeek = DateTime.fromISO(endDate.lastDay, {
+					zone: "America/Denver",
+				});
+
+				if (today >= startOfWeek && today <= endOfWeek) {
 					setIsAllowed(true);
-					const diffInTime = endDate.lastDay - today;
-					const diffInWeeks = Math.ceil(diffInTime / (1000 * 60 * 60 * 24 * 7));
+
+					// Calculate difference in days using Luxon
+					const diffInDays = endOfWeek.diff(today, "days").days;
+					console.log("Diff in days: ", diffInDays);
+
+					// Convert days to weeks and round up
+					const diffInWeeks = Math.ceil(diffInDays / 7);
+					console.log("Diff in weeks: ", diffInWeeks);
 
 					setAvailableWeeksCount(diffInWeeks);
 				} else {

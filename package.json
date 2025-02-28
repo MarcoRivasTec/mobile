@@ -1,6 +1,6 @@
 {
   "name": "@tecma/tecmamovilconnect",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -36,6 +36,7 @@
     "expo-splash-screen": "^0.27.5",
     "expo-status-bar": "^1.12.1",
     "lottie-react-native": "6.7.0",
+    "luxon": "^3.5.0",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "0.74.5",

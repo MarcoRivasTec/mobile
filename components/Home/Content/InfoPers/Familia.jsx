@@ -24,11 +24,11 @@ function Familia({
 
 	const removeFamilyMember = async ({ pariente }) => {
 		const removeFamilyQuery = {
-			query: `mutation removeFamilyMember($numEmp: Int!, $region: String!,  $name: String!, $date: String!) {
+			query: `mutation removeFamilyMember($numEmp: String!, $region: String!,  $name: String!, $date: String!) {
 					removeFamilyMember(numEmp: $numEmp, region: $region, name: $name, date: $date)
 				}`,
 			variables: {
-				numEmp: +numEmp,
+				numEmp: numEmp,
 				region: region,
 				name: pariente.nombre,
 				date: pariente.fec_act,

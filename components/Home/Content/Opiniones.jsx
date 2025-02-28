@@ -51,7 +51,7 @@ function Opiniones() {
 					}`,
 			variables: {
 				input: {
-					numEmp: +numEmp,
+					numEmp: numEmp,
 					region: region,
 					opinion: opinion,
 				},

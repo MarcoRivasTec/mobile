@@ -95,11 +95,11 @@ function AddMemberModal({ onCallback, onExit, updateData }) {
 			// 	`Nombre: ${fullName}, numEmp: ${talla}, Num emp: ${empNum}`
 			// );
 			const addFamilyQuery = {
-				query: `mutation addFamilyMember($numEmp: Int!, $region: String!, $name: String!, $kin: Int!, $sex: String!, $birth: String!) {
+				query: `mutation addFamilyMember($numEmp: String!, $region: String!, $name: String!, $kin: Int!, $sex: String!, $birth: String!) {
 					addFamilyMember(numEmp: $numEmp, region: $region, name: $name, kin: $kin, sex: $sex, birth: $birth)
 				}`,
 				variables: {
-					numEmp: +numEmp,
+					numEmp: numEmp,
 					region: region,
 					name: fullName,
 					kin: +parentesco,

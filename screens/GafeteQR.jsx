@@ -92,7 +92,7 @@ const GafeteQR = ({ navigation }) => {
 						}`,
 				variables: {
 					input: {
-						numEmp: +numEmp,
+						numEmp: numEmp,
 						region: region,
 					},
 				},

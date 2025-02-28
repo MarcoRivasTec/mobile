@@ -100,7 +100,7 @@ function ReciboNom() {
 		);
 		const payrollQuery = {
 			query: `mutation generatePayroll(
-					$numEmp: Int!,
+					$numEmp: String!,
 					$region: String!,
 					$period: Int!,
 					$year: Int!
@@ -117,7 +117,7 @@ function ReciboNom() {
 					}
 					}`,
 			variables: {
-				numEmp: +numEmp,
+				numEmp: numEmp,
 				region: region,
 				period: period,
 				year: selectedYear,

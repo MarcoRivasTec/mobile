@@ -65,7 +65,7 @@ export const HomeProvider = ({ children }) => {
 		if (data.surname_1 === "" && data.surname_2 === "") {
 			fullName = data.name;
 		}
-		const empNum = parseInt(data.numEmp, 10);
+		// const empNum = parseInt(data.numEmp, 10);
 		// const fullName2 = `${data.surname_1}${data.surname_2 !== "" ? `" "${data.surname_2}` : ""}, ${data.name}`;
 		// const fullName =
 		console.log(
@@ -84,7 +84,7 @@ export const HomeProvider = ({ children }) => {
 		);
 		const requisitionQuery = {
 			query: `mutation sendRequisition(
-					$numEmp: Int!,
+					$numEmp: String!,
 					$region: String!,
 					$name: String!,
 					$letter: String!,
@@ -131,7 +131,7 @@ export const HomeProvider = ({ children }) => {
 					}
 					}`,
 			variables: {
-				numEmp: empNum,
+				numEmp: numEmp,
 				region: region,
 				name: fullName,
 				letter: letter,

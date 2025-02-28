@@ -133,11 +133,11 @@ const Restablece = ({ navigation }) => {
 		}
 
 		const query = {
-			query: `mutation resetNIP($numEmp: Int!, $rfc: String!, $newNIP: String!, $region: String!){
+			query: `mutation resetNIP($numEmp: String!, $rfc: String!, $newNIP: String!, $region: String!){
 				resetNIP(numEmp: $numEmp, rfc: $rfc, newNIP: $newNIP, region: $region)
 			}`,
 			variables: {
-				numEmp: +numEmp,
+				numEmp: numEmp,
 				newNIP: nip,
 				rfc: rfc,
 				region: region,

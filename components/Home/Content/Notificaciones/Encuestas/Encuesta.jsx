@@ -177,7 +177,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
                 }`,
 				variables: {
 					input: {
-						numEmp: +numEmp, // Employee number
+						numEmp: numEmp, // Employee number
 						region: region,
 						encuesta: +surveyData.encuesta, // Survey ID
 						data: mutationData, // Questions and answers

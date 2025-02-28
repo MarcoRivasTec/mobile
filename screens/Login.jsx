@@ -190,6 +190,8 @@ const Login = ({ navigation }) => {
 			}
 		} catch (error) {
 			console.error("Error at Versions:", error);
+			setIsLoading(false);
+			setVersionCheck(false);
 		}
 	};
 

@@ -36,11 +36,11 @@ function ModifyTallasModal({ data, list, onCallback, onExit, updateData }) {
 		const updateTallasAndFetch = async (tipo, talla) => {
 			// console.log(`Tipo: ${tipo}, Talla: ${talla}, Num emp: ${empNum}`);
 			const updateTallas = {
-				query: `mutation updateMeasurements($numEmp: Int!, $region: String!, $type: String!, $size: String!) {
+				query: `mutation updateMeasurements($numEmp: String!, $region: String!, $type: String!, $size: String!) {
 					updateMeasurements(numEmp: $numEmp, region: $region, type: $type, size: $size)
 				}`,
 				variables: {
-					numEmp: empNum,
+					numEmp: numEmp,
 					region: region,
 					type: tipo,
 					size: talla,
