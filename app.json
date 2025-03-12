@@ -1,58 +1,60 @@
 {
-	"expo": {
-		"name": "TECMA Móvil Connect",
-		"slug": "tecma-movil-connect",
-		"version": "1.0.4",
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
-		"splash": {
-			"image": "./assets/icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"assetBundlePatterns": ["**/*"],
-		"ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "com.tecma.TecmaMovilConnect",
-			"infoPlist": {
-				"CFBundleDisplayName": "TECMAMóvil Connect",
-				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
-				"NSAppTransportSecurity": {
-					"NSAllowsArbitraryLoads": true
-				}
-			}
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			},
-			"package": "com.tecma.movilconnect",
-			"name": "TECMA Móvil Connect",
-			"softwareKeyboardLayoutMode": "pan"
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
-		},
-		"extra": {
-			"eas": {
-				"projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
-			}
-		},
-		"plugins": [
-			[
-				"expo-build-properties",
-				{
-					"ios": {
-						"infoPlist": {
-							"NSAppTransportSecurity": {
-								"NSAllowsArbitraryLoads": true
-							}
-						}
-					}
-				}
-			]
-		]
-	}
+  "expo": {
+    "name": "TECMA Móvil Connect Dev",
+    "slug": "tecma-movil-connect-dev",
+    "version": "1.0.5dev",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
+      "infoPlist": {
+        "CFBundleDisplayName": "TECMAMóvil Connect Dev",
+        "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.tecma.movilconnecttest",
+      "name": "TECMA Móvil Connect Test",
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "infoPlist": {
+              "NSAppTransportSecurity": {
+                "NSAllowsArbitraryLoads": true
+              }
+            }
+          }
+        }
+      ]
+    ]
+  }
 }
