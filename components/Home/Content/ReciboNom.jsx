@@ -95,9 +95,10 @@ function ReciboNom() {
 
 	const sendPayrollRequest = async (period) => {
 		setIsWorkingModalVisible(true);
-		console.log(
-			`Year: ${selectedYear}, Week: ${selectedWeek}, Special week: ${selectedNominaEsp}`
-		);
+		// console.log(
+		// 	`numEmp: ${numEmp}, ${typeof numEmp}, Year: ${selectedYear}, ${typeof selectedYear},
+		// 	, Week: ${selectedWeek}, ${typeof selectedWeek}, Special week: ${selectedNominaEsp}, ${typeof selectedNominaEsp}`
+		// );
 		const payrollQuery = {
 			query: `mutation generatePayroll(
 					$numEmp: String!,
@@ -119,7 +120,7 @@ function ReciboNom() {
 			variables: {
 				numEmp: numEmp,
 				region: region,
-				period: period,
+				period: +period,
 				year: selectedYear,
 			},
 		};
@@ -143,8 +144,13 @@ function ReciboNom() {
 						await FileViewer.open(tempFilePath);
 						// await FileViewer.open(publicFilePath);
 					} else {
-						Alert.alert("Error", "No se pudo guardar el archivo, intentalo de nuevo.")
-						console.warn("File not found in public directory after move");
+						Alert.alert(
+							"Error",
+							"No se pudo guardar el archivo, intentalo de nuevo."
+						);
+						console.warn(
+							"File not found in public directory after move"
+						);
 					}
 				} catch (error) {
 					console.error("Error saving file:", error);
@@ -155,7 +161,10 @@ function ReciboNom() {
 					"Error",
 					"Hubo un problema con tu solicitud, vuelve a intentarlo en 1 minuto"
 				);
-				console.warn("Detail retrieving payroll information: ", response?.data);
+				console.warn(
+					"Detail retrieving payroll information: ",
+					response?.data
+				);
 			}
 		} catch (error) {
 			console.error("Error retrieving payroll information:", error);
@@ -191,7 +200,7 @@ function ReciboNom() {
 		};
 
 		const nominaObject = recibos.find(
-			(recibo) => recibo.nomina === selectedWeek
+			(recibo) => recibo.nomina == selectedWeek
 		);
 
 		if (!nominaObject) {
@@ -335,7 +344,9 @@ function ReciboNom() {
 				const data = await fetchPost({ query });
 				// console.log("Response data at fondo ahorro:", data);
 				if (data.data.RecibosYears) {
-					const yearsCount = data.data.RecibosYears.map((item) => item.year);
+					const yearsCount = data.data.RecibosYears.map(
+						(item) => item.year
+					);
 					setYears(yearsCount);
 					// setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
@@ -409,7 +420,9 @@ function ReciboNom() {
 					if (especiales.length > 0) {
 						mostRecentNomina = especiales.sort(
 							(a, b) =>
-								new Date(b.fecha.split("-").reverse().join("-")) -
+								new Date(
+									b.fecha.split("-").reverse().join("-")
+								) -
 								new Date(a.fecha.split("-").reverse().join("-"))
 						)[0].nomina;
 					}
@@ -490,13 +503,19 @@ function ReciboNom() {
 						</Text>
 					</View>
 					<View style={reciboNom.sectionButtonContainer}>
-						<ButtonInfo data={fondoAhorro.saldo_fa} title="Acumulado" />
+						<ButtonInfo
+							data={fondoAhorro.saldo_fa}
+							title="Acumulado"
+						/>
 						<ButtonInfo
 							data={fondoAhorro.saldo_pr}
 							title="Saldo préstamo ahorro"
 						/>
 						{fondoAhorro.saldo_ca != 0 ? (
-							<ButtonInfo data={fondoAhorro.saldo_ca} title="Caja de Ahorro" />
+							<ButtonInfo
+								data={fondoAhorro.saldo_ca}
+								title="Caja de Ahorro"
+							/>
 						) : (
 							<View style={{ flex: 1 }} />
 						)}
@@ -516,7 +535,9 @@ function ReciboNom() {
 									style={reciboNom.nominaSearchIcon}
 								></Icon>
 							</View>
-							<Text style={reciboNom.nominaSearchText}>{selectedYear}</Text>
+							<Text style={reciboNom.nominaSearchText}>
+								{selectedYear}
+							</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={weekModalHandler}
@@ -537,9 +558,13 @@ function ReciboNom() {
 
 					{/* Cantidades */}
 					<View style={reciboNom.nominaCantidadContainer}>
-						<TouchableOpacity style={reciboNom.nominaCantidadElementContainer}>
+						<TouchableOpacity
+							style={reciboNom.nominaCantidadElementContainer}
+						>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>Percepciones</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>
+									Percepciones
+								</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -555,7 +580,9 @@ function ReciboNom() {
 							]}
 						>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>Deducciones</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>
+									Deducciones
+								</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -564,9 +591,13 @@ function ReciboNom() {
 								</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity style={reciboNom.nominaCantidadElementContainer}>
+						<TouchableOpacity
+							style={reciboNom.nominaCantidadElementContainer}
+						>
 							<View style={reciboNom.nominaCantidadBox}>
-								<Text style={reciboNom.nominaCantidadTitle}>Neto</Text>
+								<Text style={reciboNom.nominaCantidadTitle}>
+									Neto
+								</Text>
 							</View>
 							<View style={reciboNom.nominaCantidadBox}>
 								<Text style={reciboNom.nominaCantidad}>
@@ -583,9 +614,16 @@ function ReciboNom() {
 						style={reciboNom.nominaGenerarContainer}
 					>
 						<View style={reciboNom.nominaGenerarButton}>
-							<Ionicons name="document" size={16} color={COLORS.white} />
+							<Ionicons
+								name="document"
+								size={16}
+								color={COLORS.white}
+							/>
 							<Text
-								style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+								style={[
+									reciboNom.nominaGenerarText,
+									{ paddingLeft: "4%" },
+								]}
 							>
 								Generar recibo
 							</Text>
@@ -593,20 +631,33 @@ function ReciboNom() {
 								name="arrow-forward"
 								size={16}
 								color={COLORS.white}
-								style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+								style={[
+									reciboNom.nominaGenerarText,
+									{ paddingLeft: "4%" },
+								]}
 							/>
 						</View>
 					</TouchableOpacity>
 				</View>
 				{selectedNominaEsp !== "No hay" && (
-					<View style={[reciboNom.nominaContainer, { marginTop: "2.5%" }]}>
+					<View
+						style={[
+							reciboNom.nominaContainer,
+							{ marginTop: "2.5%" },
+						]}
+					>
 						{/* Barra Busqueda */}
 						<View style={reciboNom.nominaHeader}>
 							<TouchableOpacity
 								onPress={nominaEspModalHandler}
-								style={[reciboNom.nominaWeekContainer, { left: 0 }]}
+								style={[
+									reciboNom.nominaWeekContainer,
+									{ left: 0 },
+								]}
 							>
-								<View style={reciboNom.nominaSearchIconContainer}>
+								<View
+									style={reciboNom.nominaSearchIconContainer}
+								>
 									<Icon
 										name="search"
 										size={13}
@@ -640,12 +691,15 @@ function ReciboNom() {
 								style={[
 									reciboNom.nominaCantidadElementContainer,
 									{
-										backgroundColor: COLORS.flatlistElement1,
+										backgroundColor:
+											COLORS.flatlistElement1,
 									},
 								]}
 							>
 								<View style={reciboNom.nominaCantidadBox}>
-									<Text style={reciboNom.nominaCantidadTitle}>Deducciones</Text>
+									<Text style={reciboNom.nominaCantidadTitle}>
+										Deducciones
+									</Text>
 								</View>
 								<View style={reciboNom.nominaCantidadBox}>
 									<Text style={reciboNom.nominaCantidad}>
@@ -658,7 +712,9 @@ function ReciboNom() {
 								style={reciboNom.nominaCantidadElementContainer}
 							>
 								<View style={reciboNom.nominaCantidadBox}>
-									<Text style={reciboNom.nominaCantidadTitle}>Neto</Text>
+									<Text style={reciboNom.nominaCantidadTitle}>
+										Neto
+									</Text>
 								</View>
 								<View style={reciboNom.nominaCantidadBox}>
 									<Text style={reciboNom.nominaCantidad}>
@@ -671,13 +727,22 @@ function ReciboNom() {
 
 						{/* Generar recibo */}
 						<TouchableOpacity
-							onPress={() => sendPayrollRequest(selectedNominaEsp)}
+							onPress={() =>
+								sendPayrollRequest(selectedNominaEsp)
+							}
 							style={reciboNom.nominaGenerarContainer}
 						>
 							<View style={reciboNom.nominaGenerarButton}>
-								<Ionicons name="document" size={16} color={COLORS.white} />
+								<Ionicons
+									name="document"
+									size={16}
+									color={COLORS.white}
+								/>
 								<Text
-									style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+									style={[
+										reciboNom.nominaGenerarText,
+										{ paddingLeft: "4%" },
+									]}
 								>
 									Generar recibo
 								</Text>
@@ -685,7 +750,10 @@ function ReciboNom() {
 									name="arrow-forward"
 									size={16}
 									color={COLORS.white}
-									style={[reciboNom.nominaGenerarText, { paddingLeft: "4%" }]}
+									style={[
+										reciboNom.nominaGenerarText,
+										{ paddingLeft: "4%" },
+									]}
 								/>
 							</View>
 						</TouchableOpacity>
