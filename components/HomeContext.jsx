@@ -70,6 +70,7 @@ export const HomeProvider = ({ children }) => {
 		// const fullName =
 		console.log(
 			`Arguments:
+			numEmp: ${data.numEmp},
 			letter: ${letter},
 			motive: ${motive},
 			coment: ${coment},
@@ -131,7 +132,7 @@ export const HomeProvider = ({ children }) => {
 					}
 					}`,
 			variables: {
-				numEmp: numEmp,
+				numEmp: data.numEmp,
 				region: region,
 				name: fullName,
 				letter: letter,

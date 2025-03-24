@@ -121,6 +121,7 @@ function Prestamos() {
 	};
 
 	const fetchDataPrestamo = async () => {
+		// console.log("Fetch data prestamo params: ", numEmp, typeof numEmp, region, typeof region);
 		const query = {
 			query: `query Prestamo($numEmp: String!, $region: String!){
 				Prestamo(numEmp: $numEmp, region: $region) {
@@ -366,9 +367,9 @@ function Prestamos() {
 		}
 	};
 
-	useEffect(() => {
-		console.log(JSON.stringify(prestamoSendData, null, 2));
-	}, [prestamoSendData]);
+	// useEffect(() => {
+	// 	console.log(JSON.stringify(prestamoSendData, null, 2));
+	// }, [prestamoSendData]);
 
 	const formatCurrency = (amount) => {
 		return amount.toLocaleString(undefined, {
