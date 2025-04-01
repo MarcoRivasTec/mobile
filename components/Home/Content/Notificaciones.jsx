@@ -4,10 +4,11 @@ import { notificaciones } from "./styles";
 import Working from "./Design/Working";
 import { AppContext } from "../../AppContext";
 import COLORS from "../../../constants/colors";
-import Encuestas from "./Notificaciones/Encuestas";
 import { HomeContext } from "../../HomeContext";
 import fetchPost from "../../fetching";
+import Encuestas from "./Notificaciones/Encuestas";
 import Avisos from "./Notificaciones/Avisos";
+import Solicitudes from "./Notificaciones/Solicitudes";
 
 function Notificaciones({ section = "Encuestas" }) {
 	const { height, region } = useContext(AppContext);
@@ -15,13 +16,15 @@ function Notificaciones({ section = "Encuestas" }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(section);
 	const [encuestas, setEncuestas] = useState([]);
+	const [requests, setRequests] = useState([]);
+	const [isSupervisor, setIsSupervisor] = useState(false);
 
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
 	const [notifsAvisos, setNotifsAvisos] = useState(0);
 
 	const updateNotifications = async () => {
 		const encuestasQuery = {
-			query: `query Encuestas(
+			query: `query NotificationsData(
 						$numEmp: String!,
 						$region: String!,
 					) {
@@ -33,6 +36,18 @@ function Notificaciones({ section = "Encuestas" }) {
 							titulo
 							preguntas
 						}
+						IsSupervisor(
+							numEmp: $numEmp,
+							region: $region,
+						) {
+							success
+							message
+							data {
+								name
+								numEmp
+								type
+							}
+						}
 					}`,
 			variables: {
 				numEmp: numEmp,
@@ -41,10 +56,23 @@ function Notificaciones({ section = "Encuestas" }) {
 		};
 		try {
 			const data = await fetchPost({ query: encuestasQuery });
-			console.log("Data is: ", JSON.stringify(data, null, 1));
+			console.log("Notifications data is: ", JSON.stringify(data, null, 1));
 			// if (region === "JRZ") {
+			if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
+				console.log(
+					"isSupervisor data: ",
+					JSON.stringify(data.data.IsSupervisor, null, 1)
+				);
+				setIsSupervisor(true);
+				if (
+					data.data.IsSupervisor.data &&
+					data.data.IsSupervisor.data.length > 0
+				) {
+					setRequests(data.data.IsSupervisor.data);
+				}
+			}
 			if (data.data.Encuestas && data.data.Encuestas.length > 0) {
-				console.log("Correct", region);
+				// console.log("Correct", region);
 				// console.log("Data is: ", data.data.Encuestas);
 				setEncuestas(data.data.Encuestas);
 				setNotifsEncuestas(data.data.Encuestas.length);
@@ -137,6 +165,9 @@ function Notificaciones({ section = "Encuestas" }) {
 				{[
 					{ title: "Encuestas", notificationCount: notifsEncuestas },
 					{ title: "Avisos", notificationCount: notifsAvisos },
+					...(isSupervisor
+						? [{ title: "Solicitudes", notificationCount: notifsEncuestas }]
+						: []),
 					// { title: "Eventos", notificationCount: notifsEncuestas },
 				].map((tab, index, array) => (
 					<Tab
@@ -149,6 +180,13 @@ function Notificaciones({ section = "Encuestas" }) {
 			</View>
 
 			<View style={notificaciones.contentContainer}>
+				{activeTab === "Solicitudes" && isSupervisor && (
+					<Solicitudes
+						isLoading={isLoading}
+						requests={requests}
+						updateNotifications={updateNotifications}
+					/>
+				)}
 				{activeTab === "Encuestas" && (
 					<Encuestas
 						encuestasDisp={encuestas}

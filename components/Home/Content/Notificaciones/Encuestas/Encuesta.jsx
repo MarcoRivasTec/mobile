@@ -16,7 +16,13 @@ import fetchPost from "../../../../fetching";
 import { HomeContext } from "../../../../HomeContext";
 import Confirm from "../../Design/Confirm";
 
-function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }) {
+function Encuesta({
+	surveyData,
+	onCallback,
+	onExit,
+	isVisible,
+	updateEncuestas,
+}) {
 	const { region, platform } = useContext(AppContext);
 	const { numEmp } = useContext(HomeContext);
 	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
@@ -129,8 +135,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 								<Text
 									style={[
 										encuesta.answerText,
-										selectedAnswer === respuesta &&
-											encuesta.selectedAnswerText,
+										selectedAnswer === respuesta && encuesta.selectedAnswerText,
 									]}
 								>
 									{respuesta}
@@ -195,11 +200,11 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 				console.log("Survey submission response:", response);
 
 				if (response.data.submitSurvey.success) {
+					await updateEncuestas();
 					confirmationModalHandler();
 				} else {
 					alert(
-						"Error al enviar la encuesta: " +
-							response.data.submitSurvey.message
+						"Error al enviar la encuesta: " + response.data.submitSurvey.message
 					);
 				}
 			} catch (error) {
@@ -209,7 +214,10 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 				);
 			}
 		} else {
-			Alert.alert("Importante", "Debes responder a todas las preguntas para poder terminar la encuesta.")
+			Alert.alert(
+				"Importante",
+				"Debes responder a todas las preguntas para poder terminar la encuesta."
+			);
 		}
 	};
 
@@ -230,9 +238,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 					) : (
 						<View style={encuesta.modalContainer}>
 							{/* Title */}
-							<Text style={encuesta.titleText}>
-								{surveyData.titulo}
-							</Text>
+							<Text style={encuesta.titleText}>{surveyData.titulo}</Text>
 
 							<FlatList
 								data={surveyQuestions}
@@ -244,9 +250,7 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 									maxHeight: "100%",
 									// borderWidth: 1,
 								}}
-								contentContainerStyle={
-									encuesta.listContentContainer
-								}
+								contentContainerStyle={encuesta.listContentContainer}
 							/>
 
 							{/* Buttons */}
@@ -260,13 +264,8 @@ function Encuesta({ surveyData, onCallback, onExit, isVisible, updateEncuestas }
 									</Text>
 								</TouchableOpacity>
 
-								<TouchableOpacity
-									onPress={onExit}
-									style={encuesta.exitButton}
-								>
-									<Text style={encuesta.exitButtonText}>
-										Volver
-									</Text>
+								<TouchableOpacity onPress={onExit} style={encuesta.exitButton}>
+									<Text style={encuesta.exitButtonText}>Volver</Text>
 								</TouchableOpacity>
 							</View>
 							{ConfirmationVisible && (

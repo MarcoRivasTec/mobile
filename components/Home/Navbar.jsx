@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Icon from "./icons";
 import ConfirmModal from "./Content/InfoPers/ConfirmModal";
 import { showMessage } from "react-native-flash-message";
+import { CommonActions } from "@react-navigation/native";
 
 function Navbar({ changeContent, navigation }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
@@ -67,7 +68,15 @@ function Navbar({ changeContent, navigation }) {
 					onExit={confirmationModalHandler}
 					title="Cerrar sesión"
 					data="¿Estás seguro que deseas cerrar sesión?"
-					onConfirm={() => navigation.replace("Login")}
+					// onConfirm={() => navigation.replace("Login")}
+					onConfirm={() => {
+						navigation.dispatch(
+							CommonActions.reset({
+								index: 0,
+								routes: [{ name: "Login" }],
+							})
+						);
+					}}
 					style={navbar.modal}
 				/>
 			)}
