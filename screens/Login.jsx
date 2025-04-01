@@ -167,8 +167,8 @@ const Login = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		if (route?.params?.myVar === true) {
-			// Clears the navigation stack and replaces it with Login
+		// This is implemented due to issue with navigation.replace upon logout inside a modal causing a crash in iOS
+		if (route?.params?.clear === true) {
 			navigation.reset({
 				index: 0,
 				routes: [{ name: "Login" }],
