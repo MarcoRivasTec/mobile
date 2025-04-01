@@ -68,14 +68,9 @@ function Navbar({ changeContent, navigation }) {
 					onExit={confirmationModalHandler}
 					title="Cerrar sesión"
 					data="¿Estás seguro que deseas cerrar sesión?"
-					// onConfirm={() => navigation.replace("Login")}
 					onConfirm={() => {
-						navigation.dispatch(
-							CommonActions.reset({
-								index: 0,
-								routes: [{ name: "Login" }],
-							})
-						);
+						confirmationModalHandler();
+						navigation.navigate("Login", { clear: true });
 					}}
 					style={navbar.modal}
 				/>

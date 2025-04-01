@@ -37,7 +37,7 @@ import DownArrow from "../components/Animations/DownArrow";
 import fetchPost from "../components/fetching";
 import { showMessage, hideMessage } from "react-native-flash-message";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
 	const {
 		platform,
 		numEmp,
@@ -165,6 +165,17 @@ const Login = ({ navigation }) => {
 			currVer: appVersion,
 		},
 	};
+
+	useEffect(() => {
+		if (route?.params?.myVar === true) {
+			// Clears the navigation stack and replaces it with Login
+			navigation.reset({
+				index: 0,
+				routes: [{ name: "Login" }],
+			});
+		}
+	}, [route]);
+	
 
 	const checkVersion = async () => {
 		try {
