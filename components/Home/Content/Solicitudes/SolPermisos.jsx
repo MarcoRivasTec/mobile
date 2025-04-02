@@ -208,7 +208,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 													locale="es"
 													open={openStartDate}
 													date={startDate}
-													minimumDate={today}
+													// minimumDate={today}
 													onConfirm={(startDate) => {
 														setOpenStartDate(false);
 														setStartDate(startDate);

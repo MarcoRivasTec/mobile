@@ -32,8 +32,8 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 		disponibles: 0,
 	});
 
-	const [coment, setComent] = useState("");
-	const [isLoading, setIsLoading] = useState("false");
+	const [comment, setComment] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const [startDate, setStartDate] = useState(today);
 	const [openStartDate, setOpenStartDate] = useState(false);
 
@@ -110,26 +110,80 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 		// 	return;
 		// }
 		setIsWorkingModalVisible(true);
-		const requisitionData = {
-			letter: "Vacaciones",
-			startDate: startDate,
-			endDate: endDate,
-			days: endDate.getDate() - startDate.getDate(),
-		};
+		if (region === "AMX") {
+			// New method
+			// console.warn("Amx user, using new method");
+			// console.log("Date: ", startDate.toISOString().split("T")[0]);
+			try {
+				const mutation = {
+					query: `mutation sendAbsenceRequest($input: RequestAbsenceInput!) {
+                            requestAbsence(input: $input) {
+                                success
+                                message
+                            }
+                }`,
+					variables: {
+						input: {
+							numEmp: numEmp, // Employee number
+							region: region,
+							type: "VAC",
+							start_date: startDate.toISOString().split("T")[0],
+							end_date: endDate.toISOString().split("T")[0],
+							days: endDate.getDate() - startDate.getDate(),
+							...(comment && comment.trim() !== "" && { comment }),
+						},
+					},
+				};
 
-		if (coment !== "") {
-			requisitionData.coment = coment;
-		}
-		const response = await sendRequisition(requisitionData);
-		// console.log("Response requestGafete: ", response);
-		setIsWorkingModalVisible(false);
-		if (response === "Done") {
-			confirmationModalHandler();
+				// Send the mutation
+				console.log(
+					"Variables for query are: ",
+					JSON.stringify(mutation.variables, null, 1)
+				);
+				const response = await fetchPost({ query: mutation });
+				console.log("Survey submission response:", response);
+
+				if (
+					response.data.requestAbsence &&
+					response.data.requestAbsence.success
+				) {
+					confirmationModalHandler();
+				} else {
+					alert(
+						"Error al enviar la solicitud: " +
+							response.data.requestAbsence.message
+					);
+				}
+			} catch (error) {
+				console.error("Error requesting absence:", error);
+				alert(
+					"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo."
+				);
+			}
+			setIsWorkingModalVisible(false);
 		} else {
-			Alert.alert(
-				"Error",
-				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
-			);
+			// Actual method
+			const requisitionData = {
+				letter: "Vacaciones",
+				startDate: startDate,
+				endDate: endDate,
+				days: endDate.getDate() - startDate.getDate(),
+			};
+
+			if (comment !== "") {
+				requisitionData.comment = comment;
+			}
+			const response = await sendRequisition(requisitionData);
+			// console.log("Response requestGafete: ", response);
+			setIsWorkingModalVisible(false);
+			if (response === "Done") {
+				confirmationModalHandler();
+			} else {
+				Alert.alert(
+					"Error",
+					"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+				);
+			}
 		}
 	};
 
@@ -323,15 +377,15 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									{/* Comentarios */}
 									<View style={solVacaciones.comentariosContainer}>
 										<Text style={solVacaciones.comentariosTitle}>
-											Comentarios
+											Comentario
 										</Text>
 										<TextInput
 											placeholder="Tu comentario aquí ..."
 											style={solVacaciones.comentariosText}
 											maxLength={255}
 											multiline={true}
-											value={coment}
-											onChangeText={(text) => setComent(text)}
+											value={comment}
+											onChangeText={(text) => setComment(text)}
 										></TextInput>
 									</View>
 
@@ -373,6 +427,8 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									onCallback={confirmationModalHandler}
 									onExit={confirmationModalHandler}
 									closeModal={onExit}
+									customTitle="Tu solicitud se ha registrado correctamente"
+									customText="Se te notificará el estado de tu solicitud automáticamente"
 								/>
 							)}
 							{isWorkingModalVisible && (
