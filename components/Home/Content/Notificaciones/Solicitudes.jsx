@@ -5,24 +5,25 @@ import Working from "../Design/Working";
 import LoadingContent from "../../../Animations/LoadingContent";
 import ConfirmModal from "../InfoPers/ConfirmModal";
 import Encuesta from "./Encuestas/Encuesta";
+import Solicitud from "./Solicitudes/Solicitud";
 
 function Solicitudes({ requests, isLoading, updateNotifications }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
-	const [encuestaVisible, setEncuestaVisible] = useState(false);
+	const [requestVisible, setRequestVisible] = useState(false);
 	const [request, setRequest] = useState(null);
 
 	const confirmationModalHandler = async () => {
 		setConfirmationVisible(!ConfirmationVisible);
 	};
 
-	const encuestaHandler = () => {
-		setEncuestaVisible(!encuestaVisible);
+	const requestHandler = () => {
+		setRequestVisible(!requestVisible);
 	};
 
-	const handleEncuesta = () => {
+	const handleRequest = () => {
 		confirmationModalHandler();
 		setTimeout(() => {
-			encuestaHandler();
+			requestHandler();
 		});
 	};
 
@@ -65,15 +66,15 @@ function Solicitudes({ requests, isLoading, updateNotifications }) {
 					onExit={confirmationModalHandler}
 					title="Solicitud"
 					data={`Confirma alta de permiso a la solicitud del usuario : ${request.name}?`}
-					onConfirm={handleEncuesta}
+					onConfirm={handleRequest}
 					// style={navbar.modal}
 				/>
 			)}
-			{encuestaVisible && (
-				<Encuesta
-					onCallback={encuestaHandler}
-					onExit={encuestaHandler}
-					isVisible={encuestaVisible}
+			{requestVisible && (
+				<Solicitud
+					onCallback={requestHandler}
+					onExit={requestHandler}
+					isVisible={requestVisible}
 					surveyData={request}
 					updateNotifications={updateNotifications}
 					// style={navbar.modal}

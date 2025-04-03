@@ -161,4 +161,4 @@ function Solicitud({
 	);
 }
 
-export default Encuesta;
+export default Solicitud;
