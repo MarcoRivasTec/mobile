@@ -11,7 +11,8 @@ import { AppContext } from "../components/AppContext";
 const Welcome = ({ navigation, route }) => {
 	const { name, accessToken } = route.params;
 	const { numEmp, region } = useContext(AppContext);
-	const { setProfileImg, setDataFields } = useContext(HomeContext);
+	const { setProfileImg, setDataFields, setIsSupervisor } =
+		useContext(HomeContext);
 	const [animFinish, setAnimFinish] = useState(false);
 	const [infoFetched, setInfoFetched] = useState(false);
 
@@ -46,6 +47,13 @@ const Welcome = ({ navigation, route }) => {
 					turno
 					clasificacion
 				}
+				IsSupervisor(
+						numEmp: $numEmp,
+						region: $region,
+					) {
+						success
+						message
+					}
 			}`,
 			variables: {
 				numEmp: numEmp,
@@ -81,6 +89,9 @@ const Welcome = ({ navigation, route }) => {
 				} else {
 					console.warn("Error retrieving user info");
 				}
+				if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
+					setIsSupervisor(true);
+				}
 				// setIsLoading(false);
 			})
 			.catch((error) => {
@@ -110,10 +121,7 @@ const Welcome = ({ navigation, route }) => {
 					setProfileImg(null);
 				} else {
 					setProfileImg(
-						Buffer.from(
-							data.data.ImageBlob.image,
-							"base64"
-						).toString("base64")
+						Buffer.from(data.data.ImageBlob.image, "base64").toString("base64")
 					);
 					console.log("Image set properly");
 				}

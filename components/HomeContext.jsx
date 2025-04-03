@@ -27,6 +27,7 @@ export const HomeProvider = ({ children }) => {
 		turno: "",
 		clasificacion: "",
 	});
+	const [isSupervisor, setIsSupervisor] = useState(false);
 
 	useEffect(() => {
 		console.log(JSON.stringify(data, null, 1));
@@ -178,11 +179,17 @@ export const HomeProvider = ({ children }) => {
 		}
 	};
 
+	useEffect(() => {
+		console.warn("User is supervisor: ", isSupervisor);
+	}, [isSupervisor]);
+
 	return (
 		<HomeContext.Provider
 			value={{
 				...data,
 				setDataFields,
+				isSupervisor,
+				setIsSupervisor,
 				profileImg,
 				setProfileImg,
 				sendRequisition,

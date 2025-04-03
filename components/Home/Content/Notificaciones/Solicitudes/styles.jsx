@@ -59,6 +59,12 @@ const getRequestStyle = ({ height = 20 }) => {
 			color: COLORS.black,
 			// borderWidth: 1,
 		},
+		label: {
+			fontFamily: "Montserrat-Regular",
+			fontSize: 15,
+			color: "#333",
+			marginBottom: 4,
+		},
 		dataText: {
 			fontSize: 16,
 			marginBottom: 20,

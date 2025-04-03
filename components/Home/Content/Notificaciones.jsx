@@ -12,12 +12,11 @@ import Solicitudes from "./Notificaciones/Solicitudes";
 
 function Notificaciones({ section = "Encuestas" }) {
 	const { height, region } = useContext(AppContext);
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, isSupervisor } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(section);
 	const [encuestas, setEncuestas] = useState([]);
 	const [requests, setRequests] = useState([]);
-	const [isSupervisor, setIsSupervisor] = useState(false);
 
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
 	const [notifsAvisos, setNotifsAvisos] = useState(0);
@@ -36,18 +35,6 @@ function Notificaciones({ section = "Encuestas" }) {
 							titulo
 							preguntas
 						}
-						IsSupervisor(
-							numEmp: $numEmp,
-							region: $region,
-						) {
-							success
-							message
-							data {
-								name
-								numEmp
-								type
-							}
-						}
 					}`,
 			variables: {
 				numEmp: numEmp,
@@ -57,20 +44,7 @@ function Notificaciones({ section = "Encuestas" }) {
 		try {
 			const data = await fetchPost({ query: encuestasQuery });
 			console.log("Notifications data is: ", JSON.stringify(data, null, 1));
-			// if (region === "JRZ") {
-			if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
-				console.log(
-					"isSupervisor data: ",
-					JSON.stringify(data.data.IsSupervisor, null, 1)
-				);
-				setIsSupervisor(true);
-				if (
-					data.data.IsSupervisor.data &&
-					data.data.IsSupervisor.data.length > 0
-				) {
-					setRequests(data.data.IsSupervisor.data);
-				}
-			}
+
 			if (data.data.Encuestas && data.data.Encuestas.length > 0) {
 				// console.log("Correct", region);
 				// console.log("Data is: ", data.data.Encuestas);
