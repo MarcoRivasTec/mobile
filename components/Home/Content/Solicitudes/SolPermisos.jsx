@@ -135,8 +135,10 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				// setIsWorkingModalVisible(false);
 				console.log("Response at solpermisos: ", response);
 				if (response === "Done") {
+					setIsWorkingModalVisible(false);
 					confirmationModalHandler();
 				} else {
+					setIsWorkingModalVisible(false);
 					Alert.alert(
 						"Error",
 						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
@@ -354,28 +356,28 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 									{isWorkingModalVisible && (
 										<Working isModalVisible={isWorkingModalVisible} />
 									)}
+									{isTypeModalVisible && (
+										<DataModal
+											selectedElement={motive}
+											setSelectedElement={setMotive}
+											onCallback={typeHandler}
+											isModalVisible={isTypeModalVisible}
+											style={{
+												position: "absolute",
+												height: "100%",
+												width: "100%",
+											}}
+										/>
+									)}
+									{ConfirmationVisible && (
+										<Confirm
+											isModalVisible={ConfirmationVisible}
+											onCallback={confirmationModalHandler}
+											onExit={confirmationModalHandler}
+											closeModal={onExit}
+										/>
+									)}
 								</View>
-							)}
-							{isTypeModalVisible && (
-								<DataModal
-									selectedElement={motive}
-									setSelectedElement={setMotive}
-									onCallback={typeHandler}
-									isModalVisible={isTypeModalVisible}
-									style={{
-										position: "absolute",
-										height: "100%",
-										width: "100%",
-									}}
-								/>
-							)}
-							{ConfirmationVisible && (
-								<Confirm
-									isModalVisible={ConfirmationVisible}
-									onCallback={confirmationModalHandler}
-									onExit={confirmationModalHandler}
-									closeModal={onExit}
-								/>
 							)}
 						</View>
 					</View>

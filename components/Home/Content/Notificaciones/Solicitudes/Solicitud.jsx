@@ -135,63 +135,6 @@ function Solicitud({
 		}
 	};
 
-	// const handleSurveySubmit = async () => {
-	// 	if (validateSurveyCompletion()) {
-	// 		// Build the payload
-	// 		const mutationData = surveyQuestions.map((question) => ({
-	// 			pregunta: question.codigo, // Question code
-	// 			respuesta: answers[question.codigo], // User's answer
-	// 		}));
-
-	// 		// Construct the mutation
-	// 		const mutation = {
-	// 			query: `mutation SubmitSurvey($input: SubmitSurveyInput!) {
-	//                         submitSurvey(input: $input) {
-	//                             success
-	//                             message
-	//                         }
-	//             }`,
-	// 			variables: {
-	// 				input: {
-	// 					numEmp: numEmp, // Employee number
-	// 					region: region,
-	// 					encuesta: +surveyData.encuesta, // Survey ID
-	// 					data: mutationData, // Questions and answers
-	// 				},
-	// 			},
-	// 		};
-
-	// 		try {
-	// 			// Send the mutation
-	// 			console.log(
-	// 				"Variables for query are: ",
-	// 				JSON.stringify(mutation.variables, null, 1)
-	// 			);
-	// 			const response = await fetchPost({ query: mutation });
-	// 			console.log("Survey submission response:", response);
-
-	// 			if (response.data.submitSurvey.success) {
-	// 				await updateEncuestas();
-	// 				confirmationModalHandler();
-	// 			} else {
-	// 				alert(
-	// 					"Error al enviar la encuesta: " + response.data.submitSurvey.message
-	// 				);
-	// 			}
-	// 		} catch (error) {
-	// 			console.error("Error submitting survey:", error);
-	// 			alert(
-	// 				"Ocurrió un error al enviar la encuesta. Por favor, inténtalo de nuevo."
-	// 			);
-	// 		}
-	// 	} else {
-	// 		Alert.alert(
-	// 			"Importante",
-	// 			"Debes responder a todas las preguntas para poder terminar la encuesta."
-	// 		);
-	// 	}
-	// };
-
 	const formatLongDate = (dateStr) => {
 		if (!dateStr) return null;
 		const date = new Date(dateStr);
@@ -300,7 +243,7 @@ function Solicitud({
 								{requestData.type !== "PER" && requestData.end_date && (
 									<Text style={request.label}>
 										<Text style={{ fontFamily: "Montserrat-SemiBold" }}>
-											Fin:{" "}
+											Regresa:{" "}
 										</Text>
 										{formatShortDate(requestData.end_date)}
 									</Text>
@@ -354,8 +297,8 @@ function Solicitud({
 									<Text style={request.label}>
 										<Text style={{ fontFamily: "Montserrat-SemiBold" }}>
 											Aprobado por:
-										</Text>
-										Text {requestData.approved_by} el{" "}
+										</Text>{" "}
+										{requestData.approved_by} el{"  "}
 										{formatLongDate(requestData.approval_date)}
 									</Text>
 								)}

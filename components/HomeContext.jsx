@@ -179,9 +179,9 @@ export const HomeProvider = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		console.warn("User is supervisor: ", isSupervisor);
-	}, [isSupervisor]);
+	// useEffect(() => {
+	// 	console.warn("User is supervisor: ", isSupervisor);
+	// }, [isSupervisor]);
 
 	return (
 		<HomeContext.Provider

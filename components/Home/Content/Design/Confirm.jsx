@@ -8,8 +8,8 @@ function Confirm({
 	onCallback,
 	onExit,
 	closeModal = null,
-	customTitle,
-	customText,
+	customTitle = null,
+	customText = null,
 }) {
 	useEffect(() => {
 		let timeoutId;

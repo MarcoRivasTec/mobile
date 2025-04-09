@@ -72,7 +72,7 @@ function Solicitudes({ updateNotifications }) {
 		};
 		try {
 			const data = await fetchPost({ query: requestsQuery });
-			// console.log("Requests data is: ", JSON.stringify(data, null, 1));
+			console.log("Requests data is: ", JSON.stringify(data, null, 1));
 			// if (region === "JRZ") {
 			if (data.data.SuperiorRequests && data.data.SuperiorRequests.success) {
 				if (
@@ -126,7 +126,7 @@ function Solicitudes({ updateNotifications }) {
 
 	const statusOrder = [
 		"Pendiente",
-		"Preaprobado",
+		"Pre-Aprobado",
 		"Aprobado",
 		"Rechazado",
 		"Cancelado",
@@ -134,7 +134,7 @@ function Solicitudes({ updateNotifications }) {
 
 	const statusColors = {
 		Pendiente: "#F39C12", // naranja
-		Preaprobado: "#5DADE2", // azul
+		"Pre-Aprobado": "#5DADE2", // azul
 		Aprobado: "#27AE60", // verde
 		Rechazado: "#E74C3C", // rojo
 		Cancelado: "#95A5A6", // gris
