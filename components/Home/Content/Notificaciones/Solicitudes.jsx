@@ -10,7 +10,7 @@ import { AppContext } from "../../../AppContext";
 import fetchPost from "../../../fetching";
 import { HomeContext } from "../../../HomeContext";
 
-function Solicitudes({ updateNotifications }) {
+function Solicitudes({ updateNotificationsData }) {
 	const { numEmp, region } = useContext(AppContext);
 	// const { numEmp } = useState(HomeContext);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);

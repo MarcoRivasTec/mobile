@@ -11,78 +11,43 @@ import { AppContext } from "../components/AppContext";
 import Bell from "../components/Animations/Bell";
 import fetchPost from "../components/fetching";
 import COLORS from "../constants/colors";
+import { HomeContext } from "../components/HomeContext";
 
 const Home = ({ navigation }) => {
 	const { numEmp, region } = useContext(AppContext);
-	const [notifs, setNotifs] = useState(0);
+	const { updateNotifications } = useContext(HomeContext);
 
 	useEffect(() => {
 		StatusBar.setHidden(false);
 
-		const updateNotifications = async () => {
-			const encuestasQuery = {
-				query: `query Encuestas(
-							$numEmp: String!,
-							$region: String!,
-						) {
-							Encuestas(
-								numEmp: $numEmp,
-								region: $region,
-							) {
-								encuesta
-								titulo
-								preguntas
-							}
-						}`,
-				variables: {
-					numEmp: numEmp,
-					region: region,
-				},
-			};
-			try {
-				const data = await fetchPost({ query: encuestasQuery });
-				// console.log("Data is: ", data);
-				// if (region === "JRZ") {
-				if (data.data.Encuestas && data.data.Encuestas.length > 1) {
-					console.log("Correct", region);
-					setNotifs(data.data.Encuestas.length);
-					showMessage({
-						message: "Tienes notificaciones !",
-						description: `Tienes${
-							data.data.Encuestas.length > 1 ? " más de " : " "
-						}una encuesta pendiente por responder`,
-						type: "info",
-						duration: 20000,
-						position: "top",
-						statusBarHeight: 30,
-						style: {
-							// backgroundColor: COLORS.second,
-							backgroundColor: "white",
-							borderBottomLeftRadius: 15,
-							borderBottomRightRadius: 15,
-							borderWidth: 1,
-							borderColor: COLORS.main
-						},
-						textStyle: { color: COLORS.main },
-						titleStyle: { color: COLORS.main },
-						icon: () => <Bell />,
-					});
-				}
-			} catch (error) {
-				showMessage({
-					message:
-						"Hubo un problema al actualizar tus notificaciones",
-					type: "warning",
-					duration: 3000,
-					position: "top",
-					statusBarHeight: 30,
-					icon: { icon: "info", position: "right" },
-					// statusBarHeight: 40,
-				});
-			}
+		let notifs = 0;
+		const init = async () => {
+			notifs = await updateNotifications();
 		};
-
-		updateNotifications();
+		init();
+		if (notifs > 0) {
+			showMessage({
+				message: "Tienes notificaciones !",
+				description: `Tienes${
+					data.data.Encuestas.length > 1 ? " más de " : " "
+				}una encuesta pendiente por responder`,
+				type: "info",
+				duration: 20000,
+				position: "top",
+				statusBarHeight: 30,
+				style: {
+					// backgroundColor: COLORS.second,
+					backgroundColor: "white",
+					borderBottomLeftRadius: 15,
+					borderBottomRightRadius: 15,
+					borderWidth: 1,
+					borderColor: COLORS.main,
+				},
+				textStyle: { color: COLORS.main },
+				titleStyle: { color: COLORS.main },
+				icon: () => <Bell />,
+			});
+		}
 	}, []);
 
 	const [currentContent, setCurrentContent] = useState("Menu");
@@ -110,7 +75,7 @@ const Home = ({ navigation }) => {
 			<Card />
 
 			{/* Contenedor acceso rapido */}
-			<Quickbar notifs={notifs} changeContent={changeContent} />
+			<Quickbar changeContent={changeContent} />
 
 			{/* Contenedor modulos/apartados */}
 			<ContentRenderer

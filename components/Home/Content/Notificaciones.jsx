@@ -21,7 +21,7 @@ function Notificaciones({ section = "Encuestas" }) {
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
 	const [notifsAvisos, setNotifsAvisos] = useState(0);
 
-	const updateNotifications = async () => {
+	const updateNotificationsData = async () => {
 		const encuestasQuery = {
 			query: `query NotificationsData(
 						$numEmp: String!,
@@ -93,7 +93,7 @@ function Notificaciones({ section = "Encuestas" }) {
 	useEffect(() => {
 		console.log("Entering notifications");
 
-		updateNotifications();
+		updateNotificationsData();
 		setIsLoading(false);
 	}, []);
 
@@ -158,14 +158,14 @@ function Notificaciones({ section = "Encuestas" }) {
 					<Solicitudes
 						isLoading={isLoading}
 						requests={requests}
-						updateNotifications={updateNotifications}
+						updateNotificationsData={updateNotificationsData}
 					/>
 				)}
 				{activeTab === "Encuestas" && (
 					<Encuestas
 						encuestasDisp={encuestas}
 						isLoading={isLoading}
-						updateEncuestas={updateNotifications}
+						updateEncuestas={updateNotificationsData}
 					/>
 				)}
 				{activeTab === "Avisos" && <Avisos isLoading={isLoading} />}

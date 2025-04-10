@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { quickbar } from "./styles";
 import COLORS from "../../constants/colors";
@@ -6,9 +6,11 @@ import Icon from "./icons";
 import { Ionicons } from "@expo/vector-icons";
 import MCI from "react-native-vector-icons/MaterialCommunityIcons";
 import Bell from "../Animations/Bell";
+import { HomeContext } from "../HomeContext";
 
-function Quickbar({ changeContent, notifs }) {
+function Quickbar({ changeContent }) {
 	//Loading fonts before setting the state for quickbar buttons results in error: rendering more/less hooks in previous state
+	const { notifications } = useContext(HomeContext);
 	const [pressedQuickbarButton, setQuickBarPressedButton] = useState(null);
 
 	const handlePress = (QuickbarButtonName) => {
@@ -44,9 +46,7 @@ function Quickbar({ changeContent, notifs }) {
 							name="INFO_PERS"
 							size={20}
 							color={
-								isQuickbarButtonPressed("button1")
-									? COLORS.white
-									: COLORS.main
+								isQuickbarButtonPressed("button1") ? COLORS.white : COLORS.main
 							}
 						/>
 					</View>
@@ -84,9 +84,7 @@ function Quickbar({ changeContent, notifs }) {
 							name="AREA"
 							size={18}
 							color={
-								isQuickbarButtonPressed("button2")
-									? COLORS.white
-									: COLORS.main
+								isQuickbarButtonPressed("button2") ? COLORS.white : COLORS.main
 							}
 						/>
 					</View>
@@ -124,9 +122,7 @@ function Quickbar({ changeContent, notifs }) {
 							name="REDES"
 							size={25}
 							color={
-								isQuickbarButtonPressed("button3")
-									? COLORS.white
-									: COLORS.main
+								isQuickbarButtonPressed("button3") ? COLORS.white : COLORS.main
 							}
 							style={{ top: "4%" }}
 						/>
@@ -166,9 +162,7 @@ function Quickbar({ changeContent, notifs }) {
 							name="IDEAS"
 							size={26}
 							color={
-								isQuickbarButtonPressed("button4")
-									? COLORS.white
-									: COLORS.main
+								isQuickbarButtonPressed("button4") ? COLORS.white : COLORS.main
 							}
 							style={{ top: "4%" }}
 						/>
@@ -186,7 +180,7 @@ function Quickbar({ changeContent, notifs }) {
 				</View>
 			</TouchableOpacity>
 			{/* Directorio */}
-			{notifs > 0 ? (
+			{notifications > 0 ? (
 				<TouchableOpacity
 					onPress={() => {
 						handlePress("button5");
@@ -219,16 +213,14 @@ function Quickbar({ changeContent, notifs }) {
 								fontFamily: "Montserrat-Medium",
 							}}
 						>
-							{notifs}
+							{notifications}
 						</Text>
 					</View>
 					<View
 						style={[
 							quickbar.iconBgContainer,
 							{
-								backgroundColor: isQuickbarButtonPressed(
-									"button5"
-								)
+								backgroundColor: isQuickbarButtonPressed("button5")
 									? COLORS.main
 									: COLORS.white,
 								height: "55%",
@@ -272,9 +264,7 @@ function Quickbar({ changeContent, notifs }) {
 						style={[
 							quickbar.iconBgContainer,
 							{
-								backgroundColor: isQuickbarButtonPressed(
-									"button5"
-								)
+								backgroundColor: isQuickbarButtonPressed("button5")
 									? COLORS.main
 									: COLORS.white,
 							},

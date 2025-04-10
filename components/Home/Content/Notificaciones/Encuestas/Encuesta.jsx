@@ -24,7 +24,7 @@ function Encuesta({
 	updateEncuestas,
 }) {
 	const { region, platform } = useContext(AppContext);
-	const { numEmp } = useContext(HomeContext);
+	const { numEmp, updateNotifications } = useContext(HomeContext);
 	const statusBarHeight = platform === "ios" ? 20 : StatusBar.currentHeight;
 	const encuesta = getEncuestaStyle({ height: statusBarHeight });
 	const [isLoading, setIsLoading] = useState(true);
@@ -276,6 +276,7 @@ function Encuesta({
 									closeModal={() => {
 										onExit();
 										updateEncuestas();
+										updateNotifications();
 									}}
 									customTitle="Encuesta enviada"
 									customText="Gracias por tu participación!"

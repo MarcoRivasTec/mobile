@@ -179,6 +179,49 @@ export const HomeProvider = ({ children }) => {
 		}
 	};
 
+	const updateNotifications = async () => {
+		const encuestasQuery = {
+			query: `query Encuestas(
+						$numEmp: String!,
+						$region: String!,
+					) {
+						Encuestas(
+							numEmp: $numEmp,
+							region: $region,
+						) {
+							encuesta
+						}
+					}`,
+			variables: {
+				numEmp: numEmp,
+				region: region,
+			},
+		};
+		try {
+			const data = await fetchPost({ query: encuestasQuery });
+			// console.log("Data is: ", data);
+			// if (region === "JRZ") {
+			if (data.data.Encuestas && data.data.Encuestas.length > 1) {
+				// console.log("Correct", region);
+				setNotifications(data.data.Encuestas.length);
+				return data.data.Encuestas.length;
+			} else {
+				return 0;
+			}
+		} catch (error) {
+			showMessage({
+				message: "Hubo un problema al actualizar tus notificaciones",
+				type: "warning",
+				duration: 3000,
+				position: "top",
+				statusBarHeight: 30,
+				icon: { icon: "info", position: "right" },
+				// statusBarHeight: 40,
+			});
+			return 0;
+		}
+	};
+
 	// useEffect(() => {
 	// 	console.warn("User is supervisor: ", isSupervisor);
 	// }, [isSupervisor]);
@@ -193,6 +236,7 @@ export const HomeProvider = ({ children }) => {
 				profileImg,
 				setProfileImg,
 				sendRequisition,
+				updateNotifications,
 			}}
 		>
 			{children}
