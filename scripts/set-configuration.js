@@ -9,37 +9,49 @@ const envPath = path.resolve(__dirname, "../env", ".env");
 let oldEndpoint = "";
 const newEndpoint = `"https://api.tecmamovilconnect.com/"`;
 
-function loadJson(filePath) {
+async function loadJson(filePath) {
 	return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function saveJson(filePath, data) {
+async function saveJson(filePath, data) {
 	fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
-function updateJsonValues() {
-	const appJson = loadJson(appJsonPath);
-	const packageJson = loadJson(packageJsonPath);
+async function updateJsonValues() {
+	try {
+		const appJson = await loadJson(appJsonPath);
+		const packageJson = await loadJson(packageJsonPath);
 
-	// Set fixed values (original ones from JSON files)
-	appJson.expo.name = "TECMA Móvil Connect";
-	appJson.expo.slug = "tecma-movil-connect";
-	appJson.expo.ios.bundleIdentifier = "com.tecma.TecmaMovilConnect";
-	appJson.expo.ios.infoPlist.CFBundleDisplayName = "TECMA Móvil Connect";
-	appJson.expo.android.package = "com.tecma.movilconnect";
-	appJson.expo.android.name = "TECMA Móvil Connect";
-	appJson.expo.version = "1.0.5";
+		// Set fixed values (original ones from JSON files)
+		appJson.expo.name = "TECMA Móvil Connect";
+		appJson.expo.slug = "tecma-movil-connect";
+		appJson.expo.ios.bundleIdentifier = "com.tecma.TecmaMovilConnect";
+		appJson.expo.ios.infoPlist.CFBundleDisplayName = "TECMA Móvil Connect";
+		appJson.expo.android.package = "com.tecma.movilconnect";
+		appJson.expo.android.name = "TECMA Móvil Connect";
+		appJson.expo.version = "1.0.5";
 
-	packageJson.name = "@tecma/tecmamovilconnect";
+		packageJson.name = "@tecma/tecmamovilconnect";
 
-	saveJson(appJsonPath, appJson);
-	saveJson(packageJsonPath, packageJson);
-	console.log("Updated JSON values to fixed configuration.");
+		await saveJson(appJsonPath, appJson);
+		await saveJson(packageJsonPath, packageJson);
+
+		// 🔍 Depuración añadida aquí
+		console.log("appJsonPath:", appJsonPath);
+		console.log("Escritura completada, contenido grabado:");
+		console.log(JSON.stringify(appJson, null, 2));
+
+		const fileRawContent = fs.readFileSync(appJsonPath, 'utf8');
+		console.log("Contenido físico de app.json tras guardado:");
+		console.log(fileRawContent);
+	} catch (error) {
+		console.error("Error updating JSON values:", error);
+	}
 }
 
-function restoreJsonValues() {
-	const appJson = loadJson(appJsonPath);
-	const packageJson = loadJson(packageJsonPath);
+async function restoreJsonValues() {
+	const appJson = await loadJson(appJsonPath);
+	const packageJson = await loadJson(packageJsonPath);
 
 	// Restore values
 	appJson.expo.name = "TECMA Móvil Connect Dev";
@@ -52,13 +64,13 @@ function restoreJsonValues() {
 
 	packageJson.name = "@tecma/tecmamovilconnecttest";
 
-	saveJson(appJsonPath, appJson);
-	saveJson(packageJsonPath, packageJson);
+	await saveJson(appJsonPath, appJson);
+	await saveJson(packageJsonPath, packageJson);
 	console.log("Restored JSON values to Test configuration.");
 }
 
 // Function to update the API_ENDPOINT in the .env file
-function updateEnvApiEndpoint() {
+async function updateEnvApiEndpoint() {
 	if (fs.existsSync(envPath)) {
 		let envContent = fs.readFileSync(envPath, 'utf8');
 		const currentEndpointMatch = envContent.match(/API_ENDPOINT=(.*)/);
@@ -73,7 +85,7 @@ function updateEnvApiEndpoint() {
 	}
 }
 
-function restoreEnvApiEndpoint() {
+async function restoreEnvApiEndpoint() {
 	if (fs.existsSync(envPath) && oldEndpoint) {
 		let envContent = fs.readFileSync(envPath, 'utf8');
 		envContent = envContent.replace(/API_ENDPOINT=.*/g, `API_ENDPOINT=${oldEndpoint}`);
@@ -82,10 +94,10 @@ function restoreEnvApiEndpoint() {
 	}
 }
 
-function updateReanimatedVersion(version) {
-	const packageJson = loadJson(packageJsonPath);
+async function updateReanimatedVersion(version) {
+	const packageJson = await loadJson(packageJsonPath);
 	packageJson.dependencies["react-native-reanimated"] = version;
-	saveJson(packageJsonPath, packageJson);
+	await saveJson(packageJsonPath, packageJson);
 	console.log(`Updated react-native-reanimated to version ${version}`);
 }
 
@@ -100,14 +112,9 @@ function runCommand(command) {
 }
 
 // Set name and those of packages/identifiers to production values
-updateJsonValues();
-
-// Update API_ENDPOINT before build
-updateEnvApiEndpoint();
-
-// Update the version to 3.9.0-rc.1
-console.log("Setting react-native-reanimated to 3.9.0-rc.1 for build");
-updateReanimatedVersion("3.9.0-rc.1");
+async function prepareForBuild() {
+	await updateJsonValues();
+}
 
 // Determine which command to run
 const isAndroidPrebuild = process.env.EXPO_PREBUILD_ANDROID;
@@ -130,17 +137,25 @@ if (isAndroidPrebuild) {
 }
 
 // Run the prebuild or build command
-if (command) {
-	try {
-		runCommand(command);
-	} finally {
-		// Restore the version and API_ENDPOINT after the build process
-		console.log("Restoring react-native-reanimated to 3.10.1");
-		updateReanimatedVersion("3.10.1");
-		console.log("Restoring original API_ENDPOINT");
-		restoreEnvApiEndpoint();
-		restoreJsonValues();
+(async function main() {
+	if (command) {
+		try {
+			// Await configuration updates
+			await prepareForBuild();          // Ensures updateJsonValues completes
+			await updateEnvApiEndpoint();           // This is synchronous
+			console.log("Setting react-native-reanimated to 3.9.0-rc.1 for build");
+			await updateReanimatedVersion("3.9.0-rc.1");
+
+			// Now, execute the build command
+			runCommand(command);
+		} finally {
+			console.log("Restoring react-native-reanimated to 3.10.1");
+			await updateReanimatedVersion("3.10.1");
+			console.log("Restoring original API_ENDPOINT");
+			await restoreEnvApiEndpoint();
+			await restoreJsonValues();  // Await if restoreJsonValues is async
+		}
+	} else {
+		console.log("No build command found. Skipping build.");
 	}
-} else {
-	console.log("No build command found. Skipping build.");
-}
+})();

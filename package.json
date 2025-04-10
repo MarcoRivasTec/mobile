@@ -72,5 +72,6 @@
       "**/string-width"
     ]
   },
-  "private": true
+  "private": true,
+  "type": "commonjs"
 }
