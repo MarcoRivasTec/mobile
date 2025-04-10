@@ -45,7 +45,7 @@ function Notificaciones({ section = "Encuestas" }) {
 			const data = await fetchPost({ query: encuestasQuery });
 			console.log("Notifications data is: ", JSON.stringify(data, null, 1));
 
-			if (data.data.Encuestas && data.data.Encuestas.length > 0) {
+			if (data.data.Encuestas) {
 				// console.log("Correct", region);
 				// console.log("Data is: ", data.data.Encuestas);
 				setEncuestas(data.data.Encuestas);
