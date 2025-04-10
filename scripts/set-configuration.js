@@ -28,6 +28,7 @@ function updateJsonValues() {
 	appJson.expo.ios.infoPlist.CFBundleDisplayName = "TECMA Móvil Connect";
 	appJson.expo.android.package = "com.tecma.movilconnect";
 	appJson.expo.android.name = "TECMA Móvil Connect";
+	appJson.expo.version = "1.0.5";
 
 	packageJson.name = "@tecma/tecmamovilconnect";
 

@@ -18,7 +18,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
       "infoPlist": {
-        "CFBundleDisplayName": "TECMAMóvil Connect Dev",
+        "CFBundleDisplayName": "TECMA Móvil Connect Dev",
         "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
