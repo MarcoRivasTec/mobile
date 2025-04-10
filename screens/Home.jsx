@@ -24,31 +24,31 @@ const Home = ({ navigation }) => {
 		const init = async () => {
 			notifs = await updateNotifications();
 			// console.warn("notifs", notifs);
+			if (notifs > 0) {
+				showMessage({
+					message: "Tienes notificaciones !",
+					description: `Tienes${
+						notifs > 1 ? " más de " : " "
+					}una encuesta pendiente por responder`,
+					type: "info",
+					duration: 20000,
+					position: "top",
+					statusBarHeight: 30,
+					style: {
+						// backgroundColor: COLORS.second,
+						backgroundColor: "white",
+						borderBottomLeftRadius: 15,
+						borderBottomRightRadius: 15,
+						borderWidth: 1,
+						borderColor: COLORS.main,
+					},
+					textStyle: { color: COLORS.main },
+					titleStyle: { color: COLORS.main },
+					icon: () => <Bell />,
+				});
+			}
 		};
 		init();
-		if (notifs > 0) {
-			showMessage({
-				message: "Tienes notificaciones !",
-				description: `Tienes${
-					data.data.Encuestas.length > 1 ? " más de " : " "
-				}una encuesta pendiente por responder`,
-				type: "info",
-				duration: 20000,
-				position: "top",
-				statusBarHeight: 30,
-				style: {
-					// backgroundColor: COLORS.second,
-					backgroundColor: "white",
-					borderBottomLeftRadius: 15,
-					borderBottomRightRadius: 15,
-					borderWidth: 1,
-					borderColor: COLORS.main,
-				},
-				textStyle: { color: COLORS.main },
-				titleStyle: { color: COLORS.main },
-				icon: () => <Bell />,
-			});
-		}
 	}, []);
 
 	const [currentContent, setCurrentContent] = useState("Menu");
