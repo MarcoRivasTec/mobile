@@ -4,26 +4,33 @@ import { working } from "./styles";
 import LoadingContent from "../../../Animations/LoadingContent";
 
 function Working({ isModalVisible, text = "Procesando ..." }) {
-	return (
-		<View style={working.container}>
-			<Modal animationType="fade" transparent={true} visible={isModalVisible}>
-				<View style={working.backgroundContainer}>
-					<View style={working.modalContainer}>
-						<View style={working.contentContainer}>
-							{/* Title */}
-							<View style={working.animContainer}>
-								<View style={working.anim}>
-									<LoadingContent />
-								</View>
-							</View>
+	useEffect(() => {
+		console.log("Modal visibility changed:", isModalVisible);
+	}, [isModalVisible]);
 
-							{/* Text */}
-							<Text style={working.text}>{text}</Text>
+	return (
+		<Modal
+			animationType="fade"
+			transparent={true}
+			visible={isModalVisible}
+			onRequestClose={() => {}}
+		>
+			<View style={working.backgroundContainer}>
+				<View style={working.modalContainer}>
+					<View style={working.contentContainer}>
+						{/* Title */}
+						<View style={working.animContainer}>
+							<View style={working.anim}>
+								<LoadingContent />
+							</View>
 						</View>
+
+						{/* Text */}
+						<Text style={working.text}>{text}</Text>
 					</View>
 				</View>
-			</Modal>
-		</View>
+			</View>
+		</Modal>
 	);
 }
 

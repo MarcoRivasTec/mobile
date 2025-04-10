@@ -9,6 +9,7 @@ import {
 	Keyboard,
 	Platform,
 	Alert,
+	InteractionManager,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { solPermisos } from "./styles";
@@ -124,7 +125,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 					requisitionData.comment = comment;
 				}
 
-				const response = await sendRequisition(requisitionData);
+				const response = await sendRequisition({ ...requisitionData });
 				// const response = await sendRequisition({
 				// 	letter: "PermisoDias",
 				// 	startDate: startDate,
@@ -133,17 +134,22 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				// 	comment: comment === "" ? null : comment,
 				// });
 				// setIsWorkingModalVisible(false);
+				setTimeout(() => {
+					InteractionManager.runAfterInteractions(() => {
+						setIsWorkingModalVisible(false);
+						if (response === "Done") {
+							confirmationModalHandler();
+						} else {
+							// setIsWorkingModalVisible(false);
+							Alert.alert(
+								"Error",
+								"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+							);
+						}
+					});
+				}, 1000);
+				// setIsWorkingModalVisible(false);
 				console.log("Response at solpermisos: ", response);
-				if (response === "Done") {
-					setIsWorkingModalVisible(false);
-					confirmationModalHandler();
-				} else {
-					setIsWorkingModalVisible(false);
-					Alert.alert(
-						"Error",
-						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
-					);
-				}
 			}
 		} catch (error) {
 			console.error("Error requesting absence:", error);
