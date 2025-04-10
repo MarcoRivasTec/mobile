@@ -193,7 +193,7 @@ export const HomeProvider = ({ children }) => {
 						}
 					}`,
 			variables: {
-				numEmp: numEmp,
+				numEmp: data.numEmp,
 				region: region,
 			},
 		};
