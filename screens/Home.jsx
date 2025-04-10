@@ -23,6 +23,7 @@ const Home = ({ navigation }) => {
 		let notifs = 0;
 		const init = async () => {
 			notifs = await updateNotifications();
+			// console.warn("notifs", notifs);
 		};
 		init();
 		if (notifs > 0) {

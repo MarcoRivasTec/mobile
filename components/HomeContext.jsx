@@ -28,6 +28,7 @@ export const HomeProvider = ({ children }) => {
 		clasificacion: "",
 	});
 	const [isSupervisor, setIsSupervisor] = useState(false);
+	const [notifications, setNotifications] = useState(0);
 
 	useEffect(() => {
 		console.log(JSON.stringify(data, null, 1));
@@ -199,9 +200,9 @@ export const HomeProvider = ({ children }) => {
 		};
 		try {
 			const data = await fetchPost({ query: encuestasQuery });
-			// console.log("Data is: ", data);
+			console.log("Data is: ", data.data.Encuestas);
 			// if (region === "JRZ") {
-			if (data.data.Encuestas && data.data.Encuestas.length > 1) {
+			if (data.data.Encuestas && data.data.Encuestas.length > 0) {
 				// console.log("Correct", region);
 				setNotifications(data.data.Encuestas.length);
 				return data.data.Encuestas.length;
@@ -236,6 +237,7 @@ export const HomeProvider = ({ children }) => {
 				profileImg,
 				setProfileImg,
 				sendRequisition,
+				notifications,
 				updateNotifications,
 			}}
 		>
