@@ -89,9 +89,10 @@ const Welcome = ({ navigation, route }) => {
 				} else {
 					console.warn("Error retrieving user info");
 				}
-				if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
-					setIsSupervisor(true);
-				}
+				// if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
+				// 	setIsSupervisor(true);
+				// }
+				
 				// setIsLoading(false);
 			})
 			.catch((error) => {

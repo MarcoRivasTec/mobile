@@ -64,11 +64,8 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 			endDate.setDate(endDate.getDate() + parseInt(days, 10));
 
 			console.log("Region value: ", region);
-			if (region === "AMX") {
+			if (region === "None") {
 				// New method
-				// console.warn("Amx user, using new method");
-				// return;
-				// console.log("Date: ", startDate.toISOString().split("T")[0]);
 				const mutation = {
 					query: `mutation sendAbsenceRequest($input: RequestAbsenceInput!) {
 								requestAbsence(input: $input) {
@@ -89,7 +86,6 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 					},
 				};
 
-				// Send the mutation
 				console.log(
 					"Variables for query are: ",
 					JSON.stringify(mutation.variables, null, 1)
@@ -97,22 +93,38 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				const response = await fetchPost({ query: mutation });
 				console.log("Request absence response:", response);
 
-				if (
-					response.data.requestAbsence &&
-					response.data.requestAbsence.success
-				) {
-					setIsWorkingModalVisible(false);
-					confirmationModalHandler();
-				} else {
-					setIsWorkingModalVisible(false);
-					Alert.alert(
-						"Error",
-						`Hubo un error al enviar la solicitud: ${response.data.requestAbsence.message}`
-					);
-				}
+				setTimeout(() => {
+					InteractionManager.runAfterInteractions(() => {
+						setIsWorkingModalVisible(false);
+						if (
+							response.data.requestAbsence &&
+							response.data.requestAbsence.success
+						) {
+							confirmationModalHandler();
+						} else {
+							Alert.alert(
+								"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo."
+							);
+							console.error(response.data.requestAbsence.message);
+						}
+					});
+				}, 100);
+
+				// if (
+				// 	response.data.requestAbsence &&
+				// 	response.data.requestAbsence.success
+				// ) {
+				// 	setIsWorkingModalVisible(false);
+				// 	confirmationModalHandler();
+				// } else {
+				// 	setIsWorkingModalVisible(false);
+				// 	Alert.alert(
+				// 		"Error",
+				// 		`Hubo un error al enviar la solicitud: ${response.data.requestAbsence.message}`
+				// 	);
+				// }
 			} else {
-				// console.log("Old method");
-				// return;
+				// Old method;
 				const requisitionData = {
 					letter: "PermisoDias",
 					startDate: startDate,
@@ -126,29 +138,19 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				}
 
 				const response = await sendRequisition({ ...requisitionData });
-				// const response = await sendRequisition({
-				// 	letter: "PermisoDias",
-				// 	startDate: startDate,
-				// 	motive: motive,
-				// 	days: days,
-				// 	comment: comment === "" ? null : comment,
-				// });
-				// setIsWorkingModalVisible(false);
 				setTimeout(() => {
 					InteractionManager.runAfterInteractions(() => {
 						setIsWorkingModalVisible(false);
 						if (response === "Done") {
 							confirmationModalHandler();
 						} else {
-							// setIsWorkingModalVisible(false);
 							Alert.alert(
 								"Error",
 								"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
 							);
 						}
 					});
-				}, 1000);
-				// setIsWorkingModalVisible(false);
+				}, 100);
 				console.log("Response at solpermisos: ", response);
 			}
 		} catch (error) {
@@ -381,6 +383,10 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 											onCallback={confirmationModalHandler}
 											onExit={confirmationModalHandler}
 											closeModal={onExit}
+											customTitle="Tu solicitud se ha registrado correctamente"
+											customText={
+												"Contacta con tu departamento de RH para confirmarla."
+											}
 										/>
 									)}
 								</View>

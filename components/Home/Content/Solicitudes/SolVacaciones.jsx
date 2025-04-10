@@ -110,7 +110,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 		// 	return;
 		// }
 		setIsWorkingModalVisible(true);
-		if (region === "AMX") {
+		if (region === "None") {
 			// New method
 			// console.warn("Amx user, using new method");
 			// console.log("Date: ", startDate.toISOString().split("T")[0]);
@@ -141,19 +141,36 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 					JSON.stringify(mutation.variables, null, 1)
 				);
 				const response = await fetchPost({ query: mutation });
-				console.log("Survey submission response:", response);
+				// console.log("Survey submission response:", response);
 
-				if (
-					response.data.requestAbsence &&
-					response.data.requestAbsence.success
-				) {
-					confirmationModalHandler();
-				} else {
-					alert(
-						"Error al enviar la solicitud: " +
-							response.data.requestAbsence.message
-					);
-				}
+				setTimeout(() => {
+					InteractionManager.runAfterInteractions(() => {
+						setIsWorkingModalVisible(false);
+						if (
+							response.data.requestAbsence &&
+							response.data.requestAbsence.success
+						) {
+							confirmationModalHandler();
+						} else {
+							Alert.alert(
+								"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo."
+							);
+							console.error(response.data.requestAbsence.message);
+						}
+					});
+				}, 100);
+
+				// if (
+				// 	response.data.requestAbsence &&
+				// 	response.data.requestAbsence.success
+				// ) {
+				// 	confirmationModalHandler();
+				// } else {
+				// 	alert(
+				// 		"Error al enviar la solicitud: " +
+				// 			response.data.requestAbsence.message
+				// 	);
+				// }
 			} catch (error) {
 				console.error("Error requesting absence:", error);
 				alert(
@@ -175,15 +192,21 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 			}
 			const response = await sendRequisition(requisitionData);
 			// console.log("Response requestGafete: ", response);
-			setIsWorkingModalVisible(false);
-			if (response === "Done") {
-				confirmationModalHandler();
-			} else {
-				Alert.alert(
-					"Error",
-					"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
-				);
-			}
+
+			setTimeout(() => {
+				InteractionManager.runAfterInteractions(() => {
+					setIsWorkingModalVisible(false);
+					if (response === "Done") {
+						confirmationModalHandler();
+					} else {
+						// setIsWorkingModalVisible(false);
+						Alert.alert(
+							"Error",
+							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+						);
+					}
+				});
+			}, 100);
 		}
 	};
 
@@ -428,7 +451,9 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									onExit={confirmationModalHandler}
 									closeModal={onExit}
 									customTitle="Tu solicitud se ha registrado correctamente"
-									customText="Se te notificará el estado de tu solicitud automáticamente"
+									customText={
+										"Contacta con tu departamento de RH para confirmarla."
+									}
 								/>
 							)}
 							{isWorkingModalVisible && (
