@@ -4,17 +4,17 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "stc": "expo start -c",
-    "ipstc": "node scripts/set-ip-start.js",
-    "and": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
+    "adev": "set DEV_MODE_ANDROID=1 && node scripts/set-configuration.js",
+    "arun": "set DEV_MODE_ANDROID_RUN=1 && node scripts/set-configuration.js",
+    "idev": "set DEV_MODE_IOS_RUN=1 && node scripts/set-configuration.js",
     "pb-a": "set EXPO_PREBUILD_ANDROID=1 && node scripts/set-configuration.js",
     "pb-ac": "set EXPO_PREBUILD_ANDROID_CLEAN=1 && node scripts/set-configuration.js",
     "pb-i": "EXPO_PREBUILD_IOS=1 node scripts/set-configuration.js",
     "pb-ic": "EXPO_PREBUILD_IOS_CLEAN=1 node scripts/set-configuration.js",
     "eas-android": "set EAS_BUILD=1 && node scripts/set-configuration.js",
-    "android": "expo run:android"
+    "android": "expo run:android",
+    "web": "expo start --web",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.0",

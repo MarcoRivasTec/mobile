@@ -15,8 +15,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { defPass, defRegion } from "../defaultValues";
-
 import TecmaMovil from "../components/Animations/TecmaMovil";
 import Icon from "../components/Home/icons";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -36,6 +34,7 @@ import Loading from "../components/Animations/Loading";
 import DownArrow from "../components/Animations/DownArrow";
 import fetchPost from "../components/fetching";
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { API_ENDPOINT } from "@env";
 
 const Login = ({ navigation, route }) => {
 	const {
@@ -175,7 +174,6 @@ const Login = ({ navigation, route }) => {
 			});
 		}
 	}, [route]);
-	
 
 	const checkVersion = async () => {
 		try {
@@ -552,7 +550,10 @@ const Login = ({ navigation, route }) => {
 					</View>
 
 					{/* Version */}
-					<Text style={login.version}>v{appVersion}</Text>
+					<Text style={login.version}>
+						v{appVersion}
+						{API_ENDPOINT}
+					</Text>
 				</View>
 			</TouchableWithoutFeedback>
 
