@@ -23,6 +23,7 @@ async function updateJsonValues(mode) {
 	try {
 		console.log("\n\nUpdating JSON values...\n");
 		const appJson = await loadJson(appJsonPath);
+		console.warn("Json data is: ", appJson);
 		const packageJson = await loadJson(packageJsonPath);
 
 		if (mode === "dev") {
@@ -30,18 +31,22 @@ async function updateJsonValues(mode) {
 			appJson.expo.slug = "tecma-movil-connect-dev";
 			appJson.expo.version = "1.0.5dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
+			appJson.expo.splash.image = "./assets/icon-dev.png";
+			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
 			appJson.expo.ios.bundleIdentifier = "com.tecma.TecmaMovilConnectDev";
 			appJson.expo.ios.infoPlist.CFBundleDisplayName = "TECMA Móvil Connect Dev";
 			appJson.expo.android.package = "com.tecma.movilconnecttest";
 			appJson.expo.android.name = "TECMA Móvil Connect Test";
 			packageJson.name = "@tecma/tecmamovilconnecttest";
-
+			
 		} else if (mode === "prod") {
-
+			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
 			appJson.expo.version = "1.0.5";
 			appJson.expo.icon = "./assets/icon.png";
+			appJson.expo.splash.image = "./assets/icon.png";
+			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
 			appJson.expo.ios.bundleIdentifier = "com.tecma.TecmaMovilConnect";
 			appJson.expo.ios.infoPlist.CFBundleDisplayName = "TECMA Móvil Connect";
 			appJson.expo.android.package = "com.tecma.movilconnect";
@@ -85,7 +90,6 @@ async function updateReanimatedVersion(version) {
 	await saveJson(packageJsonPath, packageJson);
 	console.log(`Updated react-native-reanimated to version ${version}`);
 }
-
 
 async function getLocalIp() {
 	const interfaces = os.networkInterfaces();
@@ -134,7 +138,7 @@ const isEASBuild = process.env.EAS_BUILD;
 let command = "";
 
 if (isAndroidDev) {
-	command = "npx expo start -c";
+	command = "npx expo start -c --dev-client";
 } else if (isAndroidRun) {
 	command = "npx expo run:android -d";
 } else if (isIOSDev) {
@@ -180,10 +184,19 @@ if (isAndroidDev) {
 		} else if (isAndroidDev || isAndroidRun || isIOSDev) {
 			try {
 				console.warn("\n\nRunning dev mode...");
+
+				// 🧹 Delete android folder if it exists (only for dev mode)
+				const androidPath = path.resolve(__dirname, "..", "android");
+				if (fs.existsSync(androidPath)) {
+					console.log("Deleting existing android folder...");
+					fs.rmSync(androidPath, { recursive: true, force: true });
+					console.log("Android folder deleted.");
+				}
+
 				console.log("\nUpdating JSON values for dev...");
 				await updateJsonValues("dev");
-				console.log("\nSetting react-native-reanimated to 3.10.1 for dev");
-				await updateReanimatedVersion("3.10.1");
+				// console.log("\nSetting react-native-reanimated to 3.10.1 for dev");
+				// await updateReanimatedVersion("3.10.1");
 				console.log("\nUpdating API endpoint to dev...");
 				const localIp = await getLocalIp();
 				const devEndpoint = `http://${localIp}:${testPort}/papitecma`;
