@@ -550,10 +550,7 @@ const Login = ({ navigation, route }) => {
 					</View>
 
 					{/* Version */}
-					<Text style={login.version}>
-						v{appVersion}
-						{API_ENDPOINT}
-					</Text>
+					<Text style={login.version}>v{appVersion}</Text>
 				</View>
 			</TouchableWithoutFeedback>
 
