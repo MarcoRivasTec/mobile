@@ -15,16 +15,16 @@ function ConfirmModal({ title, data, onCallback, onExit, onConfirm }) {
 					<View style={confirmModal.modalContainer}>
 						<View style={confirmModal.contentContainer}>
 							{/* Title */}
-							<View style={confirmModal.titleContainer}>
+							{/* <View style={confirmModal.titleContainer}> */}
 								<Text style={confirmModal.titleText}>{title}</Text>
-							</View>
+							{/* </View> */}
 
 							{/* Data */}
-							<View style={confirmModal.dataContainer}>
+							{/* <View style={confirmModal.dataContainer}> */}
 								<Text style={confirmModal.dataText}>
                                     {data}
                                 </Text>
-							</View>		
+							{/* </View>		 */}
 
 							{/* Buttons */}
 							<View style={confirmModal.buttonsContainer}>

@@ -5,3 +5,9 @@ export function handleTextChange(text, setInputValue) {
       setInputValue(text);
     }
 };
+
+export function createSetInputValue(setFields, fieldName) {
+  return (value) => {
+      setFields({ [fieldName]: value });
+  };
+}

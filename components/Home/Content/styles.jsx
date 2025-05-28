@@ -20,6 +20,37 @@ const menu = StyleSheet.create({
 const header = StyleSheet.create({
 	container: {
 		flex: 1,
+		width: "95%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	titleContainer: {
+		height: "100%",
+		// width: "35%",
+		paddingRight: 24,
+		paddingLeft: 8,
+		borderBottomRightRadius: 50,
+		backgroundColor: COLORS.main,
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+	title: {
+		bottom: "10%",
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 12,
+		alignSelf: "center",
+		// borderWidth: 1
+	},
+});
+
+const header1 = StyleSheet.create({
+	container: {
+		flex: 1,
 		justifyContent: "center",
 		alignContent: "flex-start",
 		width: "95%",
@@ -295,6 +326,35 @@ const redes = StyleSheet.create({
 	},
 });
 
+const ideas = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.main,
+		// borderWidth: 2
+	},
+	contentContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// paddingLeft: "4%",
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	animContainer: {},
+});
+
 const directorio = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -402,6 +462,72 @@ const directorio = StyleSheet.create({
 	},
 });
 
+const notificaciones = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "purple"
+	},
+	titleContainer: {
+		height: "5%",
+		width: "95%",
+		// width: "35%",
+		// paddingRight: 24,
+		// paddingLeft: 8,
+		// borderBottomRightRadius: 50,
+		backgroundColor: COLORS.white,
+		justifyContent: "center",
+		alignItems: "center",
+		borderTopWidth: 0,
+		borderWidth: 2,
+		borderColor: COLORS.main,
+		// borderColor: "black"
+	},
+	title: {
+		color: COLORS.main,
+		fontFamily: "Montserrat-Medium",
+		fontSize: 17,
+		bottom: "5%",
+	},
+	tabsContainer: {
+		height: "5%",
+		width: "95%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1
+	},
+	tabContainer: {
+		flex: 1,
+		// height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderBottomRightRadius: 16,
+		borderBottomLeftRadius: 16,
+		borderWidth: 1,
+		borderTopWidth: 0,
+		borderColor: COLORS.main,
+	},
+	tabText: {
+		color: COLORS.white,
+		fontFamily: "Montserrat-Medium",
+		// fontSize: 12,
+	},
+
+	contentContainer: {
+		// flex: 19,
+		height: "90%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "black"
+	},
+});
+
 const vacaciones = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -446,14 +572,22 @@ const reciboNom = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	contentContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// borderWidth: 1
+	},
 	sectionContainer: {
-		flex: 5,
+		// flex: 5,
+		height: "24%",
 		width: "100%",
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
 	sectionTitleContainer: {
-		flex: 2,
+		flex: 2.5,
 		width: "100%",
 		top: "3%",
 		justifyContent: "center",
@@ -466,18 +600,21 @@ const reciboNom = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		top: "1%",
+		// borderWidth: 1,
 	},
 	nominaContainer: {
-		flex: 14,
-		top: "4%",
+		// flex: 14,
+		height: "37.5%",
+		marginTop: "1%",
 		width: "95%",
 		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	nominaHeader: {
 		width: "100%",
-		height: "7%",
+		// height: "15%",
+		flex: 1.7,
 		borderRadius: 50,
 		backgroundColor: COLORS.naranja,
 		flexDirection: "row",
@@ -507,8 +644,9 @@ const reciboNom = StyleSheet.create({
 		// borderWidth: 50,
 	},
 	nominaSearchIconContainer: {
-		paddingVertical: "4%",
-		paddingHorizontal: 5,
+		// height: "100%",
+		paddingVertical: 6,
+		paddingHorizontal: 6,
 		justifyContent: "center",
 		alignContent: "center",
 		borderRadius: 50,
@@ -525,13 +663,17 @@ const reciboNom = StyleSheet.create({
 		color: COLORS.white,
 	},
 	nominaCantidadContainer: {
-		flex: 1,
+		flex: 6,
+		// height: "55%",
 		width: "100%",
-		top: "3%",
+		// top: "3%",
+		marginTop: "1.5%",
+		// borderWidth: 1,
 	},
 	nominaCantidadElementContainer: {
+		flex: 1,
 		width: "100%",
-		height: "8%",
+		// height: "16%",
 		justifyContent: "space-around",
 		alignItems: "center",
 		marginVertical: "1.0%",
@@ -557,6 +699,33 @@ const reciboNom = StyleSheet.create({
 		color: "black",
 		textAlign: "center",
 	},
+	nominaGenerarContainer: {
+		flex: 2.3,
+		// height: "30%",
+		width: "100%",
+		// top: "3%",
+		marginVertical: "1.5%",
+		// borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	nominaGenerarButton: {
+		height: "100%",
+		width: "50%",
+		backgroundColor: COLORS.main,
+		borderRadius: 15,
+		justifyContent: "center",
+		alignItems: "center",
+		flexDirection: "row",
+	},
+	nominaGenerarText: {
+		fontSize: 17,
+		color: COLORS.white,
+		textAlign: "center",
+	},
+	nominaGenerarIcon: {
+		color: COLORS.white,
+	},
 });
 
 const prenomina = StyleSheet.create({
@@ -566,12 +735,14 @@ const prenomina = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	prenominaContainer: {
+	contentContainer: {
 		flex: 19,
-		top: "4%",
+		marginTop: "2%",
+		// top: "4%",
 		width: "95%",
 		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	prenominaHeader: {
 		width: "100%",
@@ -622,46 +793,242 @@ const prenomina = StyleSheet.create({
 		textAlign: "center",
 		color: COLORS.white,
 	},
-	prenominaCantidadContainer: {
+	prenominaDates: {
+		height: "15%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "3%",
+		// borderWidth: 1,
+	},
+	prenominaDatesText: {
+		fontSize: 18,
+		fontWeight: "bold",
+	},
+	prenominaContainer: {
+		height: "40%",
+		// flex: 3.5,
+		width: "100%",
+		marginTop: "3%",
+		// borderWidth: 1,
+	},
+	prenominaElementContainer: {
 		flex: 1,
 		width: "100%",
-		top: "3%",
-	},
-	prenominaCantidadElementContainer: {
-		width: "100%",
-		height: "8%",
-		justifyContent: "space-around",
+		// height: "8%",
+		justifyContent: "space-evenly",
 		alignItems: "center",
+		paddingLeft: "7%",
+		paddingRight: "3%",
 		marginVertical: "1.0%",
 		flexDirection: "row",
 		backgroundColor: COLORS.flatlistElement2,
 	},
-	prenominaCantidadBox: {
-		width: "30%",
+	prenominaElementTitleContainer: {
+		flex: 1,
+		// width: "30%",
 		height: "100%",
-		right: "50%",
+		left: "10%",
 		justifyContent: "center",
 		alignContent: "center",
+		// alignSelf: "flex-end",
+		// borderWidth: 1,
 	},
-	prenominaCantidadTitle: {
+	prenominaElementDataContainer: {
+		flex: 2,
+		// width: "30%",
+		height: "100%",
+		marginLeft: "5%",
+		// right: "50%",
+		justifyContent: "center",
+		alignContent: "center",
+		// alignSelf: "flex-end",
+		// borderWidth: 1,
+	},
+	prenominaElementTitleText: {
 		fontSize: 17,
 		color: COLORS.black,
 		textAlign: "center",
 	},
-	prenominaCantidad: {
+	prenominaElementDataText: {
 		fontSize: 17,
-		left: "25%",
+		// left: "25%",
 		fontWeight: "bold",
 		color: "black",
 		textAlign: "center",
 	},
-	buttonContainer: {
-		width: "24%",
-		height: "8%",
-		top: "10%",
+	buttonText: {
+		fontSize: 12,
+		color: COLORS.white,
+		fontWeight: "bold",
+	},
+	detalleHeader: {
+		width: "100%",
+		height: "15%",
+		backgroundColor: COLORS.white,
+		justifyContent: "center",
+		borderRadius: 12,
+		// borderRadius: "12%",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		alignItems: "center",
+	},
+	detalleHeaderWeekYearRow: {
+		flex: 1,
+		width: "100%",
+		backgroundColor: COLORS.naranja,
+		// borderRadius: "10%",
+		borderRadius: 10,
 		justifyContent: "center",
 		alignItems: "center",
-		alignSelf: "center",
+		flexDirection: "row",
+	},
+	detalleHeaderDaysRow: {
+		flex: 1.5,
+		width: "97%",
+		// backgroundColor: COLORS.w,
+		justifyContent: "center",
+		alignItems: "center",
+		flexDirection: "row",
+		// borderWidth: 1,
+	},
+	detalleDayButton: {
+		flex: 1,
+		paddingVertical: "1.5%",
+		paddingHorizontal: "0.5%",
+		marginHorizontal: "0.7%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 4,
+		// borderWidth: 1,
+	},
+	detalleSelectedDayButton: {
+		flex: 1.5,
+		paddingVertical: "1.5%",
+		paddingHorizontal: "0.5%",
+		marginHorizontal: "0.7%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 4,
+		backgroundColor: COLORS.naranja,
+		// borderWidth: 1,
+	},
+	detalleDayButtonText: {
+		fontSize: 13,
+		// fontWeight: "bold",
+		color: "black",
+	},
+	detalleSelectedDayButtonText: {
+		fontSize: 13,
+		// fontWeight: "bold",
+		color: COLORS.white,
+	},
+	detalleDayContainer: {
+		height: "72%",
+		width: "100%",
+		padding: "2%",
+		marginTop: "6%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: COLORS.flatlistElement1,
+		borderRadius: 6,
+	},
+	detalleDaysDescContainer: {
+		flex: 1,
+		// height: "6%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	detalleDaysDescText: {
+		fontSize: 13,
+		color: "black",
+		fontWeight: "bold",
+	},
+	detalleChecadasContainer: {
+		flex: 1.2,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginVertical: "3%",
+		flexDirection: "row",
+		// borderWidth: 1,
+	},
+	detalleChecadasDatosContainer: {
+		flex: 1,
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: COLORS.main,
+		borderRightWidth: 1,
+		borderColor: COLORS.flatlistBackground,
+	},
+	detalleChecadasTituloContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderBottomWidth: 1,
+		borderColor: COLORS.flatlistBackground,
+	},
+	detalleChecadasTituloText: {
+		fontSize: 11,
+		color: COLORS.white,
+		fontWeight: "bold",
+	},
+	detalleChecadasDatoContainer: {
+		flex: 1,
+		width: "98%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	detalleChecadasDatoText: {
+		fontSize: 12,
+		color: COLORS.white,
+	},
+	detalleHabilContainer: {
+		flex: 0.8,
+		// height: "6%",
+		width: "20%",
+		borderRadius: 12,
+		marginVertical: "2%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	detalleHabilText: {
+		fontSize: 14,
+		color: COLORS.white,
+		fontWeight: "bold",
+	},
+	detalleDataContainer: {
+		// height: "40%",
+		flex: 3,
+		width: "100%",
+		marginTop: "4%",
+		marginBottom: "5%",
+		// borderWidth: 1,
+	},
+
+	buttonContainer: {
+		width: "30%",
+		// flex: 1,
+		height: "9%",
+		marginTop: "5%",
+		marginBottom: "2%",
+		justifyContent: "center",
+		alignItems: "center",
+
+		// borderWidth: 1,
+	},
+	buttonGradient: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 12,
 	},
 	buttonBackground: {
 		width: "100%",
@@ -671,11 +1038,6 @@ const prenomina = StyleSheet.create({
 		alignItems: "center",
 		overflow: "hidden",
 		position: "absolute",
-	},
-	buttonText: {
-		fontSize: 12,
-		color: COLORS.white,
-		fontWeight: "bold",
 	},
 });
 
@@ -700,10 +1062,12 @@ const solicitudes = StyleSheet.create({
 		paddingLeft: "4%",
 	},
 	sectionButtonContainer: {
-		height: "15%",
-		width: "85%",
-		top: "6%",
-		flexDirection: "row",
+		// height: "15%",
+		flex: 1,
+		width: "80%",
+		// top: "6%",
+		marginVertical: "5%",
+		// flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -794,12 +1158,20 @@ const prestamos = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
-		paddingLeft: "3%",
 		marginVertical: "1%",
 		borderWidth: 1,
 		borderColor: COLORS.grey,
 		borderRadius: 10,
+		paddingLeft: 10,
 		backgroundColor: COLORS.white,
+	},
+	dataInputField: {
+		height: "100%",
+		width: "100%",
+		paddingLeft: 10,
+		justifyContent: "center",
+		alignItems: "flex-start",
+		fontSize: 12,
 	},
 	dataRowFieldContainer: {
 		flex: 1,
@@ -853,6 +1225,118 @@ const prestamos = StyleSheet.create({
 		color: COLORS.black,
 	},
 	bouncyCheckbox: {},
+});
+
+const retiro = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	contentContainer: {
+		flex: 19,
+		width: "92%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	titleContainer: {
+		height: "auto",
+		// flex: 0.3,
+		// height: "6%",
+		width: "100%",
+		marginTop: "4%",
+		// borderWidth: 1,
+		// borderRadius: 10,
+		justifyContent: "flex-start",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+	},
+	titleText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: COLORS.black,
+	},
+	textContainer: {
+		// height: 450,
+		// flex: 4,
+		// height: "60%",
+		// borderWidth: 1,
+		paddingTop: 10,
+		paddingBottom: 10,
+		width: "100%",
+		marginTop: "2%",
+		// marginBottom: "1%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// borderWidth: 1,
+	},
+	textSubContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+	},
+	text: {
+		// flex: 1,
+		fontSize: 16,
+		textAlign: "left",
+		// borderWidth: 1,
+		color: COLORS.black,
+	},
+	subtext: {
+		fontSize: 16,
+		color: COLORS.black,
+	},
+	button: {
+		backgroundColor: COLORS.naranja,
+		// width: "50%",
+		marginTop: 15,
+		paddingVertical: 8,
+		paddingHorizontal: 20,
+		borderRadius: 12,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	textButton: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+});
+
+const cartas = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	sectionContainer: {
+		flex: 19,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "center",
+	},
+	sectionTitleContainer: {
+		height: "10%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		paddingLeft: "4%",
+	},
+	sectionButtonContainer: {
+		flex: 1,
+		// height: "100%",
+		width: "90%",
+		// top: "3%",
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "center",
+		alignItems: "center",
+		// marginBottom: "-5%"
+		// borderWidth: 1,
+	},
 });
 
 const reposiciones = StyleSheet.create({
@@ -994,12 +1478,26 @@ const polizas = StyleSheet.create({
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
+	titleContainer: {
+		flex: 1,
+		width: "90%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	titleText: {
+		fontSize: 30,
+		fontFamily: "Montserrat-SemiBold",
+		textAlign: "center",
+	},
 	scrollContainer: {
 		flex: 1,
 		width: "100%",
+		
 	},
 	scrollContentContainer: {
 		flexGrow: 1,
+		justifyContent: "flex-start",
+		alignItems: "center"
 	},
 });
 
@@ -1107,6 +1605,17 @@ const opiniones = StyleSheet.create({
 		color: COLORS.black,
 		textAlign: "left",
 	},
+	remainingChars: {
+		marginTop: "1%",
+		alignSelf: "flex-end",
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+	},
+	noRemainingChars: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		color: "red",
+	},
 	buttonContainer: {
 		flex: 0.2,
 		paddingHorizontal: "12%",
@@ -1130,12 +1639,16 @@ export {
 	infopers,
 	area,
 	redes,
+	ideas,
 	directorio,
+	notificaciones,
 	vacaciones,
 	reciboNom,
 	prenomina,
 	solicitudes,
 	prestamos,
+	retiro,
+	cartas,
 	reposiciones,
 	linea,
 	polizas,

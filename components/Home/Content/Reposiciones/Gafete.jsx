@@ -1,19 +1,32 @@
 import React, { useState } from "react";
-import {
-	Modal,
-	View,
-	Text,
-	TouchableOpacity,
-} from "react-native";
+import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { gafete } from "./styles";
 import Confirm from "./Confirm";
+import Working from "../Design/Working";
 
-function Gafete({ onCallback, isModalVisible, onExit }) {
+function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
+
+	const requestGafete = async () => {
+		setIsWorkingModalVisible(true);
+		const response = await tarjetasRequisition({ type: "Gafete" });
+		// console.log("Response requestGafete: ", response);
+		setIsWorkingModalVisible(false);
+		if (response === "Done") {
+			confirmationModalHandler();
+		} else {
+			Alert.alert(
+				"Error",
+				"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+			);
+		}
+	};
+
 	return (
 		<View style={gafete.container}>
 			<Modal
@@ -27,14 +40,23 @@ function Gafete({ onCallback, isModalVisible, onExit }) {
 						<View style={gafete.contentContainer}>
 							{/* Title */}
 							<View style={gafete.titleContainer}>
-								<Text style={gafete.titleText}>Solicitud de Reposición</Text>
+								<Text style={gafete.titleText}>
+									Solicitud de Reposición
+								</Text>
 							</View>
 
 							{/* Text */}
 							<View style={gafete.textContainer}>
 								<Text style={gafete.text}>
-									<Text style={gafete.text}>Se enviará la</Text>
-									<Text style={[gafete.text, { fontWeight: "bold" }]}>
+									<Text style={gafete.text}>
+										Se enviará la
+									</Text>
+									<Text
+										style={[
+											gafete.text,
+											{ fontWeight: "bold" },
+										]}
+									>
 										{" "}
 										Solicitud de Reposición de Gafete{" "}
 									</Text>
@@ -43,28 +65,36 @@ function Gafete({ onCallback, isModalVisible, onExit }) {
 									</Text>
 								</Text>
 								<Text style={gafete.text}>
-									Recuerda que debes entregar tu gafete dañado, de otra forma
-									tendra un costo.{"\n"}
+									Recuerda que debes entregar tu gafete
+									dañado, de otra forma tendra un costo.{"\n"}
 								</Text>
 								<Text style={gafete.text}>
-									En 24 hrs. puedes pasar al Departamento de RH por el.{"\n"}
+									En 24 hrs. puedes pasar al Departamento de
+									RH por el.{"\n"}
 								</Text>
-								<Text style={gafete.text}>¿Deseas continuar?</Text>
+								<Text style={gafete.text}>
+									¿Deseas continuar?
+								</Text>
 							</View>
 
 							{/* Back button */}
 							<View style={gafete.buttonContainer}>
 								<TouchableOpacity
-									onPress={confirmationModalHandler}
+									onPress={requestGafete}
+									// onPress={confirmationModalHandler}
 									style={gafete.button}
 								>
-									<Text style={gafete.textButton}>Solicitar</Text>
+									<Text style={gafete.textButton}>
+										Solicitar
+									</Text>
 								</TouchableOpacity>
 								<View>
 									{ConfirmationVisible && (
 										<Confirm
 											isModalVisible={ConfirmationVisible}
-											onCallback={confirmationModalHandler}
+											onCallback={
+												confirmationModalHandler
+											}
 											onExit={confirmationModalHandler}
 											closeModal={onExit}
 										/>
@@ -72,12 +102,20 @@ function Gafete({ onCallback, isModalVisible, onExit }) {
 								</View>
 								<TouchableOpacity
 									onPress={onExit}
-									style={[gafete.button, { backgroundColor: "gray" }]}
+									style={[
+										gafete.button,
+										{ backgroundColor: "gray" },
+									]}
 								>
-									<Text style={gafete.textButton}>Volver</Text>
+									<Text style={gafete.textButton}>
+										Volver
+									</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
+						{isWorkingModalVisible && (
+							<Working isModalVisible={isWorkingModalVisible} />
+						)}
 					</View>
 				</View>
 			</Modal>

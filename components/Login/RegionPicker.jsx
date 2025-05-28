@@ -12,8 +12,10 @@ function RegionPicker({ onCallback, region, setRegion }) {
 			selectedValue={region}
 			onValueChange={(itemValue) => {
 				{
-					itemValue === "Selecciona la región"
-						? Alert.alert("Opción inválida", "Debes seleccionar una región", [{text: "Entendido"}])
+					itemValue === "Selecciona"
+						? Alert.alert("Opción inválida", "Debes seleccionar una región", [
+								{ text: "Entendido" },
+						  ])
 						: setRegion(itemValue);
 					onCallback && onCallback();
 				}
@@ -21,31 +23,18 @@ function RegionPicker({ onCallback, region, setRegion }) {
 			style={layout.picker}
 			itemStyle={modal.pickerItemStyle}
 		>
-			{Platform.OS === "android" ? (
+			{Platform.OS === "android" && (
 				<Picker.Item
 					label="Selecciona la región"
 					style={{ color: "gray" }}
-					value="Selecciona la región"
+					value="Selecciona"
 				/>
-			) : null}
-			<Picker.Item label="Amamex" style={modal.pickerItem} value="Amamex" />
-			<Picker.Item
-				label="Cd. Juárez"
-				style={modal.pickerItem}
-				value="Cd. Juárez"
-			/>
-			<Picker.Item
-				label="Monterrey"
-				style={modal.pickerItem}
-				value="Monterrey"
-			/>
-			<Picker.Item
-				label="Monterrey Living Spaces"
-				style={modal.pickerItem}
-				value="Monterrey Living Spaces"
-			/>
-			<Picker.Item label="Saltillo" style={modal.pickerItem} value="Saltillo" />
-			<Picker.Item label="Tijuana" style={modal.pickerItem} value="Tijuana" />
+			)}
+			<Picker.Item label="Amamex" style={modal.pickerItem} value="AMX" />
+			<Picker.Item label="Cd. Juárez" style={modal.pickerItem} value="JRZ" />
+			<Picker.Item label="Monterrey" style={modal.pickerItem} value="MTY" />
+			<Picker.Item label="Saltillo" style={modal.pickerItem} value="SAL" />
+			<Picker.Item label="Tijuana" style={modal.pickerItem} value="TIJ" />
 		</Picker>
 	);
 }

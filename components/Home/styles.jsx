@@ -92,8 +92,8 @@ const data = StyleSheet.create({
 		// flex: 1,
 		height: "100%",
 		width: "100%",
-		borderRadius: 100
-	}
+		borderRadius: 100,
+	},
 });
 
 const quickbar = StyleSheet.create({
@@ -115,6 +115,7 @@ const quickbar = StyleSheet.create({
 		top: "0.3%",
 		width: "100%",
 		height: "100%",
+		// borderWidth: 1
 	},
 	iconBgContainer: {
 		justifyContent: "center",
@@ -219,6 +220,11 @@ const navbar = StyleSheet.create({
 		width: "8%",
 		marginTop: "4%",
 		marginHorizontal: "2.5%",
+	},
+	modal: {
+		position: "absolute",
+		height: "100%",
+		width: "100%",
 	},
 });
 

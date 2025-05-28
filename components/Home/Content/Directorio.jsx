@@ -81,7 +81,7 @@ function Directorio() {
 					{/* Identificacion */}
 					<View style={[directorio.divider, {marginBottom: "-1%"}]}/>
 					<Registro img={sos} number="911" />
-					<Registro img={csa} number="(656) 649-1010" />
+					<Registro img={csa} number="(656) 649-1000" />
 					<Registro img={cruz} number="065" />
 					<Registro img={cfe} number="071" />
 					<Registro img={angeles} number="078" />

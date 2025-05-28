@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "TecmaMovil",
-    "slug": "TecmaMovil",
-    "version": "1.0.0",
+    "name": "TECMA Móvil Connect Dev",
+    "slug": "tecma-movil-connect-dev",
+    "version": "1.0.5dev",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icon-dev.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,14 +15,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "buildNumber": "5",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
+      "infoPlist": {
+        "CFBundleDisplayName": "TECMA Móvil Connect Dev",
+        "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
+      "versionCode": 5,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon-dev.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.marcotecma.TecmaMovil",
+      "package": "com.tecma.movilconnecttest",
+      "name": "TECMA Móvil Connect Test",
       "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
@@ -32,6 +43,23 @@
       "eas": {
         "projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          },
+          "ios": {
+            "infoPlist": {
+              "NSAppTransportSecurity": {
+                "NSAllowsArbitraryLoads": true
+              }
+            }
+          }
+        }
+      ]
+    ]
   }
 }

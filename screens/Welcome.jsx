@@ -1,24 +1,152 @@
-import {
-	Text,
-	Animated,
-	StyleSheet,
-	View,
-	StatusBar,
-} from "react-native";
-import React, { useEffect, useRef } from "react";
+import { Text, Animated, StyleSheet, View } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
+import getFirstName from "../components/utils";
+import fetchPost from "../components/fetching";
+import { Buffer } from "buffer";
+import { HomeContext } from "../components/HomeContext";
+import { AppContext } from "../components/AppContext";
 
-const Welcome = ({ navigation }) => {
-	// useEffect(() => {
-	//   const timer = setTimeout(() => {
-	//     navigation.replace("Home");
-	//   }, 3000); // 3 seconds to automatically change to the next screen
+const Welcome = ({ navigation, route }) => {
+	const { name, accessToken } = route.params;
+	const { numEmp, region } = useContext(AppContext);
+	const { setProfileImg, setDataFields, setIsSupervisor } =
+		useContext(HomeContext);
+	const [animFinish, setAnimFinish] = useState(false);
+	const [infoFetched, setInfoFetched] = useState(false);
 
-	//   return () => clearTimeout(timer); // Clears the timer
-	// }, []);
-
+	const handleAnimationFinish = () => {
+		setAnimFinish(!animFinish);
+	};
+	// setDataFields({
+	// 	accessToken: accessToken,
+	// 	name: name,
+	// });
+	const firstName = getFirstName(name);
+	const formattedName =
+		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 	const fadeAnim = useRef(new Animated.Value(0)).current;
+
+	const getUserInfo = () => {
+		const query = {
+			query: `query UserInfo($numEmp: String! $region: String!){
+				UserInfo(numEmp: $numEmp, region: $region) {
+					apellido_pat
+					apellido_mat
+					sexo
+					razon
+					planta
+					planta_id
+					area
+					proyecto
+					supervisor
+					nomina
+					puesto
+					puesto_id
+					turno
+					clasificacion
+				}
+				IsSupervisor(
+						numEmp: $numEmp,
+						region: $region,
+					) {
+						success
+						message
+					}
+			}`,
+			variables: {
+				numEmp: numEmp,
+				region: region,
+			},
+		};
+		// setIsLoading(true);
+		fetchPost({ query })
+			.then((data) => {
+				// console.log("Response data at welcome:", data);
+				if (data.data.UserInfo) {
+					setDataFields({
+						accessToken: accessToken,
+						name: name,
+						numEmp: numEmp,
+						surname_1: data.data.UserInfo.apellido_pat,
+						surname_2: data.data.UserInfo.apellido_mat,
+						sexo: data.data.UserInfo.sexo,
+						razon: data.data.UserInfo.razon,
+						planta: data.data.UserInfo.planta,
+						plantaID: data.data.UserInfo.planta_id.trim(),
+						area: data.data.UserInfo.area,
+						proyecto: data.data.UserInfo.proyecto.trim(),
+						supervisor: data.data.UserInfo.supervisor,
+						nomina: data.data.UserInfo.nomina,
+						puesto: data.data.UserInfo.puesto,
+						puestoID: data.data.UserInfo.puesto_id.trim(),
+						turno: data.data.UserInfo.turno,
+						clasificacion: data.data.UserInfo.clasificacion.trim(),
+					});
+					setInfoFetched(!infoFetched);
+					// navigation.replace("Home");
+				} else {
+					console.warn("Error retrieving user info");
+				}
+				// if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
+				// 	setIsSupervisor(true);
+				// }
+				
+				// setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error at welcome:", error);
+				// Handle the error
+				// setIsLoading(false);
+			});
+	};
+
+	const getUserImg = () => {
+		const query = {
+			query: `query ImageBlob($numEmp: String!, $region: String!){
+				ImageBlob(numEmp: $numEmp, region: $region) {
+					image
+				}
+			}`,
+			variables: {
+				numEmp: numEmp,
+				region: region,
+			},
+		};
+		// setIsLoading(true);
+		fetchPost({ query })
+			.then((data) => {
+				// console.log("Response image data at welcome:", data);
+				if (data.data.ImageBlob === null) {
+					setProfileImg(null);
+				} else {
+					setProfileImg(
+						Buffer.from(data.data.ImageBlob.image, "base64").toString("base64")
+					);
+					console.log("Image set properly");
+				}
+				// setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error at welcome img:", error);
+				// Handle the error
+				// setIsLoading(false);
+			});
+	};
+
+	useEffect(() => {
+		if (infoFetched === true && animFinish === true) {
+			// StatusBar.setHidden(false);
+			navigation.replace("Home");
+		}
+	}, [infoFetched, animFinish]);
+
+	useEffect(() => {
+		// StatusBar.setHidden(true);
+		getUserImg();
+		getUserInfo();
+	}, []);
 
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
@@ -28,20 +156,23 @@ const Welcome = ({ navigation }) => {
 		}).start();
 	}, [fadeAnim]);
 
-	useEffect(() => {
-		StatusBar.setHidden(true); // Hide the status bar when the component mounts
-	}, []);
+	// useEffect(() => {
+	// 	StatusBar.setHidden(true); // Hide the status bar when the component mounts
+	// }, []);
 
-	const handleAnimationFinish = () => {
-		navigation.navigate("Home");
-		StatusBar.setHidden(false);
-	};
 	return (
-		<View style={{ width: "100%", height: "100%" }}>
+		<View
+			style={{
+				position: "absolute",
+				width: "100%",
+				height: "100%",
+				zIndex: 2,
+			}}
+		>
 			<WelcomeAnim
-				style={{ position: "absolute", width: "100%", height: "100%" }}
+				style={{ position: "absolute", zIndex: 1 }}
 				onFinish={handleAnimationFinish}
-			></WelcomeAnim>
+			/>
 			<Animated.View style={[styles.container, { opacity: fadeAnim }]}>
 				<Text
 					style={{
@@ -63,32 +194,10 @@ const Welcome = ({ navigation }) => {
 					}}
 				>
 					{" "}
-					Marcos!{" "}
+					{formattedName}!{" "}
 				</Text>
 			</Animated.View>
 		</View>
-		// <ImageBackground
-		//   source={require("../assets/backgrounds/FONDOBIENVENIDA.png")}
-		//   style={{ flex: 1 }}
-		// >
-		//   {/* Logo */}
-		//   <Logo></Logo>
-
-		//   <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-		//     <Text
-		//       style={{ color: COLORS.white, fontSize: 140, marginBottom: "-10%" }}
-		//     >
-		//       {" "}
-		//       Hello{" "}
-		//     </Text>
-		//     <Text
-		//       style={{ color: COLORS.white, fontSize: 80, textAlign: "center" }}
-		//     >
-		//       {" "}
-		//       Marcos!{" "}
-		//     </Text>
-		//   </Animated.View>
-		// </ImageBackground>
 	);
 };
 const styles = StyleSheet.create({
@@ -99,7 +208,7 @@ const styles = StyleSheet.create({
 		bottom: "12%",
 		justifyContent: "flex-end",
 		alignItems: "center",
-		zIndex: 1,
+		zIndex: 2,
 	},
 });
 

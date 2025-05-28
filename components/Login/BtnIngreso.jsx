@@ -1,10 +1,209 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Alert, Linking } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../constants/colors";
 import { layout } from "./styles";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import fetchPost from "../fetching";
+import Loading from "../Animations/Loading";
+import { AppContext } from "../AppContext";
+// import { autoLogin } from "../../defaultValues";
 
-function Ingresar({ navigation }) {
+import { hideMessage, showMessage } from "react-native-flash-message";
+
+function Ingresar({ nip, checkboxState, navigation, region }) {
+	const {
+		numEmp,
+		setInfoFields,
+		appVersion,
+		playStoreURI,
+		appStoreURI,
+		platform,
+	} = useContext(AppContext);
+	const [versionCheck, setVersionCheck] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [canContinue, setCanContinue] = useState(false);
+
+	const query = {
+		query: `query Versions($currVer: String!){
+			Versions(currVer: $currVer) {
+				upToDate
+				critical					
+			}
+		}`,
+		variables: {
+			currVer: appVersion,
+		},
+	};
+
+	const fetchData = async () => {
+		try {
+			const data = await fetchPost({ query });
+			console.log("Response data at Versions:", data);
+			if (data.data.Versions) {
+				if (data.data.Versions.upToDate === false) {
+					if (data.data.Versions.critical === true) {
+						showMessage({
+							message: "La aplicación tiene una actualización importante",
+							description:
+								"Deberás actualizar para poder continuar. Toca aquí para actualizar",
+							type: "danger",
+							duration: 20000,
+							icon: { icon: "warning", position: "right" },
+							onPress: () => {
+								openStore();
+							},
+						});
+					} else {
+						setCanContinue(true);
+						showMessage({
+							message: "La aplicación tiene una nueva actualización",
+							description:
+								"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
+							type: "warning",
+							duration: 20000,
+							icon: { icon: "warning", position: "right" },
+							onPress: () => {
+								openStore();
+							},
+						});
+					}
+				} else {
+					setCanContinue(true);
+				}
+			} else {
+				showMessage({
+					message: "Error de conexión",
+					description:
+						"Hubo un problema al contactar nuestros servidores, revisa tu conexión a internet.",
+					type: "warning",
+					duration: 10000,
+					icon: { icon: "warning", position: "right" },
+				});
+				console.warn("Error retrieving app version information");
+			}
+		} catch (error) {
+			console.error("Error at Versions:", error);
+		} finally {
+			// setIsLoading(false);
+		}
+	};
+
+	const openStore = async () => {
+		try {
+			console.log("Platform is");
+			await Linking.openURL(platform === "ios" ? appStoreURI : playStoreURI);
+		} catch (error) {
+			console.error("Failed to open store: ", error);
+		}
+	};
+
+	useEffect(() => {
+		setVersionCheck(true);
+		fetchData();
+		setVersionCheck(false);
+	}, []);
+
+	const handleLogin = () => {
+		// console.log("Prueba");
+		if (!canContinue) {
+			showMessage({
+				message: "La aplicación tiene una actualización importante",
+				description: "Deberás actualizar para poder continuar",
+				type: "danger",
+				// duration: 15000,
+				autoHide: false,
+				icon: { icon: "warning", position: "right" },
+			});
+			return;
+		}
+		if (numEmp === "") {
+			Alert.alert("Debes introducir tu número de empleado o reloj");
+			return;
+		}
+		if (nip === "") {
+			Alert.alert("Debes introducir tu NIP");
+			return;
+		}
+		if (region === "Selecciona") {
+			Alert.alert("Opción incorrecta", "Selecciona una región");
+			return;
+		}
+
+		hideMessage();
+		setIsLoading(true);
+
+		const query = {
+			query: `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
+						login(numEmp: $numEmp, nip: $nip, region: $region) {
+							success
+							message
+							data {
+								token
+								name
+							}
+						}
+					}`,
+			variables: {
+				numEmp: numEmp,
+				region: region,
+				nip: nip,
+			},
+		};
+		fetchPost({ query })
+			.then(async (data) => {
+				setIsLoading(false);
+				// console.log("Response data at ingreso: ", data);
+				// return;
+				if (data.data.login.success) {
+					// setFields({
+					// 	name: data.data.login.name,
+					// 	accessToken: data.data.login.token,
+					// });
+					if (checkboxState) {
+						console.log("Checkbox checked");
+						await AsyncStorage.setItem("storedNumEmp", numEmp);
+						await AsyncStorage.setItem("storedRegion", region);
+						console.log("Set items: ", region, numEmp);
+					}
+					// console.log(JSON.stringify(data.data.login, null, 1));
+					setInfoFields({ region: region });
+					navigation.replace("WelcomeHome", {
+						screen: "Welcome",
+						params: {
+							name: data.data.login.data.name,
+							accessToken: data.data.login.data.token,
+						},
+					});
+				} else if (data.data.login.message) {
+					Alert.alert(data.data.login.message);
+					return;
+				} else {
+					Alert.alert(
+						"Error",
+						"Ocurrió un error inesperado, vuelve a intentarlo."
+					);
+					return;
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					console.error("Error at ingreso", error);
+				}
+				// Alert.alert(error.errors[0].message);
+				// Handle the error
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	};
+
+	// useEffect(() => {
+	// 	if (autoLogin) {
+	// 		handleLogin();
+	// 	}
+	// }, []);
+
 	return (
 		<LinearGradient
 			colors={[COLORS.naranja, COLORS.rojo]}
@@ -12,12 +211,15 @@ function Ingresar({ navigation }) {
 			start={{ x: 0, y: 0 }}
 			end={{ x: 1, y: 0 }}
 		>
-			<TouchableOpacity
-				style={layout.button}
-				onPress={() => navigation.replace("Welcome")}
-			>
-				<Text style={layout.buttonText}>Ingresar</Text>
-			</TouchableOpacity>
+			{isLoading || versionCheck ? (
+				<TouchableOpacity style={layout.button}>
+					<Loading />
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity style={layout.button} onPress={handleLogin}>
+					<Text style={layout.buttonText}>Ingresar</Text>
+				</TouchableOpacity>
+			)}
 		</LinearGradient>
 	);
 }

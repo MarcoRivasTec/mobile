@@ -1,263 +1,475 @@
-import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from '../constants/colors';
+import {
+	View,
+	ImageBackground,
+	TouchableWithoutFeedback,
+	Keyboard,
+	KeyboardAvoidingView,
+	TouchableOpacity,
+	Platform,
+	TextInput,
+	Text,
+	Pressable,
+	Alert,
+	BackHandler,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useContext, useEffect, useState } from "react";
+import TecmaMovil from "../components/Animations/TecmaMovil";
+import NIP from "../components/Login/NIP";
+import { handleTextChange } from "../components/Login/textCheck";
+import { layout } from "../components/Login/styles";
+import fetchPost from "../components/fetching";
+import COLORS from "../constants/colors";
+import Icon from "../components/Home/icons";
+import Loading from "../components/Animations/Loading";
 import { Ionicons } from "@expo/vector-icons";
-import Button from '../components/Button';
+import { AppContext } from "../components/AppContext";
+import RegionPicker from "../components/Login/RegionPicker";
+import DownArrow from "../components/Animations/DownArrow";
+import { reset } from "./styles";
+import RegionModal from "../components/Login/RegionModal";
 
 const Restablece = ({ navigation }) => {
-    // const [isPasswordShown, setIsPasswordShown] = useState(false);
-    // const [isChecked, setIsChecked] = useState(false);
-    return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-            {/* <View style={{ flex: 1, marginHorizontal: 22 }}>
-                <View style={{ marginVertical: 22 }}>
-                    <Text style={{
-                        fontSize: 22,
-                        fontWeight: 'bold',
-                        marginVertical: 12,
-                        color: COLORS.black
-                    }}>
-                        Create Account
-                    </Text>
+	const { platform } = useContext(AppContext);
+	console.log("Platform is: ", platform);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [isInputFocused, setIsInputFocused] = useState(false);
+	const [region, setRegion] = useState("Selecciona");
+	const [numEmp, setNumEmp] = useState("");
+	const [rfc, setRFC] = useState("");
+	const [nip, setNip] = useState("");
+	const [nip2, setNip2] = useState("");
+	const [isNipShown, setIsNipShown] = useState(true);
 
-                    <Text style={{
-                        fontSize: 16,
-                        color: COLORS.black
-                    }}>Connect with your friend today!</Text>
-                </View>
+	const returnRegion = (region) => {
+		switch (region) {
+			case "Selecciona":
+				return "Selecciona una opción";
+			case "JRZ":
+				return "Cd. Juárez";
+			case "MTY":
+				return "Monterrey";
+			case "AMX":
+				return "Amamamex";
+			case "TIJ":
+				return "Tijuana";
+			case "SAL":
+				return "Saltillo";
+			default:
+				break;
+		}
+	};
 
-                <View style={{ marginBottom: 12 }}>
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight: 400,
-                        marginVertical: 8
-                    }}>Email address</Text>
+	useEffect(() => {
+		const backAction = () => {
+			if (isInputFocused) {
+				if (inputRef.current) {
+					inputRef.current.blur(); // Force blur on input
+				}
+				Keyboard.dismiss();
+				setIsInputFocused(false);
+				return true; // Prevent default back action
+			}
+			return false; // Allows normal back behavior when input is not focused
+		};
 
-                    <View style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingLeft: 22
-                    }}>
-                        <TextInput
-                            placeholder='Enter your email address'
-                            placeholderTextColor={COLORS.black}
-                            keyboardType='email-address'
-                            style={{
-                                width: "100%"
-                            }}
-                        />
-                    </View>
-                </View>
+		const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
+			setIsInputFocused(false);
+		});
 
-                <View style={{ marginBottom: 12 }}>
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight: 400,
-                        marginVertical: 8
-                    }}>Mobile Number</Text>
+		const backHandler = BackHandler.addEventListener(
+			"hardwareBackPress",
+			backAction
+		);
 
-                    <View style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingLeft: 22
-                    }}>
-                        <TextInput
-                            placeholder='+91'
-                            placeholderTextColor={COLORS.black}
-                            keyboardType='numeric'
-                            style={{
-                                width: "12%",
-                                borderRightWidth: 1,
-                                borderLeftColor: COLORS.grey,
-                                height: "100%"
-                            }}
-                        />
+		return () => {
+			backHandler.remove();
+			keyboardListener.remove();
+		};
+	}, [isInputFocused]);
 
-                        <TextInput
-                            placeholder='Enter your phone number'
-                            placeholderTextColor={COLORS.black}
-                            keyboardType='numeric'
-                            style={{
-                                width: "80%"
-                            }}
-                        />
-                    </View>
-                </View>
+	function modalHandler() {
+		setIsModalVisible(!isModalVisible);
+	}
 
-                <View style={{ marginBottom: 12 }}>
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight: 400,
-                        marginVertical: 8
-                    }}>Password</Text>
+	const handleReset = () => {
+		setIsLoading(true);
+		if (numEmp === "") {
+			Alert.alert(
+				"Importante",
+				"Debes introducir tu número de empleado / reloj"
+			);
+			setIsLoading(false);
+			return;
+		}
+		if (rfc === "") {
+			Alert.alert("Importante", "Debes introducir tu RFC");
+			return;
+		}
+		if (nip.length !== 6) {
+			Alert.alert("Importante", "Debes introducir un NIP de 6 dígitos");
+			setIsLoading(false);
+			return;
+		}
+		if (nip === "") {
+			Alert.alert("Importante", "Debes introducir un NIP");
+			setIsLoading(false);
+			return;
+		}
+		if (nip2 === "") {
+			Alert.alert("Importante", "Debes reintroducir el NIP");
+			return;
+		}
+		if (nip !== nip2) {
+			Alert.alert("Error", "Tus NIPs no coinciden, reintrodúcelo");
+			setIsLoading(false);
+			return;
+		}
+		if (region === "Selecciona") {
+			Alert.alert("Opción incorrecta", "Selecciona una región");
+			setIsLoading(false);
+			return;
+		}
 
-                    <View style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingLeft: 22
-                    }}>
-                        <TextInput
-                            placeholder='Enter your password'
-                            placeholderTextColor={COLORS.black}
-                            secureTextEntry={isPasswordShown}
-                            style={{
-                                width: "100%"
-                            }}
-                        />
+		const query = {
+			query: `mutation resetNIP($numEmp: String!, $rfc: String!, $newNIP: String!, $region: String!){
+				resetNIP(numEmp: $numEmp, rfc: $rfc, newNIP: $newNIP, region: $region)
+			}`,
+			variables: {
+				numEmp: numEmp,
+				newNIP: nip,
+				rfc: rfc,
+				region: region,
+			},
+		};
+		fetchPost({ query })
+			.then((data) => {
+				console.log(JSON.stringify(data.data.resetNIP, null, 1));
+				switch (data.data.resetNIP) {
+					case "Success": {
+						Alert.alert(
+							"Cambio exitoso",
+							"Podrás utilizar tu nuevo NIP para ingresar a TECMAMóvil Connect."
+						);
+						navigation.replace("Login");
+						setIsLoading(false);
+						return;
+					}
+					case "Not found": {
+						Alert.alert(
+							"Error",
+							"No se encontró un empleado con el número de reloj proporionado."
+						);
+						setIsLoading(false);
+						return;
+					}
+					case "Invalid RFC": {
+						Alert.alert(
+							"Error",
+							"El RFC proporcionado es incorrecto."
+						);
+						setIsLoading(false);
+						return;
+					}
+					case "Invalid NIP": {
+						Alert.alert(
+							"Error",
+							"El NIP proporcionado es incorrecto."
+						);
+						setIsLoading(false);
+						return;
+					}
+					case "Same NIP": {
+						Alert.alert(
+							"Error",
+							"El NIP debe ser diferente del anterior."
+						);
+						setIsLoading(false);
+						return;
+					}
 
-                        <TouchableOpacity
-                            onPress={() => setIsPasswordShown(!isPasswordShown)}
-                            style={{
-                                position: "absolute",
-                                right: 12
-                            }}
-                        >
-                            {
-                                isPasswordShown == true ? (
-                                    <Ionicons name="eye-off" size={24} color={COLORS.black} />
-                                ) : (
-                                    <Ionicons name="eye" size={24} color={COLORS.black} />
-                                )
-                            }
+					default:
+						break;
+				}
+			})
+			.catch((error) => {
+				setIsLoading(false);
+				if (error) {
+					console.error("Error at restablecer", error);
+				}
+				// Alert.alert(error.errors[0].message);
+				// Handle the error
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	};
 
-                        </TouchableOpacity>
-                    </View>
-                </View>
+	useEffect(() => {
+		console.log("Modal visibility: ", isModalVisible);
+	}, [isModalVisible]);
 
-                <View style={{
-                    flexDirection: 'row',
-                    marginVertical: 6
-                }}>
-                    
+	return (
+		<ImageBackground
+			source={require("../assets/backgrounds/FONDOSPLASH.png")}
+			style={reset.backgroundContainer}
+		>
+			<TouchableWithoutFeedback
+				onPress={Keyboard.dismiss}
+				accessible={false}
+			>
+				<View style={reset.container}>
+					{/* Logo */}
+					<View
+						style={[
+							reset.logoContainer,
+							{ flex: isInputFocused ? 40 : 49 },
+						]}
+					>
+						<TecmaMovil />
+					</View>
 
-                    <Text>I aggree to the terms and conditions</Text>
-                </View>
+					{/* Margin */}
+					<View style={{ flex: isInputFocused ? 1 : 1 }} />
 
-                <Button
-                    title="Sign Up"
-                    filled
-                    style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                    }}
-                />
+					<KeyboardAvoidingView
+						style={reset.credentialsContainer}
+						behavior="padding"
+						keyboardVerticalOffset={10}
+					>
+						{/* User */}
+						<View style={reset.fieldContainer}>
+							<View
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.primary },
+								]}
+							>
+								<Icon
+									name="USER"
+									size={20}
+									style={reset.icon}
+								/>
+							</View>
+							<View style={reset.field}>
+								<TextInput
+									placeholder="Número de empleado"
+									placeholderTextColor={COLORS.placeholder}
+									keyboardType="number-pad"
+									inputMode="numeric"
+									value={numEmp}
+									onChangeText={(text) =>
+										handleTextChange(text, setNumEmp)
+									}
+									maxLength={12}
+									style={reset.userInput}
+									onFocus={() => setIsInputFocused(true)}
+									onBlur={() => setIsInputFocused(false)}
+								/>
+							</View>
+						</View>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-                    <View
-                        style={{
-                            flex: 1,
-                            height: 1,
-                            backgroundColor: COLORS.grey,
-                            marginHorizontal: 10
-                        }}
-                    />
-                    <Text style={{ fontSize: 14 }}>Or Sign up with</Text>
-                    <View
-                        style={{
-                            flex: 1,
-                            height: 1,
-                            backgroundColor: COLORS.grey,
-                            marginHorizontal: 10
-                        }}
-                    />
-                </View>
+						{/* RFC */}
+						<View style={reset.fieldContainer}>
+							<View
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.primary },
+								]}
+							>
+								<Icon
+									name="USER"
+									size={20}
+									style={reset.icon}
+								/>
+							</View>
+							<View style={reset.field}>
+								<TextInput
+									placeholder="Introduce tu RFC"
+									placeholderTextColor={COLORS.placeholder}
+									value={rfc}
+									onChangeText={(text) => setRFC(text.toUpperCase())}
+									maxLength={13}
+									onFocus={() => setIsInputFocused(true)}
+									onBlur={() => setIsInputFocused(false)}
+									style={reset.userInput}
+								/>
+							</View>
+						</View>
 
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        onPress={() => console.log("Pressed")}
-                        style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                            height: 52,
-                            borderWidth: 1,
-                            borderColor: COLORS.grey,
-                            marginRight: 4,
-                            borderRadius: 10
-                        }}
-                    >
-                        <Image
-                            source={require("../assets/social/facebook.png")}
-                            style={{
-                                height: 36,
-                                width: 36,
-                                marginRight: 8
-                            }}
-                            resizeMode='contain'
-                        />
+						{/* NIP */}
+						<View style={reset.fieldContainer}>
+							<View
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.secondary },
+								]}
+							>
+								<Icon
+									name="PASSWORD"
+									size={26}
+									style={reset.icon}
+								/>
+							</View>
+							<View style={reset.field}>
+								<TextInput
+									placeholder="Tu nuevo NIP (6 dígitos)"
+									placeholderTextColor={COLORS.placeholder}
+									keyboardType="number-pad"
+									inputMode="numeric"
+									minLength={6}
+									maxLength={6}
+									value={nip}
+									onChangeText={(text) =>
+										handleTextChange(text, setNip)
+									}
+									secureTextEntry={!isNipShown}
+									style={reset.userInput}
+									onFocus={() => setIsInputFocused(true)}
+									onBlur={() => setIsInputFocused(false)}
+								/>
+								{/* <TouchableOpacity
+									onPress={() => setIsNipShown(!isNipShown)}
+									style={reset.passEye}
+								>
+									{isNipShown == true ? (
+										<Ionicons
+											name="eye-off"
+											size={24}
+											color={COLORS.black}
+										/>
+									) : (
+										<Ionicons
+											name="eye"
+											size={24}
+											color={COLORS.black}
+										/>
+									)}
+								</TouchableOpacity> */}
+							</View>
+						</View>
 
-                        <Text>Facebook</Text>
-                    </TouchableOpacity>
+						{/* NIP 2 */}
+						<View style={reset.fieldContainer}>
+							<View
+								style={[
+									reset.iconBox,
+									{ backgroundColor: COLORS.secondary },
+								]}
+							>
+								<Icon
+									name="PASSWORD"
+									size={26}
+									style={reset.icon}
+								/>
+							</View>
+							<View style={reset.field}>
+								<TextInput
+									placeholder="Reintroduce el NIP (6 dígitos)"
+									placeholderTextColor={COLORS.placeholder}
+									keyboardType="number-pad"
+									inputMode="numeric"
+									minLength={6}
+									maxLength={6}
+									value={nip2}
+									onChangeText={(text) =>
+										handleTextChange(text, setNip2)
+									}
+									secureTextEntry={!isNipShown}
+									style={reset.userInput}
+									onFocus={() => setIsInputFocused(true)}
+									onBlur={() => setIsInputFocused(false)}
+								/>
+								{/* <TouchableOpacity
+										onPress={() => setIsNipShown(!isNipShown)}
+										style={reset.passEye}
+									>
+									{isNipShown == true ? (
+										<Ionicons name="eye-off" size={24} color={COLORS.black} />
+									) : (
+										<Ionicons name="eye" size={24} color={COLORS.black} />
+									)}
+								</TouchableOpacity> */}
+							</View>
+						</View>
+					</KeyboardAvoidingView>
 
-                    <TouchableOpacity
-                        onPress={() => console.log("Pressed")}
-                        style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                            height: 52,
-                            borderWidth: 1,
-                            borderColor: COLORS.grey,
-                            marginRight: 4,
-                            borderRadius: 10
-                        }}
-                    >
-                        <Image
-                            source={require("../assets/social/google.png")}
-                            style={{
-                                height: 36,
-                                width: 36,
-                                marginRight: 8
-                            }}
-                            resizeMode='contain'
-                        />
+					{/* Margin */}
+					{isInputFocused && <View style={{ flex: 7 }} />}
 
-                        <Text>Google</Text>
-                    </TouchableOpacity>
-                </View>
+					{/* Region */}
+					<View style={reset.regionContainer}>
+						<View style={reset.iconBox}>
+							<Icon name="REGION" size={26} style={reset.icon} />
+						</View>
+						{platform === "ios" ? (
+							<TouchableOpacity
+								onPress={modalHandler}
+								style={reset.field}
+							>
+								<Text style={reset.fieldText}>
+									{returnRegion(region)}
+								</Text>
+								<View style={reset.arrowContainer}>
+									<DownArrow />
+								</View>
+							</TouchableOpacity>
+						) : (
+							<View style={reset.field}>
+								<RegionPicker
+									region={region}
+									setRegion={setRegion}
+								/>
+							</View>
+						)}
+					</View>
 
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    marginVertical: 22
-                }}>
-                    <Text style={{ fontSize: 16, color: COLORS.black }}>Already have an account</Text>
-                    <Pressable
-                        onPress={() => navigation.navigate("Login")}
-                    >
-                        <Text style={{
-                            fontSize: 16,
-                            color: COLORS.primary,
-                            fontWeight: "bold",
-                            marginLeft: 6
-                        }}>Login</Text>
-                    </Pressable>
-                </View>
-            </View> */}
-        </SafeAreaView>
-    )
-}
+					{/* Login button */}
+					<LinearGradient
+						colors={[COLORS.naranja, COLORS.rojo]}
+						style={reset.buttonContainer}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 1, y: 0 }}
+					>
+						{isLoading ? (
+							<TouchableOpacity style={reset.button}>
+								<Loading />
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity
+								style={reset.button}
+								onPress={handleReset}
+							>
+								<Text style={reset.buttonText}>
+									Restablecer
+								</Text>
+							</TouchableOpacity>
+						)}
+					</LinearGradient>
 
-export default Restablece
+					{/* Reset link */}
+					<View style={reset.resetContainer}>
+						<Text style={reset.resetText}>
+							Devolver a inicio de sesión
+						</Text>
+						<Pressable onPress={() => navigation.navigate("Login")}>
+							<Text style={reset.resetTextLink}>aquí</Text>
+						</Pressable>
+					</View>
+				</View>
+			</TouchableWithoutFeedback>
+			{isModalVisible && (
+				<RegionModal
+					region={region}
+					setRegion={setRegion}
+					onCallback={modalHandler}
+					isModalVisible={isModalVisible}
+					style={reset.modal}
+				/>
+			)}
+		</ImageBackground>
+	);
+};
+
+export default Restablece;

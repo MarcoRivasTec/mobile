@@ -1,32 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { navbar } from "./styles";
 import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "./icons";
+import ConfirmModal from "./Content/InfoPers/ConfirmModal";
+import { showMessage } from "react-native-flash-message";
+import { CommonActions } from "@react-navigation/native";
 
-function Navbar({changeContent, navigation}) {
+function Navbar({ changeContent, navigation }) {
+	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
+
+	function confirmationModalHandler() {
+		setConfirmationVisible(!ConfirmationVisible);
+	}
+
+	const temporarilyDisabled = () => {
+		showMessage({
+			message: "Esta función está temporalmente deshabilitada",
+			type: "info",
+			duration: 3000,
+			position: "bottom",
+			icon: { icon: "info", position: "right" },
+			// statusBarHeight: 40,
+		});
+	};
+
 	return (
 		<View style={navbar.container}>
 			<View style={navbar.box}>
 				<View style={navbar.boxLeft}>
-					<TouchableOpacity style={navbar.button}>
+					<TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
 						<Ionicons name="search" size={16} color={COLORS.white} />
 					</TouchableOpacity>
 				</View>
 				<View style={navbar.boxRight}>
-					<TouchableOpacity style={navbar.button}>
+					{/* <TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
 						<Ionicons
 							name="notifications-outline"
 							size={16}
 							color={COLORS.white}
 						/>
-					</TouchableOpacity>
-					<TouchableOpacity style={navbar.button}>
+					</TouchableOpacity> */}
+					<TouchableOpacity onPress={temporarilyDisabled} style={navbar.button}>
 						<Ionicons name="settings-outline" size={16} color={COLORS.white} />
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => navigation.replace("Login")}
+						onPress={confirmationModalHandler}
 						style={[navbar.button, { backgroundColor: COLORS.rosa }]}
 					>
 						<Ionicons name="exit-outline" size={16} color={COLORS.white} />
@@ -35,13 +55,26 @@ function Navbar({changeContent, navigation}) {
 			</View>
 			<View style={navbar.home}>
 				{/* Home Button */}
-				<TouchableOpacity 
+				<TouchableOpacity
 					style={navbar.homeBackground}
 					onPress={() => changeContent("Menu")}
 				>
 					<Icon name="HOME" size={25} color={COLORS.white} />
 				</TouchableOpacity>
 			</View>
+			{ConfirmationVisible && (
+				<ConfirmModal
+					onCallback={confirmationModalHandler}
+					onExit={confirmationModalHandler}
+					title="Cerrar sesión"
+					data="¿Estás seguro que deseas cerrar sesión?"
+					onConfirm={() => {
+						confirmationModalHandler();
+						navigation.navigate("Login", { clear: true });
+					}}
+					style={navbar.modal}
+				/>
+			)}
 		</View>
 	);
 }

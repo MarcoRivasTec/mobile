@@ -8,10 +8,11 @@ const solVacaciones = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		// backgroundColor: "rgba(255,255,255, 0.9)",
-		backgroundColor: "rgba(0, 0, 0, 0.1)",
+		backgroundColor: "rgba(0, 0, 0, 0.3)",
 	},
 	modalContainer: {
-		height: "60%",
+		height: "auto",
+		// height: "60%",
 		marginVertical: "2%",
 		width: "80%",
 		justifyContent: "center",
@@ -20,20 +21,19 @@ const solVacaciones = StyleSheet.create({
 		borderRadius: 25,
 	},
 	contentContainer: {
-		flex: 1,
+		// flex: 1,
+		height: "auto",
 		width: "90%",
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
+		paddingVertical: 15,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	titleContainer: {
-		flex: 10,
-		// height: "6%",
+		// paddingVertical: 5,
 		width: "100%",
-		top: "3%",
-		// height: "4%",
-		borderRadius: 10,
-		justifyContent: "flex-start",
+		justifyContent: "center",
 		alignItems: "flex-start",
+		// borderWidth: 1
 	},
 	titleText: {
 		fontSize: 20,
@@ -41,18 +41,22 @@ const solVacaciones = StyleSheet.create({
 		color: COLORS.black,
 	},
 	cantidadContainer: {
-		flex: 30,
-		marginTop: "3%",
+		// flex: 30,
+		height: 110,
+		marginTop: 15,
 		// height: "20%",
+		justifyContent: "center",
+		alignItems: "center",
 		width: "100%",
+		// borderWidth: 1
 	},
 	cantidadElementContainer: {
-		top: "5%",
+		// top: "5%",
+		flex: 1,
 		width: "100%",
-		height: "22%",
 		justifyContent: "space-around",
 		alignItems: "center",
-		marginVertical: "1.0%",
+		marginVertical: "1%",
 		flexDirection: "row",
 		backgroundColor: COLORS.flatlistElement2,
 	},
@@ -74,12 +78,15 @@ const solVacaciones = StyleSheet.create({
 		textAlign: "right",
 	},
 	fechasContainer: {
-		flex: 15,
+		// flex: 15,
+		height: 80,
 		// height: "9%",
 		width: "100%",
+		marginTop: 15,
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
+		// borderWidth: 1,
 	},
 	fechaContainer: {
 		height: "100%",
@@ -130,26 +137,24 @@ const solVacaciones = StyleSheet.create({
 		fontSize: 12,
 		color: COLORS.black,
 	},
-	iconContainer: {
-
-	},
+	iconContainer: {},
 	icon: {
 		borderStartWidth: 1,
 		borderColor: "gray",
-		left: "15%"
+		left: 2,
+		// right: ,
 	},
 	diasContainer: {
 		flex: 1,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
-		
 	},
 	diasBottomContainer: {
 		flex: 1,
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "center",		
+		alignItems: "center",
 		flexDirection: "row",
 	},
 	diasSeparatorContainer: {
@@ -176,12 +181,14 @@ const solVacaciones = StyleSheet.create({
 		color: COLORS.black,
 	},
 	comentariosContainer: {
-		flex: 35,
+		// flex: 35,
+		height: 150,
 		// height: "30%",
 		width: "100%",
-		marginVertical: "4%",		
+		marginTop: 15,
+		// marginVertical: "4%",
 		justifyContent: "flex-start",
-		alignItems: "flex-start"
+		alignItems: "flex-start",
 	},
 	comentariosTitle: {
 		flex: 1,
@@ -189,7 +196,7 @@ const solVacaciones = StyleSheet.create({
 		fontWeight: "bold",
 		color: "black",
 	},
-	comentariosTitleText: {
+	comentariosText: {
 		flex: 4,
 		width: "100%",
 		borderWidth: 1,
@@ -198,23 +205,26 @@ const solVacaciones = StyleSheet.create({
 		fontSize: 12,
 		padding: "2%",
 		color: "black",
-		textAlignVertical: "top"
+		textAlignVertical: "top",
 	},
-	exitButton: {
-		flex: 10,
-		// height: "10%",
-		backgroundColor: COLORS.naranja,
-		alignSelf: "flex-end",
-		// height: "6%",
-		width: "30%",
-		marginBottom: "3%",
-		marginRight: "3%",
-		borderRadius: 20,
+	buttonsContainer: {
+		height: 40,
+		width: "100%",
+		marginTop: 15,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+	},
+	button: {
+		height: "100%",
+		// width: "30%",
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: COLORS.naranja,
+		paddingHorizontal: 18,
+		// borderWidth: 1,
+		borderRadius: 15,
 	},
-	textExitButton: {
+	buttonText: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.white,
@@ -228,11 +238,11 @@ const solPermisos = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		// backgroundColor: "rgba(255,255,255, 0.9)",
-		backgroundColor: "rgba(0, 0, 0, 0.1)",
+		backgroundColor: "rgba(0, 0, 0, 0.3)",
 	},
 	modalContainer: {
 		height: "60%",
-		marginVertical: "2%",
+		// marginVertical: "2%",
 		width: "80%",
 		justifyContent: "center",
 		alignItems: "center",
@@ -242,14 +252,15 @@ const solPermisos = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
 		width: "90%",
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
+		paddingVertical: "4%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	titleContainer: {
 		flex: 10,
 		// height: "6%",
 		width: "100%",
-		top: "3%",
+		// top: "3%",
 		// height: "4%",
 		borderRadius: 10,
 		justifyContent: "flex-start",
@@ -267,10 +278,12 @@ const solPermisos = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
+		// borderWidth: 1,
 	},
 	fechaContainer: {
+		flex: 1.5,
 		height: "100%",
-		width: "36%",
+		// width: "40%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
@@ -278,16 +291,17 @@ const solPermisos = StyleSheet.create({
 		// borderRadius: 10,
 	},
 	diasContainer: {
-		flex: 3,
-		width: "28%",
+		flex: 1,
+		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	fechaTitleContainer: {
 		flex: 1,
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "center",
+		alignItems: "flex-start",
 	},
 	fechaTitle: {
 		fontSize: 14,
@@ -309,34 +323,27 @@ const solPermisos = StyleSheet.create({
 		// backgroundColor: COLORS.naranja,
 		// borderRadius: 50,
 		flexDirection: "row",
-		justifyContent: "space-around",
+		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 	fechaText: {
-		left: "10%",
-		fontSize: 12,
+		left: 20,
+		fontSize: 15,
 		color: COLORS.black,
 	},
-	iconContainer: {
-
-	},
+	iconContainer: {},
 	icon: {
+		position: "absolute",
 		borderStartWidth: 1,
 		borderColor: "gray",
-		left: "10%"
-	},
-	diasContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		
+		right: 8,
 	},
 	diasBottomContainer: {
 		flex: 1,
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "center",		
+		alignItems: "center",
 		flexDirection: "row",
 	},
 	diasSeparatorContainer: {
@@ -351,22 +358,27 @@ const solPermisos = StyleSheet.create({
 	},
 	diasTextContainer: {
 		height: "100%",
-		width: "30%",
+		width: "40%",
 		borderWidth: 1,
 		borderColor: "gray",
 		borderRadius: 10,
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	diasText: {
-		fontSize: 12,
-		color: COLORS.black,
-	},	
-	tipoContainer: {
-		flex: 15,
+	diasTextField: {
+		height: "100%",
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "flex-start"
+		alignItems: "center",
+		textAlign: "center",
+		fontSize: 15,
+		color: COLORS.black,
+	},
+	tipoContainer: {
+		flex: 17,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "flex-start",
 	},
 	tipoTitleContainer: {
 		flex: 1,
@@ -378,28 +390,41 @@ const solPermisos = StyleSheet.create({
 	tipoTitleText: {
 		fontSize: 14,
 		color: COLORS.black,
-		fontWeight: "bold"
+		fontWeight: "bold",
 	},
-	tipoBox: {
+	tipoField: {
 		flex: 1,
-		width: "50%",
+		width: "70%",
 		justifyContent: "center",
 		alignItems: "center",
 		borderWidth: 1,
 		borderColor: "gray",
-		borderRadius: 10
+		borderRadius: 10,
+	},
+	tipoIconContainer: {
+		position: "absolute",
+		right: -2,
+		top: 2,
+		height: "100%",
+		width: "20%",
+		// justifyContent: "center",
+		// alignItems: "center",
+		// borderWidth: 1,
+		// right: 4
 	},
 	tipoText: {
-		fontSize: 12,
+		right: 10,
+		fontSize: 14,
 		color: COLORS.black,
 	},
 	comentariosContainer: {
 		flex: 30,
 		// height: "30%",
 		width: "100%",
-		marginVertical: "4%",		
+		marginTop: "7%",
+		marginBottom: "4%",
 		justifyContent: "flex-start",
-		alignItems: "flex-start"
+		alignItems: "flex-start",
 	},
 	comentariosTitle: {
 		flex: 1,
@@ -408,35 +433,75 @@ const solPermisos = StyleSheet.create({
 		color: "black",
 	},
 	comentariosTitleText: {
-		flex: 4,
+		flex: 4.5,
 		width: "100%",
 		borderWidth: 1,
 		borderColor: COLORS.flatlistElement2,
 		borderRadius: 10,
-		fontSize: 12,
+		fontSize: 14,
 		padding: "2%",
 		color: "black",
-		textAlignVertical: "top"
+		textAlignVertical: "top",
 	},
-	exitButton: {
-		flex: 10,
-		// height: "10%",
-		backgroundColor: COLORS.naranja,
-		alignSelf: "flex-end",
-		// height: "6%",
-		width: "30%",
-		marginBottom: "3%",
-		marginRight: "3%",
-		borderRadius: 20,
+	buttonsContainer: {
+		flex: 8,
+		width: "100%",
+		justifyContent: "space-around",
+		alignItems: "center",
+		flexDirection: "row",
+		// borderWidth: 1
+	},
+	button: {
+		// width: "30%",
+		height: "100%",
+		borderRadius: 15,
+		paddingVertical: 5,
+		paddingHorizontal: 15,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: COLORS.naranja,
 	},
-	textExitButton: {
+	buttonText: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.white,
 	},
 });
 
-export { solPermisos, solVacaciones };
+const dataModal = StyleSheet.create({
+	container: {
+		position: "absolute",
+		flex: 1,
+	},
+	backgroundContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// backgroundColor: "rgba(255,255,255, 0.9)",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
+	},
+	modalContainer: {
+		top: "40%",
+		alignSelf: "center",
+		position: "absolute",
+		height: "25%",
+		// marginVertical: "2%",
+		width: "80%",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(242, 242, 242, 1)",
+		borderRadius: 25,
+	},
+	contentContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	picker: {
+		width: "100%",
+		height: "100%",
+	},
+});
+
+export { solPermisos, solVacaciones, dataModal };

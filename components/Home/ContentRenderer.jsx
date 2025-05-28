@@ -11,17 +11,21 @@ import InfoPers from "./Content/InfoPers";
 import Area from "./Content/Area";
 import Polizas from "./Content/Polizas";
 import Prestamos from "./Content/Prestamos";
+import RetiroAhorro from "./Content/RetiroAhorro";
 import Opiniones from "./Content/Opiniones";
+import Cartas from "./Content/Cartas";
 import Reposiciones from "./Content/Reposiciones";
 import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
+import TecmaIdeas from "./Content/TecmaIdeas";
+import Notificaciones from "./Content/Notificaciones";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	function renderContent() {
 		switch (content) {
 			case "Menu":
-				return <Menu changeContent={changeContent} />;
+				return <Menu changeContent={changeContent} navigation={navigation} />;
 
 			case "InfoPers":
 				return <InfoPers />;
@@ -29,11 +33,12 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Area />;
 			case "Redes":
 				return <Redes />;
-			case "Directorio":
-				return <Directorio />;
-
+			case "Ideas":
+				return <TecmaIdeas />;
+			case "Notificaciones":
+				return <Notificaciones />;
 			case "Vacaciones":
-				return <Vacaciones navigation={navigation} />;
+				return <Vacaciones changeContent={changeContent} />;
 			case "ReciboNom":
 				return <ReciboNom />;
 			case "Prenomina":
@@ -42,17 +47,20 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Solicitudes />;
 			case "Prestamos":
 				return <Prestamos />;
-			// case "Retiro":
-			// 	return <Retiro />;
-
+			case "RetiroAhorro":
+				return <RetiroAhorro />;
+			case "Cartas":
+				return <Cartas />;
 			case "Reposiciones":
 				return <Reposiciones />;
 			case "LineaDenuncia":
 				return <LineaDenuncia />;
-			// case "Cartas":
-			// 	return <Cartas />;
 			case "Polizas":
 				return <Polizas />;
+			// case "Avisos": {
+
+			// 	return;
+			// }
 			case "Opiniones":
 				return <Opiniones />;
 			// case "CambioNIP":
@@ -64,7 +72,11 @@ function ContentRenderer({ content, changeContent, navigation }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			<SVGLogo height="55%" width="55%" style={contentRenderer.svg}></SVGLogo>
+			{/* <SVGLogo
+				height="55%"
+				width="55%"
+				style={contentRenderer.svg}
+			></SVGLogo> */}
 			{renderContent()}
 		</View>
 	);

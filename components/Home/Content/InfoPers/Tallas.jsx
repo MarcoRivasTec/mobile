@@ -5,12 +5,15 @@ import Icon from "../../icons";
 import ModifyTallasModal from "./Tallas/ModifyTallasModal";
 
 function Tallas({
+	tallasPrendas,
+	list,
 	selectedModal,
 	height,
 	width,
 	titleHeight,
 	openModal,
 	closeModal,
+	updateData,
 }) {
 	const contentHeight = Math.round(height * 0.1);
 
@@ -37,12 +40,28 @@ function Tallas({
 		};
 	}, [width, height]); // Dependencies for the effect
 
-	const [tallasPrendas, setTallasPrendas] = useState({
-		playera: "S",
-		pantalon: "26x26",
-		calzado: "MEX: 6.5 | USA: 8.5",
-	});
-
+	const formatSize = (talla) => {
+		switch (talla) {
+			case "SIN":
+				return "SIN";
+			case "Extra Chico":
+				return "XS";
+			case "Chico":
+				return "S";
+			case "Mediano":
+				return "M";
+			case "Grande":
+				return "G";
+			case "Extra Grande":
+				return "XL";
+			case "XXL":
+				return "XXL";
+			case "XXXL":
+				return "XXXL";
+			default:
+				break;
+		}
+	};
 	return (
 		<View style={tallas.container}>
 			{/* Title */}
@@ -56,20 +75,42 @@ function Tallas({
 				</TouchableOpacity>
 				{selectedModal === "tallas" && (
 					<ModifyTallasModal
-						tallasPrendas={tallasPrendas}
-						setTallasPrendas={setTallasPrendas}
+						data={tallasPrendas}
+						list={list}
 						onCallback={closeModal}
 						onExit={closeModal}
+						updateData={updateData}
 					/>
 				)}
 			</View>
 
 			{/* Contenedor prendas */}
 			<View style={[tallas.prendasContainer, { height: contentHeight }]}>
-
 				{/* Playera/Camisa */}
 				<View
-					style={[tallas.prendaContainer, { flex: 0.32, paddingRight: "2%" }]}
+					style={[
+						tallas.prendaContainer,
+						{
+							flex:
+								tallasPrendas.playera === "SIN" &&
+								tallasPrendas.pantalon === "SIN" &&
+								tallasPrendas.calzado === "SIN"
+									? 1
+									: 0.4,
+							paddingLeft:
+								tallasPrendas.playera === "SIN" &&
+								tallasPrendas.pantalon === "SIN" &&
+								tallasPrendas.calzado === "SIN"
+									? 0
+									: "2%",
+							paddingRight:
+								tallasPrendas.playera === "SIN" &&
+								tallasPrendas.pantalon === "SIN" &&
+								tallasPrendas.calzado === "SIN"
+									? 0
+									: "3.5%",
+						},
+					]}
 				>
 					<View
 						style={[
@@ -81,17 +122,40 @@ function Tallas({
 							},
 						]}
 					>
-						<Icon name="CAMISA" size={22} style={tallas.prendaIcon} />
+						<Icon
+							name="CAMISA"
+							size={22}
+							style={tallas.prendaIcon}
+						/>
 					</View>
 					<View style={tallas.prendaDataContainer}>
-						<View style={tallas.prendaDataTextContainer}>
-							<Text style={tallas.prendaDataText}>{tallasPrendas.playera}</Text>
+						<View
+							style={[
+								tallas.prendaDataTextContainer,
+								{ width: "80%", right: 4 },
+							]}
+						>
+							<Text style={tallas.prendaDataText}>
+								{formatSize(tallasPrendas.playera)}
+							</Text>
 						</View>
 					</View>
 				</View>
 
 				{/* Pantalon */}
-				<View style={[tallas.prendaContainer, { flex: 0.8 }]}>
+				<View
+					style={[
+						tallas.prendaContainer,
+						{
+							marginHorizontal:
+								tallasPrendas.playera === "SIN" &&
+								tallasPrendas.pantalon === "SIN" &&
+								tallasPrendas.calzado === "SIN"
+									? "2%"
+									: 0,
+						},
+					]}
+				>
 					<View
 						style={[
 							tallas.prendaIconContainer,
@@ -102,22 +166,30 @@ function Tallas({
 							},
 						]}
 					>
-						<Icon name="PANTALON" size={23} style={tallas.prendaIcon} />
+						<Icon
+							name="PANTALON"
+							size={23}
+							style={tallas.prendaIcon}
+						/>
 					</View>
 					<View style={tallas.prendaDataContainer}>
 						<View style={tallas.prendaDataTextContainer}>
-							<Text 
-							adjustsFontSizeToFit={true}
-							numberOfLines={1}
-							style={[tallas.prendaDataText, {fontSize: 9.5}]}>
-								MEX | USA {tallasPrendas.pantalon}
+							<Text
+								adjustsFontSizeToFit={true}
+								minimumFontScale={0.5}
+								numberOfLines={1}
+								style={tallas.prendaDataText}
+							>
+								{tallasPrendas.pantalon === "SIN"
+									? "SIN"
+									: `MEX | USA ${tallasPrendas.pantalon}`}
 							</Text>
 						</View>
 					</View>
 				</View>
 
 				{/* Calzado */}
-				<View style={[tallas.prendaContainer, {paddingLeft: "0%",}]}>
+				<View style={[tallas.prendaContainer]}>
 					<View
 						style={[
 							tallas.prendaIconContainer,
@@ -128,21 +200,29 @@ function Tallas({
 							},
 						]}
 					>
-						<Icon name="ZAPATO" size={14} style={tallas.prendaIcon} />
+						<Icon
+							name="ZAPATO"
+							size={14}
+							style={tallas.prendaIcon}
+						/>
 					</View>
 					<View style={tallas.prendaDataContainer}>
 						<View style={tallas.prendaDataTextContainer}>
 							<Text
 								adjustsFontSizeToFit={true}
+								minimumFontScale={0.6}
 								numberOfLines={1}
 								style={tallas.prendaDataText}
 							>
-								{tallasPrendas.calzado}
+								{tallasPrendas.calzado === "SIN"
+									? "SIN"
+									: `MEX ${tallasPrendas.calzado} | USA ${
+											+tallasPrendas.calzado + 2
+									  }`}
 							</Text>
 						</View>
 					</View>
 				</View>
-
 			</View>
 		</View>
 	);
