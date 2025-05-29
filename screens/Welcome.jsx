@@ -116,6 +116,9 @@ const Welcome = ({ navigation, route }) => {
 							!data.data.UserInfo.restricted_sections.includes("opinion"),
 					});
 					// navigation.replace("Home");
+					// if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
+					// 	setIsSupervisor(true);
+					// }
 				} else {
 					navigation.replace("Login");
 					Alert.alert(
