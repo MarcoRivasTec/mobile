@@ -128,7 +128,7 @@ async function runCommandFresh(command) {
 
 const isAndroidDev = process.env.DEV_MODE_ANDROID;
 const isAndroidRun = process.env.DEV_MODE_ANDROID_RUN;
-const isIOSDev = process.env.DEV_MODE_IOS;
+const isIOSDev = process.env.DEV_MODE_IOS_RUN;
 
 const isAndroidPrebuild = process.env.EXPO_PREBUILD_ANDROID;
 const isAndroidPrebuildClean = process.env.EXPO_PREBUILD_ANDROID_CLEAN;
