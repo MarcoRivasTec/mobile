@@ -5,6 +5,7 @@ import {
 	Text,
 	StatusBar,
 	TouchableOpacity,
+	Animated,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import QRCodeStyled from "react-native-qrcode-styled";
@@ -52,21 +53,23 @@ const GafeteQR = ({ navigation }) => {
 		planta,
 	} = useContext(HomeContext);
 	const { region, platform, height, width } = useContext(AppContext);
-	// console.log("Platform is: ", platform);
+
 	const insets = platform === "ios" ? useSafeAreaInsets() : null;
+
 	const statusBarHeight =
 		platform === "ios" ? insets?.top : StatusBar.currentHeight;
-	console.log("Status bar height is: ", statusBarHeight);
 	const [arrowHeight, setArrowHeight] = useState(
 		platform === "ios" ? height * 0.65 : 0
 	);
 	const [whiteHeight, setWhiteHeight] = useState(
 		platform === "ios" ? height * 0.35 : 0
 	);
-	console.log("arrowHeight and whiteHeight: ", arrowHeight, whiteHeight);
+
+	const [layoutReady, setLayoutReady] = useState(platform === "ios");
+	const [fadeAnim] = useState(new Animated.Value(0));
+
 	const pictureSize = width * 0.45;
 	const pictureRadius = pictureSize * 0.33;
-	// console.log(statusBarHeight);
 	const gafete = getGafeteStyle(platform);
 	const today = new Date();
 	const date = formatDate(today);
@@ -127,8 +130,20 @@ const GafeteQR = ({ navigation }) => {
 	}, []);
 
 	useEffect(() => {
-		// console.log("QR Data is: ", QRData);
-	}, [QRData]);
+		if (arrowHeight !== 0 && whiteHeight !== 0 && QRData !== null) {
+			setLayoutReady(true);
+		}
+	}, [arrowHeight, whiteHeight, QRData]);
+
+	useEffect(() => {
+		if (layoutReady) {
+			Animated.timing(fadeAnim, {
+				toValue: 1,
+				duration: 500,
+				useNativeDriver: true,
+			}).start();
+		}
+	}, [layoutReady]);
 
 	return QRData ? (
 		<View
@@ -152,7 +167,7 @@ const GafeteQR = ({ navigation }) => {
 						  }
 						: undefined
 				}
-			></View>
+			/>
 
 			{/* Arrow Background */}
 			<View
@@ -166,264 +181,281 @@ const GafeteQR = ({ navigation }) => {
 					console.log("Arrow height is: ", height);
 				}}
 			>
-				<ImageBackground
-					source={require("../assets/backgrounds/GAFETEFONDO.png")}
-					resizeMode="cover"
-					style={gafete.backgroundContainer}
-				/>
+				{QRData && layoutReady && (
+					<Animated.View
+						style={[gafete.backgroundContainer, { opacity: fadeAnim }]}
+					>
+						<ImageBackground
+							source={require("../assets/backgrounds/GAFETEFONDO.png")}
+							resizeMode="cover"
+							style={gafete.backgroundContainer}
+						/>
+					</Animated.View>
+				)}
 			</View>
 
-			{/* Picture */}
-			{arrowHeight != 0 && (
-				<View
-					style={{
-						position: "absolute",
-						height: pictureSize,
-						width: pictureSize,
-						bottom: arrowHeight - pictureSize / 2,
-						// borderWidth: 2,
-						// borderRadius: 150,
-						alignSelf: "center",
-					}}
-				>
-					<ShadowedView
-						style={[
-							gafete.imageContainer,
-							{
-								borderRadius: pictureRadius,
-								overflow: "hidden",
-							},
-						]}
+			<Animated.View
+				style={{
+					opacity: fadeAnim,
+					position: "absolute",
+					top: 0,
+					left: 0,
+					right: 0,
+					bottom: 0,
+				}}
+			>
+				{/* Picture */}
+				{QRData && layoutReady && (
+					<View
+						style={{
+							position: "absolute",
+							height: pictureSize,
+							width: pictureSize,
+							bottom: arrowHeight - pictureSize / 2,
+							// borderWidth: 2,
+							// borderRadius: 150,
+							alignSelf: "center",
+						}}
 					>
-						<Image
+						<ShadowedView
 							style={[
-								gafete.image,
+								gafete.imageContainer,
 								{
 									borderRadius: pictureRadius,
-									// transform: [{ translateY: pictureSize * 0.15 }],
-									// top: 20
+									overflow: "hidden",
 								},
 							]}
-							resizeMode="contain"
-							// source={require("../../assets/social/imagen.png")}
-							source={{
-								uri: `data:image/jpeg;base64,${profileImg}`,
-							}}
-						/>
-					</ShadowedView>
-				</View>
-			)}
+						>
+							<Image
+								style={[
+									gafete.image,
+									{
+										borderRadius: pictureRadius,
+										// transform: [{ translateY: pictureSize * 0.15 }],
+										// top: 20
+									},
+								]}
+								resizeMode="contain"
+								// source={require("../../assets/social/imagen.png")}
+								source={{
+									uri: `data:image/jpeg;base64,${profileImg}`,
+								}}
+							/>
+						</ShadowedView>
+					</View>
+				)}
 
-			<View
-				style={[
-					gafete.topContainer,
-					{
-						height:
-							platform === "ios"
-								? whiteHeight - statusBarHeight - pictureSize / 2
-								: whiteHeight - pictureSize / 2,
-						...(platform === "ios" && { top: statusBarHeight }),
-					},
-				]}
-			>
-				{/* Back button */}
-				<TouchableOpacity
-					onPress={() => navigation.goBack()}
-					style={gafete.backButton}
+				<View
+					style={[
+						gafete.topContainer,
+						{
+							height:
+								platform === "ios"
+									? whiteHeight - statusBarHeight - pictureSize / 2
+									: whiteHeight - pictureSize / 2,
+							...(platform === "ios" && { top: statusBarHeight }),
+						},
+					]}
 				>
-					<AD name="arrowleft" size={25} />
-				</TouchableOpacity>
+					{/* Back button */}
+					<TouchableOpacity
+						onPress={() => navigation.goBack()}
+						style={gafete.backButton}
+					>
+						<AD name="arrowleft" size={25} />
+					</TouchableOpacity>
 
-				{/* Logo */}
-				<View style={[gafete.dataContainer, { height: "40%" }]}>
-					{/* <Image
+					{/* Logo */}
+					<View style={[gafete.dataContainer, { height: "40%" }]}>
+						{/* <Image
 						source={require("../assets/adaptive-icon.png")}
 						style={gafete.logo}
 						resizeMethod="resize"
 					/> */}
-					<Logo style={gafete.logo} />
-				</View>
+						<Logo style={gafete.logo} />
+					</View>
 
-				{/* Name */}
-				<View style={[gafete.dataContainer, { height: "60%", bottom: "2%" }]}>
-					<Text
-						style={{
-							fontFamily: "Montserrat-ExtraBold",
-							fontSize: 28,
-							color: BLACK.b2,
-						}}
-					>
-						{name}
-					</Text>
-					<Text
-						style={{
-							fontFamily: "Montserrat-Light",
-							fontSize: 22,
-							color: BLACK.b2,
-						}}
-					>
-						{surname_1} {surname_2}
-					</Text>
-				</View>
-			</View>
-
-			<View
-				style={[
-					gafete.bottomContainer,
-					{ height: arrowHeight - pictureSize / 2 },
-				]}
-			>
-				{/* Job Description */}
-				<View
-					style={[gafete.dataContainer, { height: "17%", marginTop: "3%" }]}
-				>
-					<Text style={gafete.jobDescription}>{puesto}</Text>
-				</View>
-
-				{/* Employee Number */}
-				<View style={[gafete.dataContainer, { height: "8%" }]}>
-					<View style={gafete.employeeNumberBackground} />
-					<Text style={gafete.employeeNumber}>{numEmp}</Text>
-				</View>
-
-				{/* QR Code */}
-				<View style={[gafete.dataContainer, { height: "40%" }]}>
-					{QRData ? (
-						<View
+					{/* Name */}
+					<View style={[gafete.dataContainer, { height: "60%", bottom: "2%" }]}>
+						<Text
 							style={{
-								height: "100%",
-								width: "100%",
-								justifyContent: "center",
-								alignItems: "center",
+								fontFamily: "Montserrat-ExtraBold",
+								fontSize: 28,
+								color: BLACK.b2,
 							}}
 						>
-							<Logo style={gafete.logoQR} />
-							<QRCodeStyled
-								data={QRData}
-								style={gafete.QR}
-								pieceBorderRadius={2.5}
-								outerEyesOptions={{
-									topLeft: {
-										borderRadius: [15, 15, 0, 15],
-										color: "#30565E",
-									},
-									topRight: {
-										borderRadius: [15, 15, 15],
-										color: "#30565E",
-									},
-									bottomLeft: {
-										borderRadius: [15, 0, 15, 15],
-										color: "#30565E",
-									},
+							{name}
+						</Text>
+						<Text
+							style={{
+								fontFamily: "Montserrat-Light",
+								fontSize: 22,
+								color: BLACK.b2,
+							}}
+						>
+							{surname_1} {surname_2}
+						</Text>
+					</View>
+				</View>
+
+				<View
+					style={[
+						gafete.bottomContainer,
+						{ height: arrowHeight - pictureSize / 2 },
+					]}
+				>
+					{/* Job Description */}
+					<View
+						style={[gafete.dataContainer, { height: "17%", marginTop: "3%" }]}
+					>
+						<Text style={gafete.jobDescription}>{puesto}</Text>
+					</View>
+
+					{/* Employee Number */}
+					<View style={[gafete.dataContainer, { height: "8%" }]}>
+						<View style={gafete.employeeNumberBackground} />
+						<Text style={gafete.employeeNumber}>{numEmp}</Text>
+					</View>
+
+					{/* QR Code */}
+					<View style={[gafete.dataContainer, { height: "40%" }]}>
+						{QRData ? (
+							<View
+								style={{
+									height: "100%",
+									width: "100%",
+									justifyContent: "center",
+									alignItems: "center",
 								}}
-								innerEyesOptions={{
-									borderRadius: 7,
-									scale: 0.85,
-									color: "#30565E",
-									// color: "blue"
-								}}
-								logo={{
-									href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
-									// href: () => <SvgUri source="https://tecmamovil.com/tecmamovilconnect.svg" />,
-									// padding: 4,
-									hidePieces: true,
-									opacity: 0,
-								}}
-								gradient={{
-									type: "radial",
-									options: {
-										center: [0.5, 0.5],
-										radius: [1, 1],
-										colors: ["#467479", "#30565E"],
-										locations: [0, 1],
-									},
-								}}
-								pieceSize={4.7}
-								pieceScale={1}
 							>
-								{/* {() => (
+								<Logo style={gafete.logoQR} />
+								<QRCodeStyled
+									data={QRData}
+									style={gafete.QR}
+									pieceBorderRadius={2.5}
+									outerEyesOptions={{
+										topLeft: {
+											borderRadius: [15, 15, 0, 15],
+											color: "#30565E",
+										},
+										topRight: {
+											borderRadius: [15, 15, 15],
+											color: "#30565E",
+										},
+										bottomLeft: {
+											borderRadius: [15, 0, 15, 15],
+											color: "#30565E",
+										},
+									}}
+									innerEyesOptions={{
+										borderRadius: 7,
+										scale: 0.85,
+										color: "#30565E",
+										// color: "blue"
+									}}
+									logo={{
+										href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
+										// href: () => <SvgUri source="https://tecmamovil.com/tecmamovilconnect.svg" />,
+										// padding: 4,
+										hidePieces: true,
+										opacity: 0,
+									}}
+									gradient={{
+										type: "radial",
+										options: {
+											center: [0.5, 0.5],
+											radius: [1, 1],
+											colors: ["#467479", "#30565E"],
+											locations: [0, 1],
+										},
+									}}
+									pieceSize={4.7}
+									pieceScale={1}
+								>
+									{/* {() => (
 									<Logo
 										// width={40} // Adjust size as needed
 										// height={40}
 										style={gafete.logoQR}
 									/>
 								)} */}
-							</QRCodeStyled>
-						</View>
-					) : (
-						<LoadingContent />
-					)}
-				</View>
+								</QRCodeStyled>
+							</View>
+						) : (
+							<LoadingContent />
+						)}
+					</View>
 
-				{/* Info */}
-				<View style={[gafete.dataContainer, { height: "14%" }]}>
-					<LinearGradient
-						colors={["#01121C", "#18343F"]}
-						style={gafete.categoryTitlesContainer}
-						start={{ x: 0, y: 0 }}
-						end={{ x: 0, y: 1 }}
-					>
-						<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
-						<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
-						<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
-					</LinearGradient>
-					{/* <View style={gafete.categoryTitlesContainer}></View> */}
-					<LinearGradient
-						colors={["#2B4954", "#4A6D76"]}
-						style={gafete.categoriesContainer}
-						start={{ x: 0, y: 0 }}
-						end={{ x: 0, y: 1 }}
-					>
-						<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
-							<Text style={gafete.categoryData}>{planta}</Text>
-						</View>
-						{empInfo ? (
+					{/* Info */}
+					<View style={[gafete.dataContainer, { height: "14%" }]}>
+						<LinearGradient
+							colors={["#01121C", "#18343F"]}
+							style={gafete.categoryTitlesContainer}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 0, y: 1 }}
+						>
+							<Text style={[gafete.category, { flex: 1 }]}>Planta</Text>
+							<Text style={[gafete.category, { flex: 1 }]}>Ingreso</Text>
+							<Text style={[gafete.category, { flex: 1.5 }]}>No. IMSS</Text>
+						</LinearGradient>
+						{/* <View style={gafete.categoryTitlesContainer}></View> */}
+						<LinearGradient
+							colors={["#2B4954", "#4A6D76"]}
+							style={gafete.categoriesContainer}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 0, y: 1 }}
+						>
 							<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
-								<Text style={gafete.categoryData}>{empInfo.ingreso}</Text>
+								<Text style={gafete.categoryData}>{planta}</Text>
 							</View>
-						) : (
-							<LoadingContent style={{ flex: 1 }} />
-						)}
-						{empInfo ? (
-							<View style={[gafete.categoryDataContainer, { flex: 1.5 }]}>
-								<Text style={gafete.categoryData}>{empInfo.imss}</Text>
+							{empInfo ? (
+								<View style={[gafete.categoryDataContainer, { flex: 1 }]}>
+									<Text style={gafete.categoryData}>{empInfo.ingreso}</Text>
+								</View>
+							) : (
+								<LoadingContent style={{ flex: 1 }} />
+							)}
+							{empInfo ? (
+								<View style={[gafete.categoryDataContainer, { flex: 1.5 }]}>
+									<Text style={gafete.categoryData}>{empInfo.imss}</Text>
+								</View>
+							) : (
+								<LoadingContent style={{ flex: 1.5 }} />
+							)}
+						</LinearGradient>
+					</View>
+
+					{/* Company */}
+					<View style={[gafete.dataContainer, { height: "6%" }]}>
+						<Text style={gafete.company}>{razon}</Text>
+					</View>
+
+					{/* QR info */}
+					<View
+						style={[
+							gafete.dataContainer,
+							{
+								height: "6%",
+								flexDirection: "row",
+								backgroundColor: COLORS.flatlistElement1,
+							},
+						]}
+					>
+						<View style={gafete.generadoShadowContainer}>
+							<View style={gafete.generadoContainer}>
+								<Text style={gafete.generado}>GENERADO</Text>
 							</View>
-						) : (
-							<LoadingContent style={{ flex: 1.5 }} />
-						)}
-					</LinearGradient>
-				</View>
-
-				{/* Company */}
-				<View style={[gafete.dataContainer, { height: "6%" }]}>
-					<Text style={gafete.company}>{razon}</Text>
-				</View>
-
-				{/* QR info */}
-				<View
-					style={[
-						gafete.dataContainer,
-						{
-							height: "6%",
-							flexDirection: "row",
-							backgroundColor: COLORS.flatlistElement1,
-						},
-					]}
-				>
-					<View style={gafete.generadoShadowContainer}>
-						<View style={gafete.generadoContainer}>
-							<Text style={gafete.generado}>GENERADO</Text>
+						</View>
+						<View style={gafete.generadoDataContainer}>
+							<Text style={gafete.generadoData}>{date}</Text>
+							<Text style={gafete.generadoData}>{time}</Text>
 						</View>
 					</View>
-					<View style={gafete.generadoDataContainer}>
-						<Text style={gafete.generadoData}>{date}</Text>
-						<Text style={gafete.generadoData}>{time}</Text>
-					</View>
-				</View>
 
-				{/* Etc */}
-				<View style={[gafete.dataContainer, { flex: 1 }]} />
-			</View>
+					{/* Etc */}
+					<View style={[gafete.dataContainer, { flex: 1 }]} />
+				</View>
+			</Animated.View>
 		</View>
 	) : (
 		<View style={[gafete.container, { height: "100%" }]}>
