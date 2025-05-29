@@ -27,6 +27,26 @@ export const HomeProvider = ({ children }) => {
 		turno: "",
 		clasificacion: "",
 	});
+
+	const [menuButtons, setMenuButtons] = useState({
+		badge: false,
+		payroll: false,
+		prepayroll: false,
+		absenteeism: false,
+		loans: false,
+		savings: false,
+		letters: false,
+		replacements: false,
+		vacations: false,
+		policies: false,
+		denounces: false,
+		opinion: false,
+	});
+
+	useEffect(() => {
+		console.log("Menu buttons updated:", JSON.stringify(menuButtons, null, 1));
+	}, [menuButtons]);
+
 	const [isSupervisor, setIsSupervisor] = useState(false);
 	const [notifications, setNotifications] = useState(0);
 
@@ -232,6 +252,8 @@ export const HomeProvider = ({ children }) => {
 			value={{
 				...data,
 				setDataFields,
+				menuButtons,
+				setMenuButtons,
 				isSupervisor,
 				setIsSupervisor,
 				profileImg,

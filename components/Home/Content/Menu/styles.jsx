@@ -3,28 +3,56 @@ import COLORS from "../../../../constants/colors";
 
 const sectionButton = StyleSheet.create({
 	// Menu / Buttons properties
-	button: {
-		flex: 1,
+	animatedContainer: {
+		// borderRadius: 25,
+		height: "100%",
+		width: "32%",
+		marginHorizontal: "1%",
+	},
+	shadowedView: {
 		backgroundColor: COLORS.main,
 		borderRadius: 25,
-		height: "82%",
-		width: "80%",
 		marginHorizontal: "1%",
-		marginVertical: "2%",
+		// marginVertical: "2%",
+		// borderRadius: 10,
+		overflow: "hidden",
+		shadowOffset: { width: 2, height: 4 }, // X: 0, Y: 4
+		shadowOpacity: 0.4,
+		shadowRadius: 5,
+	},
+	// button: {
+	// 	// flex: 1,
+	// 	backgroundColor: COLORS.main,
+	// 	borderRadius: 25,
+	// 	height: "100%",
+	// 	width: "32%",
+	// 	marginHorizontal: "1%",
+	// 	marginVertical: "2%",
+	// 	justifyContent: "center",
+	// 	alignItems: "center",
+	// },
+	button: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	icon: {
-		position: "absolute",
-	},
 	content: {
+		height: "100%",
+		width: "90%",
 		justifyContent: "center",
 		alignItems: "center",
 		alignContent: "center",
-		width: "90%",
+		// borderWidth: 1,
+	},
+	iconContainer: {
+		marginTop: "10%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	text: {
-		marginTop: 58,
+		marginTop: "5%",
 		textAlign: "center",
 		fontSize: 11,
 		color: COLORS.white,

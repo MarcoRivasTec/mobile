@@ -11,7 +11,7 @@ import { AppContext } from "../components/AppContext";
 const Welcome = ({ navigation, route }) => {
 	const { name, accessToken } = route.params;
 	const { numEmp, region } = useContext(AppContext);
-	const { setProfileImg, setDataFields, setIsSupervisor } =
+	const { setProfileImg, setDataFields, setIsSupervisor, setMenuButtons } =
 		useContext(HomeContext);
 	const [animFinish, setAnimFinish] = useState(false);
 	const [infoFetched, setInfoFetched] = useState(false);
@@ -46,14 +46,16 @@ const Welcome = ({ navigation, route }) => {
 					puesto_id
 					turno
 					clasificacion
+					restricted_sections
 				}
 				IsSupervisor(
 						numEmp: $numEmp,
 						region: $region,
-					) {
-						success
-						message
-					}
+				) {
+					success
+					message
+				}
+				
 			}`,
 			variables: {
 				numEmp: numEmp,
@@ -85,14 +87,47 @@ const Welcome = ({ navigation, route }) => {
 						clasificacion: data.data.UserInfo.clasificacion.trim(),
 					});
 					setInfoFetched(!infoFetched);
+					console.log(
+						"Restricted sections:",
+						data.data.UserInfo.restricted_sections
+					);
+					setMenuButtons({
+						badge: !data.data.UserInfo.restricted_sections.includes("badge"),
+						payroll:
+							!data.data.UserInfo.restricted_sections.includes("payroll"),
+						prepayroll:
+							!data.data.UserInfo.restricted_sections.includes("prepayroll"),
+						absenteeism:
+							!data.data.UserInfo.restricted_sections.includes("absenteeism"),
+						loans: !data.data.UserInfo.restricted_sections.includes("loans"),
+						savings:
+							!data.data.UserInfo.restricted_sections.includes("savings"),
+						letters:
+							!data.data.UserInfo.restricted_sections.includes("letters"),
+						replacements:
+							!data.data.UserInfo.restricted_sections.includes("replacements"),
+						vacations:
+							!data.data.UserInfo.restricted_sections.includes("vacations"),
+						policies:
+							!data.data.UserInfo.restricted_sections.includes("policies"),
+						denounces:
+							!data.data.UserInfo.restricted_sections.includes("denounces"),
+						opinion:
+							!data.data.UserInfo.restricted_sections.includes("opinion"),
+					});
 					// navigation.replace("Home");
 				} else {
+					navigation.replace("Login");
+					Alert.alert(
+						"Error",
+						"Hubo un error al obtener la información del usuario, si esto persiste, contacta a tu departamento de Recursos Humanos."
+					);
 					console.warn("Error retrieving user info");
 				}
 				// if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
 				// 	setIsSupervisor(true);
 				// }
-				
+
 				// setIsLoading(false);
 			})
 			.catch((error) => {
@@ -107,8 +142,8 @@ const Welcome = ({ navigation, route }) => {
 			query: `query ImageBlob($numEmp: String!, $region: String!){
 				ImageBlob(numEmp: $numEmp, region: $region) {
 					image
-				}
-			}`,
+					}
+					}`,
 			variables: {
 				numEmp: numEmp,
 				region: region,
@@ -200,6 +235,7 @@ const Welcome = ({ navigation, route }) => {
 		</View>
 	);
 };
+
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",

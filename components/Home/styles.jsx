@@ -153,6 +153,13 @@ const contentRenderer = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: COLORS.white,
+		// borderWidth: 1
+	},
+	animatedContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	svg: {
 		position: "absolute",

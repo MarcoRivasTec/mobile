@@ -5,15 +5,19 @@ const menu = StyleSheet.create({
 	// Menu / Buttons properties
 	container: {
 		flex: 1,
+		// height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		width: "90%",
+		marginTop: "2%"
+		// borderWidth: 1,
 	},
 	row: {
-		flex: 1,
+		// flex: 1,
 		flexDirection: "row",
-		justifyContent: "center",
+		// justifyContent: "space-around",
 		alignItems: "center",
+		// borderWidth: 1,
 	},
 });
 
@@ -1492,12 +1496,11 @@ const polizas = StyleSheet.create({
 	scrollContainer: {
 		flex: 1,
 		width: "100%",
-		
 	},
 	scrollContentContainer: {
 		flexGrow: 1,
 		justifyContent: "flex-start",
-		alignItems: "center"
+		alignItems: "center",
 	},
 });
 

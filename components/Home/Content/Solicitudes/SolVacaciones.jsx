@@ -8,6 +8,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 	Alert,
+	InteractionManager,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { solVacaciones } from "./styles";
