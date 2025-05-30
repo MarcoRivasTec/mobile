@@ -6,7 +6,7 @@
     "start": "expo start",
     "adev": "set DEV_MODE_ANDROID=1 && node scripts/set-configuration.js",
     "arun": "set DEV_MODE_ANDROID_RUN=1 && node scripts/set-configuration.js",
-    "idev": "DEV_MODE_IOS_RUN=1 && node scripts/set-configuration.js",
+    "idev": "DEV_MODE_IOS_RUN=1 node scripts/set-configuration.js",
     "pb-a": "set EXPO_PREBUILD_ANDROID=1 && node scripts/set-configuration.js",
     "pb-ac": "set EXPO_PREBUILD_ANDROID_CLEAN=1 && node scripts/set-configuration.js",
     "pb-i": "EXPO_PREBUILD_IOS=1 node scripts/set-configuration.js",
