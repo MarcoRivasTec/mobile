@@ -488,7 +488,8 @@ const Login = ({ navigation, route }) => {
 							console.log("Set items: ", region, numEmp);
 						}
 						// console.log(JSON.stringify(data.data.login, null, 1));
-						await setInfoFields({ region: region });
+						console.log("Setting info fields and navigating...");
+						await setInfoFields({ region: storedRegion, numEmp: storedNumEmp });
 						navigation.replace("WelcomeHome", {
 							screen: "Welcome",
 							params: {
