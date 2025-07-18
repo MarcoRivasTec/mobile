@@ -18,6 +18,7 @@ import Cartas from "./Content/Cartas";
 import Reposiciones from "./Content/Reposiciones";
 import Redes from "./Content/Redes";
 import LineaDenuncia from "./Content/LineaDenuncia";
+import Signature from "./Content/Signature";
 import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 import Notificaciones from "./Content/Notificaciones";
@@ -81,6 +82,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Polizas />;
 			case "Opiniones":
 				return <Opiniones />;
+			case "Signature":
+				return <Signature />;
 			default:
 				return null;
 		}
