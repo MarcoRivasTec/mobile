@@ -1093,7 +1093,7 @@ const solicitudes = StyleSheet.create({
 		// top: "6%",
 		marginVertical: "5%",
 		// flexDirection: "row",
-		justifyContent: "center",
+		justifyContent: "space-around",
 		alignItems: "center",
 	},
 });
