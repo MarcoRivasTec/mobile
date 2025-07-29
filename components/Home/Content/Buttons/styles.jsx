@@ -96,7 +96,6 @@ const buttonInfo = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
-
 	},
 	textDataContainer: {
 		width: "100%",
@@ -104,7 +103,7 @@ const buttonInfo = StyleSheet.create({
 		justifyContent: "flex-end",
 		alignItems: "center",
 		// borderWidth: 1,
-		// borderColor: "purple"	
+		// borderColor: "purple"
 	},
 	textTitleContainer: {
 		width: "90%",
@@ -129,6 +128,16 @@ const buttonInfo = StyleSheet.create({
 
 const buttonAction = StyleSheet.create({
 	container: {
+		// flex: 1,
+		width: "100%",
+		aspectRatio: 1213 / 621,
+		justifyContent: "center",
+		// position: "relative",
+		alignItems: "center",
+		// borderWidth: 1,
+		// alignSelf: "center",
+	},
+	button: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
@@ -138,12 +147,23 @@ const buttonAction = StyleSheet.create({
 		height: "100%",
 		position: "absolute",
 	},
+	// backgroundContainer: {
+	// 	top: "-1.3%",
+	// 	left: "-1.2%",
+	// 	flexDirection: "row",
+	// 	width: "79%",
+	// 	height: "88%",
+	// },
 	backgroundContainer: {
-		top: "-1.3%",
-		left: "-1.2%",
+		// position: "absolute",
+		top: 0,
+		left: 0,
+		width: "100%",
+		height: "100%",
 		flexDirection: "row",
-		width: "79%",
-		height: "88%",
+		paddingLeft: "5%",
+		paddingRight: "7%",
+		paddingVertical: "8%",
 	},
 	iconContainer: {
 		flex: 3,
@@ -155,7 +175,7 @@ const buttonAction = StyleSheet.create({
 		color: COLORS.white,
 	},
 	textContainer: {
-		flex: 4,
+		flex: 5,
 		justifyContent: "center",
 		alignItems: "center",
 	},

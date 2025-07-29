@@ -6,10 +6,7 @@ import Icon from "../../icons";
 function ButtonAction({ icon, size, title, toggleModal, fontSize = 12 }) {
 	return (
 		<View style={buttonAction.container}>
-			<TouchableOpacity
-				onPress={toggleModal}
-				style={buttonAction.container}
-			>
+			<TouchableOpacity onPress={toggleModal} style={buttonAction.button}>
 				<Image
 					source={require("../../../../assets/BOTON_SELECCION.png")}
 					resizeMethod="resize"
@@ -18,11 +15,7 @@ function ButtonAction({ icon, size, title, toggleModal, fontSize = 12 }) {
 				/>
 				<View style={buttonAction.backgroundContainer}>
 					<View style={buttonAction.iconContainer}>
-						<Icon
-							name={icon}
-							size={size}
-							style={buttonAction.icon}
-						/>
+						<Icon name={icon} size={size} style={buttonAction.icon} />
 					</View>
 					<View style={buttonAction.textContainer}>
 						<Text
@@ -30,7 +23,7 @@ function ButtonAction({ icon, size, title, toggleModal, fontSize = 12 }) {
 							maxFontSizeMultiplier={1.5}
 							adjustsFontSizeToFit={true}
 							numberOfLines={2}
-							style={[buttonAction.text, {fontSize: fontSize}]}
+							style={[buttonAction.text, { fontSize: fontSize }]}
 						>
 							{title}
 						</Text>

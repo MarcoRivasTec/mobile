@@ -71,7 +71,7 @@ function Menu({ changeContent, navigation }) {
 		menuButtons.opinion && {
 			title: "Opiniones",
 			icon: "OPINIONES",
-			onPress: () => changeContent("Signature"),
+			onPress: () => changeContent("Opiniones"),
 		},
 	].filter(Boolean);
 
