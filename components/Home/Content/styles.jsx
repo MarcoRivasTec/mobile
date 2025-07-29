@@ -1396,9 +1396,17 @@ const reposiciones = StyleSheet.create({
 		// height: "100%",
 		width: "80%",
 		// top: "3%",
+		// paddingVertical: "5%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
+	},
+	buttonContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// marginVertical: "4%",
 	},
 });
 

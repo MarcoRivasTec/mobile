@@ -135,6 +135,7 @@ const buttonAction = StyleSheet.create({
 		// position: "relative",
 		alignItems: "center",
 		// borderWidth: 1,
+		borderColor: "blue",
 		// alignSelf: "center",
 	},
 	button: {
