@@ -324,10 +324,6 @@ const Login = ({ navigation, route }) => {
 		try {
 			console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
 			if (data.data.login.success) {
-				// setFields({
-				// 	name: data.data.login.name,
-				// 	accessToken: data.data.login.token,
-				// });
 				if (checkboxState) {
 					console.log("Checkbox checked");
 					await AsyncStorage.setItem("storedNumEmp", numEmp);
@@ -358,48 +354,6 @@ const Login = ({ navigation, route }) => {
 		} finally {
 			setIsLoading(false);
 		}
-		// fetchPost({ query })
-		// 	.then(async (data) => {
-		// 		setIsLoading(false);
-		// 		// console.log("Response data at ingreso: ", data);
-		// 		// return;
-		// 		if (data.data.login.success) {
-		// 			// setFields({
-		// 			// 	name: data.data.login.name,
-		// 			// 	accessToken: data.data.login.token,
-		// 			// });
-		// 			if (checkboxState) {
-		// 				console.log("Checkbox checked");
-		// 				await AsyncStorage.setItem("storedNumEmp", numEmp);
-		// 				await AsyncStorage.setItem("storedRegion", region);
-		// 				console.log("Set items: ", region, numEmp);
-		// 			}
-		// 			// console.log(JSON.stringify(data.data.login, null, 1));
-		// 			setInfoFields({ region: region });
-		// 			navigation.replace("WelcomeHome", {
-		// 				screen: "Welcome",
-		// 				params: {
-		// 					name: data.data.login.data.name,
-		// 					accessToken: data.data.login.data.token,
-		// 				},
-		// 			});
-		// 		} else if (data.data.login.message) {
-		// 			Alert.alert(data.data.login.message);
-		// 			return;
-		// 		} else {
-		// 			Alert.alert(
-		// 				"Error",
-		// 				"Ocurrió un error inesperado, vuelve a intentarlo."
-		// 			);
-		// 			return;
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error("Error at ingreso", error);
-		// 	})
-		// 	.finally(() => {
-		// 		setIsLoading(false);
-		// 	});
 	};
 
 	const loginMutation = `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
@@ -477,10 +431,6 @@ const Login = ({ navigation, route }) => {
 					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
 					if (data.data.login.success) {
 						console.log("Login successful, setting fields...");
-						// setFields({
-						// 	name: data.data.login.name,
-						// 	accessToken: data.data.login.token,
-						// });
 						if (checkboxState) {
 							console.log("Checkbox checked");
 							await AsyncStorage.setItem("storedNumEmp", numEmp);
@@ -530,10 +480,6 @@ const Login = ({ navigation, route }) => {
 					const data = await fetchPost({ query: loginQuery });
 					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
 					if (data.data.login.success) {
-						// setFields({
-						// 	name: data.data.login.name,
-						// 	accessToken: data.data.login.token,
-						// });
 						if (checkboxState) {
 							console.log("Checkbox checked");
 							await AsyncStorage.setItem("storedNumEmp", numEmp);

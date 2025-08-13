@@ -59,6 +59,12 @@
             }
           }
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
+        }
       ]
     ]
   }

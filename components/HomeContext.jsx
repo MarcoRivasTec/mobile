@@ -51,7 +51,7 @@ export const HomeProvider = ({ children }) => {
 	const [notifications, setNotifications] = useState(0);
 
 	useEffect(() => {
-		console.log(JSON.stringify(data, null, 1));
+		console.log("Home context data changed: ", JSON.stringify(data, null, 1));
 	}, [data]);
 
 	const setDataFields = (fields) => {

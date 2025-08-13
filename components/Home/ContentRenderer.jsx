@@ -21,6 +21,7 @@ import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 import Notificaciones from "./Content/Notificaciones";
+import CheckIn from "./Content/CheckIn";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	const [visibleContent, setVisibleContent] = useState(content);
@@ -81,6 +82,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Polizas />;
 			case "Opiniones":
 				return <Opiniones />;
+			case "CheckIn":
+				return <CheckIn />;
 			default:
 				return null;
 		}

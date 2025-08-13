@@ -73,6 +73,12 @@ function Menu({ changeContent, navigation }) {
 			icon: "OPINIONES",
 			onPress: () => changeContent("Opiniones"),
 		},
+		// menuButtons.checkin && {
+		// 	title: "Check In",
+		// 	iconLibrary: "AD",
+		// 	icon: "qrcode",
+		// 	onPress: () => changeContent("CheckIn"),
+		// },
 	].filter(Boolean);
 
 	const rows = [];

@@ -33,42 +33,53 @@ function LineaDenuncia() {
 			})
 			.catch((err) => console.error("An error occurred", err));
 	};
-	const handlePress2 = () => {
-		// const phoneNumber = "6561011010"; // Telefono west?
 
-		const url = `whatsapp://send?phone=${phoneNumber}`;
+	const handlePress2 = async () => {
+		const whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
+		const callUrl = `tel:${phoneNumber}`;
 
-		Linking.canOpenURL(url)
-			.then((supported) => {
-				if (supported) {
-					return Linking.openURL(url);
-				} else {
-					Alert.alert(
-						"Error",
-						"WhatsApp no está instalado en este dispositivo"
-					);
-				}
-			})
-			.catch((err) => console.error("An error occurred", err));
+		try {
+			const whatsappSupported = await Linking.canOpenURL(whatsappUrl);
+
+			if (whatsappSupported) {
+				await Linking.openURL(whatsappUrl);
+				return;
+			}
+
+			const callSupported = await Linking.canOpenURL(callUrl);
+			if (callSupported) {
+				await Linking.openURL(callUrl);
+				return;
+			}
+
+			Alert.alert("Error", "No se pudo abrir WhatsApp ni la app de llamadas.");
+		} catch (err) {
+			console.error("An error occurred", err);
+		}
 	};
-	const handlePress3 = () => {
-		// const phoneNumber = "6563755037"; // Telefono central
-		// const phoneNumber = "6561011010"; // Telefono west?
 
-		const url = `whatsapp://send?phone=${phoneNumber}`;
+	const handlePress3 = async () => {
+		const whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
+		const callUrl = `tel:${phoneNumber}`;
 
-		Linking.canOpenURL(url)
-			.then((supported) => {
-				if (supported) {
-					return Linking.openURL(url);
-				} else {
-					Alert.alert(
-						"Error",
-						"WhatsApp no está instalado en este dispositivo"
-					);
-				}
-			})
-			.catch((err) => console.error("An error occurred", err));
+		try {
+			const whatsappSupported = await Linking.canOpenURL(whatsappUrl);
+
+			if (whatsappSupported) {
+				await Linking.openURL(whatsappUrl);
+				return;
+			}
+
+			const callSupported = await Linking.canOpenURL(callUrl);
+			if (callSupported) {
+				await Linking.openURL(callUrl);
+				return;
+			}
+
+			Alert.alert("Error", "No se pudo abrir WhatsApp ni la app de llamadas.");
+		} catch (err) {
+			console.error("An error occurred", err);
+		}
 	};
 
 	return (
@@ -103,24 +114,32 @@ function LineaDenuncia() {
 					</View>
 				</View>
 				<View style={linea.sectionButtonContainer}>
-					<ButtonAction
-						toggleModal={handlePress1}
-						icon="VACACIONES"
-						size={20}
-						title="Enviar correo"
-					></ButtonAction>
-					<ButtonAction
-						toggleModal={handlePress2}
-						icon="WHATSAPP"
-						size={24}
-						title="Mensaje WhatsApp"
-					></ButtonAction>
-					<ButtonAction
-						toggleModal={handlePress3}
-						icon="WHATSAPP"
-						size={24}
-						title="Hacer llamada"
-					></ButtonAction>
+					<View style={linea.buttonContainer}>
+						<ButtonAction
+							toggleModal={handlePress1}
+							icon="VACACIONES"
+							size={20}
+							title="Enviar correo"
+						/>
+					</View>
+
+					<View style={linea.buttonContainer}>
+						<ButtonAction
+							toggleModal={handlePress2}
+							icon="WHATSAPP"
+							size={24}
+							title="Mensaje WhatsApp"
+						/>
+					</View>
+
+					<View style={linea.buttonContainer}>
+						<ButtonAction
+							toggleModal={handlePress3}
+							icon="WHATSAPP"
+							size={24}
+							title="Hacer llamada"
+						/>
+					</View>
 				</View>
 			</View>
 		</View>

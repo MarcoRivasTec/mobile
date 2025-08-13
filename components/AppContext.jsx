@@ -15,8 +15,6 @@ export const AppProvider = ({ children }) => {
 		"https://play.google.com/store/apps/details?id=com.tecma.movilconnect";
 	const appStoreURI = "https://apps.apple.com/app/id6736772143";
 	const [info, setInfo] = useState({
-		// accessToken: "",
-		// name: "",
 		numEmp: "", 
 		region: "",
 		platform: Platform.OS,
@@ -28,10 +26,6 @@ export const AppProvider = ({ children }) => {
 		width: width,
 		height: height,
 		appVersion: appConfig.expo.version,
-
-		// proyecto: "",
-		// razon: "",
-		// puesto: "",
 	});
 
 	const setInfoFields = (fields) => {

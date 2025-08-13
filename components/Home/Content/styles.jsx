@@ -1491,13 +1491,18 @@ const linea = StyleSheet.create({
 	sectionButtonContainer: {
 		flex: 1.4,
 		// height: "15%",
-		width: "95%",
+		width: "100%",
 		// borderWidth: 1,
 		// top: "6%",
 		flexDirection: "row",
-		justifyContent: "center",
+		justifyContent: "space-around",
 		alignItems: "center",
 	},
+	buttonContainer: {
+		width: "31%",
+		justifyContent: "center",
+		alignItems: "center",		
+	}
 });
 
 const polizas = StyleSheet.create({
