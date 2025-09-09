@@ -84,9 +84,14 @@ function SignatureModal({ onCallback, isSignatureModalVisible, onExit }) {
 				setIsLoading(false);
 				Alert.alert("Éxito", `${response.message}`);
 				console.log(response.pdfUrl);
-
+				
 				Linking.openURL(response.pdfUrl);
-			} else if (response?.message) {
+			} else if (response?.message && response?.pdfUrl) {
+				setIsLoading(false);
+				Alert.alert("Aviso", `${response.message}`);
+				
+				Linking.openURL(response.pdfUrl);
+			} else if (response?.message && !response?.pdfUrl) {
 				setIsLoading(false);
 				Alert.alert("Error", response.message);
 			} else {
