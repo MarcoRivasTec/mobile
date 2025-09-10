@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Linking } from "react-native";
 import { notificaciones } from "./styles";
 import Working from "./Design/Working";
 import { AppContext } from "../../AppContext";
@@ -10,13 +10,15 @@ import Encuestas from "./Notificaciones/Encuestas";
 import Avisos from "./Notificaciones/Avisos";
 import Solicitudes from "./Notificaciones/Solicitudes";
 
-function Notificaciones({ section = "Encuestas" }) {
+function Notificaciones({ section = "Avisos" }) {
 	const { height, region } = useContext(AppContext);
-	const { numEmp, isSupervisor } = useContext(HomeContext);
+	const { numEmp, isSupervisor, accessToken } = useContext(HomeContext);
+	// console.log("Access token is (Notificaciones): ", `${accessToken}`);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(section);
 	const [encuestas, setEncuestas] = useState([]);
 	const [requests, setRequests] = useState([]);
+	const [notifications, setNotifications] = useState([]);
 
 	const [notifsEncuestas, setNotifsEncuestas] = useState(0);
 	const [notifsAvisos, setNotifsAvisos] = useState(0);
@@ -41,9 +43,33 @@ function Notificaciones({ section = "Encuestas" }) {
 				region: region,
 			},
 		};
+
+		const notificationsQuery = {
+			query: `query Notifications {
+						Notifications {
+							id
+							title
+							message
+							created_at
+							files {
+								id
+								file_name
+							}
+						}
+					}`,
+		};
+
 		try {
 			const data = await fetchPost({ query: encuestasQuery });
-			console.log("Notifications data is: ", JSON.stringify(data, null, 1));
+			const notificationsData = await fetchPost({
+				query: notificationsQuery,
+				token: accessToken,
+			});
+			// console.log("Notifications data is(encuestas): ", JSON.stringify(data, null, 1));
+			console.log(
+				"Notifications data is ",
+				JSON.stringify(notificationsData, null, 1)
+			);
 
 			if (data.data.Encuestas) {
 				// console.log("Correct", region);
@@ -72,6 +98,10 @@ function Notificaciones({ section = "Encuestas" }) {
 				// 	icon: () => <Bell />,
 				// });
 			}
+			if (notificationsData.data.Notifications) {
+				setNotifsAvisos(notificationsData.data.Notifications.length);
+				setNotifications(notificationsData.data.Notifications);
+			}
 		} catch (error) {
 			// showMessage({
 			// 	message:
@@ -83,6 +113,31 @@ function Notificaciones({ section = "Encuestas" }) {
 			// 	icon: { icon: "info", position: "right" },
 			// 	// statusBarHeight: 40,
 			// });
+		}
+	};
+
+	const onFilePress = async (notificationId, fileId) => {
+		const fileQuery = {
+			query: `query FileUrl($nid: ID!, $fid: ID!) {
+				NotificationFileUrl(notificationId: $nid, fileId: $fid) {
+					success
+					message	
+					url
+				}
+			}`,
+			variables: {
+				nid: notificationId,
+				fid: fileId,
+			},
+		};
+		const data = await fetchPost({
+			query: fileQuery,
+			token: accessToken,
+		});
+		console.log("Data is: ", JSON.stringify(data, null, 1));
+		if (data.data?.NotificationFileUrl?.success) {
+			console.log("Url is: ", data.data.NotificationFileUrl.url);
+			await Linking.openURL(data.data.NotificationFileUrl.url);
 		}
 	};
 
@@ -137,8 +192,8 @@ function Notificaciones({ section = "Encuestas" }) {
 			</View>
 			<View style={notificaciones.tabsContainer}>
 				{[
-					{ title: "Encuestas", notificationCount: notifsEncuestas },
 					{ title: "Avisos", notificationCount: notifsAvisos },
+					{ title: "Encuestas", notificationCount: notifsEncuestas },
 					...(isSupervisor
 						? [{ title: "Solicitudes", notificationCount: notifsEncuestas }]
 						: []),
@@ -161,6 +216,13 @@ function Notificaciones({ section = "Encuestas" }) {
 						updateNotificationsData={updateNotificationsData}
 					/>
 				)}
+				{activeTab === "Avisos" && (
+					<Avisos
+						notifications={notifications}
+						onFilePress={onFilePress}
+						isLoading={isLoading}
+					/>
+				)}
 				{activeTab === "Encuestas" && (
 					<Encuestas
 						encuestasDisp={encuestas}
@@ -168,7 +230,6 @@ function Notificaciones({ section = "Encuestas" }) {
 						updateEncuestas={updateNotificationsData}
 					/>
 				)}
-				{activeTab === "Avisos" && <Avisos isLoading={isLoading} />}
 			</View>
 		</View>
 	);

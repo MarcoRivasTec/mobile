@@ -19,10 +19,6 @@ const Welcome = ({ navigation, route }) => {
 	const handleAnimationFinish = () => {
 		setAnimFinish(!animFinish);
 	};
-	// setDataFields({
-	// 	accessToken: accessToken,
-	// 	name: name,
-	// });
 	const firstName = getFirstName(name);
 	const formattedName =
 		firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();

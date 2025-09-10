@@ -15,7 +15,11 @@ function Reposiciones() {
 	const [isDespModalVisible, setDespModalVisible] = useState(false);
 
 	const tarjetasRequisition = ({ type, repMotive = null, folio = null }) => {
-		return sendRequisition({ letter: type, repMotive: repMotive, fileName: folio });
+		return sendRequisition({
+			letter: type,
+			repMotive: repMotive,
+			fileName: folio,
+		});
 	};
 
 	function gafeteModalHandler() {
@@ -40,29 +44,35 @@ function Reposiciones() {
 					</Text>
 				</View>
 				<View style={reposiciones.sectionButtonContainer}>
-					<ButtonAction
-						toggleModal={gafeteModalHandler}
-						icon="GAFETE"
-						size={50}
-						title="Solicitar gafete"
-						fontSize={14}
-					></ButtonAction>
+					<View style={reposiciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={gafeteModalHandler}
+							icon="GAFETE"
+							size={50}
+							title="Solicitar gafete"
+							fontSize={14}
+						/>
+					</View>
 
-					<ButtonAction
-						toggleModal={banorteModalHandler}
-						icon="TARJ_BANORTE"
-						size={50}
-						title="Tarjeta Banorte"
-						fontSize={14}
-					></ButtonAction>
+					<View style={reposiciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={banorteModalHandler}
+							icon="TARJ_BANORTE"
+							size={50}
+							title="Tarjeta Banorte"
+							fontSize={14}
+						/>
+					</View>
 
-					<ButtonAction
-						toggleModal={despensaModalHandler}
-						icon="TARJ_DESP"
-						size={50}
-						title="Tarjeta de Despensa"
-						fontSize={14}
-					></ButtonAction>
+					<View style={reposiciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={despensaModalHandler}
+							icon="TARJ_DESP"
+							size={50}
+							title="Tarjeta de Despensa"
+							fontSize={14}
+						/>
+					</View>
 				</View>
 			</View>
 			{isGafModalVisible && (

@@ -127,14 +127,22 @@ const login = StyleSheet.create({
 		textDecorationLine: "none",
 		fontFamily: "Montserrat-Regular",
 	},
-	// Login button
-	buttonContainer: {
+
+	// Login buttons
+	buttonsContainer: {
 		flex: 6,
-		// height: "12%",
 		width: "90%",
-		borderRadius: 24,
-		// borderWidth: 1,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
 		marginBottom: "2%",
+	},
+	buttonContainer: {
+		height: "100%",
+		// width: "75%",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: 24,
 	},
 	button: {
 		height: "100%",

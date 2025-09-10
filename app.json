@@ -2,7 +2,7 @@
   "expo": {
     "name": "TECMA Móvil Connect Dev",
     "slug": "tecma-movil-connect-dev",
-    "version": "1.0.6dev",
+    "version": "1.0.7dev",
     "orientation": "portrait",
     "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "6",
+      "buildNumber": "7",
       "supportsTablet": true,
       "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
       "infoPlist": {
@@ -27,7 +27,7 @@
       }
     },
     "android": {
-      "versionCode": 6,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-dev.png",
         "backgroundColor": "#ffffff"
@@ -49,7 +49,10 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true
+            "usesCleartextTraffic": true,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
           },
           "ios": {
             "infoPlist": {
@@ -58,6 +61,12 @@
               }
             }
           }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
         }
       ]
     ]

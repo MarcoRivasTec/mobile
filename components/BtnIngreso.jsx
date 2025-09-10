@@ -46,12 +46,8 @@ function Ingresar({ nip, navigation, region }) {
 		fetchPost({ query })
 			.then((data) => {
 				setIsLoading(false);
-				// console.log("Response data at ingresoo: ", data);
+				// console.log("Response data at ingreso: ", data);
 				if (data.data.login !== null) {
-					// setFields({
-					// 	name: data.data.login.name,
-					// 	accessToken: data.data.login.token,
-					// });
 					console.log(JSON.stringify(data.data.login, null, 1));
 					navigation.replace("WelcomeHome", {
 						screen: "Welcome",
