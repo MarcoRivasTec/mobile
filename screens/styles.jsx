@@ -76,7 +76,6 @@ const login = StyleSheet.create({
 		flex: 7,
 		height: "100%",
 		backgroundColor: "white",
-		// backgroundColor: COLORS.white,
 		alignItems: "flex-start",
 		justifyContent: "center",
 		borderTopRightRadius: 24,

@@ -103,6 +103,7 @@ function Opiniones() {
 								<TextInput
 									multiline={true}
 									placeholder="Escríbela aquí . . ."
+									placeholderTextColor="gray"
 									maxLength={255}
 									value={opinion}
 									onChangeText={setOpinion}

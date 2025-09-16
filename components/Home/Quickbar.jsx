@@ -76,6 +76,7 @@ function Quickbar({ changeContent }) {
 							backgroundColor: isQuickbarButtonPressed("button2")
 								? COLORS.main
 								: COLORS.white,
+							top: "5%"
 						},
 					]}
 				>
@@ -114,6 +115,7 @@ function Quickbar({ changeContent }) {
 							backgroundColor: isQuickbarButtonPressed("button3")
 								? COLORS.main
 								: COLORS.white,
+							top: "5%",
 						},
 					]}
 				>
@@ -145,7 +147,7 @@ function Quickbar({ changeContent }) {
 					handlePress("button4");
 					changeContent("Ideas");
 				}}
-				style={quickbar.buttonContainer}
+				style={[quickbar.buttonContainer, { top: "8%" }]}
 			>
 				<View
 					style={[
@@ -173,7 +175,7 @@ function Quickbar({ changeContent }) {
 						adjustsFontSizeToFit={true}
 						allowFontScaling={true}
 						numberOfLines={2}
-						style={[quickbar.text, { fontSize: 15 }]}
+						style={[quickbar.text, { fontSize: 15, top: "10%" }]}
 					>
 						Tecma Ideas
 					</Text>
@@ -267,6 +269,7 @@ function Quickbar({ changeContent }) {
 								backgroundColor: isQuickbarButtonPressed("button5")
 									? COLORS.main
 									: COLORS.white,
+								top: "5%",
 							},
 						]}
 					>
@@ -291,7 +294,7 @@ function Quickbar({ changeContent }) {
 						<Text
 							adjustsFontSizeToFit={true}
 							allowFontScaling={true}
-							numberOfLines={2}
+							numberOfLines={1}
 							style={[quickbar.text, { fontSize: 12 }]}
 						>
 							Notificaciones

@@ -681,7 +681,7 @@ const reciboNom = StyleSheet.create({
 		color: COLORS.white,
 	},
 	nominaSearchText: {
-		left: "30%",
+		left: "10%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
@@ -708,7 +708,7 @@ const reciboNom = StyleSheet.create({
 	nominaCantidadBox: {
 		width: "30%",
 		height: "100%",
-		right: "50%",
+		// right: "50%",
 		justifyContent: "center",
 		alignContent: "center",
 	},
@@ -792,7 +792,7 @@ const prenomina = StyleSheet.create({
 	prenominaWeekContainer: {
 		width: "30%",
 		height: "100%",
-		left: "10%",
+		left: "15%",
 		backgroundColor: "rgba(0, 0, 0, 0.2)",
 		flexDirection: "row",
 		justifyContent: "flex-start",
@@ -812,7 +812,7 @@ const prenomina = StyleSheet.create({
 		color: COLORS.white,
 	},
 	prenominaSearchText: {
-		left: "30%",
+		left: "10%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
@@ -829,6 +829,7 @@ const prenomina = StyleSheet.create({
 	prenominaDatesText: {
 		fontSize: 18,
 		fontWeight: "bold",
+		textAlign: "center",
 	},
 	prenominaContainer: {
 		height: "40%",

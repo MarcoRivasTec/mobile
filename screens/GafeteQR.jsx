@@ -78,7 +78,7 @@ const GafeteQR = ({ navigation }) => {
 	const [empInfo, setEmpInfo] = useState(null);
 
 	useEffect(() => {
-		StatusBar.setHidden(false);
+		StatusBar.setHidden(true);
 		const getQRData = async () => {
 			// console.log("Requesting data");
 			const qrQuery = {
@@ -259,7 +259,10 @@ const GafeteQR = ({ navigation }) => {
 				>
 					{/* Back button */}
 					<TouchableOpacity
-						onPress={() => navigation.goBack()}
+						onPress={() => {
+							StatusBar.setHidden(false);
+							navigation.goBack();
+						}}
 						style={gafete.backButton}
 					>
 						<AD name="arrowleft" size={25} />

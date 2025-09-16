@@ -22,14 +22,26 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 					onCallback();
 				}
 			}}
-			style={{ width: "100%", height: "100%" }}
-			itemStyle={dataModal.pickerItemStyle}
+			style={[
+				dataModal.picker,
+				{
+					fontSize: 18,
+					color: "black",
+					// paddingBottom: 10
+					// justifyContent: "center",
+					// alignContent: "center",
+					// borderWidth: 1,
+					// zIndex: 1,
+				},
+			]}
+			mode="dropdown"
+			// itemStyle={dataModal.pickerItemStyle}
 		>
 			{Platform.OS === "android" ? (
 				<Picker.Item
-					label="Selecciona un valor"
-					style={{ color: "gray" }}
-					value="Selecciona un valor"
+					label="Selecciona un tipo"
+					style={[dataModal.pickerItem, { color: "red" }]}
+					value="Selecciona un tipo"
 				/>
 			) : null}
 			<Picker.Item
