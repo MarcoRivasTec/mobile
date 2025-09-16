@@ -162,8 +162,8 @@ if (isAndroidDev) {
 				console.warn("\n\nRunning prebuild mode...");
 				console.log("\nUpdating JSON values for prebuild...");
 				await updateJsonValues("prod");
-				console.log("\nSetting react-native-reanimated to 3.9.0-rc.1 for build");
-				await updateReanimatedVersion("3.9.0-rc.1");
+				// console.log("\nSetting react-native-reanimated to 3.9.0-rc.1 for build");
+				// await updateReanimatedVersion("3.9.0-rc.1");
 				console.log("\nUpdating API endpoint to production...");
 				await updateEnvApiEndpoint(prodEndpoint);
 
@@ -177,8 +177,8 @@ if (isAndroidDev) {
 				console.error("Error while running command:", error);
 				process.exit(1);
 			} finally {
-				console.log("\nRestoring react-native-reanimated to 3.10.1");
-				await updateReanimatedVersion("3.10.1");
+				// console.log("\nRestoring react-native-reanimated to 3.10.1");
+				// await updateReanimatedVersion("3.10.1");
 				console.log("\nFinished prebuild process.");
 			}
 		} else if (isAndroidDev || isAndroidRun || isIOSDev) {
