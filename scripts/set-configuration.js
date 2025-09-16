@@ -137,6 +137,16 @@ const isIOSPrebuildClean = process.env.EXPO_PREBUILD_IOS_CLEAN;
 const isEASBuild = process.env.EAS_BUILD;
 let command = "";
 
+console.log("Script started with the following flags:");
+console.log("isAndroidDev:", isAndroidDev);
+console.log("isAndroidRun:", isAndroidRun);
+console.log("isIOSDev:", isIOSDev);
+console.log("isAndroidPrebuild:", isAndroidPrebuild);
+console.log("isAndroidPrebuildClean:", isAndroidPrebuildClean);
+console.log("isIOSPrebuild:", isIOSPrebuild);
+console.log("isIOSPrebuildClean:", isIOSPrebuildClean);
+console.log("isEASBuild:", isEASBuild);
+
 if (isAndroidDev) {
 	command = "npx expo start -c --dev-client";
 } else if (isAndroidRun) {

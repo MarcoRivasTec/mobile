@@ -8,7 +8,7 @@
     "arun": "set DEV_MODE_ANDROID_RUN=1 && node scripts/set-configuration.js",
     "idev": "DEV_MODE_IOS_RUN=1 node scripts/set-configuration.js",
     "pb-a": "set EXPO_PREBUILD_ANDROID=1 && node scripts/set-configuration.js",
-    "pb-ac": "set EXPO_PREBUILD_ANDROID_CLEAN=1 && node scripts/set-configuration.js",
+    "pb-ac": "cross-env EXPO_PREBUILD_ANDROID_CLEAN=1 node scripts/set-configuration.js",
     "pb-i": "EXPO_PREBUILD_IOS=1 node scripts/set-configuration.js",
     "pb-ic": "EXPO_PREBUILD_IOS_CLEAN=1 node scripts/set-configuration.js",
     "eas-android": "set EAS_BUILD=1 && node scripts/set-configuration.js",
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "cross-env": "^10.0.0",
     "react-native-svg-transformer": "^1.3.0"
   },
   "resolutions": {
