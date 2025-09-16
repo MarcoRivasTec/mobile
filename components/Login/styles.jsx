@@ -49,7 +49,7 @@ const layout = StyleSheet.create({
 		// marginLeft: "-2.5%",
 		// flex: 7,
 		width: "100%",
-		height: "100%",
+		// height: "100%",
 		// borderWidth: 1
 		paddingBottom: 2,
 	},

@@ -25,7 +25,7 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 			style={[
 				dataModal.picker,
 				{
-					fontSize: 18,
+					fontSize: 15,
 					color: "black",
 					// paddingBottom: 10
 					// justifyContent: "center",
@@ -40,7 +40,7 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 			{Platform.OS === "android" ? (
 				<Picker.Item
 					label="Selecciona un tipo"
-					style={[dataModal.pickerItem, { color: "red" }]}
+					style={dataModal.pickerItem}
 					value="Selecciona un tipo"
 				/>
 			) : null}

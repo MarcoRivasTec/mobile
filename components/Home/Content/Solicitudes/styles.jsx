@@ -367,11 +367,18 @@ const solPermisos = StyleSheet.create({
 	},
 	diasTextField: {
 		height: "100%",
+		// flex: 1,
 		width: "100%",
 		justifyContent: "center",
+		// backgroundColor: "red",
 		alignItems: "center",
 		textAlign: "center",
-		fontSize: 15,
+		// verticalAlign: "middle",
+		// alignSelf: "center",
+		fontSize: 14,
+		// borderWidth: 1,
+		padding: 4,
+		// marginTop: 6,
 		color: COLORS.black,
 	},
 	tipoContainer: {
@@ -519,9 +526,9 @@ const dataModal = StyleSheet.create({
 		// zIndex: 1,
 	},
 	pickerItem: {
-		color: "white",
+		// color: "white",
 		// borderWidth: 1,
-		fontSize: 18,
+		fontSize: 15,
 		fontFamily: "Montserrat-Medium",
 	},
 });
