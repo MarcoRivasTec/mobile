@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { quickbar } from "./styles";
 import COLORS from "../../constants/colors";
 import Icon from "./icons";
@@ -147,7 +147,7 @@ function Quickbar({ changeContent }) {
 					handlePress("button4");
 					changeContent("Ideas");
 				}}
-				style={[quickbar.buttonContainer, { top: "8%" }]}
+				style={[quickbar.buttonContainer, { top: Platform.OS === "ios" ? "0%" : "8%" }]}
 			>
 				<View
 					style={[
