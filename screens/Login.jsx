@@ -36,8 +36,10 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
 import { biometricAuthenticate } from "../components/Login/biometricAuth";
 import * as SecureStore from "expo-secure-store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Login = ({ navigation, route }) => {
+	const insets = useSafeAreaInsets();
 	const {
 		platform,
 		numEmp,
@@ -557,7 +559,7 @@ const Login = ({ navigation, route }) => {
 	return (
 		<ImageBackground
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
-			style={login.backgroundContainer}
+			style={[login.backgroundContainer, { paddingBottom: insets.bottom }]}
 		>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.container}>
@@ -646,7 +648,7 @@ const Login = ({ navigation, route }) => {
 									</View>
 								</TouchableOpacity>
 							) : (
-								<View style={login.field}>
+								<View style={[login.field, { paddingLeft: "2%" }]}>
 									<RegionPicker region={region} setRegion={setRegion} />
 								</View>
 							)}

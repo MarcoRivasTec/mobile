@@ -29,7 +29,7 @@ async function updateJsonValues(mode) {
 		if (mode === "dev") {
 			appJson.expo.name = "TECMA Móvil Connect Dev";
 			appJson.expo.slug = "tecma-movil-connect-dev";
-			appJson.expo.version = "1.0.7dev";
+			appJson.expo.version = "1.0.8dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
 			appJson.expo.splash.image = "./assets/icon-dev.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
@@ -43,7 +43,7 @@ async function updateJsonValues(mode) {
 			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
-			appJson.expo.version = "1.0.7";
+			appJson.expo.version = "1.0.8";
 			appJson.expo.icon = "./assets/icon.png";
 			appJson.expo.splash.image = "./assets/icon.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
@@ -137,6 +137,16 @@ const isIOSPrebuildClean = process.env.EXPO_PREBUILD_IOS_CLEAN;
 const isEASBuild = process.env.EAS_BUILD;
 let command = "";
 
+console.log("Script started with the following flags:");
+console.log("isAndroidDev:", isAndroidDev);
+console.log("isAndroidRun:", isAndroidRun);
+console.log("isIOSDev:", isIOSDev);
+console.log("isAndroidPrebuild:", isAndroidPrebuild);
+console.log("isAndroidPrebuildClean:", isAndroidPrebuildClean);
+console.log("isIOSPrebuild:", isIOSPrebuild);
+console.log("isIOSPrebuildClean:", isIOSPrebuildClean);
+console.log("isEASBuild:", isEASBuild);
+
 if (isAndroidDev) {
 	command = "npx expo start -c --dev-client";
 } else if (isAndroidRun) {
@@ -162,8 +172,8 @@ if (isAndroidDev) {
 				console.warn("\n\nRunning prebuild mode...");
 				console.log("\nUpdating JSON values for prebuild...");
 				await updateJsonValues("prod");
-				console.log("\nSetting react-native-reanimated to 3.9.0-rc.1 for build");
-				await updateReanimatedVersion("3.9.0-rc.1");
+				// console.log("\nSetting react-native-reanimated to 3.9.0-rc.1 for build");
+				// await updateReanimatedVersion("3.9.0-rc.1");
 				console.log("\nUpdating API endpoint to production...");
 				await updateEnvApiEndpoint(prodEndpoint);
 
@@ -177,8 +187,8 @@ if (isAndroidDev) {
 				console.error("Error while running command:", error);
 				process.exit(1);
 			} finally {
-				console.log("\nRestoring react-native-reanimated to 3.10.1");
-				await updateReanimatedVersion("3.10.1");
+				// console.log("\nRestoring react-native-reanimated to 3.10.1");
+				// await updateReanimatedVersion("3.10.1");
 				console.log("\nFinished prebuild process.");
 			}
 		} else if (isAndroidDev || isAndroidRun || isIOSDev) {

@@ -406,6 +406,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 										</Text>
 										<TextInput
 											placeholder="Tu comentario aquí ..."
+											placeholderTextColor="gray"
 											style={solVacaciones.comentariosText}
 											maxLength={255}
 											multiline={true}

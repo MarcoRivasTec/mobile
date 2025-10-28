@@ -49,7 +49,8 @@ const layout = StyleSheet.create({
 		// marginLeft: "-2.5%",
 		// flex: 7,
 		width: "100%",
-		height: "100%",
+		// height: "100%",
+		// borderWidth: 1
 		paddingBottom: 2,
 	},
 	pickerItemStyle: {
@@ -161,14 +162,19 @@ const modal = StyleSheet.create({
 	picker: {
 		width: "100%",
 		height: "100%",
+		// backgroundColor: "red",
+		// borderWidth: 1,
 	},
 	pickerItem: {
-		fontFamily: "Montserrat-Bold",
-		fontSize: 18,
+		// flex: 1,
+		fontFamily: "Montserrat-Light",
+		fontSize: 17,
+		// paddingBottom: 10,
 	},
 	pickerItemStyle: {
-		fontSize: 18,
-		fontFamily: "Montserrat-Medium",
+		height: "100%",
+		fontSize: 28,
+		fontFamily: "Montserrat-Bold",
 	},
 });
 

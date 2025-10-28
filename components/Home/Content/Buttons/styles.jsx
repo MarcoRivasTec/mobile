@@ -50,7 +50,8 @@ function getButtonTagStyle(flexValue) {
 		},
 		textTitleBox: {
 			// position: "absolute",
-			left: "2%",
+			left: "6%",
+			bottom: "1%",
 			// top: "1%",
 			width: "90%",
 			height: "80%",
@@ -119,7 +120,7 @@ const buttonInfo = StyleSheet.create({
 		color: COLORS.white,
 	},
 	textData: {
-		right: "1.5%",
+		textAlign: "center",
 		fontSize: 18,
 		fontWeight: "bold",
 		color: COLORS.white,
@@ -164,7 +165,8 @@ const buttonAction = StyleSheet.create({
 		flexDirection: "row",
 		paddingLeft: "5%",
 		paddingRight: "7%",
-		paddingVertical: "8%",
+		paddingTop: "5%",
+		paddingBottom: "7%",
 	},
 	iconContainer: {
 		flex: 3,
