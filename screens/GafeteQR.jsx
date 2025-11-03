@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	Animated,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import QRCodeStyled from "react-native-qrcode-styled";
 import { getGafeteStyle } from "./styles";
 import { HomeContext } from "../components/HomeContext";
@@ -21,6 +21,14 @@ import { ShadowedView } from "react-native-fast-shadow";
 import { showMessage } from "react-native-flash-message";
 import { LinearGradient } from "expo-linear-gradient";
 import Logo from "../assets/TECMAMOVILCONNECT.svg";
+import {
+	BarcodeCreatorView,
+	BarcodeFormat,
+} from "react-native-barcode-creator";
+import { captureRef } from "react-native-view-shot";
+import * as MediaLibrary from "expo-media-library";
+import { InteractionManager } from "react-native";
+// import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const formatDate = (date) => {
 	const day = String(date.getDate()).padStart(2, "0");
@@ -51,10 +59,32 @@ const GafeteQR = ({ navigation }) => {
 		puesto,
 		numEmp,
 		planta,
+		accessToken,
 	} = useContext(HomeContext);
 	const { region, platform, height, width } = useContext(AppContext);
+	const badgeRef = useRef(null);
+	const [isCapturing, setIsCapturing] = useState(false);
 
-	const insets = platform === "ios" ? useSafeAreaInsets() : null;
+	const waitNextFrame = () =>
+		new Promise((resolve) => requestAnimationFrame(() => resolve()));
+
+	const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+	const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
+	const waitFrames = async (n = 2) => {
+		for (let i = 0; i < n; i++) await nextFrame();
+	};
+
+	const settleUI = async () => {
+		// Wait for any gestures/animations/JS work to finish
+		await InteractionManager.runAfterInteractions();
+		// Give the UI a couple of frames to render the final state
+		await waitFrames(5);
+		// Extra buffer for low-end devices
+		await sleep(200);
+	};
+
+	const insets = useSafeAreaInsets();
+	console.log("Insets are: ", insets);
 
 	const statusBarHeight =
 		platform === "ios" ? insets?.top : StatusBar.currentHeight;
@@ -75,10 +105,53 @@ const GafeteQR = ({ navigation }) => {
 	const date = formatDate(today);
 	const time = formatTime(today);
 	const [QRData, setQRData] = useState(null);
+	const [badgeData, setBadgeData] = useState(null);
 	const [empInfo, setEmpInfo] = useState(null);
 
 	useEffect(() => {
 		StatusBar.setHidden(true);
+
+		const getBadgeData = async () => {
+			// console.log("Requesting data");
+			const badgeQuery = {
+				query: `query BadgeData {
+							BadgeData {
+								data {
+									format
+								}
+								message
+								success
+							}
+						}`,
+			};
+			// console.log("Query is: ", qrQuery);
+			try {
+				const data = await fetchPost({
+					query: badgeQuery,
+					token: accessToken,
+				});
+				// console.log("Data is: ", data);
+				// if (region === "JRZ") {
+				if (data.data.BadgeData.success) {
+					// console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
+					setBadgeData({ format: data.data.BadgeData.data.format });
+				} else {
+					setBadgeData({ format: data.data.BadgeData.data.format });
+				}
+			} catch (error) {
+				showMessage({
+					message:
+						"Hubo un problema al obtener los datos del gafete, intenta de nuevo",
+					type: "warning",
+					duration: 3000,
+					position: "top",
+					statusBarHeight: 30,
+					icon: { icon: "info", position: "right" },
+					// statusBarHeight: 40,
+				});
+			}
+		};
+
 		const getQRData = async () => {
 			// console.log("Requesting data");
 			const qrQuery = {
@@ -106,7 +179,7 @@ const GafeteQR = ({ navigation }) => {
 				// console.log("Data is: ", data);
 				// if (region === "JRZ") {
 				if (data.data.requestQRData.success) {
-					console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
+					// console.log("Obtained data is: ", JSON.stringify(data.data, null, 1));
 					setQRData(data.data.requestQRData.data.qr);
 					setEmpInfo({
 						ingreso: data.data.requestQRData.data.ingreso,
@@ -126,6 +199,7 @@ const GafeteQR = ({ navigation }) => {
 			}
 		};
 
+		getBadgeData();
 		getQRData();
 	}, []);
 
@@ -145,12 +219,68 @@ const GafeteQR = ({ navigation }) => {
 		}
 	}, [layoutReady]);
 
+	const handleSaveBadge = async () => {
+		try {
+			setIsCapturing(true);
+			// allow UI to update (buttons hidden) before snapshot
+			// await waitNextFrame();
+			await settleUI();
+			// 1) Capture the referenced view as a PNG into a temp file
+			const uri = await captureRef(badgeRef, {
+				format: "png",
+				quality: 1,
+				result: "tmpfile", // returns a file:// URI
+			});
+
+			// 2) Ask for permission and save to gallery
+			const { status } = await MediaLibrary.requestPermissionsAsync();
+			if (status !== "granted") {
+				showMessage({
+					message:
+						"Permiso de galería denegado. Ajusta los permisos e intenta de nuevo.",
+					type: "warning",
+					duration: 3000,
+					position: "top",
+					icon: { icon: "info", position: "right" },
+					statusBarHeight: 30,
+				});
+				return;
+			}
+
+			const asset = await MediaLibrary.createAssetAsync(uri);
+			// Put it in a custom album (optional). If the album exists, it will just add the asset.
+			await MediaLibrary.createAlbumAsync("Gafetes TECMA", asset, false);
+
+			showMessage({
+				message: "Gafete guardado en tu galería.",
+				type: "success",
+				duration: 2500,
+				position: "top",
+				icon: { icon: "success", position: "right" },
+				statusBarHeight: 30,
+			});
+		} catch (error) {
+			showMessage({
+				message: "No se pudo guardar el gafete. Intenta de nuevo.",
+				type: "danger",
+				duration: 3000,
+				position: "top",
+				icon: { icon: "danger", position: "right" },
+				statusBarHeight: 30,
+			});
+		} finally {
+			setIsCapturing(false);
+		}
+	};
+
 	return QRData ? (
 		<View
 			style={[
 				gafete.container,
 				{ height: platform === "ios" ? height : "100%" },
 			]}
+			ref={badgeRef}
+			collapsable={false}
 		>
 			{/* White Background */}
 			<View
@@ -198,7 +328,7 @@ const GafeteQR = ({ navigation }) => {
 				style={{
 					opacity: fadeAnim,
 					position: "absolute",
-					top: 0,
+					top: insets?.top,
 					left: 0,
 					right: 0,
 					bottom: 0,
@@ -263,9 +393,20 @@ const GafeteQR = ({ navigation }) => {
 							StatusBar.setHidden(false);
 							navigation.goBack();
 						}}
-						style={gafete.backButton}
+						style={[gafete.backButton, { opacity: isCapturing ? 0 : 1 }]}
+						pointerEvents={isCapturing ? "none" : "auto"}
 					>
 						<AD name="arrowleft" size={25} />
+					</TouchableOpacity>
+
+					{/* Generate badge button */}
+					<TouchableOpacity
+						onPress={handleSaveBadge}
+						style={[gafete.generateButton, { opacity: isCapturing ? 0 : 1 }]}
+						pointerEvents={isCapturing ? "none" : "auto"}
+					>
+						{/* <AD name="arrowleft" size={25} /> */}
+						<Text style={gafete.generateButtonText}>Descargar gafete</Text>
 					</TouchableOpacity>
 
 					{/* Logo */}
@@ -304,7 +445,10 @@ const GafeteQR = ({ navigation }) => {
 				<View
 					style={[
 						gafete.bottomContainer,
-						{ height: arrowHeight - pictureSize / 2 },
+						{
+							height: arrowHeight - pictureSize / 2,
+							paddingBottom: insets?.bottom,
+						},
 					]}
 				>
 					{/* Job Description */}
@@ -320,9 +464,9 @@ const GafeteQR = ({ navigation }) => {
 						<Text style={gafete.employeeNumber}>{numEmp}</Text>
 					</View>
 
-					{/* QR Code */}
+					{/* Barcode */}
 					<View style={[gafete.dataContainer, { height: "40%" }]}>
-						{QRData ? (
+						{QRData && badgeData ? ( // keep your existing loading/ready flow
 							<View
 								style={{
 									height: "100%",
@@ -331,58 +475,36 @@ const GafeteQR = ({ navigation }) => {
 									alignItems: "center",
 								}}
 							>
-								<Logo style={gafete.logoQR} />
-								<QRCodeStyled
-									data={QRData}
-									style={gafete.QR}
-									pieceBorderRadius={2.5}
-									outerEyesOptions={{
-										topLeft: {
-											borderRadius: [15, 15, 0, 15],
-											color: "#30565E",
-										},
-										topRight: {
-											borderRadius: [15, 15, 15],
-											color: "#30565E",
-										},
-										bottomLeft: {
-											borderRadius: [15, 0, 15, 15],
-											color: "#30565E",
-										},
-									}}
-									innerEyesOptions={{
-										borderRadius: 7,
-										scale: 0.85,
-										color: "#30565E",
-										// color: "blue"
-									}}
-									logo={{
-										href: require("../assets/LOGO TECMAMOVILCONNECT.png"),
-										// href: () => <SvgUri source="https://tecmamovil.com/tecmamovilconnect.svg" />,
-										// padding: 4,
-										hidePieces: true,
-										opacity: 0,
-									}}
-									gradient={{
-										type: "radial",
-										options: {
-											center: [0.5, 0.5],
-											radius: [1, 1],
-											colors: ["#467479", "#30565E"],
-											locations: [0, 1],
-										},
-									}}
-									pieceSize={4.7}
-									pieceScale={1}
+								{/* Optional: your logo */}
+								{/* <Logo style={gafete.logoQR} /> */}
+
+								<BarcodeCreatorView
+									value={String(numEmp)} // <- employee number
+									format={
+										badgeData.format === "CODE128"
+											? BarcodeFormat.CODE128
+											: badgeData.format === "UPCA"
+											? BarcodeFormat.UPCA
+											: badgeData.format === "QR"
+											? BarcodeFormat.QR
+											: badgeData.format === "EAN13"
+											? BarcodeFormat.EAN13
+											: badgeData.format === "AZTEC"
+											? BarcodeFormat.AZTEC
+											: badgeData.format === "PDF417"
+											? BarcodeFormat.PDF417
+											: BarcodeFormat.CODE128
+									} // supported format enum
+									foregroundColor={"#30565E"} // your palette
+									style={{ width: 280, height: 120 }} // tune to fit layout
+								/>
+
+								{/* Human-readable text under the bars */}
+								{/* <Text
+									style={{ marginTop: 8, fontWeight: "600", letterSpacing: 1 }}
 								>
-									{/* {() => (
-									<Logo
-										// width={40} // Adjust size as needed
-										// height={40}
-										style={gafete.logoQR}
-									/>
-								)} */}
-								</QRCodeStyled>
+									{String(numEmp)}
+								</Text> */}
 							</View>
 						) : (
 							<LoadingContent />
@@ -456,7 +578,9 @@ const GafeteQR = ({ navigation }) => {
 					</View>
 
 					{/* Etc */}
-					<View style={[gafete.dataContainer, { flex: 1 }]} />
+					<View style={[gafete.dataContainer, { flex: 1 }]}>
+						<Text style={gafete.company}>Validez de 1 semana</Text>
+					</View>
 				</View>
 			</Animated.View>
 		</View>

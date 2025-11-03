@@ -2194,6 +2194,7 @@ __metadata:
     expo-linking: "npm:~7.1.7"
     expo-local-authentication: "npm:~16.0.5"
     expo-location: "npm:~18.1.6"
+    expo-media-library: "npm:^18.2.0"
     expo-secure-store: "npm:~14.2.4"
     expo-sharing: "npm:~13.1.5"
     expo-splash-screen: "npm:^0.30.10"
@@ -2203,6 +2204,7 @@ __metadata:
     prop-types: "npm:^15.8.1"
     react: "npm:19.0.0"
     react-native: "npm:0.79.5"
+    react-native-barcode-creator: "npm:^0.1.8"
     react-native-bouncy-checkbox: "npm:^4.0.0"
     react-native-date-picker: "npm:^5.0.0"
     react-native-dotenv: "npm:^3.4.11"
@@ -2218,6 +2220,7 @@ __metadata:
     react-native-svg: "npm:15.11.2"
     react-native-svg-transformer: "npm:^1.3.0"
     react-native-vector-icons: "npm:^10.2.0"
+    react-native-view-shot: "npm:^4.0.3"
     react-native-webview: "npm:13.13.5"
   languageName: unknown
   linkType: soft
@@ -2720,6 +2723,13 @@ __metadata:
   version: 0.1.0
   resolution: "base-64@npm:0.1.0"
   checksum: 10c0/fe0dcf076e823f04db7ee9b02495be08a91c445fbc6db03cb9913be9680e2fcc0af8b74459041fe08ad16800b1f65a549501d8f08696a8a6d32880789b7de69d
+  languageName: node
+  linkType: hard
+
+"base64-arraybuffer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "base64-arraybuffer@npm:1.0.2"
+  checksum: 10c0/3acac95c70f9406e87a41073558ba85b6be9dbffb013a3d2a710e3f2d534d506c911847d5d9be4de458af6362c676de0a5c4c2d7bdf4def502d00b313368e72f
   languageName: node
   linkType: hard
 
@@ -3240,6 +3250,15 @@ __metadata:
   version: 2.0.0
   resolution: "crypto-random-string@npm:2.0.0"
   checksum: 10c0/288589b2484fe787f9e146f56c4be90b940018f17af1b152e4dde12309042ff5a2bf69e949aab8b8ac253948381529cc6f3e5a2427b73643a71ff177fa122b37
+  languageName: node
+  linkType: hard
+
+"css-line-break@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "css-line-break@npm:2.1.0"
+  dependencies:
+    utrie: "npm:^1.0.2"
+  checksum: 10c0/b2222d99d5daf7861ecddc050244fdce296fad74b000dcff6bdfb1eb16dc2ef0b9ffe2c1c965e3239bd05ebe9eadb6d5438a91592fa8648d27a338e827cf9048
   languageName: node
   linkType: hard
 
@@ -3799,6 +3818,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-media-library@npm:^18.2.0":
+  version: 18.2.0
+  resolution: "expo-media-library@npm:18.2.0"
+  peerDependencies:
+    expo: "*"
+    react-native: "*"
+  checksum: 10c0/6bbd7cb9bf4bbc641ea3b2e8a84354df61ae3f2fc72cc538c4807d9b29c3e17705daf0079c5f5e86112a0dc993d69245bf8dba5e1453c13dad4549a9a12aebec
+  languageName: node
+  linkType: hard
+
 "expo-modules-autolinking@npm:2.1.14":
   version: 2.1.14
   resolution: "expo-modules-autolinking@npm:2.1.14"
@@ -4215,6 +4244,16 @@ __metadata:
   dependencies:
     lru-cache: "npm:^10.0.1"
   checksum: 10c0/b19dbd92d3c0b4b0f1513cf79b0fc189f54d6af2129eeb201de2e9baaa711f1936929c848b866d9c8667a0f956f34bf4f07418c12be1ee9ca74fd9246335ca1f
+  languageName: node
+  linkType: hard
+
+"html2canvas@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "html2canvas@npm:1.4.1"
+  dependencies:
+    css-line-break: "npm:^2.1.0"
+    text-segmentation: "npm:^1.0.3"
+  checksum: 10c0/6de86f75762b00948edf2ea559f16da0a1ec3facc4a8a7d3f35fcec59bb0c5970463478988ae3d9082152e0173690d46ebf4082e7ac803dd4817bae1d355c0db
   languageName: node
   linkType: hard
 
@@ -6072,6 +6111,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-barcode-creator@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "react-native-barcode-creator@npm:0.1.8"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/676f1cde54b8e6758b4705d61b63457cc7812d6aa9e8ee1ef0d35b8b7e014861fbeae1c3d21d4ea1b17ea5063ac91352c05b1bb7266a32fc84959dc65de0661d
+  languageName: node
+  linkType: hard
+
 "react-native-bouncy-checkbox@npm:^4.0.0":
   version: 4.1.2
   resolution: "react-native-bouncy-checkbox@npm:4.1.2"
@@ -6302,6 +6351,18 @@ __metadata:
     fa6-upgrade: bin/fa6-upgrade.sh
     generate-icon: bin/generate-icon.js
   checksum: 10c0/247804affcf74906062ed088d755c3d4632e3f2b62c38226ccb05e2a8dc42414c2378040a4acb474704bed09cd06cb285770c765ffff67fb2d3b896cd46e76ca
+  languageName: node
+  linkType: hard
+
+"react-native-view-shot@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "react-native-view-shot@npm:4.0.3"
+  dependencies:
+    html2canvas: "npm:^1.4.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/e172507eb7de8760a8a557a5e8632bdc248b60b89770cc941690c8fe6c788d28be1efd8259236fbc768eba3b33aaec8b7a833476b566dfef5b754618060edbec
   languageName: node
   linkType: hard
 
@@ -7107,6 +7168,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"text-segmentation@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "text-segmentation@npm:1.0.3"
+  dependencies:
+    utrie: "npm:^1.0.2"
+  checksum: 10c0/8b9ae8524e3a332371060d0ca62f10ad49a13e954719ea689a6c3a8b8c15c8a56365ede2bb91c322fb0d44b6533785f0da603e066b7554d052999967fb72d600
+  languageName: node
+  linkType: hard
+
 "thenify-all@npm:^1.0.0":
   version: 1.6.0
   resolution: "thenify-all@npm:1.6.0"
@@ -7322,6 +7392,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
+  languageName: node
+  linkType: hard
+
+"utrie@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "utrie@npm:1.0.2"
+  dependencies:
+    base64-arraybuffer: "npm:^1.0.2"
+  checksum: 10c0/eaffe645bd81a39e4bc3abb23df5895e9961dbdd49748ef3b173529e8b06ce9dd1163e9705d5309a1c61ee41ffcb825e2043bc0fd1659845ffbdf4b1515dfdb4
   languageName: node
   linkType: hard
 

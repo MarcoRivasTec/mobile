@@ -29,7 +29,7 @@ async function updateJsonValues(mode) {
 		if (mode === "dev") {
 			appJson.expo.name = "TECMA Móvil Connect Dev";
 			appJson.expo.slug = "tecma-movil-connect-dev";
-			appJson.expo.version = "1.0.8dev";
+			appJson.expo.version = "1.0.9dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
 			appJson.expo.splash.image = "./assets/icon-dev.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
@@ -43,7 +43,7 @@ async function updateJsonValues(mode) {
 			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
-			appJson.expo.version = "1.0.8";
+			appJson.expo.version = "1.0.9";
 			appJson.expo.icon = "./assets/icon.png";
 			appJson.expo.splash.image = "./assets/icon.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
@@ -95,7 +95,7 @@ async function getLocalIp() {
 	const interfaces = os.networkInterfaces();
 	for (const name of Object.keys(interfaces)) {
 		for (const iface of interfaces[name]) {
-			if (iface.family === "IPv4" && !iface.internal && iface.address.startsWith("10.3.")) {
+			if (iface.family === "IPv4" && !iface.internal && (iface.address.startsWith("10.3.") || iface.address.startsWith("192.168."))) {
 				return iface.address;
 			}
 		}
