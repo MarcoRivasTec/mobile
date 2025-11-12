@@ -10,7 +10,7 @@ function RegionPicker({ onCallback, region, setRegion }) {
 	return (
 		<Picker
 			selectedValue={region}
-			onValueChange={(itemValue) => {
+			onValueChange={(itemValue, itemIndex) => {
 				{
 					itemValue === "Selecciona"
 						? Alert.alert("Opción inválida", "Debes seleccionar una región", [
@@ -20,8 +20,10 @@ function RegionPicker({ onCallback, region, setRegion }) {
 					onCallback && onCallback();
 				}
 			}}
-			style={layout.picker}
-			itemStyle={modal.pickerItemStyle}
+			style={[layout.picker, { marginBottom: 2, color: "black" }]}
+			
+			mode="dropdown"
+			// itemStyle={{ fontSize: 12, fontStyle: "italic", color: "blue", fontFamily: "Montserrat-Bold" }}
 		>
 			{Platform.OS === "android" && (
 				<Picker.Item

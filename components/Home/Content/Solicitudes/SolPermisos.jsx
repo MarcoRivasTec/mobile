@@ -81,7 +81,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 							start_date: startDate.toISOString().split("T")[0],
 							motive: 1,
 							days: endDate.getDate() - startDate.getDate(),
-							...(comment && comment.trim() !== "" && { comment }),
+							...(comment && comment.trim() !== "" && { coment: comment }),
 						},
 					},
 				};
@@ -134,7 +134,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 				};
 
 				if (comment !== "") {
-					requisitionData.comment = comment;
+					requisitionData.coment = comment;
 				}
 
 				const response = await sendRequisition({ ...requisitionData });
@@ -306,14 +306,15 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 												</View>
 											</TouchableOpacity>
 										) : (
-											<View style={[solPermisos.tipoField, { width: "100%" }]}>
+											<View style={[solPermisos.tipoField, { width: "100%", zIndex: 10 }]}>
+												{/* <Text>{motive}</Text> */}
 												<DataPicker
 													selectedElement={motive}
 													setSelectedElement={setMotive}
-													style={{
-														height: "100%",
-														width: "100%",
-													}}
+													// style={{
+													// 	height: "100%",
+													// 	width: "100%",
+													// }}
 												/>
 											</View>
 										)}
@@ -326,6 +327,7 @@ function SolPermisos({ onCallback, isVacModalVisible, onExit }) {
 										</Text>
 										<TextInput
 											placeholder="Tu comentario aquí ..."
+											placeholderTextColor="gray"
 											style={solPermisos.comentariosTitleText}
 											multiline={true}
 											numberOfLines={5}

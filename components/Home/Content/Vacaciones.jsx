@@ -9,6 +9,7 @@ import HistorialModal from "./Vacaciones/HistorialModal";
 import LoadingContent from "../../Animations/LoadingContent";
 import fetchPost from "../../fetching";
 import { AppContext } from "../../AppContext";
+import SignatureModal from "./Vacaciones/SignatureModal";
 
 function Vacaciones({ changeContent }) {
 	const { numEmp, region } = useContext(AppContext);
@@ -27,9 +28,13 @@ function Vacaciones({ changeContent }) {
 	});
 
 	const [isModalVisible, setModalVisible] = useState(false);
+	const [isSignatureModalVisible, setSignatureModalVisible] = useState(false);
 
 	function modalHandler() {
 		setModalVisible(!isModalVisible);
+	}
+	function signatureModalHandler() {
+		setSignatureModalVisible(!isSignatureModalVisible);
 	}
 
 	// Fetch data when component mounts
@@ -67,7 +72,13 @@ function Vacaciones({ changeContent }) {
 				);
 				if (data.data.Vacaciones) {
 					// setAntiguedad(data.data.Vacaciones.antiguedad);
-					console.log(`Dias vacaciones retornados: ${JSON.stringify(data.data.Vacaciones, null, 1)}`);
+					console.log(
+						`Dias vacaciones retornados: ${JSON.stringify(
+							data.data.Vacaciones,
+							null,
+							1
+						)}`
+					);
 					antiguedad.antiguedad = data.data.Vacaciones.antiguedad.antiguedad;
 					antiguedad.ingreso = data.data.Vacaciones.antiguedad.ingreso;
 					antiguedad.diasaniv = Math.abs(
@@ -104,6 +115,7 @@ function Vacaciones({ changeContent }) {
 						data={antiguedad.ingreso}
 						title="Fecha de Ingreso"
 						type="date"
+						style={{ borderWidth: 1 }}
 					/>
 					<ButtonTag data={antiguedad.antiguedad} title="Años de Antigüedad" />
 					<ButtonTag
@@ -122,23 +134,46 @@ function Vacaciones({ changeContent }) {
 					<ButtonTag data={diasVacs.disponibles} title="Días Disponibles" />
 				</View>
 			</View>
-			<View style={vacaciones.historialContainer}>
-				<ButtonAction
-					toggleModal={() => changeContent("Solicitudes")}
-					title="Solicitar vacaciones ó permisos"
-					icon="VACACIONES"
-					size={25}
-				/>
-				<ButtonAction
-					toggleModal={modalHandler}
-					title="Ver historial de vacaciones"
-					icon="history"
-					size={33}
-				/>
+			<View style={[vacaciones.sectionContainer, { flex: 10 }]}>
+				<View style={vacaciones.buttonsContainer}>
+					<View style={vacaciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={signatureModalHandler}
+							// toggleModal={() => changeContent("Solicitudes")}
+							title="Solicitar constancia de vacaciones"
+							icon="VACACIONES"
+							size={25}
+						/>
+					</View>
+					<View style={vacaciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={modalHandler}
+							title="Ver historial de vacaciones"
+							icon="history"
+							size={33}
+						/>
+					</View>
+				</View>
+				<View style={vacaciones.buttonsContainer}>
+					<View style={vacaciones.buttonContainer}>
+						<ButtonAction
+							toggleModal={() => changeContent("Solicitudes")}
+							title="Solicitar vacaciones ó permisos"
+							icon="VACACIONES"
+							size={25}
+						/>
+					</View>
+				</View>
 			</View>
 			<View>
 				{isModalVisible && (
 					<HistorialModal onCallback={modalHandler} onExit={modalHandler} />
+				)}
+				{isSignatureModalVisible && (
+					<SignatureModal
+						onCallback={signatureModalHandler}
+						onExit={signatureModalHandler}
+					/>
 				)}
 			</View>
 		</View>

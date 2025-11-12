@@ -19,6 +19,9 @@ const Home = ({ navigation }) => {
 
 	useEffect(() => {
 		StatusBar.setHidden(false);
+		StatusBar.setTranslucent(true);
+		StatusBar.setBarStyle("dark-content");
+		StatusBar.setBackgroundColor("transparent");
 
 		let notifs = 0;
 		const init = async () => {

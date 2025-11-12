@@ -65,7 +65,7 @@ const data = StyleSheet.create({
 	},
 	cardAvatarContainer: {
 		flex: 0.34,
-		left: "5%",
+		left: "0.5%",
 		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
@@ -137,7 +137,7 @@ const quickbar = StyleSheet.create({
 		width: "86%",
 		justifyContent: "center",
 		alignItems: "center",
-		top: "1.5%",
+		// top: "1.5%",
 	},
 	text: {
 		textAlign: "center",
@@ -153,6 +153,13 @@ const contentRenderer = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: COLORS.white,
+		// borderWidth: 1
+	},
+	animatedContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	svg: {
 		position: "absolute",

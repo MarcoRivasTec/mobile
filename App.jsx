@@ -5,6 +5,7 @@ import { Splash, Login, Welcome, Home, Restablece, GafeteQR } from "./screens";
 import { AppProvider } from "./components/AppContext";
 import { HomeProvider } from "./components/HomeContext";
 import FlashMessage from "react-native-flash-message";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Create a new stack for Welcome and Home
 const MainStack = createNativeStackNavigator();
@@ -43,40 +44,42 @@ function HomeStackScreen() {
 export default function App() {
 	return (
 		<AppProvider>
-			<NavigationContainer>
-				<MainStack.Navigator initialRouteName="Splash">
-					<MainStack.Screen
-						name="Splash"
-						component={Splash}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<MainStack.Screen
-						name="Login"
-						component={Login}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<MainStack.Screen
-						name="Restablece"
-						component={Restablece}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<MainStack.Screen
-						name="WelcomeHome"
-						component={HomeStackScreen}
-						options={{
-							headerShown: false,
-						}}
-					/>
-				</MainStack.Navigator>
-			</NavigationContainer>
+			<SafeAreaProvider>
+				<NavigationContainer>
+					<MainStack.Navigator initialRouteName="Splash">
+						<MainStack.Screen
+							name="Splash"
+							component={Splash}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<MainStack.Screen
+							name="Login"
+							component={Login}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<MainStack.Screen
+							name="Restablece"
+							component={Restablece}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<MainStack.Screen
+							name="WelcomeHome"
+							component={HomeStackScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
+					</MainStack.Navigator>
+				</NavigationContainer>
 
-			<FlashMessage position="top" />
+				<FlashMessage position="top" />
+			</SafeAreaProvider>
 		</AppProvider>
 	);
 }

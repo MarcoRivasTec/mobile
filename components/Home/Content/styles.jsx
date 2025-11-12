@@ -5,15 +5,19 @@ const menu = StyleSheet.create({
 	// Menu / Buttons properties
 	container: {
 		flex: 1,
+		// height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		width: "90%",
+		marginTop: "2%",
+		// borderWidth: 1,
 	},
 	row: {
-		flex: 1,
+		// flex: 1,
 		flexDirection: "row",
-		justifyContent: "center",
+		// justifyContent: "space-around",
 		alignItems: "center",
+		// borderWidth: 1,
 	},
 });
 
@@ -542,26 +546,47 @@ const vacaciones = StyleSheet.create({
 		// borderColor: "black"
 	},
 	sectionTitleContainer: {
-		flex: 2,
+		// flex: 1,
+		height: "20%",
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
 		paddingLeft: "4%",
+		marginTop: "2%",
+		marginBottom: "-1%",
+		// borderWidth: 1,
 	},
 	sectionButtonContainer: {
-		flex: 4,
+		// flex: 3,
+		height: "80%",
 		width: "100%",
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 		top: "1%",
+		// borderWidth: 1,
+	},
+	buttonsContainer: {
+		// flex: 1,
+		height: "50%",
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	buttonContainer: {
+		width: "48%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	historialContainer: {
-		flex: 9,
-		width: "85%",
+		flex: 5,
+		width: "90%",
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 });
 
@@ -656,7 +681,7 @@ const reciboNom = StyleSheet.create({
 		color: COLORS.white,
 	},
 	nominaSearchText: {
-		left: "30%",
+		left: "10%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
@@ -683,7 +708,7 @@ const reciboNom = StyleSheet.create({
 	nominaCantidadBox: {
 		width: "30%",
 		height: "100%",
-		right: "50%",
+		// right: "50%",
 		justifyContent: "center",
 		alignContent: "center",
 	},
@@ -767,7 +792,7 @@ const prenomina = StyleSheet.create({
 	prenominaWeekContainer: {
 		width: "30%",
 		height: "100%",
-		left: "10%",
+		left: "15%",
 		backgroundColor: "rgba(0, 0, 0, 0.2)",
 		flexDirection: "row",
 		justifyContent: "flex-start",
@@ -787,7 +812,7 @@ const prenomina = StyleSheet.create({
 		color: COLORS.white,
 	},
 	prenominaSearchText: {
-		left: "30%",
+		left: "10%",
 		fontSize: 12,
 		fontWeight: "bold",
 		textAlign: "center",
@@ -804,6 +829,7 @@ const prenomina = StyleSheet.create({
 	prenominaDatesText: {
 		fontSize: 18,
 		fontWeight: "bold",
+		textAlign: "center",
 	},
 	prenominaContainer: {
 		height: "40%",
@@ -1068,7 +1094,7 @@ const solicitudes = StyleSheet.create({
 		// top: "6%",
 		marginVertical: "5%",
 		// flexDirection: "row",
-		justifyContent: "center",
+		justifyContent: "space-around",
 		alignItems: "center",
 	},
 });
@@ -1320,22 +1346,29 @@ const cartas = StyleSheet.create({
 	},
 	sectionTitleContainer: {
 		height: "10%",
+		// flex: 1,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
 		paddingLeft: "4%",
 	},
 	sectionButtonContainer: {
-		flex: 1,
+		// flex: 1,
 		// height: "100%",
-		width: "90%",
+		width: "95%",
 		// top: "3%",
 		flexDirection: "row",
 		flexWrap: "wrap",
 		justifyContent: "center",
 		alignItems: "center",
+		paddingVertical: "3%",
 		// marginBottom: "-5%"
 		// borderWidth: 1,
+	},
+	buttonContainer: {
+		width: "48%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
 
@@ -1364,9 +1397,17 @@ const reposiciones = StyleSheet.create({
 		// height: "100%",
 		width: "80%",
 		// top: "3%",
+		// paddingVertical: "5%",
 		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
+	},
+	buttonContainer: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// marginVertical: "4%",
 	},
 });
 
@@ -1451,13 +1492,18 @@ const linea = StyleSheet.create({
 	sectionButtonContainer: {
 		flex: 1.4,
 		// height: "15%",
-		width: "95%",
+		width: "100%",
 		// borderWidth: 1,
 		// top: "6%",
 		flexDirection: "row",
-		justifyContent: "center",
+		justifyContent: "space-around",
 		alignItems: "center",
 	},
+	buttonContainer: {
+		width: "31%",
+		justifyContent: "center",
+		alignItems: "center",		
+	}
 });
 
 const polizas = StyleSheet.create({
@@ -1492,12 +1538,11 @@ const polizas = StyleSheet.create({
 	scrollContainer: {
 		flex: 1,
 		width: "100%",
-		
 	},
 	scrollContentContainer: {
 		flexGrow: 1,
 		justifyContent: "flex-start",
-		alignItems: "center"
+		alignItems: "center",
 	},
 });
 

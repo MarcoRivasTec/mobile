@@ -8,6 +8,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 	Alert,
+	InteractionManager,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { solVacaciones } from "./styles";
@@ -130,10 +131,11 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 							start_date: startDate.toISOString().split("T")[0],
 							end_date: endDate.toISOString().split("T")[0],
 							days: endDate.getDate() - startDate.getDate(),
-							...(comment && comment.trim() !== "" && { comment }),
+							...(comment && comment.trim() !== "" && { coment: comment }),
 						},
 					},
 				};
+				console.log("Mutation for requestAbsence:", mutation);
 
 				// Send the mutation
 				console.log(
@@ -188,7 +190,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 			};
 
 			if (comment !== "") {
-				requisitionData.comment = comment;
+				requisitionData.coment = comment;
 			}
 			const response = await sendRequisition(requisitionData);
 			// console.log("Response requestGafete: ", response);
@@ -404,6 +406,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 										</Text>
 										<TextInput
 											placeholder="Tu comentario aquí ..."
+											placeholderTextColor="gray"
 											style={solVacaciones.comentariosText}
 											maxLength={255}
 											multiline={true}

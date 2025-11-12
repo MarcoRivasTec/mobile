@@ -48,14 +48,11 @@ function RetiroAhorro() {
 							{" "}
 							Solicitud de Renuncia al Fondo de Ahorro{" "}
 						</Text>
-						<Text style={retiro.subtext}>
-							a tu representante de RH.{"\n"}
-						</Text>
+						<Text style={retiro.subtext}>a tu representante de RH.{"\n"}</Text>
 					</Text>
 					<Text style={retiro.subtext}>
-						Al autorizarse tu solicitud se dejará de hacer la
-						retención semanal de Fondo de Ahorro así como la
-						aportación patronal
+						Al autorizarse tu solicitud se dejará de hacer la retención semanal
+						de Fondo de Ahorro así como la aportación patronal
 						{"\n"}
 					</Text>
 					<Text style={retiro.subtext}>¿Deseas continuar?</Text>
@@ -70,6 +67,7 @@ function RetiroAhorro() {
 						isModalVisible={ConfirmationVisible}
 						onCallback={confirmationModalHandler}
 						onExit={confirmationModalHandler}
+						customText="Recuerda pasar a tu departamento de Recursos Humanos para firmar el trámite, de lo contrario no procederá tu solicitud."
 					/>
 				)}
 				{isWorkingModalVisible && (

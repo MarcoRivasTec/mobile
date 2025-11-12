@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View } from "react-native";
-import SVGLogo from "../../assets/LOGOTECMAMOVIL.svg";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Animated } from "react-native";
 import { contentRenderer } from "./styles";
+
+// Import your screens
 import Menu from "./Content/Menu";
 import Vacaciones from "./Content/Vacaciones";
 import ReciboNom from "./Content/ReciboNom";
@@ -20,13 +21,35 @@ import LineaDenuncia from "./Content/LineaDenuncia";
 import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 import Notificaciones from "./Content/Notificaciones";
+import CheckIn from "./Content/CheckIn";
 
 function ContentRenderer({ content, changeContent, navigation }) {
+	const [visibleContent, setVisibleContent] = useState(content);
+	const fadeAnim = useRef(new Animated.Value(1)).current;
+
+	// Fade effect when content changes
+	useEffect(() => {
+		if (content !== visibleContent) {
+			Animated.timing(fadeAnim, {
+				toValue: 0,
+				duration: 200,
+				useNativeDriver: true,
+			}).start(() => {
+				setVisibleContent(content);
+				Animated.timing(fadeAnim, {
+					toValue: 1,
+					duration: 200,
+					useNativeDriver: true,
+				}).start();
+			});
+		}
+	}, [content]);
+
+	// Render based on visibleContent (not incoming prop)
 	function renderContent() {
-		switch (content) {
+		switch (visibleContent) {
 			case "Menu":
 				return <Menu changeContent={changeContent} navigation={navigation} />;
-
 			case "InfoPers":
 				return <InfoPers />;
 			case "Area":
@@ -57,14 +80,10 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <LineaDenuncia />;
 			case "Polizas":
 				return <Polizas />;
-			// case "Avisos": {
-
-			// 	return;
-			// }
 			case "Opiniones":
 				return <Opiniones />;
-			// case "CambioNIP":
-			// 	return <CambioNIP />;
+			case "CheckIn":
+				return <CheckIn />;
 			default:
 				return null;
 		}
@@ -72,12 +91,16 @@ function ContentRenderer({ content, changeContent, navigation }) {
 
 	return (
 		<View style={contentRenderer.container}>
-			{/* <SVGLogo
-				height="55%"
-				width="55%"
-				style={contentRenderer.svg}
-			></SVGLogo> */}
-			{renderContent()}
+			<Animated.View
+				style={[
+					contentRenderer.animatedContainer,
+					{
+						opacity: fadeAnim,
+					},
+				]}
+			>
+				{renderContent()}
+			</Animated.View>
 		</View>
 	);
 }

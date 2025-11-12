@@ -18,7 +18,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TecmaMovil from "../components/Animations/TecmaMovil";
 import Icon from "../components/Home/icons";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import ResetPass from "../components/Login/ResetPass";
 import RegionModal from "../components/Login/RegionModal";
 import { login } from "./styles";
 import { AppContext } from "../components/AppContext";
@@ -34,9 +33,13 @@ import Loading from "../components/Animations/Loading";
 import DownArrow from "../components/Animations/DownArrow";
 import fetchPost from "../components/fetching";
 import { showMessage, hideMessage } from "react-native-flash-message";
-import { API_ENDPOINT } from "@env";
+import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
+import { biometricAuthenticate } from "../components/Login/biometricAuth";
+import * as SecureStore from "expo-secure-store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Login = ({ navigation, route }) => {
+	const insets = useSafeAreaInsets();
 	const {
 		platform,
 		numEmp,
@@ -49,6 +52,7 @@ const Login = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isNipShown, setIsNipShown] = useState(true);
 	const [region, setRegion] = useState("Selecciona");
+	const [biometricSet, setBiometricSet] = useState(false);
 	const [checkboxState, setCheckboxState] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isInputFocused, setIsInputFocused] = useState(false);
@@ -63,6 +67,10 @@ const Login = ({ navigation, route }) => {
 				const storedRegion = await AsyncStorage.getItem("storedRegion");
 				console.log("Stored region is: ", storedRegion);
 				if (storedRegion) setRegion(storedRegion);
+
+				const biometricFlag = await AsyncStorage.getItem("biometricEnabled");
+				console.log("Stored flag is: ", biometricFlag);
+				if (biometricFlag === "true") setBiometricSet(true);
 			} catch (error) {
 				console.error("Failed to load stored employee number: ", error);
 			}
@@ -305,31 +313,19 @@ const Login = ({ navigation, route }) => {
 				break;
 		}
 
-		const query = {
-			query: `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
-						login(numEmp: $numEmp, nip: $nip, region: $region) {
-							success
-							message
-							data {
-								token
-								name
-							}
-						}
-					}`,
+		const loginQuery = {
+			query: loginMutation,
 			variables: {
 				numEmp: numEmp,
 				region: region,
 				nip: nip,
 			},
 		};
-		const data = await fetchPost({ query });
+
+		const data = await fetchPost({ query: loginQuery });
 		try {
 			console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
 			if (data.data.login.success) {
-				// setFields({
-				// 	name: data.data.login.name,
-				// 	accessToken: data.data.login.token,
-				// });
 				if (checkboxState) {
 					console.log("Checkbox checked");
 					await AsyncStorage.setItem("storedNumEmp", numEmp);
@@ -360,54 +356,210 @@ const Login = ({ navigation, route }) => {
 		} finally {
 			setIsLoading(false);
 		}
-		// fetchPost({ query })
-		// 	.then(async (data) => {
-		// 		setIsLoading(false);
-		// 		// console.log("Response data at ingreso: ", data);
-		// 		// return;
-		// 		if (data.data.login.success) {
-		// 			// setFields({
-		// 			// 	name: data.data.login.name,
-		// 			// 	accessToken: data.data.login.token,
-		// 			// });
-		// 			if (checkboxState) {
-		// 				console.log("Checkbox checked");
-		// 				await AsyncStorage.setItem("storedNumEmp", numEmp);
-		// 				await AsyncStorage.setItem("storedRegion", region);
-		// 				console.log("Set items: ", region, numEmp);
-		// 			}
-		// 			// console.log(JSON.stringify(data.data.login, null, 1));
-		// 			setInfoFields({ region: region });
-		// 			navigation.replace("WelcomeHome", {
-		// 				screen: "Welcome",
-		// 				params: {
-		// 					name: data.data.login.data.name,
-		// 					accessToken: data.data.login.data.token,
-		// 				},
-		// 			});
-		// 		} else if (data.data.login.message) {
-		// 			Alert.alert(data.data.login.message);
-		// 			return;
-		// 		} else {
-		// 			Alert.alert(
-		// 				"Error",
-		// 				"Ocurrió un error inesperado, vuelve a intentarlo."
-		// 			);
-		// 			return;
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error("Error at ingreso", error);
-		// 	})
-		// 	.finally(() => {
-		// 		setIsLoading(false);
-		// 	});
+	};
+
+	const loginMutation = `mutation Mutation($numEmp: String!, $nip: String!, $region: String!) {
+						login(numEmp: $numEmp, nip: $nip, region: $region) {
+							success
+							message
+							data {
+								token
+								name
+							}
+						}
+					}`;
+
+	const handleBiometricLogin = async () => {
+		try {
+			if (biometricSet) {
+				console.log("Biometric set, authenticating...");
+				const auth = await biometricAuthenticate();
+				if (!auth) {
+					showMessage({
+						message: "Error de autenticación",
+						description: "No se pudo autenticar con biometría.",
+						type: "danger",
+						duration: 5000,
+					});
+					return;
+				}
+
+				console.log(
+					"Biometric authentication successful, retrieving credentials..."
+				);
+				const storedNumEmp = await SecureStore.getItemAsync("numEmp", {
+					keychainService: "com.tecma.movilconnect.service.login",
+					requireAuthentication: false,
+				});
+				const storedNip = await SecureStore.getItemAsync("nip", {
+					keychainService: "com.tecma.movilconnect.service.login",
+					requireAuthentication: false,
+				});
+				const storedRegion = await SecureStore.getItemAsync("region", {
+					keychainService: "com.tecma.movilconnect.service.login",
+					requireAuthentication: false,
+				});
+
+				console.log(
+					"Stored credentials: ",
+					storedNumEmp,
+					storedNip,
+					storedRegion
+				);
+
+				if (!storedNumEmp || !storedNip || !storedRegion) {
+					showMessage({
+						message: "Faltan datos guardados",
+						description:
+							"Inicia sesión manualmente para configurar biométricos.",
+						type: "danger",
+						duration: 5000,
+					});
+					return;
+				}
+
+				const loginQuery = {
+					query: loginMutation,
+					variables: {
+						numEmp: storedNumEmp,
+						region: storedRegion,
+						nip: storedNip,
+					},
+				};
+
+				console.log("Logging in with stored credentials...");
+				const data = await fetchPost({ query: loginQuery });
+				try {
+					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
+					if (data.data.login.success) {
+						console.log("Login successful, setting fields...");
+						if (checkboxState) {
+							console.log("Checkbox checked");
+							await AsyncStorage.setItem("storedNumEmp", numEmp);
+							await AsyncStorage.setItem("storedRegion", region);
+							console.log("Set items: ", region, numEmp);
+						}
+						// console.log(JSON.stringify(data.data.login, null, 1));
+						console.log("Setting info fields and navigating...");
+						await setInfoFields({ region: storedRegion, numEmp: storedNumEmp });
+						navigation.replace("WelcomeHome", {
+							screen: "Welcome",
+							params: {
+								name: data.data.login.data.name,
+								accessToken: data.data.login.data.token,
+							},
+						});
+					} else if (!data.data.login.success) {
+						Alert.alert("Error", `${data.data.login.message}`);
+						return;
+					} else {
+						Alert.alert(
+							"Error",
+							"Ocurrió un error inesperado, vuelve a intentarlo."
+						);
+						return;
+					}
+				} catch (error) {
+					Alert.alert(
+						"Error",
+						"Ocurrió un error al iniciar sesión con biometría."
+					);
+					console.error("Error at ingreso", error);
+				} finally {
+					setIsLoading(false);
+				}
+			} else {
+				console.log("Biometric not set, checking credentials");
+				if (numEmp !== "" && nip !== "" && region !== "Selecciona") {
+					const loginQuery = {
+						query: loginMutation,
+						variables: {
+							numEmp: numEmp,
+							region: region,
+							nip: nip,
+						},
+					};
+					const data = await fetchPost({ query: loginQuery });
+					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
+					if (data.data.login.success) {
+						if (checkboxState) {
+							console.log("Checkbox checked");
+							await AsyncStorage.setItem("storedNumEmp", numEmp);
+							await AsyncStorage.setItem("storedRegion", region);
+							console.log("Set items: ", region, numEmp);
+						}
+
+						console.log("Authenticating with biometrics...");
+						const auth = await biometricAuthenticate();
+						if (!auth) {
+							showMessage({
+								message: "Error de autenticación",
+								description: "No se pudo autenticar con biometría.",
+								type: "danger",
+								duration: 5000,
+							});
+							return;
+						}
+
+						await SecureStore.setItemAsync("numEmp", numEmp, {
+							keychainService: "com.tecma.movilconnect.service.login",
+							requireAuthentication: false,
+						});
+						await SecureStore.setItemAsync("nip", nip, {
+							keychainService: "com.tecma.movilconnect.service.login",
+							requireAuthentication: false,
+						});
+						await SecureStore.setItemAsync("region", region, {
+							keychainService: "com.tecma.movilconnect.service.login",
+							requireAuthentication: false,
+						});
+
+						await AsyncStorage.setItem("biometricEnabled", "true");
+
+						await setInfoFields({ region: region });
+						navigation.replace("WelcomeHome", {
+							screen: "Welcome",
+							params: {
+								name: data.data.login.data.name,
+								accessToken: data.data.login.data.token,
+							},
+						});
+					} else if (!data.data.login.success) {
+						Alert.alert("Error", `${data.data.login.message}`);
+						return;
+					} else {
+						Alert.alert(
+							"Error",
+							"Ocurrió un error inesperado, vuelve a intentarlo."
+						);
+						return;
+					}
+				} else {
+					showMessage({
+						message: "La autenticación biométrica requiere tus credenciales",
+						description:
+							"Por favor, ingresa tu número de empleado, NIP y región antes de usar la autenticación biométrica.",
+						type: "danger",
+						duration: 10000,
+					});
+					return;
+				}
+			}
+		} catch (error) {
+			console.error("Error during biometric login: ", error);
+			showMessage({
+				message: "Error de autenticación biométrica",
+				description: "Hubo un problema al intentar autenticarte.",
+				type: "danger",
+				duration: 5000,
+			});
+		}
 	};
 
 	return (
 		<ImageBackground
 			source={require("../assets/backgrounds/FONDOSPLASH.png")}
-			style={login.backgroundContainer}
+			style={[login.backgroundContainer, { paddingBottom: insets.bottom }]}
 		>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<View style={login.container}>
@@ -496,7 +648,7 @@ const Login = ({ navigation, route }) => {
 									</View>
 								</TouchableOpacity>
 							) : (
-								<View style={login.field}>
+								<View style={[login.field, { paddingLeft: "2%" }]}>
 									<RegionPicker region={region} setRegion={setRegion} />
 								</View>
 							)}
@@ -524,22 +676,33 @@ const Login = ({ navigation, route }) => {
 					</View>
 
 					{/* Login button */}
-					<LinearGradient
-						colors={[COLORS.naranja, COLORS.rojo]}
-						style={login.buttonContainer}
-						start={{ x: 0, y: 0 }}
-						end={{ x: 1, y: 0 }}
-					>
-						{isLoading || versionCheck ? (
-							<TouchableOpacity style={login.button}>
-								<Loading />
-							</TouchableOpacity>
-						) : (
-							<TouchableOpacity style={login.button} onPress={handleLogin}>
-								<Text style={login.buttonText}>Ingresar</Text>
-							</TouchableOpacity>
-						)}
-					</LinearGradient>
+					<View style={login.buttonsContainer}>
+						<TouchableOpacity
+							onPress={handleBiometricLogin}
+							style={[
+								login.buttonContainer,
+								{ width: "15%", backgroundColor: COLORS.naranja },
+							]}
+						>
+							<IconMCI name="fingerprint" size={32} color={COLORS.white} />
+						</TouchableOpacity>
+						<LinearGradient
+							colors={[COLORS.naranja, COLORS.rojo]}
+							style={[login.buttonContainer, { width: "83%" }]}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 1, y: 0 }}
+						>
+							{isLoading || versionCheck ? (
+								<TouchableOpacity style={login.button}>
+									<Loading />
+								</TouchableOpacity>
+							) : (
+								<TouchableOpacity style={login.button} onPress={handleLogin}>
+									<Text style={login.buttonText}>Ingresar</Text>
+								</TouchableOpacity>
+							)}
+						</LinearGradient>
+					</View>
 
 					{/* Reset link */}
 					<View style={login.resetContainer}>

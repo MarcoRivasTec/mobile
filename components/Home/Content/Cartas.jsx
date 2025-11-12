@@ -51,64 +51,56 @@ function Cartas() {
 						Solicitud de cartas
 					</Text>
 				</View>
-				<View
-					style={[
-						cartas.sectionButtonContainer,
-						{ marginTop: "-6%", marginBottom: "-12%" },
-					]}
-				>
-					<ButtonAction
-						toggleModal={() => requestCartaHandler("CartaPrestamo")}
-						icon="CARTA_SAL"
-						size={45}
-						title="Carta Salario"
-						fontSize={14}
-					></ButtonAction>
+				<View style={[cartas.sectionButtonContainer]}>
+					<View style={cartas.buttonContainer}>
+						<ButtonAction
+							toggleModal={() => requestCartaHandler("CartaPrestamo")}
+							icon="CARTA_SAL"
+							size={45}
+							title="Carta Salario"
+							fontSize={14}
+						/>
+					</View>
 
-					<ButtonAction
-						toggleModal={() =>
-							requestCartaHandler("CartaGuarderia")
-						}
-						icon="GUARDERIA"
-						size={45}
-						title="Guardería"
-						fontSize={14}
-					></ButtonAction>
+					<View style={cartas.buttonContainer}>
+						<ButtonAction
+							toggleModal={() => requestCartaHandler("CartaGuarderia")}
+							icon="GUARDERIA"
+							size={45}
+							title="Guardería"
+							fontSize={14}
+						/>
+					</View>
 				</View>
 				<View style={cartas.sectionButtonContainer}>
-					<ButtonAction
-						toggleModal={() => requestCartaHandler("CartaVisa")}
-						icon="VISA"
-						size={45}
-						title="Carta Visa"
-						fontSize={15}
-					></ButtonAction>
+					<View style={cartas.buttonContainer}>
+						<ButtonAction
+							toggleModal={() => requestCartaHandler("CartaVisa")}
+							icon="VISA"
+							size={45}
+							title="Carta Visa"
+							fontSize={15}
+						/>
+					</View>
 
-					<ButtonAction
-						toggleModal={() => requestCartaHandler("CartaPermiso")}
-						icon="PERMISO_USA"
-						size={45}
-						title="Permiso USA"
-						fontSize={14}
-					></ButtonAction>
+					<View style={cartas.buttonContainer}>
+						<ButtonAction
+							toggleModal={() => requestCartaHandler("CartaPermiso")}
+							icon="PERMISO_USA"
+							size={45}
+							title="Permiso USA"
+							fontSize={14}
+						/>
+					</View>
 				</View>
-				<View
-					style={[
-						cartas.sectionButtonContainer,
-						{
-							flex: 0.8,
-							flexDirection: "column",
-							flexWrap: "nowrap",
-						},
-					]}
-				>
+				<View style={[cartas.sectionButtonContainer]}>
 					<ButtonAction
 						toggleModal={() => requestCartaHandler("CartaTrabajo")}
 						icon="PERMISO"
 						size={40}
 						title="Carta Trabajo"
 						fontSize={14}
-					></ButtonAction>
+					/>
 				</View>
 			</View>
 			{isCartaModalVisible && (

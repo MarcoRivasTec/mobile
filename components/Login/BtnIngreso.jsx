@@ -156,10 +156,6 @@ function Ingresar({ nip, checkboxState, navigation, region }) {
 				// console.log("Response data at ingreso: ", data);
 				// return;
 				if (data.data.login.success) {
-					// setFields({
-					// 	name: data.data.login.name,
-					// 	accessToken: data.data.login.token,
-					// });
 					if (checkboxState) {
 						console.log("Checkbox checked");
 						await AsyncStorage.setItem("storedNumEmp", numEmp);

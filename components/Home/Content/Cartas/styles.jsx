@@ -3,6 +3,7 @@ import COLORS from "../../../../constants/colors";
 
 const cartaModal = StyleSheet.create({
 	container: {
+		position: "absolute",
 		flex: 1,
 	},
 	backgroundContainer: {

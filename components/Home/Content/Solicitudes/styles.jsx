@@ -367,11 +367,18 @@ const solPermisos = StyleSheet.create({
 	},
 	diasTextField: {
 		height: "100%",
+		// flex: 1,
 		width: "100%",
 		justifyContent: "center",
+		// backgroundColor: "red",
 		alignItems: "center",
 		textAlign: "center",
-		fontSize: 15,
+		// verticalAlign: "middle",
+		// alignSelf: "center",
+		fontSize: 14,
+		// borderWidth: 1,
+		padding: 4,
+		// marginTop: 6,
 		color: COLORS.black,
 	},
 	tipoContainer: {
@@ -379,6 +386,7 @@ const solPermisos = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
+		// borderWidth: 1
 	},
 	tipoTitleContainer: {
 		flex: 1,
@@ -400,6 +408,7 @@ const solPermisos = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "gray",
 		borderRadius: 10,
+		// backgroundColor: "red"
 	},
 	tipoIconContainer: {
 		position: "absolute",
@@ -499,8 +508,28 @@ const dataModal = StyleSheet.create({
 		alignItems: "center",
 	},
 	picker: {
-		width: "100%",
-		height: "100%",
+		// padding: 4,
+		// marginTop: 10,
+		// height: 50,
+		width: "95%",
+		paddingLeft: 10,
+		// backgroundColor: "red",
+		// width: "100%",
+		// height: "100%",
+		// marginBottom: 2,
+		// paddingBottom: 2,
+		// fontSize: 15,
+		// color: "black",
+		// justifyContent: "center",
+		// alignContent: "center",
+		// borderWidth: 1,
+		// zIndex: 1,
+	},
+	pickerItem: {
+		// color: "white",
+		// borderWidth: 1,
+		fontSize: 15,
+		fontFamily: "Montserrat-Medium",
 	},
 });
 

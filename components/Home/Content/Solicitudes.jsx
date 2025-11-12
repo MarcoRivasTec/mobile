@@ -34,16 +34,14 @@ function Solicitudes() {
 						size={40}
 						fontSize={18}
 						title="Solicitar vacaciones"
-					></ButtonAction>
-					<View></View>
+					/>
 					<ButtonAction
 						toggleModal={permisosModalHandler}
 						icon="VACACIONES"
 						size={40}
 						fontSize={18}
 						title="Solicitar permisos"
-					></ButtonAction>
-					<View></View>
+					/>
 				</View>
 				{isVacModalVisible && (
 					<SolVacaciones

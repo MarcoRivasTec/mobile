@@ -76,7 +76,6 @@ const login = StyleSheet.create({
 		flex: 7,
 		height: "100%",
 		backgroundColor: "white",
-		// backgroundColor: COLORS.white,
 		alignItems: "flex-start",
 		justifyContent: "center",
 		borderTopRightRadius: 24,
@@ -127,14 +126,22 @@ const login = StyleSheet.create({
 		textDecorationLine: "none",
 		fontFamily: "Montserrat-Regular",
 	},
-	// Login button
-	buttonContainer: {
+
+	// Login buttons
+	buttonsContainer: {
 		flex: 6,
-		// height: "12%",
 		width: "90%",
-		borderRadius: 24,
-		// borderWidth: 1,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
 		marginBottom: "2%",
+	},
+	buttonContainer: {
+		height: "100%",
+		// width: "75%",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: 24,
 	},
 	button: {
 		height: "100%",
@@ -619,6 +626,26 @@ const getGafeteStyle = (platform) => {
 			alignItems: "center",
 			zIndex: 2,
 			// borderWidth: 1
+		},
+		generateButton: {
+			position: "absolute",
+			top: "5%",
+			// top: statusBarHeight,
+			right: "4%",
+			height: platform === "ios" ? "25%" : "28%",
+			width: 100,
+			borderRadius: 10,
+			backgroundColor: COLORS.main,
+			justifyContent: "center",
+			alignItems: "center",
+			zIndex: 2,
+			// borderWidth: 1,
+		},
+		generateButtonText: {
+			fontFamily: "Montserrat-Medium",
+			fontSize: 14,
+			color: COLORS.white,
+			textAlign: "center",
 		},
 	});
 };

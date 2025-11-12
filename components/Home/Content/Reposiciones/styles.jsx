@@ -3,6 +3,7 @@ import COLORS from "../../../../constants/colors";
 
 const gafete = StyleSheet.create({
 	container: {
+		position: "absolute",
 		flex: 1,
 	},
 	backgroundContainer: {
@@ -86,6 +87,7 @@ const gafete = StyleSheet.create({
 
 const banorte = StyleSheet.create({
 	container: {
+		position: "absolute",
 		flex: 1,
 	},
 	backgroundContainer: {
@@ -198,7 +200,7 @@ const banorte = StyleSheet.create({
 	checkboxText: {
 		fontSize: 16,
 		color: "black",
-		textDecorationLine: "underline"
+		textDecorationLine: "underline",
 	},
 	inputText: {
 		fontSize: 16,
@@ -238,6 +240,7 @@ const banorte = StyleSheet.create({
 
 const despensa = StyleSheet.create({
 	container: {
+		position: "absolute",
 		flex: 1,
 	},
 	backgroundContainer: {

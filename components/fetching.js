@@ -1,14 +1,16 @@
 import { API_ENDPOINT } from "@env";
 
-const fetchPost = async ({ query }) => {
+const fetchPost = async ({ query, token = null }) => {
 	// console.log("Query is: ", JSON.stringify(query, null, 1));
 	console.log("API endpoint is: ", `${API_ENDPOINT}`);
+	console.log("Token is: ", `${token}`);
 	try {
 		// console.log("Fetching...")
 		const response = await fetch(API_ENDPOINT, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				...(token && { Authorization: `Bearer ${token}` }),
 			},
 			body: JSON.stringify(query),
 		});
