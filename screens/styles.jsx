@@ -627,6 +627,26 @@ const getGafeteStyle = (platform) => {
 			zIndex: 2,
 			// borderWidth: 1
 		},
+		generateButton: {
+			position: "absolute",
+			top: "5%",
+			// top: statusBarHeight,
+			right: "4%",
+			height: platform === "ios" ? "25%" : "28%",
+			width: 100,
+			borderRadius: 10,
+			backgroundColor: COLORS.main,
+			justifyContent: "center",
+			alignItems: "center",
+			zIndex: 2,
+			// borderWidth: 1,
+		},
+		generateButtonText: {
+			fontFamily: "Montserrat-Medium",
+			fontSize: 14,
+			color: COLORS.white,
+			textAlign: "center",
+		},
 	});
 };
 

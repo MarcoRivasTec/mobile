@@ -2,7 +2,7 @@
   "expo": {
     "name": "TECMA Móvil Connect Dev",
     "slug": "tecma-movil-connect-dev",
-    "version": "1.0.8dev",
+    "version": "1.0.9dev",
     "orientation": "portrait",
     "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
@@ -33,7 +33,8 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.tecma.movilconnecttest",
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "name": "TECMA Móvil Connect Test"
     },
     "web": {
       "favicon": "./assets/favicon.png"
