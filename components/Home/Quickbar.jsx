@@ -142,7 +142,7 @@ function Quickbar({ changeContent }) {
 				</View>
 			</TouchableOpacity>
 			{/* Tecma Ideas */}
-			<TouchableOpacity
+			{/* <TouchableOpacity
 				onPress={() => {
 					handlePress("button4");
 					changeContent("Ideas");
@@ -180,7 +180,7 @@ function Quickbar({ changeContent }) {
 						Tecma Ideas
 					</Text>
 				</View>
-			</TouchableOpacity>
+			</TouchableOpacity> */}
 			{/* Directorio */}
 			{notifications > 0 ? (
 				<TouchableOpacity

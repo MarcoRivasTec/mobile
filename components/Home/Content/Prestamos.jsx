@@ -27,7 +27,7 @@ const getWeekDates = async (year, weekNumber) => {
 	// Get the first day of the year in Mountain Time
 	let firstDayOfYear = DateTime.fromObject(
 		{ year, month: 1, day: 1 },
-		{ zone: "America/Denver" }
+		{ zone: "America/Denver" },
 	);
 	let firstSaturdayOfYear = firstDayOfYear;
 
@@ -42,7 +42,7 @@ const getWeekDates = async (year, weekNumber) => {
 
 	// Calculate the number of weeks since the first Saturday of the year
 	let weeksSinceStart = Math.floor(
-		today.diff(firstSaturdayOfYear, "weeks").weeks
+		today.diff(firstSaturdayOfYear, "weeks").weeks,
 	);
 
 	// Ensure the calculation doesn't move back a full week if today isn't Saturday yet
@@ -64,7 +64,7 @@ const getWeekDates = async (year, weekNumber) => {
 		" End of week: ",
 		endOfWeek.toISO(),
 		"Week number: ",
-		correctedWeekNumber
+		correctedWeekNumber,
 	);
 	return {
 		firstDay: startOfWeek.toISO(),
@@ -147,18 +147,18 @@ function Prestamos() {
 				});
 				const startDate = await getWeekDates(
 					currentYear,
-					data.data.Prestamo.initial_week
+					data.data.Prestamo.initial_week,
 				);
 
 				const endDate = await getWeekDates(
 					currentYear,
-					data.data.Prestamo.final_week
+					data.data.Prestamo.final_week,
 				);
 				// const endDate = getWeekDates(currentYear, 34);
 				if (data.data.Prestamo.prestamo) {
 					Alert.alert(
 						"Aviso",
-						"Existe registro de un prestamo este año por lo que no se pueden solicitar más."
+						"Existe registro de un prestamo este año por lo que no se pueden solicitar más.",
 					);
 					setIsAllowed(false);
 					return;
@@ -189,7 +189,7 @@ function Prestamos() {
 					setIsAllowed(false);
 					Alert.alert(
 						"Fecha fuera de periodo",
-						"No se puede pedir un prestamo en este momento"
+						"No se puede pedir un prestamo en este momento",
 					);
 				}
 
@@ -224,7 +224,7 @@ function Prestamos() {
 		if (isAllowed === false) {
 			Alert.alert(
 				"Fecha fuera de periodo",
-				"No se puede pedir un prestamo en este momento"
+				"No se puede pedir un prestamo en este momento",
 			);
 			return;
 		}
@@ -237,14 +237,14 @@ function Prestamos() {
 		if (prestamoSendData.solicita < prestamoData.saldo_fa * 0.1) {
 			Alert.alert(
 				"Error",
-				"La cantidad a solicitar debe ser minimo 10% del ahorro disponible."
+				"La cantidad a solicitar debe ser minimo 10% del ahorro disponible.",
 			);
 			return;
 		}
 		if (prestamoSendData.solicita > prestamoData.saldo_fa * 0.9) {
 			Alert.alert(
 				"Error",
-				"La cantidad a solicitar no puede ser mayor al 90% del ahorro disponible."
+				"La cantidad a solicitar no puede ser mayor al 90% del ahorro disponible.",
 			);
 			return;
 		}
@@ -255,13 +255,13 @@ function Prestamos() {
 		if (prestamoSendData.semanas > availableWeeksCount) {
 			Alert.alert(
 				"Error",
-				"La cantidad de semanas a pagar excede el limite del periodo."
+				"La cantidad de semanas a pagar excede el limite del periodo.",
 			);
 			return;
 		}
 		setPrestamoSendData((prevState) => {
 			const intTotal = parseFloat(
-				((interes * prevState.semanas * prevState.solicita) / 100).toFixed(2)
+				((interes * prevState.semanas * prevState.solicita) / 100).toFixed(2),
 			);
 
 			const totPago = parseFloat((prevState.solicita + intTotal).toFixed(2));
@@ -309,50 +309,50 @@ function Prestamos() {
 					case "Exists":
 						Alert.alert(
 							"Error",
-							"Ya existe un préstamo registrado en el sistema."
+							"Ya existe un préstamo registrado en el sistema.",
 						);
 						break;
 					case "Existing requisition":
 						Alert.alert(
 							"Importante",
-							"Ya existe una solicitud de préstamo registrada en el sistema, espera el monto solicitado la próxima semana junto con tu depósito de nómina."
+							"Ya existe una solicitud de préstamo registrada en el sistema, espera el monto solicitado la próxima semana junto con tu depósito de nómina.",
 						);
 						break;
 					case "Limit":
 						Alert.alert(
 							"Error",
-							"El préstamo solicitado está fuera de los límites permitidos."
+							"El préstamo solicitado está fuera de los límites permitidos.",
 						);
 						break;
 					case "LessThan2Weeks":
 						Alert.alert(
 							"Error",
-							"El plazo a pagar el préstamo no puede ser menor a 2 semanas."
+							"El plazo a pagar el préstamo no puede ser menor a 2 semanas.",
 						);
 						break;
 					case "OutOfRange":
 						Alert.alert(
 							"Error",
-							"Fecha fuera de periodo de préstamos, no se puede solicitar en este momento."
+							"Fecha fuera de periodo de préstamos, no se puede solicitar en este momento.",
 						);
 						break;
 					case "ExceedsPeriod":
 						Alert.alert(
 							"Error",
-							"El plazo de semanas excede el límite permitido."
+							"El plazo de semanas excede el límite permitido.",
 						);
 						break;
 					case "Error":
 						Alert.alert(
 							"Error",
-							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
+							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto.",
 						);
 						break;
 
 					default:
 						Alert.alert(
 							"Error",
-							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto."
+							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto.",
 						);
 						break;
 				}
@@ -362,7 +362,7 @@ function Prestamos() {
 		} catch (error) {
 			Alert.alert(
 				"Error",
-				"Ocurrió un problema al solicitar tu préstamo, inténtalo de nuevo."
+				"Ocurrió un problema al solicitar tu préstamo, inténtalo de nuevo.",
 			);
 		}
 	};
@@ -443,11 +443,11 @@ function Prestamos() {
 									<TextInput
 										placeholderTextColor={"gray"}
 										placeholder={`Mínimo de $${formatCurrency(
-											prestamoData.saldo_fa * 0.1
+											prestamoData.saldo_fa * 0.1,
 										)} y máximo de $${formatCurrency(
-											prestamoData.saldo_fa * 0.9
+											prestamoData.saldo_fa * 0.9,
 										)}`}
-										style={prestamos.dataInputField}
+										style={[prestamos.dataInputField, { color: COLORS.black }]}
 										keyboardType="numeric"
 										value={prestamoSendData.solicita}
 										onChangeText={(text) =>
@@ -473,7 +473,10 @@ function Prestamos() {
 													? `Máx ${availableWeeksCount}`
 													: `No disp.`
 											}
-											style={prestamos.dataInputField}
+											style={[
+												prestamos.dataInputField,
+												{ color: COLORS.black },
+											]}
 											value={prestamoSendData.semanas}
 											keyboardType="numeric"
 											onChangeText={(text) =>
