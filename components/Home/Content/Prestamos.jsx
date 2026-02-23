@@ -75,7 +75,7 @@ const getWeekDates = async (year, weekNumber) => {
 
 function Prestamos() {
 	const { numEmp, region } = useContext(AppContext);
-	const { sendRequisition } = useContext(HomeContext);
+	const { sendRequisition, accessToken } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
@@ -120,45 +120,53 @@ function Prestamos() {
 		setPrestamoSendData((prevState) => ({ ...prevState, ...fields }));
 	};
 
-	const fetchDataPrestamo = async () => {
+	const fetchLoanData = async () => {
 		// console.log("Fetch data prestamo params: ", numEmp, typeof numEmp, region, typeof region);
 		const query = {
-			query: `query Prestamo($numEmp: String!, $region: String!){
-				Prestamo(numEmp: $numEmp, region: $region) {
-					saldo_fa,
-					prestamo,
-					initial_week,
-					final_week,
-					max_weeks
+			query: `query LoanData{
+				LoanData {
+					success
+					message
+					data {
+							saldo_fa
+							prestamo
+							initial_week
+							final_week
+							max_weeks
+						}
 				}
 			}`,
-			variables: {
-				numEmp: numEmp,
-				region: region,
-			},
 		};
 		try {
-			const data = await fetchPost({ query });
+			const data = await fetchPost({
+				query,
+				token: accessToken,
+			});
+			console.log(
+				"Response data at fetchLoanData:",
+				JSON.stringify(data, null, 1),
+			);
+			// const data = await fetchPost({ query });
 			// console.log("Response data at prestamo:", JSON.stringify(data, null, 1));
-			if (data.data.Prestamo) {
+			if (data.data.LoanData.success && data.data.LoanData.data) {
 				setPrestamoData({
-					saldo_fa: data.data.Prestamo.saldo_fa,
-					prestamo: data.data.Prestamo.prestamo,
+					saldo_fa: data.data.LoanData.data.saldo_fa,
+					prestamo: data.data.LoanData.data.prestamo,
 				});
 				const startDate = await getWeekDates(
 					currentYear,
-					data.data.Prestamo.initial_week,
+					data.data.LoanData.data.initial_week,
 				);
 
 				const endDate = await getWeekDates(
 					currentYear,
-					data.data.Prestamo.final_week,
+					data.data.LoanData.data.final_week,
 				);
 				// const endDate = getWeekDates(currentYear, 34);
-				if (data.data.Prestamo.prestamo) {
+				if (data.data.LoanData.data.prestamo) {
 					Alert.alert(
 						"Aviso",
-						"Existe registro de un prestamo este año por lo que no se pueden solicitar más.",
+						data.data.LoanData.message,
 					);
 					setIsAllowed(false);
 					return;
@@ -207,8 +215,32 @@ function Prestamos() {
 
 	const getData = async () => {
 		setIsLoading(true);
-		await fetchDataPrestamo();
+		await fetchLoanData();
+		// await onRequestLoan(1);
 		setIsLoading(false);
+	};
+
+	const onRequestLoan = async (example) => {
+		const fileQuery = {
+			query: `mutation RequestLoan($example: Int!) {
+				requestLoan(example: $example) {
+					success
+					message
+				}
+			}`,
+			variables: {
+				example: example,
+			},
+		};
+		const data = await fetchPost({
+			query: fileQuery,
+			token: accessToken,
+		});
+		console.log("Data is: ", JSON.stringify(data, null, 1));
+		if (data.data?.requestLoan?.success) {
+			console.log("Url is: ", data.data.requestLoan);
+			// await Linking.openURL(data.data.requestLoan.url);
+		}
 	};
 
 	useEffect(() => {

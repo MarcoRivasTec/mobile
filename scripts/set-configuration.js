@@ -8,6 +8,7 @@ const { execSync } = require("child_process");
 const packageJsonPath = path.resolve(__dirname, "..", "package.json");
 const appJsonPath = path.join(__dirname, "..", 'app.json');
 const envPath = path.resolve(__dirname, "../env", ".env");
+const specificEndpoint = "https://dev-api.tecmamovilconnect.com/"; // Set to empty string "" to auto-detect local IP, or set to specific URL for testing with a remote endpoint
 const prodEndpoint = "https://api.tecmamovilconnect.com/";
 const testPort = 8083;
 
@@ -95,7 +96,7 @@ async function getLocalIp() {
 	const interfaces = os.networkInterfaces();
 	for (const name of Object.keys(interfaces)) {
 		for (const iface of interfaces[name]) {
-			if (iface.family === "IPv4" && !iface.internal && (iface.address.startsWith("10.3.") || iface.address.startsWith("192.168."))) {
+			if (iface.family === "IPv4" && !iface.internal && (iface.address.startsWith("10.3.") || iface.address.startsWith("192.168"))) {
 				return iface.address;
 			}
 		}
@@ -209,7 +210,7 @@ if (isAndroidDev) {
 				// await updateReanimatedVersion("3.10.1");
 				console.log("\nUpdating API endpoint to dev...");
 				const localIp = await getLocalIp();
-				const devEndpoint = `http://${localIp}:${testPort}/papitecma`;
+				const devEndpoint = specificEndpoint === "" ? `http://${localIp}:${testPort}/papitecma` : specificEndpoint;
 				await updateEnvApiEndpoint(devEndpoint);
 
 				console.warn("\n\nRunning command for dev mode");
