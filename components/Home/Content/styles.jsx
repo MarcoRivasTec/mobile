@@ -1180,10 +1180,10 @@ const prestamos = StyleSheet.create({
 		// borderWidth: 1,
 	},
 	dataFieldContainer: {
-		height: "65%",
+		height: "75%",
 		width: "100%",
 		justifyContent: "center",
-		alignItems: "flex-start",
+		alignItems: "center",
 		marginVertical: "1%",
 		borderWidth: 1,
 		borderColor: COLORS.grey,
@@ -1201,7 +1201,7 @@ const prestamos = StyleSheet.create({
 	},
 	dataRowFieldContainer: {
 		flex: 1,
-		height: "65%",
+		height: "75%",
 		marginHorizontal: "4%",
 		justifyContent: "center",
 		alignItems: "center",
