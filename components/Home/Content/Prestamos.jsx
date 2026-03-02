@@ -74,11 +74,39 @@ const getWeekDates = async (year, weekNumber) => {
 };
 
 function Prestamos() {
-	const { numEmp, region } = useContext(AppContext);
 	const { sendRequisition, accessToken } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
+
+	const [prestamoData, setPrestamoData] = useState({
+		saldo_fa: 0,
+		prestamo: false,
+	});
+	const [loanData, setLoanData] = useState({
+		isAllowed: false,
+		balance: 0,
+		interestRate: 0,
+		
+
+
+
+	const [prestamoSendData, setPrestamoSendData] = useState({
+		solicita: 0,
+		semanas: 0,
+		intTotal: 0,
+		totPago: 0,
+		dtoSem: 0,
+	});
+	const currentYear = new Date().getFullYear();
+	const [availableWeeksCount, setAvailableWeeksCount] = useState();
+	const [isAllowed, setIsAllowed] = useState();
+	const [isCalculated, setIsCalculated] = useState(false);
+
+	// Define objects for the 5th and 42nd weeks
+	// const [startDate, setStartDate] = useState(0);
+	// const [endDate, setEndDate] = useState(0);
+
 
 	// const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
 
@@ -89,28 +117,6 @@ function Prestamos() {
 	// 	zone: "America/Denver",
 	// });
 
-	const currentYear = new Date().getFullYear();
-
-	// Define objects for the 5th and 42nd weeks
-	// const [startDate, setStartDate] = useState(0);
-	// const [endDate, setEndDate] = useState(0);
-
-	const interes = 0.159;
-	const [prestamoData, setPrestamoData] = useState({
-		saldo_fa: 0,
-		prestamo: false,
-	});
-
-	const [prestamoSendData, setPrestamoSendData] = useState({
-		solicita: 0,
-		semanas: 0,
-		intTotal: 0,
-		totPago: 0,
-		dtoSem: 0,
-	});
-	const [availableWeeksCount, setAvailableWeeksCount] = useState();
-	const [isAllowed, setIsAllowed] = useState();
-	const [isCalculated, setIsCalculated] = useState(false);
 
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
@@ -123,13 +129,14 @@ function Prestamos() {
 	const fetchLoanData = async () => {
 		// console.log("Fetch data prestamo params: ", numEmp, typeof numEmp, region, typeof region);
 		const query = {
-			query: `query LoanData{
+			query: `query LoanData(){
 				LoanData {
 					success
 					message
 					data {
-							saldo_fa
-							prestamo
+							isAllowed
+							balance
+							loan
 							initial_week
 							final_week
 							max_weeks
@@ -150,8 +157,8 @@ function Prestamos() {
 			// console.log("Response data at prestamo:", JSON.stringify(data, null, 1));
 			if (data.data.LoanData.success && data.data.LoanData.data) {
 				setPrestamoData({
-					saldo_fa: data.data.LoanData.data.saldo_fa,
-					prestamo: data.data.LoanData.data.prestamo,
+					saldo_fa: data.data.LoanData.data.balance,
+					prestamo: data.data.LoanData.data.loan,
 				});
 				const startDate = await getWeekDates(
 					currentYear,
@@ -171,6 +178,8 @@ function Prestamos() {
 					setIsAllowed(false);
 					return;
 				}
+
+				setAvailableWeeksCount(data.data.LoanData.data.max_weeks);
 
 				const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
 
