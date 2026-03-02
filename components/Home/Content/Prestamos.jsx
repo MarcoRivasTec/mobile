@@ -83,13 +83,13 @@ function Prestamos() {
 		saldo_fa: 0,
 		prestamo: false,
 	});
-	const [loanData, setLoanData] = useState({
-		isAllowed: false,
-		balance: 0,
-		interestRate: 0,
-		
+	// const [loanData, setLoanData] = useState({
+	// 	isAllowed: false,
+	// 	balance: 0,
+	// 	interestRate: 0,
+	// });
 
-
+	const [loanData, setLoanData] = useState(null);
 
 	const [prestamoSendData, setPrestamoSendData] = useState({
 		solicita: 0,
@@ -103,21 +103,6 @@ function Prestamos() {
 	const [isAllowed, setIsAllowed] = useState();
 	const [isCalculated, setIsCalculated] = useState(false);
 
-	// Define objects for the 5th and 42nd weeks
-	// const [startDate, setStartDate] = useState(0);
-	// const [endDate, setEndDate] = useState(0);
-
-
-	// const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
-
-	// const startOfWeek = DateTime.fromISO(startDate.firstDay, {
-	// 	zone: "America/Denver",
-	// });
-	// const endOfWeek = DateTime.fromISO(endDate.lastDay, {
-	// 	zone: "America/Denver",
-	// });
-
-
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
@@ -126,99 +111,163 @@ function Prestamos() {
 		setPrestamoSendData((prevState) => ({ ...prevState, ...fields }));
 	};
 
+	// const fetchLoanData = async () => {
+	// 	// console.log("Fetch data prestamo params: ", numEmp, typeof numEmp, region, typeof region);
+	// 	const query = {
+	// 		query: `query LoanData(){
+	// 			LoanData {
+	// 				success
+	// 				message
+	// 				data {
+	// 						isAllowed
+	// 						balance
+	// 						loan
+	// 						initial_week
+	// 						final_week
+	// 						max_weeks
+	// 					}
+	// 			}
+	// 		}`,
+	// 	};
+	// 	try {
+	// 		const data = await fetchPost({
+	// 			query,
+	// 			token: accessToken,
+	// 		});
+	// 		console.log(
+	// 			"Response data at fetchLoanData:",
+	// 			JSON.stringify(data, null, 1),
+	// 		);
+	// 		// const data = await fetchPost({ query });
+	// 		// console.log("Response data at prestamo:", JSON.stringify(data, null, 1));
+	// 		if (data.data.LoanData.success && data.data.LoanData.data) {
+	// 			setPrestamoData({
+	// 				saldo_fa: data.data.LoanData.data.balance,
+	// 				prestamo: data.data.LoanData.data.loan,
+	// 			});
+	// 			const startDate = await getWeekDates(
+	// 				currentYear,
+	// 				data.data.LoanData.data.initial_week,
+	// 			);
+
+	// 			const endDate = await getWeekDates(
+	// 				currentYear,
+	// 				data.data.LoanData.data.final_week,
+	// 			);
+	// 			// const endDate = getWeekDates(currentYear, 34);
+	// 			if (data.data.LoanData.data.prestamo) {
+	// 				Alert.alert(
+	// 					"Aviso",
+	// 					data.data.LoanData.message,
+	// 				);
+	// 				setIsAllowed(false);
+	// 				return;
+	// 			}
+
+	// 			setAvailableWeeksCount(data.data.LoanData.data.max_weeks);
+
+	// 			const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
+
+	// 			const startOfWeek = DateTime.fromISO(startDate.firstDay, {
+	// 				zone: "America/Denver",
+	// 			});
+	// 			const endOfWeek = DateTime.fromISO(endDate.lastDay, {
+	// 				zone: "America/Denver",
+	// 			});
+
+	// 			if (today >= startOfWeek && today <= endOfWeek) {
+	// 				setIsAllowed(true);
+
+	// 				// Calculate difference in days using Luxon
+	// 				const diffInDays = endOfWeek.diff(today, "days").days;
+	// 				console.log("Diff in days: ", diffInDays);
+
+	// 				// Convert days to weeks and round up
+	// 				const diffInWeeks = Math.ceil(diffInDays / 7);
+	// 				console.log("Diff in weeks: ", diffInWeeks);
+
+	// 				setAvailableWeeksCount(diffInWeeks);
+	// 			} else {
+	// 				setIsAllowed(false);
+	// 				Alert.alert(
+	// 					"Fecha fuera de periodo",
+	// 					"No se puede pedir un prestamo en este momento",
+	// 				);
+	// 			}
+
+	// 			// console.log(
+	// 			// 	"Valid years: ",
+	// 			// 	JSON.stringify(data.data.prenominaYears, null, 2)
+	// 			// );
+	// 		} else {
+	// 			console.warn("Error retrieving prestamo information");
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error at prestamo fetch:", error);
+	// 	}
+	// };
 	const fetchLoanData = async () => {
-		// console.log("Fetch data prestamo params: ", numEmp, typeof numEmp, region, typeof region);
 		const query = {
-			query: `query LoanData(){
-				LoanData {
-					success
-					message
-					data {
+			query: `
+				query LoanData {
+					LoanData {
+						success
+						message
+						data {
 							isAllowed
+							reason
 							balance
-							loan
-							initial_week
-							final_week
-							max_weeks
+							minAmount
+							maxAmount
+							maxWeeks
+							interestRate
+							existingLoanStatus
+							cycle {
+								startDate
+								endDate
+							}
+							serverNow
 						}
+					}
 				}
-			}`,
+			`,
 		};
+
 		try {
-			const data = await fetchPost({
+			const response = await fetchPost({
 				query,
 				token: accessToken,
 			});
-			console.log(
-				"Response data at fetchLoanData:",
-				JSON.stringify(data, null, 1),
-			);
-			// const data = await fetchPost({ query });
-			// console.log("Response data at prestamo:", JSON.stringify(data, null, 1));
-			if (data.data.LoanData.success && data.data.LoanData.data) {
-				setPrestamoData({
-					saldo_fa: data.data.LoanData.data.balance,
-					prestamo: data.data.LoanData.data.loan,
-				});
-				const startDate = await getWeekDates(
-					currentYear,
-					data.data.LoanData.data.initial_week,
+
+			const result = response?.data?.LoanData;
+
+			// 1️⃣ If structure invalid OR success is false
+			if (!result || result.success !== true) {
+				Alert.alert(
+					"Error",
+					result?.message ||
+						"No se pudo obtener respuesta del servidor. Intenta de nuevo.",
 				);
+				return;
+			}
 
-				const endDate = await getWeekDates(
-					currentYear,
-					data.data.LoanData.data.final_week,
-				);
-				// const endDate = getWeekDates(currentYear, 34);
-				if (data.data.LoanData.data.prestamo) {
-					Alert.alert(
-						"Aviso",
-						data.data.LoanData.message,
-					);
-					setIsAllowed(false);
-					return;
-				}
+			const data = result.data;
 
-				setAvailableWeeksCount(data.data.LoanData.data.max_weeks);
+			// 2️⃣ Save eligibility object
+			setLoanData(data);
 
-				const today = DateTime.now().setZone("America/Denver"); // Ensure today is in MT
-
-				const startOfWeek = DateTime.fromISO(startDate.firstDay, {
-					zone: "America/Denver",
-				});
-				const endOfWeek = DateTime.fromISO(endDate.lastDay, {
-					zone: "America/Denver",
-				});
-
-				if (today >= startOfWeek && today <= endOfWeek) {
-					setIsAllowed(true);
-
-					// Calculate difference in days using Luxon
-					const diffInDays = endOfWeek.diff(today, "days").days;
-					console.log("Diff in days: ", diffInDays);
-
-					// Convert days to weeks and round up
-					const diffInWeeks = Math.ceil(diffInDays / 7);
-					console.log("Diff in weeks: ", diffInWeeks);
-
-					setAvailableWeeksCount(diffInWeeks);
-				} else {
-					setIsAllowed(false);
-					Alert.alert(
-						"Fecha fuera de periodo",
-						"No se puede pedir un prestamo en este momento",
-					);
-				}
-
-				// console.log(
-				// 	"Valid years: ",
-				// 	JSON.stringify(data.data.prenominaYears, null, 2)
-				// );
-			} else {
-				console.warn("Error retrieving prestamo information");
+			// 3️⃣ If not allowed → show backend reason
+			if (!data.isAllowed) {
+				Alert.alert("Aviso", data.reason || result.message);
 			}
 		} catch (error) {
-			console.error("Error at prestamo fetch:", error);
+			console.error("LoanData fetch error:", error);
+
+			// 4️⃣ Network / server unreachable
+			Alert.alert(
+				"Error",
+				"No se pudo obtener respuesta del servidor. Intenta de nuevo.",
+			);
 		}
 	};
 
