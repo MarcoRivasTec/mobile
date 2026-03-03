@@ -2,7 +2,7 @@
   "expo": {
     "name": "TECMA Móvil Connect Dev",
     "slug": "tecma-movil-connect-dev",
-    "version": "1.1.0dev",
+    "version": "1.1.1dev",
     "orientation": "portrait",
     "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "8",
+      "buildNumber": "11",
       "supportsTablet": true,
       "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
       "infoPlist": {

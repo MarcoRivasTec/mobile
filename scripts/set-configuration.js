@@ -8,8 +8,8 @@ const { execSync } = require("child_process");
 const packageJsonPath = path.resolve(__dirname, "..", "package.json");
 const appJsonPath = path.join(__dirname, "..", 'app.json');
 const envPath = path.resolve(__dirname, "../env", ".env");
-const specificEndpoint = ""; // Set to empty string "" to auto-detect local IP, or set to specific URL for testing with a remote endpoint
-// const specificEndpoint = "https://dev-api.tecmamovilconnect.com/"; // Set to empty string "" to auto-detect local IP, or set to specific URL for testing with a remote endpoint
+const specificEndpoint = "";
+// const specificEndpoint = "https://dev-api.tecmamovilconnect.com/";
 const prodEndpoint = "https://api.tecmamovilconnect.com/";
 const testPort = 8083;
 
@@ -31,7 +31,7 @@ async function updateJsonValues(mode) {
 		if (mode === "dev") {
 			appJson.expo.name = "TECMA Móvil Connect Dev";
 			appJson.expo.slug = "tecma-movil-connect-dev";
-			appJson.expo.version = "1.1.0dev";
+			appJson.expo.version = "1.1.1dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
 			appJson.expo.splash.image = "./assets/icon-dev.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
@@ -45,7 +45,7 @@ async function updateJsonValues(mode) {
 			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
-			appJson.expo.version = "1.1.0";
+			appJson.expo.version = "1.1.1";
 			appJson.expo.icon = "./assets/icon.png";
 			appJson.expo.splash.image = "./assets/icon.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
