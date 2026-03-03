@@ -7,6 +7,7 @@ import {
 	Alert,
 	TouchableWithoutFeedback,
 	Keyboard,
+	Animated,
 } from "react-native";
 import { prestamos } from "./styles";
 import fetchPost from "../../fetching";
@@ -22,30 +23,62 @@ import { HomeContext } from "../../HomeContext";
 import { DateTime } from "luxon";
 
 function Prestamos() {
-	const { sendRequisition, accessToken } = useContext(HomeContext);
+	const { accessToken } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
+	const [confirmVisible, setConfirmVisible] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+	const amountBorder = useState(new Animated.Value(0))[0];
+	const weeksBorder = useState(new Animated.Value(0))[0];
+
+	const amountBorderColor = amountBorder.interpolate({
+		inputRange: [0, 1, 2],
+		outputRange: [COLORS.grey, "#2ecc71", "#e74c3c"],
+	});
+
+	const weeksBorderColor = weeksBorder.interpolate({
+		inputRange: [0, 1, 2],
+		outputRange: [COLORS.grey, "#2ecc71", "#e74c3c"],
+	});
 
 	const [loanData, setLoanData] = useState(null);
 
-	const [prestamoSendData, setPrestamoSendData] = useState({
-		solicita: 0,
-		semanas: 0,
-		intTotal: 0,
-		totPago: 0,
-		dtoSem: 0,
+	const [loanInput, setLoanInput] = useState({
+		amount: "",
+		weeks: "",
 	});
+
+	const amount = parseFloat(loanInput.amount);
+	const weeks = parseInt(loanInput.weeks);
+
+	const isAmountValid =
+		amount &&
+		loanData &&
+		amount >= loanData.minAmount &&
+		amount <= loanData.maxAmount;
+
+	const isWeeksValid =
+		weeks && loanData && weeks >= 2 && weeks <= loanData.maxWeeks;
+
+	const canCalculate = isAmountValid && isWeeksValid && loanData?.isAllowed;
+
+	const [calculatedData, setCalculatedData] = useState({
+		interestTotal: 0,
+		totalToPay: 0,
+		weeklyDiscount: 0,
+	});
+
+	const setLoanInputField = (fields) => {
+		setLoanInput((prev) => ({ ...prev, ...fields }));
+	};
 
 	const [isCalculated, setIsCalculated] = useState(false);
 
 	function confirmationModalHandler() {
 		setConfirmationVisible(!ConfirmationVisible);
 	}
-
-	const setPrestamoSendDataFields = (fields) => {
-		setPrestamoSendData((prevState) => ({ ...prevState, ...fields }));
-	};
 
 	const fetchLoanData = async () => {
 		console.log("Fetching loan data");
@@ -124,202 +157,43 @@ function Prestamos() {
 		setIsLoading(false);
 	};
 
-	const onRequestLoan = async (example) => {
-		const fileQuery = {
-			query: `mutation RequestLoan($example: Int!) {
-				requestLoan(example: $example) {
-					success
-					message
-				}
-			}`,
-			variables: {
-				example: example,
-			},
-		};
-		const data = await fetchPost({
-			query: fileQuery,
-			token: accessToken,
-		});
-		console.log("Data is: ", JSON.stringify(data, null, 1));
-		if (data.data?.requestLoan?.success) {
-			console.log("Url is: ", data.data.requestLoan);
-			// await Linking.openURL(data.data.requestLoan.url);
-		}
-	};
+	const requestLoan = () => {
+		if (isSubmitting) return;
 
-	useEffect(() => {
-		getData();
-	}, []);
-
-	const calculateData = () => {
-		if (!loanData) return;
-
-		if (!loanData.isAllowed) {
-			Alert.alert(
-				"Aviso",
-				loanData.reason || "No es posible solicitar préstamo.",
-			);
-			return;
-		}
-
-		if (!prestamoSendData.solicita || prestamoSendData.solicita <= 0) {
-			Alert.alert("Error", "La cantidad a solicitar debe ser mayor a 0.");
-			return;
-		}
-
-		if (
-			prestamoSendData.solicita < loanData.minAmount ||
-			prestamoSendData.solicita > loanData.maxAmount
-		) {
-			Alert.alert(
-				"Error",
-				"La cantidad solicitada está fuera de los límites permitidos.",
-			);
-			return;
-		}
-
-		if (!prestamoSendData.semanas || prestamoSendData.semanas < 2) {
-			Alert.alert("Error", "El plazo mínimo es de 2 semanas.");
-			return;
-		}
-
-		if (prestamoSendData.semanas > loanData.maxWeeks) {
-			Alert.alert("Error", "El número de semanas excede el máximo permitido.");
-			return;
-		}
-
-		const interestRate = loanData.interestRate;
-
-		const intTotal = parseFloat(
-			(prestamoSendData.solicita * (interestRate / 100)).toFixed(2),
-		);
-
-		const totPago = parseFloat(
-			(prestamoSendData.solicita + intTotal).toFixed(2),
-		);
-
-		const dtoSem = parseFloat((totPago / prestamoSendData.semanas).toFixed(2));
-
-		setPrestamoSendData((prev) => ({
-			...prev,
-			intTotal,
-			totPago,
-			dtoSem,
-		}));
-
-		setIsCalculated(true);
-	};
-
-	// const requestLoan = async () => {
-	// 	if (!isCalculated) {
-	// 		Alert.alert("Error", "Debes calcular primero tu solicitud de préstamo");
-	// 		return;
-	// 	}
-	// 	try {
-	// 		setIsWorkingModalVisible(true);
-
-	// 		// console.log(
-	// 		// 	`Requested loan and type: ${
-	// 		// 		prestamoSendData.solicita
-	// 		// 	} type: ${typeof prestamoSendData.solicita}, weeks: ${
-	// 		// 		prestamoSendData.semanas
-	// 		// 	} type: ${typeof prestamoSendData.semanas}`
-	// 		// );
-	// 		const requestRetiro = async () => {
-	// 			setIsWorkingModalVisible(true);
-	// 			const response = await sendRequisition({
-	// 				letter: "PtmoFA",
-	// 				requestedLoan: prestamoSendData.solicita,
-	// 				loanWeeks: prestamoSendData.semanas,
-	// 			});
-	// 			console.log("Response loan is: ", JSON.stringify(response, null, 1));
-	// 			setIsWorkingModalVisible(false);
-	// 			switch (response) {
-	// 				case "Done":
-	// 					confirmationModalHandler();
-	// 					break;
-	// 				case "Exists":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"Ya existe un préstamo registrado en el sistema.",
-	// 					);
-	// 					break;
-	// 				case "Existing requisition":
-	// 					Alert.alert(
-	// 						"Importante",
-	// 						"Ya existe una solicitud de préstamo registrada en el sistema, espera el monto solicitado la próxima semana junto con tu depósito de nómina.",
-	// 					);
-	// 					break;
-	// 				case "Limit":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"El préstamo solicitado está fuera de los límites permitidos.",
-	// 					);
-	// 					break;
-	// 				case "LessThan2Weeks":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"El plazo a pagar el préstamo no puede ser menor a 2 semanas.",
-	// 					);
-	// 					break;
-	// 				case "OutOfRange":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"Fecha fuera de periodo de préstamos, no se puede solicitar en este momento.",
-	// 					);
-	// 					break;
-	// 				case "ExceedsPeriod":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"El plazo de semanas excede el límite permitido.",
-	// 					);
-	// 					break;
-	// 				case "Error":
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto.",
-	// 					);
-	// 					break;
-
-	// 				default:
-	// 					Alert.alert(
-	// 						"Error",
-	// 						"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto.",
-	// 					);
-	// 					break;
-	// 			}
-	// 		};
-
-	// 		await requestRetiro();
-	// 	} catch (error) {
-	// 		Alert.alert(
-	// 			"Error",
-	// 			"Ocurrió un problema al solicitar tu préstamo, inténtalo de nuevo.",
-	// 		);
-	// 	}
-	// };
-
-	const requestLoan = async () => {
 		if (!isCalculated) {
-			Alert.alert("Error", "Debes calcular primero tu solicitud de préstamo");
+			Alert.alert("Error", "Debes calcular primero tu solicitud.");
 			return;
 		}
-		try {
-			setIsWorkingModalVisible(true);
 
+		if (!isAgreementChecked) {
+			Alert.alert("Aviso", "Debes aceptar los términos antes de continuar.");
+			return;
+		}
+
+		setConfirmVisible(true);
+	};
+
+	const submitLoan = async () => {
+		if (isSubmitting) return;
+
+		setIsSubmitting(true);
+		setConfirmVisible(false);
+		setIsWorkingModalVisible(true);
+
+		try {
 			const mutation = {
 				query: `
-						mutation RequestLoan($input: RequestLoanInput!) {
+					mutation RequestLoan($input: RequestLoanInput!) {
 						requestLoan(input: $input) {
 							success
 							message
 						}
-						}
-					`,
+					}
+				`,
 				variables: {
 					input: {
-						amount: prestamoSendData.solicita,
-						weeks: prestamoSendData.semanas,
+						amount: parseFloat(loanInput.amount),
+						weeks: parseInt(loanInput.weeks),
 					},
 				},
 			};
@@ -328,17 +202,110 @@ function Prestamos() {
 				query: mutation,
 				token: accessToken,
 			});
+
+			const result = response?.data?.requestLoan;
+
+			if (!result?.success) {
+				setIsWorkingModalVisible(false);
+				setIsSubmitting(false);
+				Alert.alert("Error", result?.message);
+				return;
+			}
+
+			setLoanInput({ amount: "", weeks: "" });
+
+			setCalculatedData({
+				interestTotal: 0,
+				totalToPay: 0,
+				weeklyDiscount: 0,
+			});
+
+			setIsCalculated(false);
+
+			await fetchLoanData();
+
+			setIsWorkingModalVisible(false);
+			confirmationModalHandler();
 		} catch (error) {
-			Alert.alert(
-				"Error",
-				"Ocurrió un problema al solicitar tu préstamo, inténtalo de nuevo.",
-			);
+			setIsWorkingModalVisible(false);
+			Alert.alert("Error", "Ocurrió un problema al procesar tu solicitud.");
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
-	// useEffect(() => {
-	// 	console.log(JSON.stringify(prestamoSendData, null, 2));
-	// }, [prestamoSendData]);
+	useEffect(() => {
+		getData();
+	}, []);
+
+	useEffect(() => {
+		Animated.timing(amountBorder, {
+			toValue: loanInput.amount.length === 0 ? 0 : isAmountValid ? 1 : 2,
+			duration: 200,
+			useNativeDriver: false,
+		}).start();
+	}, [loanInput.amount, isAmountValid]);
+
+	useEffect(() => {
+		Animated.timing(weeksBorder, {
+			toValue: loanInput.weeks.length === 0 ? 0 : isWeeksValid ? 1 : 2,
+			duration: 200,
+			useNativeDriver: false,
+		}).start();
+	}, [loanInput.weeks, isWeeksValid]);
+
+	const calculateData = () => {
+		if (!loanData) return;
+
+		const amount = parseFloat(loanInput.amount);
+		const weeks = parseInt(loanInput.weeks);
+
+		if (!loanData.isAllowed) {
+			Alert.alert("Aviso", loanData.reason);
+			return;
+		}
+
+		if (!amount || amount <= 0) {
+			Alert.alert("Error", "La cantidad debe ser mayor a 0.");
+			return;
+		}
+
+		if (amount < loanData.minAmount || amount > loanData.maxAmount) {
+			Alert.alert(
+				"Error",
+				"La cantidad solicitada está fuera de los límites permitidos.",
+			);
+			return;
+		}
+
+		if (!weeks || weeks < 2) {
+			Alert.alert("Error", "El plazo mínimo es de 2 semanas.");
+			return;
+		}
+
+		if (weeks > loanData.maxWeeks) {
+			Alert.alert("Error", "El número de semanas excede el máximo permitido.");
+			return;
+		}
+
+		const interestRate = loanData.interestRate;
+
+		const interestTotal = parseFloat(
+			((amount * weeks * interestRate) / 100).toFixed(2),
+		);
+
+		const totalToPay = parseFloat((amount + interestTotal).toFixed(2));
+
+		const weeklyDiscount = parseFloat((totalToPay / weeks).toFixed(2));
+
+		setCalculatedData({
+			interestTotal,
+			totalToPay,
+			weeklyDiscount,
+		});
+
+		setIsCalculated(true);
+	};
 
 	const formatCurrency = (amount) => {
 		return amount.toLocaleString(undefined, {
@@ -347,7 +314,18 @@ function Prestamos() {
 		});
 	};
 
-	return loanData?.isAllowed ? (
+	useEffect(() => {
+		if (isCalculated) {
+			setIsCalculated(false);
+			setCalculatedData({
+				interestTotal: 0,
+				totalToPay: 0,
+				weeklyDiscount: 0,
+			});
+		}
+	}, [loanInput.amount, loanInput.weeks]);
+
+	return (
 		<View style={prestamos.container}>
 			<ContentHeader title="Préstamos" />
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -379,8 +357,9 @@ function Prestamos() {
 									</Text>
 								</View>
 							</View>
+
 							{/* Solicitud */}
-							<View style={[prestamos.dataContainer, { marginTop: "1%" }]}>
+							<View style={[prestamos.dataContainer, { marginTop: "3%" }]}>
 								<View
 									style={[
 										prestamos.dataTextContainer,
@@ -406,8 +385,14 @@ function Prestamos() {
 										(Máximo 90%)
 									</Text>
 								</View>
-								<View
+								{/* <View
 									style={[prestamos.dataFieldContainer, { paddingLeft: 0 }]}
+								> */}
+								<Animated.View
+									style={[
+										prestamos.dataFieldContainer,
+										{ borderColor: amountBorderColor },
+									]}
 								>
 									<TextInput
 										placeholderTextColor={"gray"}
@@ -418,23 +403,29 @@ function Prestamos() {
 										)}`}
 										style={[prestamos.dataInputField, { color: COLORS.black }]}
 										keyboardType="numeric"
-										value={prestamoSendData.solicita}
+										value={loanInput.amount}
 										onChangeText={(text) =>
-											setPrestamoSendDataFields({
-												solicita: +text,
+											setLoanInputField({
+												amount: text.replace(/[^0-9.]/g, ""),
 											})
 										}
+										underlineColorAndroid="transparent"
 									/>
-								</View>
+								</Animated.View>
 							</View>
 
 							{/* Semanas */}
-							<View style={prestamos.dataRowContainer}>
+							<View style={[prestamos.dataRowContainer, { marginTop: "1%" }]}>
 								<View style={prestamos.dataRowContainer}>
 									<View style={prestamos.dataRowTextContainer}>
 										<Text style={prestamos.dataText}># Semanas</Text>
 									</View>
-									<View style={prestamos.dataRowFieldContainer}>
+									<Animated.View
+										style={[
+											prestamos.dataRowFieldContainer,
+											{ borderColor: weeksBorderColor },
+										]}
+									>
 										<TextInput
 											placeholderTextColor={"gray"}
 											placeholder={
@@ -444,17 +435,20 @@ function Prestamos() {
 											}
 											style={[
 												prestamos.dataInputField,
-												{ color: COLORS.black },
+												{
+													color: COLORS.black,
+												},
 											]}
-											value={prestamoSendData.semanas}
 											keyboardType="numeric"
+											value={loanInput.weeks}
 											onChangeText={(text) =>
-												setPrestamoSendDataFields({
-													semanas: +text,
+												setLoanInputField({
+													weeks: text.replace(/[^0-9]/g, ""),
 												})
 											}
+											underlineColorAndroid="transparent"
 										/>
-									</View>
+									</Animated.View>
 								</View>
 								<View style={prestamos.dataRowContainer}>
 									<View style={prestamos.dataRowTextContainer}>
@@ -471,8 +465,17 @@ function Prestamos() {
 							{/* Calcular */}
 							<TouchableOpacity
 								onPress={calculateData}
-								style={prestamos.buttonContainer}
+								disabled={!canCalculate}
+								style={[
+									prestamos.buttonContainer,
+									!canCalculate && prestamos.buttonDisabled,
+									{ marginTop: "3%" },
+								]}
 							>
+								{/* <TouchableOpacity
+								onPress={calculateData}
+								style={prestamos.buttonContainer}
+							> */}
 								<Text style={prestamos.buttonText}>Calcular</Text>
 							</TouchableOpacity>
 
@@ -481,9 +484,14 @@ function Prestamos() {
 								<View style={prestamos.dataTextContainer}>
 									<Text style={prestamos.dataText}>Interés Total</Text>
 								</View>
-								<View style={prestamos.dataFieldContainer}>
+								<View
+									style={[
+										prestamos.dataFieldContainer,
+										isCalculated && prestamos.successHighlight,
+									]}
+								>
 									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(prestamoSendData.intTotal)}
+										$ {formatCurrency(calculatedData.interestTotal)}
 									</Text>
 								</View>
 							</View>
@@ -491,9 +499,14 @@ function Prestamos() {
 								<View style={prestamos.dataTextContainer}>
 									<Text style={prestamos.dataText}>Total a pagar</Text>
 								</View>
-								<View style={prestamos.dataFieldContainer}>
+								<View
+									style={[
+										prestamos.dataFieldContainer,
+										isCalculated && prestamos.successHighlight,
+									]}
+								>
 									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(prestamoSendData.totPago)}
+										$ {formatCurrency(calculatedData.totalToPay)}
 									</Text>
 								</View>
 							</View>
@@ -501,15 +514,33 @@ function Prestamos() {
 								<View style={prestamos.dataTextContainer}>
 									<Text style={prestamos.dataText}>Descuento semanal</Text>
 								</View>
-								<View style={prestamos.dataFieldContainer}>
+								<View
+									style={[
+										prestamos.dataFieldContainer,
+										isCalculated && prestamos.successHighlight,
+									]}
+								>
 									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(prestamoSendData.dtoSem)}
+										$ {formatCurrency(calculatedData.weeklyDiscount)}
 									</Text>
 								</View>
 							</View>
 
-							<View style={prestamos.agreementContainer}>
-								<BouncyCheckbox size={30} fillColor={COLORS.naranja} />
+							<View
+								style={[
+									prestamos.agreementContainer,
+									!isAgreementChecked &&
+										isCalculated &&
+										prestamos.agreementRequired,
+								]}
+							>
+								<BouncyCheckbox
+									size={30}
+									fillColor={COLORS.naranja}
+									isChecked={isAgreementChecked}
+									disableBuiltInState
+									onPress={() => setIsAgreementChecked((prev) => !prev)}
+								/>
 								<View style={prestamos.agreementTextContainer}>
 									<Text
 										adjustsFontSizeToFit={true}
@@ -527,17 +558,37 @@ function Prestamos() {
 							{/* Calcular */}
 							<TouchableOpacity
 								onPress={requestLoan}
+								disabled={!isCalculated || isSubmitting || !isAgreementChecked}
 								style={[
 									prestamos.buttonContainer,
-									{ marginTop: "3%", marginBottom: "3%" },
+									(!isCalculated || isSubmitting || !isAgreementChecked) &&
+										prestamos.buttonDisabled,
 								]}
 							>
-								<Text style={prestamos.buttonText}>Solicitar</Text>
+								<Text style={prestamos.buttonText}>
+									{isSubmitting ? "Enviando..." : "Solicitar"}
+								</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
 				)}
 			</TouchableWithoutFeedback>
+			{confirmVisible && (
+				<Confirm
+					customText={`Confirmar solicitud
+
+					Monto: $${formatCurrency(amount)}
+					Semanas: ${weeks}
+					Interés total: $${formatCurrency(calculatedData.interestTotal)}
+					Total a pagar: $${formatCurrency(calculatedData.totalToPay)}
+					Descuento semanal: $${formatCurrency(calculatedData.weeklyDiscount)}
+
+					¿Deseas continuar?`}
+					isModalVisible={confirmVisible}
+					onCallback={submitLoan}
+					onExit={() => setConfirmVisible(false)}
+				/>
+			)}
 			{ConfirmationVisible && (
 				<Confirm
 					customText="Tu préstamo fue procesado con éxito, espera el monto solicitado la próxima semana junto con tu depósito de nómina."
@@ -553,16 +604,6 @@ function Prestamos() {
 					style={{ position: "absolute" }}
 				/>
 			)}
-		</View>
-	) : (
-		<View style={prestamos.container}>
-			<ContentHeader title="Préstamos" />
-			<View style={prestamos.contentContainer}>
-				<Text style={prestamos.notAllowedText}>
-					{loanData?.reason ||
-						"No es posible solicitar un préstamo en este momento."}
-				</Text>
-			</View>
 		</View>
 	);
 }

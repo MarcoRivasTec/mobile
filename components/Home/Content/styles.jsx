@@ -1113,7 +1113,8 @@ const prestamos = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		width: "94%",
-		marginTop: "2%",
+		marginTop: "1%",
+		paddingBottom: "3%",
 		borderRadius: 10,
 		// borderTopLeftRadius: 10,
 		// borderTopRightRadius: 10,
@@ -1181,6 +1182,8 @@ const prestamos = StyleSheet.create({
 	},
 	dataFieldContainer: {
 		height: "75%",
+		// minHeight: 40,
+		// paddingVertical: 6,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
@@ -1196,8 +1199,10 @@ const prestamos = StyleSheet.create({
 		width: "100%",
 		paddingLeft: 10,
 		justifyContent: "center",
-		alignItems: "flex-start",
+		alignItems: "center",
 		fontSize: 12,
+		textAlignVertical: "center", // Android fix
+		includeFontPadding: false, // Android fix
 	},
 	dataRowFieldContainer: {
 		flex: 1,
@@ -1225,8 +1230,8 @@ const prestamos = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 100,
-		marginTop: "1%",
-		marginBottom: "1%",
+		// marginTop: "1%",
+		// marginBottom: "1%",
 		backgroundColor: COLORS.naranja,
 	},
 	buttonText: {
@@ -1236,7 +1241,8 @@ const prestamos = StyleSheet.create({
 	},
 	agreementContainer: {
 		flex: 1.5,
-		marginTop: "2%",
+		marginTop: "5%",
+		marginBottom: "5%",
 		flexDirection: "row",
 		width: "100%",
 		// borderWidth: 1,
@@ -1251,6 +1257,41 @@ const prestamos = StyleSheet.create({
 		color: COLORS.black,
 	},
 	bouncyCheckbox: {},
+	inputValid: {
+		borderColor: "#2ecc71", // green
+	},
+
+	inputInvalid: {
+		borderColor: "#e74c3c", // red
+	},
+
+	inputNeutral: {
+		borderColor: COLORS.grey,
+	},
+
+	buttonDisabled: {
+		backgroundColor: "#f5b27a", // lighter naranja
+		opacity: 0.6,
+	},
+
+	errorText: {
+		fontSize: 11,
+		color: "#e74c3c",
+		marginTop: 4,
+		alignSelf: "flex-start",
+	},
+
+	successHighlight: {
+		backgroundColor: "rgba(46, 204, 113, 0.08)",
+		borderColor: "#2ecc71",
+	},
+
+	agreementRequired: {
+		borderColor: "#e74c3c",
+		borderWidth: 1,
+		borderRadius: 8,
+		padding: 4,
+	},
 });
 
 const retiro = StyleSheet.create({
@@ -1502,8 +1543,8 @@ const linea = StyleSheet.create({
 	buttonContainer: {
 		width: "31%",
 		justifyContent: "center",
-		alignItems: "center",		
-	}
+		alignItems: "center",
+	},
 });
 
 const polizas = StyleSheet.create({
