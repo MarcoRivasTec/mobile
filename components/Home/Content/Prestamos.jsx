@@ -76,6 +76,8 @@ function Prestamos({ changeContent }) {
 	const hasActiveLoan =
 		loanData?.loanStatus === "PENDING" ||
 		loanData?.loanStatus === "APPROVED" ||
+		loanData?.loanStatus === "REJECTED" ||
+		loanData?.loanStatus === "ACTIVE" ||
 		loanData?.loanStatus === "COMPLETED";
 
 	const canCalculate =
@@ -240,12 +242,10 @@ function Prestamos({ changeContent }) {
 			setIsCalculated(false);
 			setIsAgreementChecked(false);
 
-			await fetchLoanData();
+			// await fetchLoanData();
 
-			setIsWorkingModalVisible(false);
+			// setIsWorkingModalVisible(false);
 			confirmationModalHandler();
-
-			await changeContent("Menu");
 		} catch (error) {
 			setIsWorkingModalVisible(false);
 			Alert.alert("Error", "Ocurrió un problema al procesar tu solicitud.");
@@ -396,11 +396,31 @@ function Prestamos({ changeContent }) {
 						</View>
 						<View style={prestamos.infoContainer}>
 							<View style={prestamos.cycleCard}>
-								<View style={prestamos.cycleHeader}>
-									<Text style={prestamos.cycleTitle}>
-										📅 Periodo de Préstamos
-									</Text>
-									{loanData?.loanStatus && (
+								<View style={prestamos.cycleInfoContainer}>
+									{/* <View style={prestamos.cycleHeader}> */}
+									<View style={prestamos.cycleDataContainer}>
+										<Text style={prestamos.cycleTitle}>
+											📅 Periodo de Préstamos
+										</Text>
+										{/* </View> */}
+
+										<Text style={prestamos.cycleDates}>
+											{formatSpanishDate(loanData?.cycle?.startDate)}
+											{"  –  "}
+											{formatSpanishDate(loanData?.cycle?.endDate)}
+										</Text>
+									</View>
+								</View>
+								{loanData?.loanStatus && (
+									<View style={prestamos.loanStatusContainer}>
+										<Text
+											numberOfLines={1}
+											adjustsFontSizeToFit
+											minimumFontScale={0.7}
+											style={prestamos.loanStatusTitle}
+										>
+											Préstamo solicitado:
+										</Text>
 										<View
 											style={[
 												prestamos.statusBadge,
@@ -420,14 +440,8 @@ function Prestamos({ changeContent }) {
 												{getStatusLabel(loanData.loanStatus)}
 											</Text>
 										</View>
-									)}
-								</View>
-
-								<Text style={prestamos.cycleDates}>
-									{formatSpanishDate(loanData?.cycle?.startDate)}
-									{"  –  "}
-									{formatSpanishDate(loanData?.cycle?.endDate)}
-								</Text>
+									</View>
+								)}
 							</View>
 
 							{/* Saldo atual */}
@@ -712,6 +726,9 @@ Descuento semanal: $${formatCurrency(calculatedData.weeklyDiscount)}
 					isModalVisible={ConfirmationVisible}
 					onCallback={confirmationModalHandler}
 					onExit={confirmationModalHandler}
+					closeModal={async () => {
+						await changeContent("Menu");
+					}}
 					style={{ position: "absolute" }}
 				/>
 			)}

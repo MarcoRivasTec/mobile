@@ -1154,10 +1154,14 @@ const prestamos = StyleSheet.create({
 		alignItems: "center",
 	},
 	cycleCard: {
-		flex: 1,
+		// height: "100%",
+		flex: 1.5,
 		width: "100%",
-		paddingVertical: 14,
-		paddingHorizontal: 16,
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		// paddingVertical: 14,
+		// paddingHorizontal: 16,
 		borderRadius: 14,
 		backgroundColor: "#ffffff",
 		marginTop: "1.5%",
@@ -1168,13 +1172,29 @@ const prestamos = StyleSheet.create({
 		elevation: 3, // Android shadow
 		// borderWidth: 1
 	},
-	
+
+	cycleInfoContainer: {
+		height: "100%",
+		width: "68%",
+		justifyContent: "space-evenly",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+
+	cycleDataContainer: {
+		height: "100%",
+		width: "100%",
+		justifyContent: "space-evenly",
+		alignItems: "flex-start",
+		paddingLeft: "6%",
+		// borderWidth: 1,
+	},
 	cycleHeader: {
 		// borderWidth: 1,
-		marginBottom: 6,
+		// marginBottom: 6,
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center",
+		alignItems: "flex-start",
 	},
 
 	cycleTitle: {
@@ -1189,12 +1209,27 @@ const prestamos = StyleSheet.create({
 		color: "#555",
 	},
 
+	loanStatusContainer: {
+		height: "100%",
+		width: "32%",
+		paddingHorizontal: "2%",
+		justifyContent: "space-evenly",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+	loanStatusTitle: {
+		fontSize: 12,
+		fontWeight: "600",
+		fontStyle: "bold",
+		color: COLORS.black,
+	},
+
 	statusBadge: {
-		position: "absolute",
-		right: 0,
-		top: 0,
-		marginTop: 10,
-		alignSelf: "flex-start",
+		// position: "absolute",
+		// right: 0,
+		// top: 0,
+		// marginTop: 10,
+		// alignSelf: "flex-start",
 		paddingHorizontal: 12,
 		paddingVertical: 4,
 		borderRadius: 20,
