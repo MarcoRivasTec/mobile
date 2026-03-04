@@ -1114,7 +1114,7 @@ const prestamos = StyleSheet.create({
 		alignItems: "center",
 		width: "94%",
 		marginTop: "1%",
-		paddingBottom: "3%",
+		// paddingBottom: "3%",
 		borderRadius: 10,
 		// borderTopLeftRadius: 10,
 		// borderTopRightRadius: 10,
@@ -1125,7 +1125,7 @@ const prestamos = StyleSheet.create({
 		// borderColor: "black"
 	},
 	titleBar: {
-		flex: 1,
+		flex: 1.1,
 		width: "100%",
 		borderRadius: 100,
 		justifyContent: "center",
@@ -1146,18 +1146,74 @@ const prestamos = StyleSheet.create({
 		color: "white",
 	},
 	infoContainer: {
-		flex: 19,
+		flex: 18.9,
 		width: "95%",
+		// paddingTop: "1%",
+		paddingBottom: "4%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	dataContainer: {
+	cycleCard: {
 		flex: 1,
+		width: "100%",
+		paddingVertical: 14,
+		paddingHorizontal: 16,
+		borderRadius: 14,
+		backgroundColor: "#ffffff",
+		marginTop: "1.5%",
+		shadowColor: "#000",
+		shadowOpacity: 0.05,
+		shadowOffset: { width: 0, height: 4 },
+		shadowRadius: 8,
+		elevation: 3, // Android shadow
+		// borderWidth: 1
+	},
+	
+	cycleHeader: {
+		// borderWidth: 1,
+		marginBottom: 6,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+
+	cycleTitle: {
+		fontSize: 15,
+		fontWeight: "700",
+		color: COLORS.black,
+	},
+
+	cycleDates: {
+		fontSize: 14,
+		fontWeight: "500",
+		color: "#555",
+	},
+
+	statusBadge: {
+		position: "absolute",
+		right: 0,
+		top: 0,
+		marginTop: 10,
+		alignSelf: "flex-start",
+		paddingHorizontal: 12,
+		paddingVertical: 4,
+		borderRadius: 20,
+		borderWidth: 1,
+	},
+
+	statusBadgeText: {
+		fontSize: 12,
+		fontWeight: "600",
+	},
+	dataContainer: {
+		flex: 1.4,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
+		marginTop: "2%",
+
 		// borderWidth: 1,
-		marginTop: "4%",
+		borderColor: "blue",
 	},
 	dataRowContainer: {
 		flex: 1,
@@ -1165,29 +1221,32 @@ const prestamos = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: "1%",
+		marginTop: "3%",
 
 		// borderWidth: 1,
+		borderColor: "red",
 	},
 	dataTextContainer: {
+		flex: 1,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "flex-start",
 		// borderWidth: 1,
 	},
 	dataRowTextContainer: {
-		justifyContent: "flex-start",
+		justifyContent: "center",
 		alignItems: "center",
 		// borderWidth: 1,
 	},
 	dataFieldContainer: {
-		height: "75%",
+		flex: 2,
+		// height: "100%",
 		// minHeight: 40,
 		// paddingVertical: 6,
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
-		marginVertical: "1%",
+		marginTop: "0.5%",
 		borderWidth: 1,
 		borderColor: COLORS.grey,
 		borderRadius: 10,
@@ -1197,16 +1256,40 @@ const prestamos = StyleSheet.create({
 	dataInputField: {
 		height: "100%",
 		width: "100%",
-		paddingLeft: 10,
+		// paddingLeft: 10,
 		justifyContent: "center",
 		alignItems: "center",
-		fontSize: 12,
+		fontSize: 13,
+		verticalAlign: "center",
 		textAlignVertical: "center", // Android fix
+
 		includeFontPadding: false, // Android fix
+	},
+	dataRowsContainer: {
+		flex: 0.9,
+		height: "100%",
+		flexDirection: "row",
+		marginTop: "3%",
+		// marginHorizontal: "4%",
+		justifyContent: "center",
+		alignItems: "center",
+
+		// borderWidth: 1,
+		borderColor: "brown",
+	},
+	dataRowsRowContainer: {
+		flex: 1,
+		height: "100%",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+
+		// borderWidth: 1,
+		borderColor: "green",
 	},
 	dataRowFieldContainer: {
 		flex: 1,
-		height: "75%",
+		height: "100%",
 		marginHorizontal: "4%",
 		justifyContent: "center",
 		alignItems: "center",
@@ -1216,16 +1299,63 @@ const prestamos = StyleSheet.create({
 		backgroundColor: COLORS.white,
 	},
 	dataText: {
-		fontSize: 15,
+		fontSize: 14,
 		fontWeight: "bold",
 		color: "black",
+		alignSelf: "center",
 	},
 	dataFieldText: {
 		fontSize: 15,
 		color: "black",
 	},
+	detailsContainer: {
+		flex: 1.3,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		marginTop: "7%",
+
+		// borderWidth: 1,
+		borderColor: "purple",
+	},
+	detailContainer: {
+		height: "100%",
+		width: "32%",
+		justifyContent: "center",
+		alignItems: "flex-start",
+		// marginTop: "3%",
+
+		// borderWidth: 1,
+		borderColor: "blue",
+	},
+	detailTitle: {
+		fontSize: 12,
+		paddingLeft: 4,
+		fontWeight: "bold",
+		color: "black",
+	},
+	detailFieldContainer: {
+		// flex: 1,
+		height: "70%",
+		// minHeight: 40,
+		// paddingVertical: 6,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: "1%",
+		borderWidth: 1,
+		borderColor: COLORS.grey,
+		borderRadius: 10,
+		// paddingLeft: 10,
+		backgroundColor: COLORS.white,
+	},
+	detailFieldText: {
+		fontSize: 15,
+		color: "black",
+	},
 	buttonContainer: {
-		flex: 0.5,
+		flex: 0.7,
 		paddingHorizontal: "12%",
 		justifyContent: "center",
 		alignItems: "center",
@@ -1240,12 +1370,14 @@ const prestamos = StyleSheet.create({
 		color: "white",
 	},
 	agreementContainer: {
-		flex: 1.5,
-		marginTop: "5%",
-		marginBottom: "5%",
+		flex: 1.4,
+		marginTop: "4%",
+		marginBottom: "4%",
 		flexDirection: "row",
 		width: "100%",
+
 		// borderWidth: 1,
+		borderColor: "yellow",
 	},
 	agreementTextContainer: {
 		flex: 1,
@@ -1290,7 +1422,7 @@ const prestamos = StyleSheet.create({
 		borderColor: "#e74c3c",
 		borderWidth: 1,
 		borderRadius: 8,
-		padding: 4,
+		padding: 2,
 	},
 });
 

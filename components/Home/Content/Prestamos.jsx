@@ -21,8 +21,9 @@ import Confirm from "./Design/Confirm";
 import Working from "./Design/Working";
 import { HomeContext } from "../../HomeContext";
 import { DateTime } from "luxon";
+import ConfirmActionModal from "./Design/ConfirmAction";
 
-function Prestamos() {
+function Prestamos({ changeContent }) {
 	const { accessToken } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
@@ -32,6 +33,16 @@ function Prestamos() {
 	const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 	const amountBorder = useState(new Animated.Value(0))[0];
 	const weeksBorder = useState(new Animated.Value(0))[0];
+
+	const formatSpanishDate = (dateString) => {
+		if (!dateString) return "";
+
+		return capitalize(
+			DateTime.fromISO(dateString).setLocale("es").toFormat("dd/LLLL/yy"),
+		);
+	};
+
+	const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 	const amountBorderColor = amountBorder.interpolate({
 		inputRange: [0, 1, 2],
@@ -54,7 +65,7 @@ function Prestamos() {
 	const weeks = parseInt(loanInput.weeks);
 
 	const isAmountValid =
-		amount &&
+		Number.isFinite(amount) &&
 		loanData &&
 		amount >= loanData.minAmount &&
 		amount <= loanData.maxAmount;
@@ -62,7 +73,13 @@ function Prestamos() {
 	const isWeeksValid =
 		weeks && loanData && weeks >= 2 && weeks <= loanData.maxWeeks;
 
-	const canCalculate = isAmountValid && isWeeksValid && loanData?.isAllowed;
+	const hasActiveLoan =
+		loanData?.loanStatus === "PENDING" ||
+		loanData?.loanStatus === "APPROVED" ||
+		loanData?.loanStatus === "COMPLETED";
+
+	const canCalculate =
+		isAmountValid && isWeeksValid && loanData?.isAllowed && !hasActiveLoan;
 
 	const [calculatedData, setCalculatedData] = useState({
 		interestTotal: 0,
@@ -96,7 +113,7 @@ function Prestamos() {
 							maxAmount
 							maxWeeks
 							interestRate
-							existingLoanStatus
+							loanStatus
 							cycle {
 								startDate
 								endDate
@@ -221,11 +238,14 @@ function Prestamos() {
 			});
 
 			setIsCalculated(false);
+			setIsAgreementChecked(false);
 
 			await fetchLoanData();
 
 			setIsWorkingModalVisible(false);
 			confirmationModalHandler();
+
+			await changeContent("Menu");
 		} catch (error) {
 			setIsWorkingModalVisible(false);
 			Alert.alert("Error", "Ocurrió un problema al procesar tu solicitud.");
@@ -255,7 +275,10 @@ function Prestamos() {
 	}, [loanInput.weeks, isWeeksValid]);
 
 	const calculateData = () => {
-		if (!loanData) return;
+		if (!loanData || !loanData.isAllowed) {
+			Alert.alert("Aviso", loanData?.reason || "No puedes pedir un préstamo.");
+			return;
+		}
 
 		const amount = parseFloat(loanInput.amount);
 		const weeks = parseInt(loanInput.weeks);
@@ -314,6 +337,36 @@ function Prestamos() {
 		});
 	};
 
+	const getStatusColor = (status) => {
+		switch (status) {
+			case "PENDING":
+				return "#f39c12"; // orange
+			case "APPROVED":
+				return "#2ecc71"; // green
+			case "REJECTED":
+				return "#e74c3c"; // red
+			case "COMPLETED":
+				return "#3498db"; // blue
+			default:
+				return COLORS.black;
+		}
+	};
+
+	const getStatusLabel = (status) => {
+		switch (status) {
+			case "PENDING":
+				return "Pendiente";
+			case "APPROVED":
+				return "Aprobado";
+			case "REJECTED":
+				return "Rechazado";
+			case "COMPLETED":
+				return "Entregado";
+			default:
+				return null;
+		}
+	};
+
 	useEffect(() => {
 		if (isCalculated) {
 			setIsCalculated(false);
@@ -322,6 +375,7 @@ function Prestamos() {
 				totalToPay: 0,
 				weeklyDiscount: 0,
 			});
+			setIsAgreementChecked(false);
 		}
 	}, [loanInput.amount, loanInput.weeks]);
 
@@ -341,6 +395,41 @@ function Prestamos() {
 							</View>
 						</View>
 						<View style={prestamos.infoContainer}>
+							<View style={prestamos.cycleCard}>
+								<View style={prestamos.cycleHeader}>
+									<Text style={prestamos.cycleTitle}>
+										📅 Periodo de Préstamos
+									</Text>
+									{loanData?.loanStatus && (
+										<View
+											style={[
+												prestamos.statusBadge,
+												{
+													backgroundColor:
+														getStatusColor(loanData.loanStatus) + "20",
+													borderColor: getStatusColor(loanData.loanStatus),
+												},
+											]}
+										>
+											<Text
+												style={[
+													prestamos.statusBadgeText,
+													{ color: getStatusColor(loanData.loanStatus) },
+												]}
+											>
+												{getStatusLabel(loanData.loanStatus)}
+											</Text>
+										</View>
+									)}
+								</View>
+
+								<Text style={prestamos.cycleDates}>
+									{formatSpanishDate(loanData?.cycle?.startDate)}
+									{"  –  "}
+									{formatSpanishDate(loanData?.cycle?.endDate)}
+								</Text>
+							</View>
+
 							{/* Saldo atual */}
 							<View style={prestamos.dataRowContainer}>
 								<View style={prestamos.dataRowTextContainer}>
@@ -359,7 +448,7 @@ function Prestamos() {
 							</View>
 
 							{/* Solicitud */}
-							<View style={[prestamos.dataContainer, { marginTop: "3%" }]}>
+							<View style={[prestamos.dataContainer]}>
 								<View
 									style={[
 										prestamos.dataTextContainer,
@@ -395,13 +484,19 @@ function Prestamos() {
 									]}
 								>
 									<TextInput
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										minimumFontScale={0.6}
 										placeholderTextColor={"gray"}
 										placeholder={`Mínimo de $${formatCurrency(
 											loanData?.minAmount ?? 0,
 										)} y máximo de $${formatCurrency(
 											loanData?.maxAmount ?? 0,
 										)}`}
-										style={[prestamos.dataInputField, { color: COLORS.black }]}
+										style={[
+											prestamos.dataInputField,
+											{ color: COLORS.black, fontSize: 14 },
+										]}
 										keyboardType="numeric"
 										value={loanInput.amount}
 										onChangeText={(text) =>
@@ -415,8 +510,8 @@ function Prestamos() {
 							</View>
 
 							{/* Semanas */}
-							<View style={[prestamos.dataRowContainer, { marginTop: "1%" }]}>
-								<View style={prestamos.dataRowContainer}>
+							<View style={[prestamos.dataRowsContainer]}>
+								<View style={prestamos.dataRowsRowContainer}>
 									<View style={prestamos.dataRowTextContainer}>
 										<Text style={prestamos.dataText}># Semanas</Text>
 									</View>
@@ -434,9 +529,10 @@ function Prestamos() {
 													: `No disp.`
 											}
 											style={[
-												prestamos.dataInputField,
+												prestamos.dataFieldText,
 												{
 													color: COLORS.black,
+													fontSize: 15,
 												},
 											]}
 											keyboardType="numeric"
@@ -450,7 +546,7 @@ function Prestamos() {
 										/>
 									</Animated.View>
 								</View>
-								<View style={prestamos.dataRowContainer}>
+								<View style={prestamos.dataRowsRowContainer}>
 									<View style={prestamos.dataRowTextContainer}>
 										<Text style={prestamos.dataText}>% Interés</Text>
 									</View>
@@ -480,49 +576,72 @@ function Prestamos() {
 							</TouchableOpacity>
 
 							{/* Totales */}
-							<View style={prestamos.dataContainer}>
-								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>Interés Total</Text>
-								</View>
-								<View
-									style={[
-										prestamos.dataFieldContainer,
-										isCalculated && prestamos.successHighlight,
-									]}
-								>
-									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(calculatedData.interestTotal)}
+							<View style={prestamos.detailsContainer}>
+								<View style={prestamos.detailContainer}>
+									{/* <View style={prestamos.dataTextContainer}> */}
+									<Text
+										style={prestamos.detailTitle}
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										minimumFontScale={0.6}
+									>
+										Interés Total
 									</Text>
+									{/* </View> */}
+									<View
+										style={[
+											prestamos.detailFieldContainer,
+											isCalculated && prestamos.successHighlight,
+										]}
+									>
+										<Text style={prestamos.detailFieldText}>
+											$ {formatCurrency(calculatedData.interestTotal)}
+										</Text>
+									</View>
 								</View>
-							</View>
-							<View style={prestamos.dataContainer}>
-								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>Total a pagar</Text>
-								</View>
-								<View
-									style={[
-										prestamos.dataFieldContainer,
-										isCalculated && prestamos.successHighlight,
-									]}
-								>
-									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(calculatedData.totalToPay)}
+								<View style={prestamos.detailContainer}>
+									{/* <View style={prestamos.detailTitleContainer}> */}
+									<Text
+										style={prestamos.detailTitle}
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										minimumFontScale={0.6}
+									>
+										Total a pagar
 									</Text>
+									{/* </View> */}
+									<View
+										style={[
+											prestamos.detailFieldContainer,
+											isCalculated && prestamos.successHighlight,
+										]}
+									>
+										<Text style={prestamos.detailFieldText}>
+											$ {formatCurrency(calculatedData.totalToPay)}
+										</Text>
+									</View>
 								</View>
-							</View>
-							<View style={prestamos.dataContainer}>
-								<View style={prestamos.dataTextContainer}>
-									<Text style={prestamos.dataText}>Descuento semanal</Text>
-								</View>
-								<View
-									style={[
-										prestamos.dataFieldContainer,
-										isCalculated && prestamos.successHighlight,
-									]}
-								>
-									<Text style={prestamos.dataFieldText}>
-										$ {formatCurrency(calculatedData.weeklyDiscount)}
+								<View style={prestamos.detailContainer}>
+									{/* <View style={prestamos.detailTitleContainer}> */}
+									<Text
+										style={prestamos.detailTitle}
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										minimumFontScale={0.6}
+									>
+										Descuento semanal
 									</Text>
+									{/* </View> */}
+									<View
+										style={[
+											prestamos.detailFieldContainer,
+											isCalculated && prestamos.successHighlight,
+										]}
+									>
+										<Text style={prestamos.detailFieldText}>
+											$ {formatCurrency(calculatedData.weeklyDiscount)}
+										</Text>
+									</View>
 								</View>
 							</View>
 
@@ -544,7 +663,7 @@ function Prestamos() {
 								<View style={prestamos.agreementTextContainer}>
 									<Text
 										adjustsFontSizeToFit={true}
-										minimumFontScale={0.5}
+										minimumFontScale={0.9}
 										style={prestamos.agreementText}
 									>
 										Estoy de acuerdo con los importes de interés y descuento
@@ -574,19 +693,17 @@ function Prestamos() {
 				)}
 			</TouchableWithoutFeedback>
 			{confirmVisible && (
-				<Confirm
-					customText={`Confirmar solicitud
+				<ConfirmActionModal
+					visible={confirmVisible}
+					summaryText={`Monto: $${formatCurrency(amount)}
+Semanas: ${weeks}
+Interés total: $${formatCurrency(calculatedData.interestTotal)}
+Total a pagar: $${formatCurrency(calculatedData.totalToPay)}
+Descuento semanal: $${formatCurrency(calculatedData.weeklyDiscount)}
 
-					Monto: $${formatCurrency(amount)}
-					Semanas: ${weeks}
-					Interés total: $${formatCurrency(calculatedData.interestTotal)}
-					Total a pagar: $${formatCurrency(calculatedData.totalToPay)}
-					Descuento semanal: $${formatCurrency(calculatedData.weeklyDiscount)}
-
-					¿Deseas continuar?`}
-					isModalVisible={confirmVisible}
-					onCallback={submitLoan}
-					onExit={() => setConfirmVisible(false)}
+¿Deseas continuar?`}
+					onConfirm={submitLoan}
+					onCancel={() => setConfirmVisible(false)}
 				/>
 			)}
 			{ConfirmationVisible && (
