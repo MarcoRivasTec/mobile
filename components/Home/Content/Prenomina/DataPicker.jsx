@@ -6,14 +6,13 @@ import { dataModal } from "./styles";
 function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 	return (
 		<Picker
+			// mode="dropdown"
 			selectedValue={selectedElement}
 			onValueChange={(itemValue) => {
 				if (itemValue === "Selecciona un valor") {
-					Alert.alert(
-						"Opción inválida",
-						"Debes seleccionar un un valor",
-						[{ text: "Entendido" }]
-					);
+					Alert.alert("Opción inválida", "Debes seleccionar un un valor", [
+						{ text: "Entendido" },
+					]);
 				} else {
 					itemValue = parseInt(itemValue, 10);
 					setSelectedElement(itemValue);
@@ -23,7 +22,13 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 					onCallback();
 				}
 			}}
-			style={{ width: "100%", height: "100%" }}
+			style={{
+				width: "100%",
+				height: "100%",
+				backgroundColor: "#fff",
+				color: "#000",
+			}}
+			dropdownIconColor="#000"
 			itemStyle={dataModal.pickerItemStyle}
 		>
 			{Platform.OS === "android" ? (
