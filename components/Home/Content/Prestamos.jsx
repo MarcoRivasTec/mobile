@@ -34,12 +34,40 @@ function Prestamos({ changeContent }) {
 	const amountBorder = useState(new Animated.Value(0))[0];
 	const weeksBorder = useState(new Animated.Value(0))[0];
 
+	const MONTHS_ES = [
+		"Enero",
+		"Febrero",
+		"Marzo",
+		"Abril",
+		"Mayo",
+		"Junio",
+		"Julio",
+		"Agosto",
+		"Septiembre",
+		"Octubre",
+		"Noviembre",
+		"Diciembre",
+	];
+
 	const formatSpanishDate = (dateString) => {
 		if (!dateString) return "";
 
-		return capitalize(
-			DateTime.fromISO(dateString).setLocale("es").toFormat("dd/LLLL/yy"),
-		);
+		const dt = DateTime.fromISO(dateString, {setZone: true});
+
+		if (!dt.isValid) {
+			console.log("Invalid date received: ", dateString);
+			return "";
+		}
+
+		const day = dt.day;
+		const month = MONTHS_ES[dt.month - 1];
+		const year = dt.year;
+
+		return `${day} ${month} ${year}`;
+		// return capitalize(dt.setLocale("es").toFormat("dd/MM/yy"));
+		// return capitalize(
+		// 	DateTime.fromISO(dateString).setLocale("es").toFormat("dd/LLLL/yy"),
+		// );
 	};
 
 	const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
@@ -253,7 +281,6 @@ function Prestamos({ changeContent }) {
 			setIsSubmitting(false);
 		}
 	};
-
 	useEffect(() => {
 		getData();
 	}, []);
@@ -404,7 +431,12 @@ function Prestamos({ changeContent }) {
 										</Text>
 										{/* </View> */}
 
-										<Text style={prestamos.cycleDates}>
+										<Text 
+											numberOfLines={1}
+											adjustsFontSizeToFit
+											minimumFontScale={0.7} 
+											style={prestamos.cycleDates}
+										>
 											{formatSpanishDate(loanData?.cycle?.startDate)}
 											{"  –  "}
 											{formatSpanishDate(loanData?.cycle?.endDate)}
