@@ -23,7 +23,8 @@
         "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can upload images to your profile."
       }
     },
     "android": {
