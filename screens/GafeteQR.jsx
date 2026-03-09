@@ -278,11 +278,11 @@ const GafeteQR = ({ navigation }) => {
 			setIsCapturing(true);
 			await settleUI();
 
-			const rawUri = await captureRef(badgeRef, {
-				format: "png",
-				quality: 1,
-				result: "tmpfile",
-			});
+		const rawUri = await captureRef(badgeRef, {
+			format: "png",
+			quality: 1,
+			result: "tmpfile",
+		});
 
 			const localUri = rawUri.startsWith("file://")
 				? rawUri
