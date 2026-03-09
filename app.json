@@ -2,7 +2,7 @@
   "expo": {
     "name": "TECMA Móvil Connect Dev",
     "slug": "tecma-movil-connect-dev",
-    "version": "1.1.1dev",
+    "version": "1.1.2dev",
     "orientation": "portrait",
     "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
@@ -27,7 +27,7 @@
       "bundleIdentifier": "com.tecma.TecmaMovilConnectDev"
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 12,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-dev.png",
         "backgroundColor": "#ffffff"
