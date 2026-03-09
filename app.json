@@ -23,7 +23,8 @@
         "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
       }
     },
     "android": {
@@ -58,7 +59,8 @@
             "infoPlist": {
               "NSAppTransportSecurity": {
                 "NSAllowsArbitraryLoads": true
-              }
+              },
+              "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
             }
           }
         }
@@ -67,6 +69,13 @@
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
         }
       ]
     ]

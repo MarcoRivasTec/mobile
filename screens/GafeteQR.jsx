@@ -219,37 +219,100 @@ const GafeteQR = ({ navigation }) => {
 		}
 	}, [layoutReady]);
 
+	// const handleSaveBadge = async () => {
+	// 	try {
+	// 		setIsCapturing(true);
+	// 		// allow UI to update (buttons hidden) before snapshot
+	// 		// await waitNextFrame();
+	// 		await settleUI();
+	// 		// 1) Capture the referenced view as a PNG into a temp file
+	// 		const uri = await captureRef(badgeRef, {
+	// 			format: "png",
+	// 			quality: 1,
+	// 			result: "tmpfile", // returns a file:// URI
+	// 		});
+
+	// 		// 2) Ask for permission and save to gallery
+	// 		const { status } = await MediaLibrary.requestPermissionsAsync();
+	// 		if (status !== "granted") {
+	// 			showMessage({
+	// 				message:
+	// 					"Permiso de galería denegado. Ajusta los permisos e intenta de nuevo.",
+	// 				type: "warning",
+	// 				duration: 3000,
+	// 				position: "top",
+	// 				icon: { icon: "info", position: "right" },
+	// 				statusBarHeight: 30,
+	// 			});
+	// 			return;
+	// 		}
+
+	// 		const asset = await MediaLibrary.createAssetAsync(uri);
+	// 		// Put it in a custom album (optional). If the album exists, it will just add the asset.
+	// 		await MediaLibrary.createAlbumAsync("Gafetes TECMA", asset, false);
+
+	// 		showMessage({
+	// 			message: "Gafete guardado en tu galería.",
+	// 			type: "success",
+	// 			duration: 2500,
+	// 			position: "top",
+	// 			icon: { icon: "success", position: "right" },
+	// 			statusBarHeight: 30,
+	// 		});
+	// 	} catch (error) {
+	// 		showMessage({
+	// 			message: "No se pudo guardar el gafete. Intenta de nuevo.",
+	// 			type: "danger",
+	// 			duration: 3000,
+	// 			position: "top",
+	// 			icon: { icon: "danger", position: "right" },
+	// 			statusBarHeight: 30,
+	// 		});
+	// 	} finally {
+	// 		setIsCapturing(false);
+	// 	}
+	// };
+
 	const handleSaveBadge = async () => {
 		try {
 			setIsCapturing(true);
-			// allow UI to update (buttons hidden) before snapshot
-			// await waitNextFrame();
 			await settleUI();
-			// 1) Capture the referenced view as a PNG into a temp file
-			const uri = await captureRef(badgeRef, {
+
+			const rawUri = await captureRef(badgeRef, {
 				format: "png",
 				quality: 1,
-				result: "tmpfile", // returns a file:// URI
+				result: "tmpfile",
 			});
 
-			// 2) Ask for permission and save to gallery
-			const { status } = await MediaLibrary.requestPermissionsAsync();
-			if (status !== "granted") {
-				showMessage({
-					message:
-						"Permiso de galería denegado. Ajusta los permisos e intenta de nuevo.",
-					type: "warning",
-					duration: 3000,
-					position: "top",
-					icon: { icon: "info", position: "right" },
-					statusBarHeight: 30,
-				});
-				return;
+			const localUri = rawUri.startsWith("file://") ? rawUri : `file://${rawUri}`;
+			console.log("rawUri:", rawUri);
+			console.log("localUri:", localUri);
+
+			console.log("before currentPerm");
+			const currentPerm = await MediaLibrary.getPermissionsAsync(true);
+			console.log("currentPerm:", currentPerm);
+
+			console.log("before requestPermissionsAsync");
+			const requestedPerm = await MediaLibrary.requestPermissionsAsync(true);
+			console.log("requestedPerm:", requestedPerm);
+
+			console.log("before saveToLibraryAsync");
+			await MediaLibrary.saveToLibraryAsync(localUri);
+			console.log("after saveToLibraryAsync");
+
+			// const currentPerm = await MediaLibrary.getPermissionsAsync(true);
+			// console.log("currentPerm:", currentPerm);
+
+			// const requestedPerm = await MediaLibrary.requestPermissionsAsync(true);
+			// console.log("requestedPerm:", requestedPerm);
+
+			if (!requestedPerm.granted) {
+				throw new Error("Media library permission not granted");
 			}
 
-			const asset = await MediaLibrary.createAssetAsync(uri);
-			// Put it in a custom album (optional). If the album exists, it will just add the asset.
-			await MediaLibrary.createAlbumAsync("Gafetes TECMA", asset, false);
+			// console.log("before saveToLibraryAsync");
+			// await MediaLibrary.saveToLibraryAsync(localUri);
+			// console.log("after saveToLibraryAsync");
 
 			showMessage({
 				message: "Gafete guardado en tu galería.",
@@ -260,6 +323,8 @@ const GafeteQR = ({ navigation }) => {
 				statusBarHeight: 30,
 			});
 		} catch (error) {
+			console.log("SAVE BADGE ERROR:", error);
+			console.log("SAVE BADGE ERROR STRING:", String(error));
 			showMessage({
 				message: "No se pudo guardar el gafete. Intenta de nuevo.",
 				type: "danger",
@@ -291,10 +356,10 @@ const GafeteQR = ({ navigation }) => {
 				onLayout={
 					platform === "android"
 						? (event) => {
-								const { height } = event.nativeEvent.layout;
-								setWhiteHeight(height);
-								console.log("White height is: ", height);
-						  }
+							const { height } = event.nativeEvent.layout;
+							setWhiteHeight(height);
+							console.log("White height is: ", height);
+						}
 						: undefined
 				}
 			/>
@@ -328,7 +393,8 @@ const GafeteQR = ({ navigation }) => {
 				style={{
 					opacity: fadeAnim,
 					position: "absolute",
-					top: insets?.top,
+					// top: insets?.top,
+					top: 0,
 					left: 0,
 					right: 0,
 					bottom: 0,
@@ -484,18 +550,19 @@ const GafeteQR = ({ navigation }) => {
 										badgeData.format === "CODE128"
 											? BarcodeFormat.CODE128
 											: badgeData.format === "UPCA"
-											? BarcodeFormat.UPCA
-											: badgeData.format === "QR"
-											? BarcodeFormat.QR
-											: badgeData.format === "EAN13"
-											? BarcodeFormat.EAN13
-											: badgeData.format === "AZTEC"
-											? BarcodeFormat.AZTEC
-											: badgeData.format === "PDF417"
-											? BarcodeFormat.PDF417
-											: BarcodeFormat.CODE128
+												? BarcodeFormat.UPCA
+												: badgeData.format === "QR"
+													? BarcodeFormat.QR
+													: badgeData.format === "EAN13"
+														? BarcodeFormat.EAN13
+														: badgeData.format === "AZTEC"
+															? BarcodeFormat.AZTEC
+															: badgeData.format === "PDF417"
+																? BarcodeFormat.PDF417
+																: BarcodeFormat.CODE128
 									} // supported format enum
 									foregroundColor={"#30565E"} // your palette
+									background="transparent"
 									style={{ width: 280, height: 120 }} // tune to fit layout
 								/>
 
