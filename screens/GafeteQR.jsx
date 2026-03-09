@@ -89,10 +89,10 @@ const GafeteQR = ({ navigation }) => {
 	const statusBarHeight =
 		platform === "ios" ? insets?.top : StatusBar.currentHeight;
 	const [arrowHeight, setArrowHeight] = useState(
-		platform === "ios" ? height * 0.65 : 0
+		platform === "ios" ? height * 0.65 : 0,
 	);
 	const [whiteHeight, setWhiteHeight] = useState(
-		platform === "ios" ? height * 0.35 : 0
+		platform === "ios" ? height * 0.35 : 0,
 	);
 
 	const [layoutReady, setLayoutReady] = useState(platform === "ios");
@@ -284,35 +284,28 @@ const GafeteQR = ({ navigation }) => {
 				result: "tmpfile",
 			});
 
-			const localUri = rawUri.startsWith("file://") ? rawUri : `file://${rawUri}`;
-			console.log("rawUri:", rawUri);
+			const localUri = rawUri.startsWith("file://")
+				? rawUri
+				: `file://${rawUri}`;
 			console.log("localUri:", localUri);
 
-			console.log("before currentPerm");
-			const currentPerm = await MediaLibrary.getPermissionsAsync(true);
-			console.log("currentPerm:", currentPerm);
+			const permission = await MediaLibrary.requestPermissionsAsync(true);
+			console.log("media permission:", permission);
 
-			console.log("before requestPermissionsAsync");
-			const requestedPerm = await MediaLibrary.requestPermissionsAsync(true);
-			console.log("requestedPerm:", requestedPerm);
-
-			console.log("before saveToLibraryAsync");
-			await MediaLibrary.saveToLibraryAsync(localUri);
-			console.log("after saveToLibraryAsync");
-
-			// const currentPerm = await MediaLibrary.getPermissionsAsync(true);
-			// console.log("currentPerm:", currentPerm);
-
-			// const requestedPerm = await MediaLibrary.requestPermissionsAsync(true);
-			// console.log("requestedPerm:", requestedPerm);
-
-			if (!requestedPerm.granted) {
-				throw new Error("Media library permission not granted");
+			if (!permission.granted) {
+				showMessage({
+					message:
+						"Permiso de fotos denegado. Revisa los permisos e intenta de nuevo.",
+					type: "warning",
+					duration: 3000,
+					position: "top",
+					icon: { icon: "info", position: "right" },
+					statusBarHeight: 30,
+				});
+				return;
 			}
 
-			// console.log("before saveToLibraryAsync");
-			// await MediaLibrary.saveToLibraryAsync(localUri);
-			// console.log("after saveToLibraryAsync");
+			await MediaLibrary.saveToLibraryAsync(localUri);
 
 			showMessage({
 				message: "Gafete guardado en tu galería.",
@@ -324,7 +317,6 @@ const GafeteQR = ({ navigation }) => {
 			});
 		} catch (error) {
 			console.log("SAVE BADGE ERROR:", error);
-			console.log("SAVE BADGE ERROR STRING:", String(error));
 			showMessage({
 				message: "No se pudo guardar el gafete. Intenta de nuevo.",
 				type: "danger",
@@ -356,10 +348,10 @@ const GafeteQR = ({ navigation }) => {
 				onLayout={
 					platform === "android"
 						? (event) => {
-							const { height } = event.nativeEvent.layout;
-							setWhiteHeight(height);
-							console.log("White height is: ", height);
-						}
+								const { height } = event.nativeEvent.layout;
+								setWhiteHeight(height);
+								console.log("White height is: ", height);
+							}
 						: undefined
 				}
 			/>
