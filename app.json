@@ -1,83 +1,79 @@
 {
-  "expo": {
-    "name": "TECMA Móvil Connect Dev",
-    "slug": "tecma-movil-connect-dev",
-    "version": "1.1.1dev",
-    "orientation": "portrait",
-    "icon": "./assets/icon-dev.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/icon-dev.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "buildNumber": "11",
-      "supportsTablet": true,
-      "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
-      "infoPlist": {
-        "CFBundleDisplayName": "TECMA Móvil Connect Dev",
-        "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        },
-        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
-      }
-    },
-    "android": {
-      "versionCode": 8,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icon-dev.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.tecma.movilconnecttest",
-      "softwareKeyboardLayoutMode": "pan",
-      "name": "TECMA Móvil Connect Test"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
-      }
-    },
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "usesCleartextTraffic": true,
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
-          },
-          "ios": {
-            "infoPlist": {
-              "NSAppTransportSecurity": {
-                "NSAllowsArbitraryLoads": true
-              },
-              "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
-            }
-          }
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
-        }
-      ],
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
-        }
-      ]
-    ]
-  }
+	"expo": {
+		"name": "TECMA Móvil Connect Dev",
+		"slug": "tecma-movil-connect-dev",
+		"version": "1.1.1dev",
+		"orientation": "portrait",
+		"icon": "./assets/icon-dev.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/icon-dev.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"infoPlist": {
+				"CFBundleDisplayName": "TECMA Móvil Connect Dev",
+				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
+				"NSAppTransportSecurity": {
+					"NSAllowsArbitraryLoads": true
+				},
+				"NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+				"NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save badge images to your photo library."
+			}
+		},
+		"android": {
+			"versionCode": 8,
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/icon-dev.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.tecma.movilconnecttest",
+			"softwareKeyboardLayoutMode": "pan",
+			"name": "TECMA Móvil Connect Test"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
+			}
+		},
+		"plugins": [
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"usesCleartextTraffic": true,
+						"compileSdkVersion": 35,
+						"targetSdkVersion": 35,
+						"buildToolsVersion": "35.0.0"
+					},
+					"ios": {
+						"infoPlist": {
+							"NSAppTransportSecurity": {
+								"NSAllowsArbitraryLoads": true
+							},
+							"NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
+						}
+					}
+				}
+			],
+			[
+				"expo-location",
+				{
+					"locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
+				}
+			],
+			[
+				"expo-media-library",
+				{
+					"photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+					"savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
+				}
+			]
+		]
+	}
 }
