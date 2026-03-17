@@ -59,26 +59,19 @@ function LineaDenuncia() {
 	};
 
 	const handlePress3 = async () => {
-		const whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
 		const callUrl = `tel:${phoneNumber}`;
 
 		try {
-			const whatsappSupported = await Linking.canOpenURL(whatsappUrl);
-
-			if (whatsappSupported) {
-				await Linking.openURL(whatsappUrl);
-				return;
-			}
-
 			const callSupported = await Linking.canOpenURL(callUrl);
 			if (callSupported) {
 				await Linking.openURL(callUrl);
 				return;
 			}
 
-			Alert.alert("Error", "No se pudo abrir WhatsApp ni la app de llamadas.");
+			Alert.alert("Error", "No se pudo abrir la app de llamadas.");
 		} catch (err) {
 			console.error("An error occurred", err);
+			Alert.alert("Error", "Ocurrió un error al intentar abrir la app de llamadas");
 		}
 	};
 
