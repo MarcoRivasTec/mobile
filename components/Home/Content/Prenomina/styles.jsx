@@ -149,6 +149,7 @@ const dataModal = StyleSheet.create({
 	container: {
 		position: "absolute",
 		flex: 1,
+		// backgroundColor: "blue"
 	},
 	backgroundContainer: {
 		flex: 1,
@@ -181,7 +182,7 @@ const dataModal = StyleSheet.create({
 		height: "100%",
 	},
 	pickerItem: {
-		color: "white",
+		// color: "blue",
 	}
 });
 
