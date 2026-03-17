@@ -56,9 +56,8 @@ function Gafete({ tarjetasRequisition, onCallback, isModalVisible, onExit }) {
 									</Text>
 								</Text>
 								<Text style={gafete.text}>
-									Acepto cobro de gafete, el cual se verá reflejado en mi recibo
-									de nomina, para reposiciones y quitar la parte de recuerda
-									debes entregar tu gafete dañado.{"\n"}
+									Al seleccionar "Solicitar" se acepta cobro de gafete, el cual se verá reflejado en tu recibo
+									de nómina.{"\n"}
 								</Text>
 								<Text style={gafete.text}>
 									En 24 hrs. puedes pasar al Departamento de RH por el.{"\n"}
