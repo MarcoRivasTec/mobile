@@ -69,7 +69,7 @@ function ContentRenderer({ content, changeContent, navigation }) {
 			case "Solicitudes":
 				return <Solicitudes />;
 			case "Prestamos":
-				return <Prestamos />;
+				return <Prestamos changeContent={changeContent} />;
 			case "RetiroAhorro":
 				return <RetiroAhorro />;
 			case "Cartas":

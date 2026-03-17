@@ -179,7 +179,11 @@ const yearModal = StyleSheet.create({
 	picker: {
 		width: "100%",
 		height: "100%",
+		color: "black",
 	},
+	pickerItem: {
+		color: "white",
+	}
 });
 
 export { historialModal, yearModal };

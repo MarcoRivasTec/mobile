@@ -89,10 +89,10 @@ const GafeteQR = ({ navigation }) => {
 	const statusBarHeight =
 		platform === "ios" ? insets?.top : StatusBar.currentHeight;
 	const [arrowHeight, setArrowHeight] = useState(
-		platform === "ios" ? height * 0.65 : 0
+		platform === "ios" ? height * 0.65 : 0,
 	);
 	const [whiteHeight, setWhiteHeight] = useState(
-		platform === "ios" ? height * 0.35 : 0
+		platform === "ios" ? height * 0.35 : 0,
 	);
 
 	const [layoutReady, setLayoutReady] = useState(platform === "ios");
@@ -219,25 +219,83 @@ const GafeteQR = ({ navigation }) => {
 		}
 	}, [layoutReady]);
 
+	// const handleSaveBadge = async () => {
+	// 	try {
+	// 		setIsCapturing(true);
+	// 		// allow UI to update (buttons hidden) before snapshot
+	// 		// await waitNextFrame();
+	// 		await settleUI();
+	// 		// 1) Capture the referenced view as a PNG into a temp file
+	// 		const uri = await captureRef(badgeRef, {
+	// 			format: "png",
+	// 			quality: 1,
+	// 			result: "tmpfile", // returns a file:// URI
+	// 		});
+
+	// 		// 2) Ask for permission and save to gallery
+	// 		const { status } = await MediaLibrary.requestPermissionsAsync();
+	// 		if (status !== "granted") {
+	// 			showMessage({
+	// 				message:
+	// 					"Permiso de galería denegado. Ajusta los permisos e intenta de nuevo.",
+	// 				type: "warning",
+	// 				duration: 3000,
+	// 				position: "top",
+	// 				icon: { icon: "info", position: "right" },
+	// 				statusBarHeight: 30,
+	// 			});
+	// 			return;
+	// 		}
+
+	// 		const asset = await MediaLibrary.createAssetAsync(uri);
+	// 		// Put it in a custom album (optional). If the album exists, it will just add the asset.
+	// 		await MediaLibrary.createAlbumAsync("Gafetes TECMA", asset, false);
+
+	// 		showMessage({
+	// 			message: "Gafete guardado en tu galería.",
+	// 			type: "success",
+	// 			duration: 2500,
+	// 			position: "top",
+	// 			icon: { icon: "success", position: "right" },
+	// 			statusBarHeight: 30,
+	// 		});
+	// 	} catch (error) {
+	// 		showMessage({
+	// 			message: "No se pudo guardar el gafete. Intenta de nuevo.",
+	// 			type: "danger",
+	// 			duration: 3000,
+	// 			position: "top",
+	// 			icon: { icon: "danger", position: "right" },
+	// 			statusBarHeight: 30,
+	// 		});
+	// 	} finally {
+	// 		setIsCapturing(false);
+	// 	}
+	// };
+
 	const handleSaveBadge = async () => {
 		try {
 			setIsCapturing(true);
-			// allow UI to update (buttons hidden) before snapshot
-			// await waitNextFrame();
 			await settleUI();
-			// 1) Capture the referenced view as a PNG into a temp file
-			const uri = await captureRef(badgeRef, {
-				format: "png",
-				quality: 1,
-				result: "tmpfile", // returns a file:// URI
-			});
 
-			// 2) Ask for permission and save to gallery
-			const { status } = await MediaLibrary.requestPermissionsAsync();
-			if (status !== "granted") {
+		const rawUri = await captureRef(badgeRef, {
+			format: "png",
+			quality: 1,
+			result: "tmpfile",
+		});
+
+			const localUri = rawUri.startsWith("file://")
+				? rawUri
+				: `file://${rawUri}`;
+			console.log("localUri:", localUri);
+
+			const permission = await MediaLibrary.requestPermissionsAsync(true);
+			console.log("media permission:", permission);
+
+			if (!permission.granted) {
 				showMessage({
 					message:
-						"Permiso de galería denegado. Ajusta los permisos e intenta de nuevo.",
+						"Permiso de fotos denegado. Revisa los permisos e intenta de nuevo.",
 					type: "warning",
 					duration: 3000,
 					position: "top",
@@ -247,9 +305,7 @@ const GafeteQR = ({ navigation }) => {
 				return;
 			}
 
-			const asset = await MediaLibrary.createAssetAsync(uri);
-			// Put it in a custom album (optional). If the album exists, it will just add the asset.
-			await MediaLibrary.createAlbumAsync("Gafetes TECMA", asset, false);
+			await MediaLibrary.saveToLibraryAsync(localUri);
 
 			showMessage({
 				message: "Gafete guardado en tu galería.",
@@ -260,6 +316,7 @@ const GafeteQR = ({ navigation }) => {
 				statusBarHeight: 30,
 			});
 		} catch (error) {
+			console.log("SAVE BADGE ERROR:", error);
 			showMessage({
 				message: "No se pudo guardar el gafete. Intenta de nuevo.",
 				type: "danger",
@@ -294,7 +351,7 @@ const GafeteQR = ({ navigation }) => {
 								const { height } = event.nativeEvent.layout;
 								setWhiteHeight(height);
 								console.log("White height is: ", height);
-						  }
+							}
 						: undefined
 				}
 			/>
@@ -328,7 +385,8 @@ const GafeteQR = ({ navigation }) => {
 				style={{
 					opacity: fadeAnim,
 					position: "absolute",
-					top: insets?.top,
+					// top: insets?.top,
+					top: 0,
 					left: 0,
 					right: 0,
 					bottom: 0,
@@ -484,18 +542,19 @@ const GafeteQR = ({ navigation }) => {
 										badgeData.format === "CODE128"
 											? BarcodeFormat.CODE128
 											: badgeData.format === "UPCA"
-											? BarcodeFormat.UPCA
-											: badgeData.format === "QR"
-											? BarcodeFormat.QR
-											: badgeData.format === "EAN13"
-											? BarcodeFormat.EAN13
-											: badgeData.format === "AZTEC"
-											? BarcodeFormat.AZTEC
-											: badgeData.format === "PDF417"
-											? BarcodeFormat.PDF417
-											: BarcodeFormat.CODE128
+												? BarcodeFormat.UPCA
+												: badgeData.format === "QR"
+													? BarcodeFormat.QR
+													: badgeData.format === "EAN13"
+														? BarcodeFormat.EAN13
+														: badgeData.format === "AZTEC"
+															? BarcodeFormat.AZTEC
+															: badgeData.format === "PDF417"
+																? BarcodeFormat.PDF417
+																: BarcodeFormat.CODE128
 									} // supported format enum
 									foregroundColor={"#30565E"} // your palette
+									background="transparent"
 									style={{ width: 280, height: 120 }} // tune to fit layout
 								/>
 

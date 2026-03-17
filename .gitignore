@@ -9,13 +9,14 @@ node_modules/
 package-lock.json
 .pnpm-lock.yaml
 
-# Yarn Berry
-# .yarn/*
-# !.yarn/install-state.gz
-# !.yarn/releases
-# !.yarn/plugins
-# !.yarn/sdks
-# !.yarn/versions
+Yarn Berry
+.yarn/
+.yarn/*
+!.yarn/install-state.gz
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 
 # Expo
 .expo/

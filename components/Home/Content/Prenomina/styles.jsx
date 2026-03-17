@@ -180,6 +180,9 @@ const dataModal = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 	},
+	pickerItem: {
+		color: "white",
+	}
 });
 
 const solicitarAjuste = StyleSheet.create({

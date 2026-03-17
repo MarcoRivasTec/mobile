@@ -20,7 +20,13 @@ function DataPicker({ onCallback, data, selectedData, setSelectedData }) {
 					onCallback();
 				}
 			}}
-			style={{ width: "100%", height: "100%" }}
+			style={{
+				width: "100%",
+				height: "100%",
+				backgroundColor: "#fff",
+				color: "#000",
+			}}
+			dropdownIconColor="#000"
 			itemStyle={yearModal.pickerItemStyle}
 		>
 			{Platform.OS === "android" ? (

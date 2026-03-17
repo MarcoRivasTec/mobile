@@ -8,6 +8,8 @@ const { execSync } = require("child_process");
 const packageJsonPath = path.resolve(__dirname, "..", "package.json");
 const appJsonPath = path.join(__dirname, "..", 'app.json');
 const envPath = path.resolve(__dirname, "../env", ".env");
+// const specificEndpoint = "";
+const specificEndpoint = "https://dev-api.tecmamovilconnect.com/";
 const prodEndpoint = "https://api.tecmamovilconnect.com/";
 const testPort = 8083;
 
@@ -29,7 +31,7 @@ async function updateJsonValues(mode) {
 		if (mode === "dev") {
 			appJson.expo.name = "TECMA Móvil Connect Dev";
 			appJson.expo.slug = "tecma-movil-connect-dev";
-			appJson.expo.version = "1.1.0dev";
+			appJson.expo.version = "1.1.1dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
 			appJson.expo.splash.image = "./assets/icon-dev.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
@@ -43,7 +45,7 @@ async function updateJsonValues(mode) {
 			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
-			appJson.expo.version = "1.1.0";
+			appJson.expo.version = "1.1.1";
 			appJson.expo.icon = "./assets/icon.png";
 			appJson.expo.splash.image = "./assets/icon.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
@@ -95,7 +97,7 @@ async function getLocalIp() {
 	const interfaces = os.networkInterfaces();
 	for (const name of Object.keys(interfaces)) {
 		for (const iface of interfaces[name]) {
-			if (iface.family === "IPv4" && !iface.internal && (iface.address.startsWith("10.3.") || iface.address.startsWith("192.168."))) {
+			if (iface.family === "IPv4" && !iface.internal && (iface.address.startsWith("10.3.") || iface.address.startsWith("192.168"))) {
 				return iface.address;
 			}
 		}
@@ -209,7 +211,7 @@ if (isAndroidDev) {
 				// await updateReanimatedVersion("3.10.1");
 				console.log("\nUpdating API endpoint to dev...");
 				const localIp = await getLocalIp();
-				const devEndpoint = `http://${localIp}:${testPort}/papitecma`;
+				const devEndpoint = specificEndpoint === "" ? `http://${localIp}:${testPort}/papitecma` : specificEndpoint;
 				await updateEnvApiEndpoint(devEndpoint);
 
 				console.warn("\n\nRunning command for dev mode");
