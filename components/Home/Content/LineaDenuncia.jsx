@@ -59,16 +59,13 @@ function LineaDenuncia() {
 	};
 
 	const handlePress3 = async () => {
-		const callUrl = `tel:${phoneNumber}`;
+		// const callUrl = `tel:${phoneNumber}`;
+		// console.log("Call url is: ", callUrl)
 
 		try {
-			const callSupported = await Linking.canOpenURL(callUrl);
-			if (callSupported) {
-				await Linking.openURL(callUrl);
-				return;
-			}
+			const cleanedPhone = String(phoneNumber).replace(/[^\d+]/g, "");
+			await Linking.openURL(`tel:${cleanedPhone}`);
 
-			Alert.alert("Error", "No se pudo abrir la app de llamadas.");
 		} catch (err) {
 			console.error("An error occurred", err);
 			Alert.alert("Error", "Ocurrió un error al intentar abrir la app de llamadas");
