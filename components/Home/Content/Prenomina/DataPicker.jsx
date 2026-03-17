@@ -41,7 +41,7 @@ function DataPicker({ onCallback, data, selectedElement, setSelectedElement }) {
 			{data.map((dataUnit, index) => (
 				<Picker.Item
 					key={dataUnit}
-					label={dataUnit}
+					label={String(dataUnit)}
 					style={dataModal.pickerItem}
 					value={dataUnit}
 				/>

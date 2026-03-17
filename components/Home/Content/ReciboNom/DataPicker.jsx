@@ -39,7 +39,7 @@ function DataPicker({ onCallback, data, selectedData, setSelectedData }) {
 			{data.map((dataUnit, index) => (
 				<Picker.Item
 					key={dataUnit}
-					label={dataUnit}
+					label={String(dataUnit)}
 					style={yearModal.pickerItem}
 					value={dataUnit}
 				/>
