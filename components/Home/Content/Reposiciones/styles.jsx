@@ -15,7 +15,7 @@ const gafete = StyleSheet.create({
 		backgroundColor: "rgba(0, 0, 0, 0.4)",
 	},
 	modalContainer: {
-		height: "40%",
+		height: "45%",
 		marginVertical: "2%",
 		width: "90%",
 		justifyContent: "center",
