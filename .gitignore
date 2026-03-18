@@ -11,12 +11,6 @@ package-lock.json
 
 Yarn Berry
 .yarn/
-.yarn/*
-!.yarn/install-state.gz
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
 
 # Expo
 .expo/
@@ -52,3 +46,4 @@ env/
 .env
 
 ios/
+.yarn/install-state.gz
