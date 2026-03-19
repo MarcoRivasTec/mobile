@@ -8,8 +8,8 @@ const { execSync } = require("child_process");
 const packageJsonPath = path.resolve(__dirname, "..", "package.json");
 const appJsonPath = path.join(__dirname, "..", 'app.json');
 const envPath = path.resolve(__dirname, "../env", ".env");
-const specificEndpoint = "";
-// const specificEndpoint = "https://dev-api.tecmamovilconnect.com/";
+// const specificEndpoint = "";
+const specificEndpoint = "https://dev-api.tecmamovilconnect.com/";
 const prodEndpoint = "https://api.tecmamovilconnect.com/";
 const testPort = 8083;
 

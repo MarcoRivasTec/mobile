@@ -554,6 +554,7 @@ const GafeteQR = ({ navigation }) => {
 																: BarcodeFormat.CODE128
 									} // supported format enum
 									foregroundColor={"#30565E"} // your palette
+									{...(platform === "ios" ? { background: "transparent" } : {})} // Android's view has a default white background, iOS can be transparent
 									style={{ width: 280, height: 120 }} // tune to fit layout
 								/>
 
