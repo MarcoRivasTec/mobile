@@ -95,7 +95,7 @@ const Login = ({ navigation, route }) => {
 					description:
 						"Deberás actualizar para poder continuar. Toca aquí para actualizar",
 					type: "danger",
-					duration: 20000,
+					duration: 4000,
 					icon: { icon: "warning", position: "right" },
 					onPress: () => {
 						openStore();
@@ -109,7 +109,7 @@ const Login = ({ navigation, route }) => {
 					description:
 						"Puedes seguir utilizando la aplicación, pero te recomendamos descargarla. Toca aquí para actualizar.",
 					type: "warning",
-					duration: 20000,
+					duration: 4000,
 					icon: { icon: "warning", position: "right" },
 					onPress: () => {
 						openStore();
@@ -152,7 +152,7 @@ const Login = ({ navigation, route }) => {
 
 		const backHandler = BackHandler.addEventListener(
 			"hardwareBackPress",
-			backAction
+			backAction,
 		);
 
 		return () => {
@@ -162,14 +162,17 @@ const Login = ({ navigation, route }) => {
 	}, [isInputFocused]);
 
 	const query = {
-		query: `query Versions($currVer: String!){
-			Versions(currVer: $currVer) {
+		query: `query Version($input: VersionInput!){
+			Version(input: $input) {
 				upToDate
 				critical					
 			}
 		}`,
 		variables: {
-			currVer: appVersion,
+			input: {
+				currVer: appVersion,
+				platform: platform,
+			},
 		},
 	};
 
@@ -187,9 +190,9 @@ const Login = ({ navigation, route }) => {
 		try {
 			const data = await fetchPost({ query });
 			console.log("Response data at Versions:", data);
-			if (data.data.Versions) {
-				if (data.data.Versions.upToDate === false) {
-					if (data.data.Versions.critical === true) {
+			if (data.data.Version) {
+				if (data.data.Version.upToDate === false) {
+					if (data.data.Version.critical === true) {
 						console.log("Returning critical");
 						return "critical";
 					} else {
@@ -206,7 +209,7 @@ const Login = ({ navigation, route }) => {
 				console.warn("Error retrieving app version information");
 			}
 		} catch (error) {
-			console.error("Error at Versions:", error);
+			console.error("Error at Version:", error);
 			setIsLoading(false);
 			setVersionCheck(false);
 		}
@@ -347,7 +350,7 @@ const Login = ({ navigation, route }) => {
 			} else {
 				Alert.alert(
 					"Error",
-					"Ocurrió un error inesperado, vuelve a intentarlo."
+					"Ocurrió un error inesperado, vuelve a intentarlo.",
 				);
 				return;
 			}
@@ -385,7 +388,7 @@ const Login = ({ navigation, route }) => {
 				}
 
 				console.log(
-					"Biometric authentication successful, retrieving credentials..."
+					"Biometric authentication successful, retrieving credentials...",
 				);
 				const storedNumEmp = await SecureStore.getItemAsync("numEmp", {
 					keychainService: "com.tecma.movilconnect.service.login",
@@ -404,7 +407,7 @@ const Login = ({ navigation, route }) => {
 					"Stored credentials: ",
 					storedNumEmp,
 					storedNip,
-					storedRegion
+					storedRegion,
 				);
 
 				if (!storedNumEmp || !storedNip || !storedRegion) {
@@ -455,14 +458,14 @@ const Login = ({ navigation, route }) => {
 					} else {
 						Alert.alert(
 							"Error",
-							"Ocurrió un error inesperado, vuelve a intentarlo."
+							"Ocurrió un error inesperado, vuelve a intentarlo.",
 						);
 						return;
 					}
 				} catch (error) {
 					Alert.alert(
 						"Error",
-						"Ocurrió un error al iniciar sesión con biometría."
+						"Ocurrió un error al iniciar sesión con biometría.",
 					);
 					console.error("Error at ingreso", error);
 				} finally {
@@ -530,7 +533,7 @@ const Login = ({ navigation, route }) => {
 					} else {
 						Alert.alert(
 							"Error",
-							"Ocurrió un error inesperado, vuelve a intentarlo."
+							"Ocurrió un error inesperado, vuelve a intentarlo.",
 						);
 						return;
 					}

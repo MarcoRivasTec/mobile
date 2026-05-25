@@ -386,7 +386,7 @@ const GafeteQR = ({ navigation }) => {
 					opacity: fadeAnim,
 					position: "absolute",
 					// top: insets?.top,
-					top: 0,
+					top: platform === "ios" ? 0 : insets.top,
 					left: 0,
 					right: 0,
 					bottom: 0,
@@ -554,7 +554,7 @@ const GafeteQR = ({ navigation }) => {
 																: BarcodeFormat.CODE128
 									} // supported format enum
 									foregroundColor={"#30565E"} // your palette
-									background="transparent"
+									{...(platform === "ios" ? { background: "transparent" } : {})} // Android's view has a default white background, iOS can be transparent
 									style={{ width: 280, height: 120 }} // tune to fit layout
 								/>
 
