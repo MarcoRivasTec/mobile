@@ -1,4 +1,4 @@
-import { Text, Animated, StyleSheet, View } from "react-native";
+import { Text, Animated, StyleSheet, View, Alert } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import COLORS from "../constants/colors";
 import WelcomeAnim from "../components/Animations/Welcome";
@@ -83,10 +83,10 @@ const Welcome = ({ navigation, route }) => {
 						clasificacion: data.data.UserInfo.clasificacion.trim(),
 					});
 					setInfoFetched(!infoFetched);
-					console.log(
-						"Restricted sections:",
-						data.data.UserInfo.restricted_sections
-					);
+					// console.log(
+					// 	"Restricted sections:",
+					// 	data.data.UserInfo.restricted_sections
+					// );
 					setMenuButtons({
 						badge: !data.data.UserInfo.restricted_sections.includes("badge"),
 						payroll:
