@@ -6,6 +6,8 @@ import {
 	StatusBar,
 	TouchableOpacity,
 	Animated,
+	Linking,
+	Alert,
 } from "react-native";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import QRCodeStyled from "react-native-qrcode-styled";
@@ -84,7 +86,7 @@ const GafeteQR = ({ navigation }) => {
 	};
 
 	const insets = useSafeAreaInsets();
-	console.log("Insets are: ", insets);
+	// console.log("Insets are: ", insets);
 
 	const statusBarHeight =
 		platform === "ios" ? insets?.top : StatusBar.currentHeight;
@@ -107,6 +109,8 @@ const GafeteQR = ({ navigation }) => {
 	const [QRData, setQRData] = useState(null);
 	const [badgeData, setBadgeData] = useState(null);
 	const [empInfo, setEmpInfo] = useState(null);
+	const [isEligible, setIsEligible] = useState(false);
+	const [isOpeningPrivacyNotice, setIsOpeningPrivacyNotice] = useState(false);
 
 	useEffect(() => {
 		StatusBar.setHidden(true);
@@ -199,8 +203,32 @@ const GafeteQR = ({ navigation }) => {
 			}
 		};
 
+		const checkPrivacyNoticeEligibility = async () => {
+			const eligibilityQuery = {
+				query: `query PrivacyNoticeEligibility {
+							PrivacyNoticeEligibility {
+								success
+								message
+							}
+						}`,
+			};
+			try {
+				const data = await fetchPost({
+					query: eligibilityQuery,
+					token: accessToken,
+				});
+				if (data.data.PrivacyNoticeEligibility.success) {
+					setIsEligible(true);
+					// console.log("Message is: ", data.data.PrivacyNoticeEligibility.message);
+				}
+			} catch (error) {
+				console.log("Error querying privacy notice eligibility:", error);
+			}
+		};
+
 		getBadgeData();
 		getQRData();
+		checkPrivacyNoticeEligibility();
 	}, []);
 
 	useEffect(() => {
@@ -274,15 +302,19 @@ const GafeteQR = ({ navigation }) => {
 	// };
 
 	const handleSaveBadge = async () => {
+		const wasEligible = isEligible; // capture current eligibility state
 		try {
 			setIsCapturing(true);
+			if (isEligible) {
+				setIsEligible(false); // hide privacy notice button during capture
+			}
 			await settleUI();
 
-		const rawUri = await captureRef(badgeRef, {
-			format: "png",
-			quality: 1,
-			result: "tmpfile",
-		});
+			const rawUri = await captureRef(badgeRef, {
+				format: "png",
+				quality: 1,
+				result: "tmpfile",
+			});
 
 			const localUri = rawUri.startsWith("file://")
 				? rawUri
@@ -327,6 +359,97 @@ const GafeteQR = ({ navigation }) => {
 			});
 		} finally {
 			setIsCapturing(false);
+			if (wasEligible) {
+				setIsEligible(true); // restore privacy notice button after capture
+			}
+		}
+	};
+
+	const getPrivacyNotice = async () => {
+		if (isOpeningPrivacyNotice) return;
+
+		if (!accessToken) {
+			Alert.alert("Sesión expirada", "Por favor inicia sesión nuevamente.");
+			return;
+		}
+
+		setIsOpeningPrivacyNotice(true);
+
+		try {
+			const response = await fetchPost({
+				query: {
+					query: `
+							query PrivacyNoticeURL {
+								PrivacyNoticeURL {
+								success
+								message
+								file_url
+								}
+							}
+							`,
+				},
+				token: accessToken,
+			});
+
+			const result = response?.data?.PrivacyNoticeURL;
+
+			if (!result) {
+				Alert.alert(
+					"Aviso de privacidad",
+					"El servidor no devolvió una respuesta válida.",
+				);
+				return;
+			}
+
+			if (!result.success) {
+				Alert.alert(
+					"Aviso de privacidad",
+					result.message || "El aviso de privacidad no está disponible.",
+				);
+				return;
+			}
+
+			const fileUrl = String(result.file_url || "").trim();
+
+			if (!fileUrl) {
+				Alert.alert(
+					"Aviso de privacidad",
+					"No se pudo generar la URL del aviso de privacidad.",
+				);
+				return;
+			}
+
+			if (!/^https?:\/\//i.test(fileUrl)) {
+				Alert.alert(
+					"Aviso de privacidad",
+					"La URL generada para el aviso de privacidad no es válida.",
+				);
+				return;
+			}
+
+			const canOpen = await Linking.canOpenURL(fileUrl);
+
+			if (!canOpen) {
+				Alert.alert(
+					"Aviso de privacidad",
+					"Este dispositivo no puede abrir el enlace del aviso de privacidad.",
+				);
+				return;
+			}
+
+			await Linking.openURL(fileUrl);
+		} catch (error) {
+			console.error(
+				"Error al consultar la URL del aviso de privacidad:",
+				error,
+			);
+
+			Alert.alert(
+				"Aviso de privacidad",
+				"Ocurrió un error al abrir el aviso de privacidad. Inténtalo nuevamente.",
+			);
+		} finally {
+			setIsOpeningPrivacyNotice(false);
 		}
 	};
 
@@ -478,7 +601,24 @@ const GafeteQR = ({ navigation }) => {
 					</View>
 
 					{/* Name */}
-					<View style={[gafete.dataContainer, { height: "60%", bottom: "2%" }]}>
+					<View
+						style={[
+							gafete.dataContainer,
+							{ height: "60%", bottom: "2%" },
+						]}
+					>
+						{isEligible && (
+							<TouchableOpacity
+								onPress={getPrivacyNotice}
+								style={{ position: "absolute", width: 100, top: 0, right: "4%", padding: 5, backgroundColor: COLORS.naranja, borderRadius: 10 }}
+							>
+								<Text style={{ color: "white", fontSize: 12, textAlign: "center" }}>
+									{isOpeningPrivacyNotice
+										? "Abriendo..."
+										: "Aviso de privacidad"}
+								</Text>
+							</TouchableOpacity>
+						)}
 						<Text
 							style={{
 								fontFamily: "Montserrat-ExtraBold",
