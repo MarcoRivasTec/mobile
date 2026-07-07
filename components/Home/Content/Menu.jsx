@@ -12,6 +12,12 @@ function Menu({ changeContent, navigation }) {
 	console.log("Region is: ", region);
 
 	const allButtons = [
+		menuButtons.checkin && {
+			title: "Check In",
+			iconLibrary: "AD",
+			icon: "qrcode",
+			onPress: () => changeContent("CheckIn"),
+		},
 		menuButtons.badge && {
 			title: "Gafete Digital",
 			iconLibrary: "AD",
@@ -68,17 +74,11 @@ function Menu({ changeContent, navigation }) {
 			icon: "DENUNCIA",
 			onPress: () => changeContent("LineaDenuncia"),
 		},
-		menuButtons.opinion && {
-			title: "Opiniones",
-			icon: "OPINIONES",
-			onPress: () => changeContent("Opiniones"),
-		},
-		// menuButtons.checkin && {
-		// 	title: "Check In",
-		// 	iconLibrary: "AD",
-		// 	icon: "qrcode",
-		// 	onPress: () => changeContent("CheckIn"),
-		// },
+		// menuButtons.opinion && {
+		// 	title: "Opiniones",
+		// 	icon: "OPINIONES",
+		// 	onPress: () => changeContent("Opiniones"),
+		// },		
 	].filter(Boolean);
 
 	const rows = [];

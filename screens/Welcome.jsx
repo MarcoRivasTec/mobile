@@ -88,6 +88,7 @@ const Welcome = ({ navigation, route }) => {
 					// 	data.data.UserInfo.restricted_sections
 					// );
 					setMenuButtons({
+						checkin: !data.data.UserInfo.restricted_sections.includes("checkin"),
 						badge: !data.data.UserInfo.restricted_sections.includes("badge"),
 						payroll:
 							!data.data.UserInfo.restricted_sections.includes("payroll"),

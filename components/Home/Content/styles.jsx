@@ -1774,7 +1774,7 @@ const opiniones = StyleSheet.create({
 		// borderTopRightRadius: 10,
 		// borderBottomLeftRadius: 10,
 		// borderBottomRightRadius: 10,
-		backgroundColor: COLORS.flatlistBackground,
+		// backgroundColor: COLORS.flatlistBackground,
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
@@ -1883,6 +1883,186 @@ const opiniones = StyleSheet.create({
 		fontSize: 13,
 		fontWeight: "bold",
 		color: "white",
+	},
+	card: {
+		width: "92%",
+		minHeight: "78%",
+		borderRadius: 26,
+		backgroundColor: COLORS.white,
+		paddingHorizontal: "6%",
+		paddingVertical: "7%",
+		justifyContent: "space-between",
+		alignItems: "center",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 8,
+		},
+		shadowOpacity: 0.12,
+		shadowRadius: 14,
+		elevation: 7,
+	},
+
+	headerBlock: {
+		width: "100%",
+		alignItems: "center",
+	},
+
+	eyebrow: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		letterSpacing: 1.2,
+		textTransform: "uppercase",
+		color: COLORS.naranja,
+		marginBottom: 8,
+	},
+
+	title: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 26,
+		fontWeight: "bold",
+		color: COLORS.main,
+		textAlign: "center",
+	},
+
+	subtitle: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 13,
+		color: "#6B7280",
+		textAlign: "center",
+		lineHeight: 20,
+		marginTop: 10,
+		width: "92%",
+	},
+
+	statusPill: {
+		marginTop: 22,
+		paddingVertical: 10,
+		paddingHorizontal: 16,
+		borderRadius: 999,
+		backgroundColor: "rgba(32, 67, 137, 0.08)",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	statusDot: {
+		width: 9,
+		height: 9,
+		borderRadius: 9,
+		backgroundColor: COLORS.naranja,
+		marginRight: 8,
+	},
+
+	statusText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		fontWeight: "bold",
+		color: COLORS.main,
+	},
+
+	infoPanel: {
+		width: "100%",
+		marginTop: 24,
+		borderRadius: 20,
+		backgroundColor: "#F7F8FB",
+		paddingHorizontal: 16,
+		paddingVertical: 12,
+	},
+
+	infoRow: {
+		width: "100%",
+		minHeight: 36,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		borderBottomWidth: 1,
+		borderBottomColor: "rgba(0, 0, 0, 0.06)",
+	},
+
+	infoLabel: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		color: "#6B7280",
+	},
+
+	infoValue: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		fontWeight: "bold",
+		color: COLORS.black,
+		maxWidth: "55%",
+		textAlign: "right",
+	},
+
+	successText: {
+		color: "#15803D",
+	},
+
+	warningText: {
+		color: "#B45309",
+	},
+
+	actionArea: {
+		width: 190,
+		height: 190,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 28,
+	},
+
+	pulseRing: {
+		position: "absolute",
+		width: 150,
+		height: 150,
+		borderRadius: 150,
+		backgroundColor: COLORS.main,
+	},
+
+	checkButton: {
+		width: 145,
+		height: 145,
+		borderRadius: 145,
+		backgroundColor: COLORS.main,
+		justifyContent: "center",
+		alignItems: "center",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 8,
+		},
+		shadowOpacity: 0.22,
+		shadowRadius: 12,
+		elevation: 8,
+	},
+
+	checkButtonDisabled: {
+		opacity: 0.65,
+	},
+
+	checkButtonIcon: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 34,
+		fontWeight: "bold",
+		color: COLORS.white,
+		marginBottom: 4,
+	},
+
+	checkButtonText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.white,
+	},
+
+	footerText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 11,
+		color: "#9CA3AF",
+		textAlign: "center",
+		marginTop: 12,
 	},
 });
 
