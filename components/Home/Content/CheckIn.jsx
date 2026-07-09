@@ -44,13 +44,8 @@ const HANDLE_CHECK_IN_MUTATION = `
 			status
 			message
 			checkIn {
-				id
 				type
 				registeredAt
-				geofenceName
-				latitude
-				longitude
-				accuracy
 			}
 		}
 	}
@@ -533,6 +528,8 @@ export default function CheckIn() {
 			}
 
 			if (result.success === true) {
+				// console.log("CheckIn success:", JSON.stringify(result, null, 1));
+
 				setLastStatus(
 					currentAction.type === CHECK_OUT_TYPE
 						? "Salida registrada"
@@ -547,6 +544,9 @@ export default function CheckIn() {
 							? currentAction.successText
 							: "Tu ubicación fue enviada para validación."),
 				});
+
+				// small delay to allow UI update/animation before reloading data
+				await new Promise((res) => setTimeout(res, 3000));
 
 				await loadTodayCheckIns({ silent: true });
 
@@ -592,65 +592,62 @@ export default function CheckIn() {
 
 				<View style={styles.contentContainer}>
 					{/* <View style={styles.card}> */}
-						<View style={styles.headerBlock}>
-							<Text style={styles.eyebrow}>Control de asistencia</Text>
-							<Text style={styles.title}>
-								{nextPunchAction?.label || "Jornada completa"}
-							</Text>
-							<Text style={styles.subtitle}>
-								Consulta tus checadas del día y registra tu siguiente
-								movimiento.
-							</Text>
-						</View>
+					<View style={styles.headerBlock}>
+						<Text style={styles.eyebrow}>Control de asistencia</Text>
+						<Text style={styles.title}>
+							{nextPunchAction?.label || "Jornada completa"}
+						</Text>
+						<Text style={styles.subtitle}>
+							Consulta tus checadas del día y registra tu siguiente movimiento.
+						</Text>
+					</View>
 
-						<View style={styles.statusPill}>
-							<View style={styles.statusDot} />
-							<Text style={styles.statusText}>{lastStatus}</Text>
-						</View>
+					<View style={styles.statusPill}>
+						<View style={styles.statusDot} />
+						<Text style={styles.statusText}>{lastStatus}</Text>
+					</View>
 
-						<PunchTable
-							checkIns={todayCheckIns}
-							isLoading={isLoadingCheckIns}
+					<PunchTable checkIns={todayCheckIns} isLoading={isLoadingCheckIns} />
+
+					<View style={styles.actionArea}>
+						<Animated.View
+							pointerEvents="none"
+							style={[
+								styles.pulseRing,
+								{
+									opacity: isDayComplete ? 0 : pulseOpacity,
+									transform: [{ scale: pulseScale }],
+								},
+							]}
 						/>
 
-						<View style={styles.actionArea}>
-							<Animated.View
-								pointerEvents="none"
-								style={[
-									styles.pulseRing,
-									{
-										opacity: isDayComplete ? 0 : pulseOpacity,
-										transform: [{ scale: pulseScale }],
-									},
-								]}
-							/>
+						<TouchableOpacity
+							onPress={handleCheckIn}
+							disabled={isWorking || isLoadingCheckIns || isDayComplete}
+							activeOpacity={0.88}
+							style={[
+								styles.checkButton,
+								(isWorking || isLoadingCheckIns || isDayComplete) &&
+									styles.checkButtonDisabled,
+							]}
+						>
+							<Text style={styles.checkButtonIcon}>
+								{isDayComplete ? "✓" : "↳"}
+							</Text>
+							<Text style={styles.checkButtonText}>
+								{isWorking
+									? "Validando..."
+									: isLoadingCheckIns
+										? "Cargando..."
+										: nextPunchAction?.label || "Completo"}
+							</Text>
+						</TouchableOpacity>
+					</View>
 
-							<TouchableOpacity
-								onPress={handleCheckIn}
-								disabled={isWorking || isLoadingCheckIns || isDayComplete}
-								activeOpacity={0.88}
-								style={[
-									styles.checkButton,
-									(isWorking || isLoadingCheckIns || isDayComplete) &&
-										styles.checkButtonDisabled,
-								]}
-							>
-								<Text style={styles.checkButtonIcon}>
-									{isDayComplete ? "✓" : "↳"}
-								</Text>
-								<Text style={styles.checkButtonText}>
-									{isWorking
-										? "Validando..."
-										: isLoadingCheckIns
-											? "Cargando..."
-											: nextPunchAction?.label || "Completo"}
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						<Text style={styles.footerText}>
-							{isDayComplete ?? "Ya tienes registradas las cuatro checadas del día."}
-						</Text>
+					<Text style={styles.footerText}>
+						{isDayComplete ??
+							"Ya tienes registradas las cuatro checadas del día."}
+					</Text>
 					{/* </View> */}
 				</View>
 
