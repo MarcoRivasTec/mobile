@@ -69,16 +69,16 @@ function Menu({ changeContent, navigation }) {
 			icon: "POLIZAS",
 			onPress: () => changeContent("Polizas"),
 		},
-		menuButtons.denounces && {
-			title: "Línea de Denuncias",
-			icon: "DENUNCIA",
-			onPress: () => changeContent("LineaDenuncia"),
-		},
-		// menuButtons.opinion && {
-		// 	title: "Opiniones",
-		// 	icon: "OPINIONES",
-		// 	onPress: () => changeContent("Opiniones"),
-		// },		
+		// menuButtons.denounces && {
+		// 	title: "Línea de Denuncias",
+		// 	icon: "DENUNCIA",
+		// 	onPress: () => changeContent("LineaDenuncia"),
+		// },
+		menuButtons.opinion && {
+			title: "Opiniones",
+			icon: "OPINIONES",
+			onPress: () => changeContent("Opiniones"),
+		},		
 	].filter(Boolean);
 
 	const rows = [];

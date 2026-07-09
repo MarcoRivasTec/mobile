@@ -1774,7 +1774,7 @@ const opiniones = StyleSheet.create({
 		// borderTopRightRadius: 10,
 		// borderBottomLeftRadius: 10,
 		// borderBottomRightRadius: 10,
-		// backgroundColor: COLORS.flatlistBackground,
+		backgroundColor: COLORS.flatlistBackground,
 		// borderWidth: 1,
 		// borderColor: "black"
 	},
@@ -1884,6 +1884,24 @@ const opiniones = StyleSheet.create({
 		fontWeight: "bold",
 		color: "white",
 	},
+});
+
+const checkin = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	contentContainer: {
+		flex: 19,
+		width: "94%",
+		// marginTop: "2%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
 	card: {
 		width: "92%",
 		minHeight: "78%",
@@ -1960,40 +1978,84 @@ const opiniones = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: "bold",
 		color: COLORS.main,
+		textAlign: "center",
 	},
 
-	infoPanel: {
+	punchTable: {
 		width: "100%",
-		marginTop: 24,
+		marginTop: 26,
 		borderRadius: 20,
 		backgroundColor: "#F7F8FB",
-		paddingHorizontal: 16,
-		paddingVertical: 12,
+		overflow: "hidden",
+		borderWidth: 1,
+		borderColor: "rgba(0, 0, 0, 0.06)",
 	},
 
-	infoRow: {
+	punchHeaderRow: {
 		width: "100%",
-		minHeight: 36,
+		minHeight: 40,
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between",
+		backgroundColor: "rgba(32, 67, 137, 0.08)",
 		borderBottomWidth: 1,
 		borderBottomColor: "rgba(0, 0, 0, 0.06)",
 	},
 
-	infoLabel: {
+	punchHeaderText: {
 		fontFamily: "Montserrat-Regular",
-		fontSize: 12,
-		color: "#6B7280",
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.main,
+		textAlign: "center",
+		textTransform: "uppercase",
 	},
 
-	infoValue: {
+	punchRow: {
+		width: "100%",
+		minHeight: 54,
+		flexDirection: "row",
+		alignItems: "center",
+		borderBottomWidth: 1,
+		borderBottomColor: "rgba(0, 0, 0, 0.05)",
+	},
+
+	punchRoundCell: {
+		width: "22%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	punchCell: {
+		width: "39%",
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 6,
+	},
+
+	punchRoundText: {
+		width: 28,
+		height: 28,
+		borderRadius: 28,
+		backgroundColor: COLORS.main,
+		color: COLORS.white,
 		fontFamily: "Montserrat-Regular",
-		fontSize: 12,
+		fontSize: 13,
+		fontWeight: "bold",
+		textAlign: "center",
+		textAlignVertical: "center",
+		lineHeight: 28,
+	},
+
+	punchTimeText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.black,
-		maxWidth: "55%",
-		textAlign: "right",
+		textAlign: "center",
+	},
+
+	pendingText: {
+		color: "#9CA3AF",
 	},
 
 	successText: {
@@ -2009,7 +2071,7 @@ const opiniones = StyleSheet.create({
 		height: 190,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 28,
+		marginTop: 26,
 	},
 
 	pulseRing: {
@@ -2027,6 +2089,7 @@ const opiniones = StyleSheet.create({
 		backgroundColor: COLORS.main,
 		justifyContent: "center",
 		alignItems: "center",
+		paddingHorizontal: 12,
 
 		shadowColor: "#000",
 		shadowOffset: {
@@ -2052,9 +2115,10 @@ const opiniones = StyleSheet.create({
 
 	checkButtonText: {
 		fontFamily: "Montserrat-Regular",
-		fontSize: 15,
+		fontSize: 14,
 		fontWeight: "bold",
 		color: COLORS.white,
+		textAlign: "center",
 	},
 
 	footerText: {
@@ -2086,4 +2150,5 @@ export {
 	linea,
 	polizas,
 	opiniones,
+	checkin,
 };
