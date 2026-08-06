@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { HomeContext } from "../../../../HomeContext";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
+import { File } from "expo-file-system";
 import Confirm from "../../Design/Confirm";
 import Working from "../../Design/Working";
 
@@ -38,7 +38,8 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 		setIsWorkingModalVisible(true);
 		const response = await sendRequisition({
 			letter: "Domicilio",
-			fileName: fileType === "image/jpeg" ? "image.jpg" : "document.pdf",
+			fileName:
+				fileName || (fileType === "image/jpeg" ? "image.jpg" : "document.pdf"),
 			file: base64file,
 		});
 		setIsWorkingModalVisible(false);
@@ -48,7 +49,7 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 		} else {
 			Alert.alert(
 				"Error",
-				"Hubo un problema con tu solicitud, porfavor intenta de nuevo."
+				"Hubo un problema con tu solicitud, porfavor intenta de nuevo.",
 			);
 		}
 	};
@@ -61,48 +62,78 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 	};
 
 	const pickImage = async () => {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true,
-			quality: 1,
-		});
+		try {
+			const result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ["images"],
+				allowsEditing: true,
+				quality: 1,
+			});
 
-		if (!result.canceled) {
+			if (result.canceled || !result.assets?.length) {
+				return;
+			}
+
 			const image = result.assets[0];
 
-			if (image.uri.endsWith(".jpg") || image.uri.endsWith(".jpeg")) {
-				const base64 = await FileSystem.readAsStringAsync(image.uri, {
-					encoding: FileSystem.EncodingType.Base64,
-				});
-				setBase64File(base64);
-				setFileType("image/jpeg");
-				setPreviewUri(image.uri); // Set image URI for preview
-				setFileName(""); // Clear file name since it's an image
-			} else {
-				alert("Porfavor selecciona una imagen de formato JPEG/JPG.");
+			const isJpeg =
+				image.mimeType === "image/jpeg" ||
+				/\.jpe?g$/i.test(image.fileName ?? "");
+
+			if (!isJpeg) {
+				Alert.alert(
+					"Formato no válido",
+					"Por favor selecciona una imagen JPEG o JPG.",
+				);
+				return;
 			}
+
+			const file = new File(image.uri);
+			const base64 = await file.base64();
+
+			setBase64File(base64);
+			setFileType("image/jpeg");
+			setPreviewUri(image.uri);
+			setFileName(image.fileName ?? "imagen.jpg");
+		} catch (error) {
+			console.error("Error selecting image:", error);
+
+			Alert.alert("Error", "No fue posible leer la imagen seleccionada.");
 		}
 	};
 
 	const pickPdf = async () => {
-		let result = await DocumentPicker.getDocumentAsync({
-			type: "application/pdf",
-		});
+		try {
+			const result = await DocumentPicker.getDocumentAsync({
+				type: "application/pdf",
+				copyToCacheDirectory: true,
+				multiple: false,
+			});
 
-		console.log("Result is: ", JSON.stringify(result, null, 1));
+			if (result.canceled || !result.assets?.length) {
+				return;
+			}
 
-		if (result.assets[0].mimeType === "application/pdf") {
-			const base64 = await FileSystem.readAsStringAsync(
-				result.assets[0].uri,
-				{
-					encoding: FileSystem.EncodingType.Base64,
-				}
-			);
+			const document = result.assets[0];
+
+			if (document.mimeType !== "application/pdf") {
+				Alert.alert(
+					"Formato no válido",
+					"Por favor selecciona un archivo PDF.",
+				);
+				return;
+			}
+
+			const file = new File(document.uri);
+			const base64 = await file.base64();
+
 			setBase64File(base64);
 			setFileType("application/pdf");
-			setFileName(result.assets[0].name); // Set file name for display
-			setPreviewUri(null); // Clear image preview since it's a PDF
-			console.log("PDF file set");
+			setFileName(document.name);
+			setPreviewUri(null);
+		} catch (error) {
+			console.error("Error selecting PDF:", error);
+
+			Alert.alert("Error", "No fue posible leer el documento seleccionado.");
 		}
 	};
 
@@ -128,53 +159,29 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 									{ fontSize: 16, marginTop: 12 },
 								]}
 							>
-								Para actualizar tu dirección deberás subir una
-								imagen o documento PDF de un recibo
+								Para actualizar tu dirección deberás subir una imagen o
+								documento PDF de un recibo
 							</Text>
 
 							{fileType === null && (
 								<View>
-									<View
-										style={
-											modifyDomicilioModal.uploadButtonsContainer
-										}
-									>
-										<View
-											style={
-												modifyDomicilioModal.uploadButtonContainer
-											}
-										>
+									<View style={modifyDomicilioModal.uploadButtonsContainer}>
+										<View style={modifyDomicilioModal.uploadButtonContainer}>
 											<TouchableOpacity
 												onPress={pickImage}
-												style={
-													modifyDomicilioModal.uploadButton
-												}
+												style={modifyDomicilioModal.uploadButton}
 											>
-												<Ionicons
-													name="image-outline"
-													size={40}
-													color="gray"
-												/>
+												<Ionicons name="image-outline" size={40} color="gray" />
 											</TouchableOpacity>
-											<Text
-												style={
-													modifyDomicilioModal.uploadText
-												}
-											>
+											<Text style={modifyDomicilioModal.uploadText}>
 												Imagen
 											</Text>
 										</View>
 
-										<View
-											style={
-												modifyDomicilioModal.uploadButtonContainer
-											}
-										>
+										<View style={modifyDomicilioModal.uploadButtonContainer}>
 											<TouchableOpacity
 												onPress={pickPdf}
-												style={
-													modifyDomicilioModal.uploadButton
-												}
+												style={modifyDomicilioModal.uploadButton}
 											>
 												<Ionicons
 													name="document-text-outline"
@@ -182,45 +189,25 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 													color="gray"
 												/>
 											</TouchableOpacity>
-											<Text
-												style={
-													modifyDomicilioModal.uploadText
-												}
-											>
-												PDF
-											</Text>
+											<Text style={modifyDomicilioModal.uploadText}>PDF</Text>
 										</View>
 									</View>
 								</View>
 							)}
 
 							{fileType === "image/jpeg" && previewUri && (
-								<View
-									style={
-										modifyDomicilioModal.previewContainer
-									}
-								>
+								<View style={modifyDomicilioModal.previewContainer}>
 									<Image
 										resizeMode="contain"
 										source={{ uri: previewUri }}
-										style={
-											modifyDomicilioModal.imagePreview
-										}
+										style={modifyDomicilioModal.imagePreview}
 									/>
 								</View>
 							)}
 
 							{fileType === "application/pdf" && (
-								<View
-									style={
-										modifyDomicilioModal.filePreviewContainer
-									}
-								>
-									<Text
-										style={
-											modifyDomicilioModal.fileNameText
-										}
-									>
+								<View style={modifyDomicilioModal.filePreviewContainer}>
+									<Text style={modifyDomicilioModal.fileNameText}>
 										Archivo seleccionado: {fileName}
 									</Text>
 								</View>
@@ -231,11 +218,7 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 									onPress={resetPick}
 									style={modifyDomicilioModal.resetButton}
 								>
-									<Text
-										style={
-											modifyDomicilioModal.resetButtonText
-										}
-									>
+									<Text style={modifyDomicilioModal.resetButtonText}>
 										Cambiar archivo
 									</Text>
 								</TouchableOpacity>
@@ -247,11 +230,7 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 									onPress={requestChange}
 									style={modifyDomicilioModal.registrarButton}
 								>
-									<Text
-										style={
-											modifyDomicilioModal.registrarButtonText
-										}
-									>
+									<Text style={modifyDomicilioModal.registrarButtonText}>
 										Enviar
 									</Text>
 								</TouchableOpacity>
@@ -260,11 +239,7 @@ function ModifyDomicilioModal({ onCallback, onExit, onRegister }) {
 									onPress={onExit}
 									style={modifyDomicilioModal.exitButton}
 								>
-									<Text
-										style={
-											modifyDomicilioModal.exitButtonText
-										}
-									>
+									<Text style={modifyDomicilioModal.exitButtonText}>
 										Volver
 									</Text>
 								</TouchableOpacity>
