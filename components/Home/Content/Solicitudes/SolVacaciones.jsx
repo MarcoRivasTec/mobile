@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	Modal,
 	View,
@@ -11,6 +11,7 @@ import {
 	InteractionManager,
 } from "react-native";
 import DatePicker from "react-native-date-picker";
+
 import { solVacaciones } from "./styles";
 import Icon from "../../icons";
 import COLORS from "../../../../constants/colors";
@@ -21,12 +22,46 @@ import { HomeContext } from "../../../HomeContext";
 import { AppContext } from "../../../AppContext";
 import Working from "../Design/Working";
 
+const REQUEST_TYPE = {
+	PERMISO: 1,
+	VACACIONES: 2,
+};
+
+function toDateOnlyString(date) {
+	const year = date.getFullYear();
+	const month = `${date.getMonth() + 1}`.padStart(2, "0");
+	const day = `${date.getDate()}`.padStart(2, "0");
+
+	return `${year}-${month}-${day}`;
+}
+
+function calculateInclusiveDays(startDate, endDate) {
+	const start = new Date(startDate);
+	const end = new Date(endDate);
+
+	start.setHours(0, 0, 0, 0);
+	end.setHours(0, 0, 0, 0);
+
+	const diffMs = end.getTime() - start.getTime();
+	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+	return diffDays + 1;
+}
+
+function formatDateString(date) {
+	const day = date.getDate();
+	const month = date.getMonth() + 1;
+	const year = date.getFullYear();
+
+	return `${day}/${month}/${year}`;
+}
+
 function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 	const { numEmp, region } = useContext(AppContext);
-	const { sendRequisition } = useContext(HomeContext);
+	const { accessToken } = useContext(HomeContext);
+
 	const today = new Date();
-	let tomorrow = new Date();
-	tomorrow.setDate(tomorrow.getDate() + 1);
+
 	const [diasVacs, setDiasVacs] = useState({
 		ganados: 0,
 		tomados: 0,
@@ -35,180 +70,141 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 
 	const [comment, setComment] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+
 	const [startDate, setStartDate] = useState(today);
 	const [openStartDate, setOpenStartDate] = useState(false);
 
-	const [endDate, setEndDate] = useState(tomorrow);
+	const [endDate, setEndDate] = useState(today);
 	const [openEndDate, setOpenEndDate] = useState(false);
 
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
 
 	useEffect(() => {
-		setIsLoading(true);
-		const query = {
-			query: `query Vacaciones($numEmp: String!, $region: String!){
-				Vacaciones(numEmp: $numEmp, region: $region) {
-					diasvacs {
-						ganados
-						tomados
-						disponibles
-					}
-				}
-			}`,
-			variables: {
-				numEmp: numEmp,
-				region: region,
-			},
-		};
-		const fetchData = async () => {
+		const fetchVacationDays = async () => {
 			try {
-				const data = await fetchPost({ query });
-				console.log(
-					"Response data at vacaciones:",
-					data.data.Vacaciones.diasvacs
-				);
-				if (data.data.Vacaciones) {
+				setIsLoading(true);
+
+				const query = {
+					query: `query Vacaciones($numEmp: String!, $region: String!) {
+						Vacaciones(numEmp: $numEmp, region: $region) {
+							diasvacs {
+								ganados
+								tomados
+								disponibles
+							}
+						}
+					}`,
+					variables: {
+						numEmp,
+						region,
+					},
+				};
+
+				const data = await fetchPost({ query, token: accessToken });
+
+				if (data?.data?.Vacaciones?.diasvacs) {
 					setDiasVacs(data.data.Vacaciones.diasvacs);
 				} else {
 					console.warn("Error retrieving vacaciones information");
 				}
 			} catch (error) {
 				console.error("Error at vacaciones:", error);
+			} finally {
+				setIsLoading(false);
 			}
 		};
-		fetchData();
-		setIsLoading(false); // Set loading to false after data is fetched
-		console.log(diasVacs);
-	}, []);
+
+		fetchVacationDays();
+	}, [numEmp, region]);
 
 	function confirmationModalHandler() {
-		setConfirmationVisible(!ConfirmationVisible);
-	}
-
-	function formatDateString(date) {
-		const day = date.getDate();
-		const month = date.getMonth() + 1;
-		const year = date.getFullYear();
-
-		return `${day}/${month}/${year}`;
+		setConfirmationVisible((current) => !current);
 	}
 
 	const requestVacaciones = async () => {
-		// if (diasVacs.disponibles <= 0) {
-		// 	Alert.alert("Error", "No tienes días disponibles para vacaciones");
-		// 	return;
-		// }
 		if (endDate < startDate) {
 			Alert.alert("Error", "La fecha final no puede ser anterior a la inicial");
 			return;
 		}
-		// if (endDate + 1 - startDate > diasVacs.disponibles) {
+
+		const totalDays = calculateInclusiveDays(startDate, endDate);
+
+		if (totalDays <= 0) {
+			Alert.alert("Error", "El número de días debe ser mayor a 0");
+			return;
+		}
+
+		// Uncomment this again when you want to enforce vacation balance.
+		// if (diasVacs.disponibles <= 0) {
+		// 	Alert.alert("Error", "No tienes días disponibles para vacaciones");
+		// 	return;
+		// }
+		//
+		// if (totalDays > diasVacs.disponibles) {
 		// 	Alert.alert(
 		// 		"Error",
 		// 		"El periodo seleccionado excede los días disponibles"
 		// 	);
 		// 	return;
 		// }
+
 		setIsWorkingModalVisible(true);
-		if (region === "None") {
-			// New method
-			// console.warn("Amx user, using new method");
-			// console.log("Date: ", startDate.toISOString().split("T")[0]);
-			try {
-				const mutation = {
-					query: `mutation sendAbsenceRequest($input: RequestAbsenceInput!) {
-                            requestAbsence(input: $input) {
-                                success
-                                message
-                            }
-                }`,
-					variables: {
-						input: {
-							numEmp: numEmp, // Employee number
-							region: region,
-							type: "VAC",
-							start_date: startDate.toISOString().split("T")[0],
-							end_date: endDate.toISOString().split("T")[0],
-							days: endDate.getDate() - startDate.getDate(),
-							...(comment && comment.trim() !== "" && { coment: comment }),
-						},
+
+		try {
+			const mutation = {
+				query: `mutation SendAbsenceRequest($input: RequestAbsenceInput!) {
+					requestAbsence(input: $input) {
+						success
+						message
+					}
+				}`,
+				variables: {
+					input: {
+						type: REQUEST_TYPE.VACACIONES,
+						start_date: toDateOnlyString(startDate),
+						end_date: toDateOnlyString(endDate),
+						days: totalDays,
+						...(comment.trim() !== "" && {
+							comment: comment.trim(),
+						}),
 					},
-				};
-				console.log("Mutation for requestAbsence:", mutation);
-
-				// Send the mutation
-				console.log(
-					"Variables for query are: ",
-					JSON.stringify(mutation.variables, null, 1)
-				);
-				const response = await fetchPost({ query: mutation });
-				// console.log("Survey submission response:", response);
-
-				setTimeout(() => {
-					InteractionManager.runAfterInteractions(() => {
-						setIsWorkingModalVisible(false);
-						if (
-							response.data.requestAbsence &&
-							response.data.requestAbsence.success
-						) {
-							confirmationModalHandler();
-						} else {
-							Alert.alert(
-								"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo."
-							);
-							console.error(response.data.requestAbsence.message);
-						}
-					});
-				}, 100);
-
-				// if (
-				// 	response.data.requestAbsence &&
-				// 	response.data.requestAbsence.success
-				// ) {
-				// 	confirmationModalHandler();
-				// } else {
-				// 	alert(
-				// 		"Error al enviar la solicitud: " +
-				// 			response.data.requestAbsence.message
-				// 	);
-				// }
-			} catch (error) {
-				console.error("Error requesting absence:", error);
-				alert(
-					"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo."
-				);
-			}
-			setIsWorkingModalVisible(false);
-		} else {
-			// Actual method
-			const requisitionData = {
-				letter: "Vacaciones",
-				startDate: startDate,
-				endDate: endDate,
-				days: endDate.getDate() - startDate.getDate(),
+				},
 			};
 
-			if (comment !== "") {
-				requisitionData.coment = comment;
-			}
-			const response = await sendRequisition(requisitionData);
-			// console.log("Response requestGafete: ", response);
+			console.log(
+				"Variables for requestAbsence:",
+				JSON.stringify(mutation.variables, null, 1),
+			);
+
+			const response = await fetchPost({
+				query: mutation,
+				token: accessToken,
+			});
 
 			setTimeout(() => {
 				InteractionManager.runAfterInteractions(() => {
 					setIsWorkingModalVisible(false);
-					if (response === "Done") {
+
+					if (response?.data?.requestAbsence?.success) {
 						confirmationModalHandler();
 					} else {
-						// setIsWorkingModalVisible(false);
 						Alert.alert(
 							"Error",
-							"Hubo un problema con tu solicitud, intenta de nuevo en 1 minuto"
+							response?.data?.requestAbsence?.message ||
+								"Ocurrió un error al enviar la solicitud.",
 						);
 					}
 				});
 			}, 100);
+		} catch (error) {
+			console.error("Error requesting vacation absence:", error);
+			setIsWorkingModalVisible(false);
+
+			Alert.alert(
+				"Error",
+				"Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo.",
+			);
 		}
 	};
 
@@ -229,16 +225,13 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 								</View>
 							) : (
 								<View style={solVacaciones.contentContainer}>
-									{/* Title */}
 									<View style={solVacaciones.titleContainer}>
 										<Text style={solVacaciones.titleText}>
 											Solicitud de Vacaciones
 										</Text>
 									</View>
 
-									{/* Cantidades */}
 									<View style={solVacaciones.cantidadContainer}>
-										{/* Dias derecho */}
 										<TouchableOpacity
 											style={solVacaciones.cantidadElementContainer}
 										>
@@ -249,11 +242,11 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 											</View>
 											<View style={solVacaciones.cantidadBox}>
 												<Text style={solVacaciones.cantidad}>
-													{diasVacs.ganados.toFixed(2)}
+													{Number(diasVacs.ganados || 0).toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
-										{/* Dias pagados */}
+
 										<TouchableOpacity
 											style={[
 												solVacaciones.cantidadElementContainer,
@@ -269,11 +262,11 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 											</View>
 											<View style={solVacaciones.cantidadBox}>
 												<Text style={solVacaciones.cantidad}>
-													{diasVacs.tomados.toFixed(2)}
+													{Number(diasVacs.tomados || 0).toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
-										{/* Saldo actual */}
+
 										<TouchableOpacity
 											style={solVacaciones.cantidadElementContainer}
 										>
@@ -284,23 +277,20 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 											</View>
 											<View style={solVacaciones.cantidadBox}>
 												<Text style={solVacaciones.cantidad}>
-													{diasVacs.disponibles.toFixed(2)}
+													{Number(diasVacs.disponibles || 0).toFixed(2)}
 												</Text>
 											</View>
 										</TouchableOpacity>
 									</View>
 
-									{/* Fechas */}
 									<View style={solVacaciones.fechasContainer}>
-										{/* Fecha inicio */}
 										<View style={solVacaciones.fechaContainer}>
-											{/* Fecha title */}
 											<View style={solVacaciones.fechaTitleContainer}>
 												<Text style={solVacaciones.fechaTitle}>
 													Fecha Inicio
 												</Text>
 											</View>
-											{/* Fecha button */}
+
 											<View style={solVacaciones.fechaDateContainer}>
 												<TouchableOpacity
 													onPress={() => setOpenStartDate(true)}
@@ -316,6 +306,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														style={solVacaciones.icon}
 													/>
 												</TouchableOpacity>
+
 												<DatePicker
 													modal
 													title="Selecciona fecha inicial"
@@ -325,10 +316,13 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 													locale="es"
 													open={openStartDate}
 													date={startDate}
-													// minimumDate={today}
-													onConfirm={(startDate) => {
+													onConfirm={(selectedStartDate) => {
 														setOpenStartDate(false);
-														setStartDate(startDate);
+														setStartDate(selectedStartDate);
+
+														if (endDate < selectedStartDate) {
+															setEndDate(selectedStartDate);
+														}
 													}}
 													onCancel={() => {
 														setOpenStartDate(false);
@@ -336,32 +330,36 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 												/>
 											</View>
 										</View>
-										{/* Dias Container */}
+
 										<View style={solVacaciones.diasContainer}>
 											<View style={solVacaciones.fechaTitleContainer}>
 												<Text style={solVacaciones.fechaTitle}>Días</Text>
 											</View>
+
 											<View style={solVacaciones.diasBottomContainer}>
 												<View style={solVacaciones.diasSeparatorContainer}>
 													<Text style={solVacaciones.diasSeparator}>→</Text>
 												</View>
+
 												<View style={solVacaciones.diasTextContainer}>
 													<Text style={solVacaciones.diasText}>
-														{endDate.getDate() - startDate.getDate()}
+														{calculateInclusiveDays(startDate, endDate)}
 													</Text>
 												</View>
+
 												<View style={solVacaciones.diasSeparatorContainer}>
 													<Text style={solVacaciones.diasSeparator}>→</Text>
 												</View>
 											</View>
 										</View>
-										{/* Fecha Regreso */}
+
 										<View style={solVacaciones.fechaContainer}>
 											<View style={solVacaciones.fechaTitleContainer}>
 												<Text style={solVacaciones.fechaTitle}>
-													Fecha Regreso
+													Fecha Final
 												</Text>
 											</View>
+
 											<View style={solVacaciones.fechaDateContainer}>
 												<TouchableOpacity
 													onPress={() => setOpenEndDate(true)}
@@ -377,6 +375,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 														style={solVacaciones.icon}
 													/>
 												</TouchableOpacity>
+
 												<DatePicker
 													modal
 													title="Selecciona fecha final"
@@ -386,10 +385,10 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 													locale="es"
 													open={openEndDate}
 													date={endDate}
-													// minimumDate={tomorrow}
-													onConfirm={(endDate) => {
+													minimumDate={startDate}
+													onConfirm={(selectedEndDate) => {
 														setOpenEndDate(false);
-														setEndDate(endDate);
+														setEndDate(selectedEndDate);
 													}}
 													onCancel={() => {
 														setOpenEndDate(false);
@@ -399,23 +398,22 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 										</View>
 									</View>
 
-									{/* Comentarios */}
 									<View style={solVacaciones.comentariosContainer}>
 										<Text style={solVacaciones.comentariosTitle}>
 											Comentario
 										</Text>
+
 										<TextInput
 											placeholder="Tu comentario aquí ..."
 											placeholderTextColor="gray"
 											style={solVacaciones.comentariosText}
-											maxLength={255}
+											maxLength={200}
 											multiline={true}
 											value={comment}
 											onChangeText={(text) => setComment(text)}
-										></TextInput>
+										/>
 									</View>
 
-									{/* Back button */}
 									<View style={solVacaciones.buttonsContainer}>
 										<TouchableOpacity
 											onPress={requestVacaciones}
@@ -433,6 +431,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 												{diasVacs.disponibles <= 0 ? "Sin días" : "Solicitar"}
 											</Text>
 										</TouchableOpacity>
+
 										<TouchableOpacity
 											onPress={onExit}
 											style={[
@@ -447,6 +446,7 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									</View>
 								</View>
 							)}
+
 							{ConfirmationVisible && (
 								<Confirm
 									isModalVisible={ConfirmationVisible}
@@ -454,11 +454,10 @@ function SolVacaciones({ onCallback, isVacModalVisible, onExit }) {
 									onExit={confirmationModalHandler}
 									closeModal={onExit}
 									customTitle="Tu solicitud se ha registrado correctamente"
-									customText={
-										"Contacta con tu departamento de RH para confirmarla."
-									}
+									customText="Contacta con tu departamento de RH para confirmarla."
 								/>
 							)}
+
 							{isWorkingModalVisible && (
 								<Working isModalVisible={isWorkingModalVisible} />
 							)}

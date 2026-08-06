@@ -1071,31 +1071,230 @@ const solicitudes = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: "100%",
-		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: "#F2F2F2",
 	},
+
+	contentContainer: {
+		width: "100%",
+		alignItems: "center",
+		paddingBottom: 24,
+	},
+
 	sectionContainer: {
-		flex: 19,
-		width: "100%",
-		justifyContent: "flex-start",
-		alignItems: "center",
+		width: "94%",
+		backgroundColor: "white",
+		borderRadius: 12,
+		paddingHorizontal: 14,
+		paddingVertical: 14,
+		marginTop: 14,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.08,
+		shadowRadius: 4,
+		elevation: 2,
 	},
+
 	sectionTitleContainer: {
-		height: "10%",
 		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		paddingLeft: "4%",
+		marginBottom: 12,
 	},
+
+	sectionTitle: {
+		fontSize: 22,
+		fontWeight: "bold",
+		color: "#222",
+	},
+
+	sectionSubtitle: {
+		marginTop: 4,
+		fontSize: 13,
+		color: "#666",
+		lineHeight: 18,
+	},
+
 	sectionButtonContainer: {
-		// height: "15%",
-		flex: 1,
-		width: "80%",
-		// top: "6%",
-		marginVertical: "5%",
-		// flexDirection: "row",
-		justifyContent: "space-around",
+		width: "100%",
+		marginBottom: 14,
+		justifyContent: "center",
 		alignItems: "center",
+		flexDirection: "row",		
+	},
+
+	buttonContainer: {
+		width: "48%",
+	},
+
+	listHeaderContainer: {
+		width: "100%",
+		marginTop: 4,
+		marginBottom: 8,
+	},
+
+	listTitle: {
+		fontSize: 17,
+		fontWeight: "700",
+		color: "#333",
+	},
+
+	loadingContainer: {
+		width: "100%",
+		minHeight: 110,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	emptyContainer: {
+		width: "100%",
+		paddingVertical: 18,
+		paddingHorizontal: 12,
+		borderRadius: 10,
+		backgroundColor: "#F4F4F4",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	emptyText: {
+		fontSize: 14,
+		color: "#666",
+		textAlign: "center",
+	},
+
+	requestCard: {
+		width: "100%",
+		borderRadius: 10,
+		backgroundColor: "#F8F8F8",
+		padding: 12,
+		marginBottom: 10,
+		borderWidth: 1,
+		borderColor: "#E8E8E8",
+	},
+
+	requestCardHeader: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "flex-start",
+		marginBottom: 10,
+	},
+
+	requestTitleContainer: {
+		flex: 1,
+		paddingRight: 8,
+	},
+
+	requestTypeText: {
+		fontSize: 16,
+		fontWeight: "700",
+		color: "#222",
+	},
+
+	employeeNameText: {
+		marginTop: 2,
+		fontSize: 13,
+		color: "#555",
+	},
+
+	statusPill: {
+		borderRadius: 999,
+		paddingHorizontal: 10,
+		paddingVertical: 5,
+		minWidth: 82,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	statusPillText: {
+		fontSize: 12,
+		fontWeight: "700",
+		color: "white",
+	},
+
+	requestInfoRow: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 4,
+	},
+
+	requestInfoLabel: {
+		fontSize: 13,
+		color: "#666",
+		fontWeight: "600",
+	},
+
+	requestInfoValue: {
+		flex: 1,
+		marginLeft: 10,
+		fontSize: 13,
+		color: "#222",
+		fontWeight: "500",
+		textAlign: "right",
+	},
+
+	commentContainer: {
+		width: "100%",
+		marginTop: 10,
+		paddingTop: 8,
+		borderTopWidth: 1,
+		borderTopColor: "#E0E0E0",
+	},
+
+	commentLabel: {
+		fontSize: 12,
+		color: "#666",
+		fontWeight: "700",
+		marginBottom: 2,
+	},
+
+	commentText: {
+		fontSize: 13,
+		color: "#333",
+		lineHeight: 18,
+	},
+
+	cardActionsContainer: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "flex-end",
+		alignItems: "center",
+		marginTop: 12,
+		gap: 8,
+	},
+
+	cardActionButton: {
+		minWidth: 105,
+		borderRadius: 8,
+		paddingVertical: 9,
+		paddingHorizontal: 12,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	cardActionButtonText: {
+		fontSize: 13,
+		fontWeight: "700",
+		color: "white",
+	},
+
+	approveButton: {
+		backgroundColor: "#22A06B",
+	},
+
+	rejectButton: {
+		backgroundColor: "#D64545",
+	},
+
+	cancelButton: {
+		backgroundColor: "#D64545",
+	},
+
+	disabledButton: {
+		opacity: 0.55,
 	},
 });
 

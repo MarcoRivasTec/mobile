@@ -17,7 +17,7 @@ function Reposiciones() {
 	const tarjetasRequisition = ({ type, repMotive = null, folio = null }) => {
 		return sendRequisition({
 			letter: type,
-			repMotive: repMotive,
+			motive: repMotive,
 			fileName: folio,
 		});
 	};
