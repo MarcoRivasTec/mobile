@@ -1,102 +1,103 @@
 {
-	"expo": {
-		"name": "TECMA Móvil Connect",
-		"slug": "tecma-movil-connect",
-		"version": "1.1.5",
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
-		"splash": {
-			"image": "./assets/icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"assetBundlePatterns": ["**/*"],
-		"ios": {
-			"buildNumber": "15",
-			"supportsTablet": true,
-			"bundleIdentifier": "com.tecma.TecmaMovilConnect",
-			"infoPlist": {
-				"CFBundleDisplayName": "TECMA Móvil Connect",
-				"NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
-				"NSAppTransportSecurity": {
-					"NSAllowsArbitraryLoads": true
-				},
-				"NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
-				"NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save badge images to your photo library."
-			}
-		},
-		"android": {
-			"versionCode": 15,
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			},
-			"package": "com.tecma.movilconnect",
-			"softwareKeyboardLayoutMode": "pan",
-			"name": "TECMA Móvil Connect",
-			"permissions": [
-				"android.permission.ACCESS_COARSE_LOCATION",
-				"android.permission.ACCESS_FINE_LOCATION"
-			],
-
-			"blockedPermissions": [
-				"android.permission.READ_MEDIA_IMAGES",
-				"android.permission.READ_MEDIA_VIDEO",
-				"android.permission.READ_MEDIA_AUDIO",
-				"android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
-				"android.permission.READ_EXTERNAL_STORAGE",
-				"android.permission.WRITE_EXTERNAL_STORAGE"
-			]
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
-		},
-		"extra": {
-			"eas": {
-				"projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
-			}
-		},
-		"plugins": [
-			[
-				"expo-build-properties",
-				{
-					"android": {
-						"usesCleartextTraffic": true,
-						"compileSdkVersion": 36,
-						"targetSdkVersion": 36
-					},
-					"ios": {
-						"infoPlist": {
-							"NSAppTransportSecurity": {
-								"NSAllowsArbitraryLoads": true
-							},
-							"NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
-						}
-					}
-				}
-			],
-			[
-				"expo-location",
-				{
-					"locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
-				}
-			],
-			[
-				"expo-media-library",
-				{
-					"photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-					"savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
-				}
-			],
-			[
-				"expo-image-picker",
-				{
-					"photosPermission": "Permite seleccionar una imagen para adjuntarla a tu solicitud.",
-					"cameraPermission": false,
-					"microphonePermission": false
-				}
-			]
-		]
-	}
+  "expo": {
+    "name": "TECMA Móvil Connect",
+    "slug": "tecma-movil-connect",
+    "version": "1.1.5",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "buildNumber": "16",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tecma.TecmaMovilConnect",
+      "infoPlist": {
+        "CFBundleDisplayName": "TECMA Móvil Connect",
+        "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save badge images to your photo library."
+      }
+    },
+    "android": {
+      "versionCode": 16,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.tecma.movilconnect",
+      "softwareKeyboardLayoutMode": "pan",
+      "name": "TECMA Móvil Connect",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_AUDIO",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "153d2bce-f72c-4eef-a175-4f73275e17c6"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true,
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36
+          },
+          "ios": {
+            "infoPlist": {
+              "NSAppTransportSecurity": {
+                "NSAllowsArbitraryLoads": true
+              },
+              "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos so you can download badge data."
+            }
+          }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow ${appName} to access your location even when the app is in the background."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permite seleccionar una imagen para adjuntarla a tu solicitud.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ]
+  }
 }
