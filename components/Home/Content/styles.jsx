@@ -2,22 +2,52 @@ import { StyleSheet } from "react-native";
 import COLORS from "../../../constants/colors";
 
 const menu = StyleSheet.create({
-	// Menu / Buttons properties
 	container: {
 		flex: 1,
-		// height: "100%",
+		width: "100%",
+		position: "relative",
+	},
+
+	page: {
+		width: "100%",
+		paddingHorizontal: "1%",
+		justifyContent: "flex-start",
+	},
+
+	row: {
+		width: "100%",
+		flexDirection: "row",
+		alignItems: "center",
+	},
+
+	buttonSlot: {
+		width: "33.333333%",
+		height: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	pagination: {
+		position: "absolute",
+		bottom: 3,
+		left: 0,
+		right: 0,
+		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		width: "90%",
-		marginTop: "2%",
-		// borderWidth: 1,
 	},
-	row: {
-		// flex: 1,
-		flexDirection: "row",
-		// justifyContent: "space-around",
-		alignItems: "center",
-		// borderWidth: 1,
+
+	paginationDot: {
+		width: 6,
+		height: 6,
+		borderRadius: 3,
+		marginHorizontal: 3,
+		backgroundColor: "#C6C6C6",
+	},
+
+	paginationDotActive: {
+		width: 16,
+		backgroundColor: COLORS.main,
 	},
 });
 
@@ -1121,7 +1151,7 @@ const solicitudes = StyleSheet.create({
 		marginBottom: 14,
 		justifyContent: "center",
 		alignItems: "center",
-		flexDirection: "row",		
+		flexDirection: "row",
 	},
 
 	buttonContainer: {
