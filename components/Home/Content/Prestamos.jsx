@@ -24,7 +24,7 @@ import { DateTime } from "luxon";
 import ConfirmActionModal from "./Design/ConfirmAction";
 
 function Prestamos({ changeContent }) {
-	const { accessToken } = useContext(HomeContext);
+	const { accessToken, proyecto } = useContext(HomeContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 	const [isWorkingModalVisible, setIsWorkingModalVisible] = useState(false);
@@ -52,7 +52,7 @@ function Prestamos({ changeContent }) {
 	const formatSpanishDate = (dateString) => {
 		if (!dateString) return "";
 
-		const dt = DateTime.fromISO(dateString, {setZone: true});
+		const dt = DateTime.fromISO(dateString, { setZone: true });
 
 		if (!dt.isValid) {
 			console.log("Invalid date received: ", dateString);
@@ -431,10 +431,10 @@ function Prestamos({ changeContent }) {
 										</Text>
 										{/* </View> */}
 
-										<Text 
+										<Text
 											numberOfLines={1}
 											adjustsFontSizeToFit
-											minimumFontScale={0.7} 
+											minimumFontScale={0.7}
 											style={prestamos.cycleDates}
 										>
 											{formatSpanishDate(loanData?.cycle?.startDate)}
@@ -517,7 +517,7 @@ function Prestamos({ changeContent }) {
 											},
 										]}
 									>
-										(Máximo 90%)
+										(Máximo {proyecto === "H79" ? "90%" : "100%"})
 									</Text>
 								</View>
 								{/* <View
