@@ -29,6 +29,7 @@ export const HomeProvider = ({ children }) => {
 	});
 
 	const [menuButtons, setMenuButtons] = useState({
+		checkin: false,
 		badge: false,
 		payroll: false,
 		prepayroll: false,

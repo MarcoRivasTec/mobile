@@ -1,9 +1,9 @@
 import { API_ENDPOINT } from "@env";
 
 const fetchPost = async ({ query, token = null }) => {
-	// console.log("Query is: ", JSON.stringify(query, null, 1));
-	console.log("API endpoint is: ", `${API_ENDPOINT}`);
-	console.log("Token is: ", `${token}`);
+	// console.log("fetching ... Query is: ", JSON.stringify(query, null, 1));
+	// console.log("API endpoint is: ", `${API_ENDPOINT}`);
+	// console.log("Token is: ", `${token}`);
 	try {
 		// console.log("Fetching...")
 		const response = await fetch(API_ENDPOINT, {

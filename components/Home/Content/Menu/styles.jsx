@@ -2,59 +2,63 @@ import { StyleSheet } from "react-native";
 import COLORS from "../../../../constants/colors";
 
 const sectionButton = StyleSheet.create({
-	// Menu / Buttons properties
+	/*
+	 * The parent buttonSlot controls the column width.
+	 * SectionButton fills that slot completely.
+	 */
 	animatedContainer: {
-		// borderRadius: 25,
+		width: "100%",
 		height: "100%",
-		width: "32%",
-		marginHorizontal: "1%",
+		alignItems: "center",
+		justifyContent: "center",
 	},
+
+	/*
+	 * 92% leaves an equal space between columns.
+	 * Increase to 94% for slightly wider buttons.
+	 */
 	shadowedView: {
+		width: "92%",
+		height: "100%",
+		alignSelf: "center",
 		backgroundColor: COLORS.main,
 		borderRadius: 25,
-		marginHorizontal: "1%",
-		// marginVertical: "2%",
-		// borderRadius: 10,
-		overflow: "hidden",
-		shadowOffset: { width: 2, height: 4 }, // X: 0, Y: 4
+		shadowOffset: {
+			width: 2,
+			height: 4,
+		},
 		shadowOpacity: 0.4,
 		shadowRadius: 5,
 	},
-	// button: {
-	// 	// flex: 1,
-	// 	backgroundColor: COLORS.main,
-	// 	borderRadius: 25,
-	// 	height: "100%",
-	// 	width: "32%",
-	// 	marginHorizontal: "1%",
-	// 	marginVertical: "2%",
-	// 	justifyContent: "center",
-	// 	alignItems: "center",
-	// },
+
 	button: {
-		// flex: 1,
-		height: "100%",
+		flex: 1,
 		width: "100%",
+		backgroundColor: COLORS.main,
+		borderRadius: 25,
+		overflow: "hidden",
 		justifyContent: "center",
 		alignItems: "center",
 	},
+
 	content: {
-		height: "100%",
+		flex: 1,
 		width: "90%",
+		paddingVertical: 8,
 		justifyContent: "center",
 		alignItems: "center",
-		alignContent: "center",
-		// borderWidth: 1,
 	},
+
 	iconContainer: {
-		marginTop: "10%",
 		justifyContent: "center",
 		alignItems: "center",
 	},
+
 	text: {
-		marginTop: "5%",
+		marginTop: 7,
 		textAlign: "center",
 		fontSize: 11,
+		lineHeight: 14,
 		color: COLORS.white,
 		fontWeight: "bold",
 	},

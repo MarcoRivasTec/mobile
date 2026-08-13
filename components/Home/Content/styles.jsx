@@ -2,22 +2,52 @@ import { StyleSheet } from "react-native";
 import COLORS from "../../../constants/colors";
 
 const menu = StyleSheet.create({
-	// Menu / Buttons properties
 	container: {
 		flex: 1,
-		// height: "100%",
+		width: "100%",
+		position: "relative",
+	},
+
+	page: {
+		width: "100%",
+		paddingHorizontal: "1%",
+		justifyContent: "flex-start",
+	},
+
+	row: {
+		width: "100%",
+		flexDirection: "row",
+		alignItems: "center",
+	},
+
+	buttonSlot: {
+		width: "33.333333%",
+		height: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	pagination: {
+		position: "absolute",
+		bottom: 3,
+		left: 0,
+		right: 0,
+		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		width: "90%",
-		marginTop: "2%",
-		// borderWidth: 1,
 	},
-	row: {
-		// flex: 1,
-		flexDirection: "row",
-		// justifyContent: "space-around",
-		alignItems: "center",
-		// borderWidth: 1,
+
+	paginationDot: {
+		width: 6,
+		height: 6,
+		borderRadius: 3,
+		marginHorizontal: 3,
+		backgroundColor: "#C6C6C6",
+	},
+
+	paginationDotActive: {
+		width: 16,
+		backgroundColor: COLORS.main,
 	},
 });
 
@@ -1071,31 +1101,230 @@ const solicitudes = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: "100%",
-		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: "#F2F2F2",
 	},
+
+	contentContainer: {
+		width: "100%",
+		alignItems: "center",
+		paddingBottom: 24,
+	},
+
 	sectionContainer: {
-		flex: 19,
-		width: "100%",
-		justifyContent: "flex-start",
-		alignItems: "center",
+		width: "94%",
+		backgroundColor: "white",
+		borderRadius: 12,
+		paddingHorizontal: 14,
+		paddingVertical: 14,
+		marginTop: 14,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.08,
+		shadowRadius: 4,
+		elevation: 2,
 	},
+
 	sectionTitleContainer: {
-		height: "10%",
 		width: "100%",
-		justifyContent: "center",
-		alignItems: "flex-start",
-		paddingLeft: "4%",
+		marginBottom: 12,
 	},
+
+	sectionTitle: {
+		fontSize: 22,
+		fontWeight: "bold",
+		color: "#222",
+	},
+
+	sectionSubtitle: {
+		marginTop: 4,
+		fontSize: 13,
+		color: "#666",
+		lineHeight: 18,
+	},
+
 	sectionButtonContainer: {
-		// height: "15%",
-		flex: 1,
-		width: "80%",
-		// top: "6%",
-		marginVertical: "5%",
-		// flexDirection: "row",
-		justifyContent: "space-around",
+		width: "100%",
+		marginBottom: 14,
+		justifyContent: "center",
 		alignItems: "center",
+		flexDirection: "row",
+	},
+
+	buttonContainer: {
+		width: "48%",
+	},
+
+	listHeaderContainer: {
+		width: "100%",
+		marginTop: 4,
+		marginBottom: 8,
+	},
+
+	listTitle: {
+		fontSize: 17,
+		fontWeight: "700",
+		color: "#333",
+	},
+
+	loadingContainer: {
+		width: "100%",
+		minHeight: 110,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	emptyContainer: {
+		width: "100%",
+		paddingVertical: 18,
+		paddingHorizontal: 12,
+		borderRadius: 10,
+		backgroundColor: "#F4F4F4",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	emptyText: {
+		fontSize: 14,
+		color: "#666",
+		textAlign: "center",
+	},
+
+	requestCard: {
+		width: "100%",
+		borderRadius: 10,
+		backgroundColor: "#F8F8F8",
+		padding: 12,
+		marginBottom: 10,
+		borderWidth: 1,
+		borderColor: "#E8E8E8",
+	},
+
+	requestCardHeader: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "flex-start",
+		marginBottom: 10,
+	},
+
+	requestTitleContainer: {
+		flex: 1,
+		paddingRight: 8,
+	},
+
+	requestTypeText: {
+		fontSize: 16,
+		fontWeight: "700",
+		color: "#222",
+	},
+
+	employeeNameText: {
+		marginTop: 2,
+		fontSize: 13,
+		color: "#555",
+	},
+
+	statusPill: {
+		borderRadius: 999,
+		paddingHorizontal: 10,
+		paddingVertical: 5,
+		minWidth: 82,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	statusPillText: {
+		fontSize: 12,
+		fontWeight: "700",
+		color: "white",
+	},
+
+	requestInfoRow: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 4,
+	},
+
+	requestInfoLabel: {
+		fontSize: 13,
+		color: "#666",
+		fontWeight: "600",
+	},
+
+	requestInfoValue: {
+		flex: 1,
+		marginLeft: 10,
+		fontSize: 13,
+		color: "#222",
+		fontWeight: "500",
+		textAlign: "right",
+	},
+
+	commentContainer: {
+		width: "100%",
+		marginTop: 10,
+		paddingTop: 8,
+		borderTopWidth: 1,
+		borderTopColor: "#E0E0E0",
+	},
+
+	commentLabel: {
+		fontSize: 12,
+		color: "#666",
+		fontWeight: "700",
+		marginBottom: 2,
+	},
+
+	commentText: {
+		fontSize: 13,
+		color: "#333",
+		lineHeight: 18,
+	},
+
+	cardActionsContainer: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "flex-end",
+		alignItems: "center",
+		marginTop: 12,
+		gap: 8,
+	},
+
+	cardActionButton: {
+		minWidth: 105,
+		borderRadius: 8,
+		paddingVertical: 9,
+		paddingHorizontal: 12,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	cardActionButtonText: {
+		fontSize: 13,
+		fontWeight: "700",
+		color: "white",
+	},
+
+	approveButton: {
+		backgroundColor: "#22A06B",
+	},
+
+	rejectButton: {
+		backgroundColor: "#D64545",
+	},
+
+	cancelButton: {
+		backgroundColor: "#D64545",
+	},
+
+	disabledButton: {
+		opacity: 0.55,
 	},
 });
 
@@ -1886,6 +2115,289 @@ const opiniones = StyleSheet.create({
 	},
 });
 
+const checkin = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		// borderWidth: 1
+	},
+
+	contentContainer: {
+		flex: 19,
+		width: "94%",
+		alignItems: "center",
+		justifyContent: "flex-start",
+	},
+
+	card: {
+		width: "92%",
+		minHeight: "78%",
+		borderRadius: 26,
+		backgroundColor: COLORS.white,
+		paddingHorizontal: "6%",
+		paddingVertical: "7%",
+		justifyContent: "space-between",
+		alignItems: "center",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 8,
+		},
+		shadowOpacity: 0.12,
+		shadowRadius: 14,
+		elevation: 7,
+	},
+
+	headerBlock: {
+		width: "100%",
+		alignItems: "center",
+		// borderWidth: 1,
+	},
+
+	eyebrow: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		letterSpacing: 1.2,
+		textTransform: "uppercase",
+		color: COLORS.naranja,
+		marginBottom: 8,
+	},
+
+	title: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 26,
+		fontWeight: "bold",
+		color: COLORS.main,
+		textAlign: "center",
+	},
+
+	subtitle: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 13,
+		color: "#6B7280",
+		textAlign: "center",
+		lineHeight: 20,
+		marginTop: 10,
+		width: "92%",
+	},
+
+	statusPill: {
+		marginTop: 20,
+		paddingVertical: 10,
+		paddingHorizontal: 16,
+		maxWidth: "90%",
+		borderRadius: 999,
+		backgroundColor: "rgba(32, 67, 137, 0.08)",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	statusDot: {
+		width: 9,
+		height: 9,
+		borderRadius: 9,
+		backgroundColor: COLORS.naranja,
+		marginRight: 8,
+	},
+
+	statusText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 12,
+		fontWeight: "bold",
+		color: COLORS.main,
+		textAlign: "center",
+	},
+
+	punchTable: {
+		width: "100%",
+		marginTop: 20,
+		borderRadius: 20,
+		backgroundColor: "#F7F8FB",
+		overflow: "hidden",
+		borderWidth: 1,
+		borderColor: "rgba(0, 0, 0, 0.06)",
+	},
+
+	punchHeaderRow: {
+		width: "100%",
+		minHeight: 40,
+		flexDirection: "row",
+		alignItems: "center",
+		backgroundColor: "rgba(32, 67, 137, 0.08)",
+		borderBottomWidth: 1,
+		borderBottomColor: "rgba(0, 0, 0, 0.06)",
+	},
+
+	punchHeaderText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 11,
+		fontWeight: "bold",
+		color: COLORS.main,
+		textAlign: "center",
+		textTransform: "uppercase",
+	},
+
+	punchRow: {
+		width: "100%",
+		minHeight: 54,
+		flexDirection: "row",
+		alignItems: "center",
+		borderBottomWidth: 1,
+		borderBottomColor: "rgba(0, 0, 0, 0.05)",
+	},
+
+	punchRoundCell: {
+		width: "22%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	punchCell: {
+		width: "39%",
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 6,
+	},
+
+	punchRoundText: {
+		width: 28,
+		height: 28,
+		borderRadius: 28,
+		backgroundColor: COLORS.main,
+		color: COLORS.white,
+		fontFamily: "Montserrat-Regular",
+		fontSize: 13,
+		fontWeight: "bold",
+		textAlign: "center",
+		textAlignVertical: "center",
+		lineHeight: 28,
+	},
+
+	punchTimeText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.black,
+		textAlign: "center",
+	},
+
+	pendingText: {
+		color: "#9CA3AF",
+	},
+
+	successText: {
+		color: "#15803D",
+	},
+
+	warningText: {
+		color: "#B45309",
+	},
+
+	actionArea: {
+		width: 190,
+		height: 190,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 25,
+	},
+
+	pulseRing: {
+		position: "absolute",
+		width: 150,
+		height: 150,
+		borderRadius: 150,
+		backgroundColor: COLORS.main,
+	},
+
+	checkButton: {
+		width: 145,
+		height: 145,
+		borderRadius: 145,
+		backgroundColor: COLORS.main,
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 12,
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 8,
+		},
+		shadowOpacity: 0.22,
+		shadowRadius: 12,
+		elevation: 8,
+	},
+
+	checkButtonDisabled: {
+		opacity: 0.65,
+	},
+
+	checkButtonIcon: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 34,
+		fontWeight: "bold",
+		color: COLORS.white,
+		marginBottom: 4,
+	},
+
+	checkButtonText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 14,
+		fontWeight: "bold",
+		color: COLORS.white,
+		textAlign: "center",
+	},
+
+	footerText: {
+		fontFamily: "Montserrat-Regular",
+		fontSize: 11,
+		color: "#9CA3AF",
+		textAlign: "center",
+		marginTop: 5,
+	},
+
+	scrollView: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		// borderWidth: 1
+	},
+
+	scrollContentContainer: {
+		width: "100%",
+		alignItems: "center",
+		paddingBottom: 170,
+	},
+
+	punchActions: {
+		width: "100%",
+		alignItems: "center",
+		marginTop: 12,
+		marginBottom: 14,
+	},
+
+	refreshPunchButton: {
+		paddingVertical: 9,
+		paddingHorizontal: 18,
+		borderRadius: 18,
+		backgroundColor: "#1F6FEB",
+	},
+
+	refreshPunchButtonDisabled: {
+		opacity: 0.55,
+	},
+
+	refreshPunchButtonText: {
+		color: "#FFFFFF",
+		fontSize: 13,
+		fontWeight: "700",
+	},
+});
+
 export {
 	menu,
 	header,
@@ -1906,4 +2418,5 @@ export {
 	linea,
 	polizas,
 	opiniones,
+	checkin,
 };

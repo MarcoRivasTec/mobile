@@ -12,7 +12,7 @@ import Solicitudes from "./Notificaciones/Solicitudes";
 
 function Notificaciones({ section = "Avisos" }) {
 	const { height, region } = useContext(AppContext);
-	const { numEmp, isSupervisor, accessToken } = useContext(HomeContext);
+	const { numEmp, accessToken } = useContext(HomeContext);
 	// console.log("Access token is (Notificaciones): ", `${accessToken}`);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(section);
@@ -68,7 +68,7 @@ function Notificaciones({ section = "Avisos" }) {
 			// console.log("Notifications data is(encuestas): ", JSON.stringify(data, null, 1));
 			console.log(
 				"Notifications data is ",
-				JSON.stringify(notificationsData, null, 1)
+				JSON.stringify(notificationsData, null, 1),
 			);
 
 			if (data.data.Encuestas) {
@@ -194,9 +194,7 @@ function Notificaciones({ section = "Avisos" }) {
 				{[
 					{ title: "Avisos", notificationCount: notifsAvisos },
 					{ title: "Encuestas", notificationCount: notifsEncuestas },
-					...(isSupervisor
-						? [{ title: "Solicitudes", notificationCount: notifsEncuestas }]
-						: []),
+
 					// { title: "Eventos", notificationCount: notifsEncuestas },
 				].map((tab, index, array) => (
 					<Tab
@@ -209,13 +207,6 @@ function Notificaciones({ section = "Avisos" }) {
 			</View>
 
 			<View style={notificaciones.contentContainer}>
-				{activeTab === "Solicitudes" && isSupervisor && (
-					<Solicitudes
-						isLoading={isLoading}
-						requests={requests}
-						updateNotificationsData={updateNotificationsData}
-					/>
-				)}
 				{activeTab === "Avisos" && (
 					<Avisos
 						notifications={notifications}

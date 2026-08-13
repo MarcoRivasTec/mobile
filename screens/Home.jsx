@@ -86,6 +86,7 @@ const Home = ({ navigation }) => {
 				content={currentContent}
 				changeContent={changeContent}
 				navigation={navigation}
+				style={{borderWidth: 1, borderColor: "red"}}
 			/>
 
 			{/* Contenedor barra navegacion */}

@@ -12,41 +12,46 @@ function SectionButton({
 	icon,
 	title,
 	iconLibrary = "default",
-	menuHeight,
+	rowHeight,
 	delay = 0,
 }) {
 	const IconComponent =
 		iconLibrary === "default" ? Icon : iconLibrary === "AD" ? AD : Ionicons;
 
-	const iconContainerHeight = menuHeight ? menuHeight * 0.24 * 0.33 : 0;
+	/*
+	 * Base icon size on the button row, not the complete menu.
+	 * Adjust 0.38 if you want larger or smaller icons.
+	 */
+	const iconSize = rowHeight ? rowHeight * 0.34 : 0;
 
-	// Animations
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 	const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
 	useEffect(() => {
-		if (menuHeight > 0) {
-			Animated.parallel([
-				Animated.timing(fadeAnim, {
-					toValue: 1,
-					duration: 300,
-					delay,
-					useNativeDriver: true,
-				}),
-				Animated.timing(scaleAnim, {
-					toValue: 1,
-					duration: 300,
-					delay,
-					useNativeDriver: true,
-				}),
-			]).start();
+		if (!rowHeight) {
+			return;
 		}
-	}, [menuHeight]);
+
+		Animated.parallel([
+			Animated.timing(fadeAnim, {
+				toValue: 1,
+				duration: 300,
+				delay,
+				useNativeDriver: true,
+			}),
+			Animated.timing(scaleAnim, {
+				toValue: 1,
+				duration: 300,
+				delay,
+				useNativeDriver: true,
+			}),
+		]).start();
+	}, [rowHeight, delay, fadeAnim, scaleAnim]);
 
 	return (
 		<Animated.View
 			style={[
-				sectionButton.animatedContainer, // ← controls width/margin/height
+				sectionButton.animatedContainer,
 				{
 					opacity: fadeAnim,
 					transform: [{ scale: scaleAnim }],
@@ -57,24 +62,33 @@ function SectionButton({
 				<TouchableOpacity
 					style={sectionButton.button}
 					onPress={onPress}
-					disabled={!menuHeight}
+					disabled={!rowHeight}
+					activeOpacity={0.8}
 				>
 					<View style={sectionButton.content}>
 						<View
 							style={[
 								sectionButton.iconContainer,
-								{ height: iconContainerHeight },
+								{
+									height: iconSize,
+								},
 							]}
 						>
-							{menuHeight > 0 && (
+							{rowHeight > 0 && (
 								<IconComponent
 									name={icon}
-									size={iconContainerHeight * 0.9}
+									size={iconSize}
 									color={COLORS.white}
 								/>
 							)}
 						</View>
-						<Text numberOfLines={2} style={sectionButton.text}>
+
+						<Text
+							numberOfLines={2}
+							adjustsFontSizeToFit
+							minimumFontScale={0.85}
+							style={sectionButton.text}
+						>
 							{title}
 						</Text>
 					</View>
