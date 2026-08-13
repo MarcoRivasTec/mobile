@@ -36,11 +36,23 @@ function Navbar({ changeContent, navigation }) {
 	const [ConfirmationVisible, setConfirmationVisible] = useState(false);
 
 	function confirmationModalHandler() {
-		setConfirmationVisible(!ConfirmationVisible);
+		setConfirmationVisible((prev) => !prev);
 	}
+
+	const handleLogout = () => {
+		setConfirmationVisible(false);
+
+		setTimeout(() => {
+			navigation.reset({
+				index: 0,
+				routes: [{ name: "Login" }],
+			});
+		}, 150);
+	};
 
 	const sections = [
 		{ key: "Menu", label: "Menú" },
+		{ key: "CheckIn", label: "Check-in" },
 		{ key: "InfoPers", label: "Información Personal" },
 		{ key: "Area", label: "Área" },
 		{ key: "Redes", label: "Redes" },
@@ -148,14 +160,11 @@ function Navbar({ changeContent, navigation }) {
 			</View>
 			{ConfirmationVisible && (
 				<ConfirmModal
-					onCallback={confirmationModalHandler}
-					onExit={confirmationModalHandler}
+					onCallback={() => setConfirmationVisible(false)}
+					onExit={() => setConfirmationVisible(false)}
 					title="Cerrar sesión"
 					data="¿Estás seguro que deseas cerrar sesión?"
-					onConfirm={() => {
-						confirmationModalHandler();
-						navigation.navigate("Login", { clear: true });
-					}}
+					onConfirm={handleLogout}
 					style={navbar.modal}
 				/>
 			)}

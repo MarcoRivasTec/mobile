@@ -176,15 +176,15 @@ const Login = ({ navigation, route }) => {
 		},
 	};
 
-	useEffect(() => {
-		// This is implemented due to issue with navigation.replace upon logout inside a modal causing a crash in iOS
-		if (route?.params?.clear === true) {
-			navigation.reset({
-				index: 0,
-				routes: [{ name: "Login" }],
-			});
-		}
-	}, [route]);
+	// useEffect(() => {
+	// 	// This is implemented due to issue with navigation.replace upon logout inside a modal causing a crash in iOS
+	// 	if (route?.params?.clear === true) {
+	// 		navigation.reset({
+	// 			index: 0,
+	// 			routes: [{ name: "Login" }],
+	// 		});
+	// 	}
+	// }, [route]);
 
 	const checkVersion = async () => {
 		try {
