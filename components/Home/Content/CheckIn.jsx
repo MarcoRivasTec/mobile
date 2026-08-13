@@ -22,20 +22,13 @@ import { AppContext } from "../../AppContext";
 import fetchPost from "../../fetching";
 
 const DEVICE_ID_KEY = "@tecma_checkin_device_id";
-
-const MAX_LOCATION_ACCURACY_METERS = 75;
+const ZONE_REFRESH_INTERVAL_MS = 3000;
+const ZONE_REFRESH_INTERVAL_SECONDS = Math.ceil(
+	ZONE_REFRESH_INTERVAL_MS / 1000,
+);
 
 const CHECK_IN_TYPE = "CHECK_IN";
 const CHECK_OUT_TYPE = "CHECK_OUT";
-
-// Local visual pre-validation only.
-// The API should still make the final geofence decision.
-const FENCE_CENTER = {
-	latitude: 31.621117,
-	longitude: -106.448624,
-};
-
-const FENCE_RADIUS_METERS = 140;
 
 const HANDLE_CHECK_IN_MUTATION = `
 	mutation HandleCheckIn($input: CheckInInput!) {
@@ -46,6 +39,7 @@ const HANDLE_CHECK_IN_MUTATION = `
 			checkIn {
 				type
 				registeredAt
+				geofenceName
 			}
 		}
 	}
@@ -59,15 +53,36 @@ const TODAY_CHECK_INS_QUERY = `
 			data {
 				date
 				timezone
-				entrada_1
-				salida_1
-				entrada_2
-				salida_2
-				entrada_1_raw
-				salida_1_raw
-				entrada_2_raw
-				salida_2_raw
+				punches {
+					horario
+					entrada
+					salida
+					entrada_raw
+					salida_raw
+				}
 				serverNow
+			}
+		}
+	}
+`;
+
+const CHECK_IN_ZONE_STATUS_QUERY = `
+	query CheckInZoneStatus($input: CheckInZoneStatusInput!) {
+		CheckInZoneStatus(input: $input) {
+			success
+			message
+			data {
+				canCheckIn
+				isInsideAllowedZone
+				isBypass
+				status
+				message
+				geofenceName
+				latitude
+				longitude
+				accuracy
+				maxAccuracy
+				checkedAt
 			}
 		}
 	}
@@ -75,24 +90,6 @@ const TODAY_CHECK_INS_QUERY = `
 
 function createLocalId() {
 	return `${Date.now()}-${Math.random().toString(36).substring(2, 12)}`;
-}
-
-function formatMeters(value) {
-	if (value === null || value === undefined || Number.isNaN(Number(value))) {
-		return "Pendiente";
-	}
-
-	return `${Math.round(Number(value))} m`;
-}
-
-function getTimezone() {
-	try {
-		return (
-			Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Chihuahua"
-		);
-	} catch {
-		return "America/Chihuahua";
-	}
 }
 
 function hasPunch(value) {
@@ -122,65 +119,72 @@ function formatPunchTime(value) {
 	return cleanValue;
 }
 
-function getNextPunchAction(checkIns) {
-	if (!hasPunch(checkIns?.entrada_1)) {
+const MAX_PUNCH_ROUNDS = 6;
+
+function getPunchRows(checkIns) {
+	if (Array.isArray(checkIns?.punches)) {
+		return checkIns.punches;
+	}
+
+	return Array.from({ length: MAX_PUNCH_ROUNDS }, (_, index) => {
+		const round = index + 1;
+
 		return {
-			type: CHECK_IN_TYPE,
-			label: "Registrar entrada",
-			successTitle: "Entrada registrada",
-			successText: "Tu entrada fue registrada correctamente.",
+			horario: round,
+			entrada: checkIns?.[`entrada_${round}`] || null,
+			salida: checkIns?.[`salida_${round}`] || null,
+			entrada_raw: checkIns?.[`entrada_${round}_raw`] || null,
+			salida_raw: checkIns?.[`salida_${round}_raw`] || null,
+		};
+	});
+}
+
+function getRoundLabel(round) {
+	if (round === 1) return "";
+	return ` ${round}`;
+}
+
+function getLastPunchState(checkIns) {
+	const punches = Array.isArray(checkIns?.punches) ? checkIns.punches : [];
+
+	if (!punches.length) {
+		return {
+			nextLabel: "Registrar checada",
+			successTitle: "Checada registrada",
+			successText: "Tu checada fue registrada correctamente.",
 		};
 	}
 
-	if (!hasPunch(checkIns?.salida_1)) {
+	const sortedPunches = [...punches].sort(
+		(a, b) => Number(a.horario) - Number(b.horario),
+	);
+
+	const lastRound = sortedPunches[sortedPunches.length - 1];
+
+	if (hasPunch(lastRound?.entrada) && !hasPunch(lastRound?.salida)) {
 		return {
-			type: CHECK_OUT_TYPE,
-			label: "Registrar salida",
+			nextLabel: "Registrar salida",
 			successTitle: "Salida registrada",
 			successText: "Tu salida fue registrada correctamente.",
 		};
 	}
 
-	if (!hasPunch(checkIns?.entrada_2)) {
-		return {
-			type: CHECK_IN_TYPE,
-			label: "Registrar entrada",
-			successTitle: "Entrada registrada",
-			successText: "Tu segunda entrada fue registrada correctamente.",
-		};
-	}
-
-	if (!hasPunch(checkIns?.salida_2)) {
-		return {
-			type: CHECK_OUT_TYPE,
-			label: "Registrar salida",
-			successTitle: "Salida registrada",
-			successText: "Tu segunda salida fue registrada correctamente.",
-		};
-	}
-
-	return null;
+	return {
+		nextLabel: "Registrar entrada",
+		successTitle: "Entrada registrada",
+		successText: "Tu entrada fue registrada correctamente.",
+	};
 }
 
-function haversineDistance(lat1, lon1, lat2, lon2) {
-	function toRad(x) {
-		return (x * Math.PI) / 180;
-	}
+function getNextPunchAction(checkIns) {
+	const state = getLastPunchState(checkIns);
 
-	const R = 6371000;
-	const dLat = toRad(lat2 - lat1);
-	const dLon = toRad(lon2 - lon1);
-
-	const a =
-		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		Math.cos(toRad(lat1)) *
-			Math.cos(toRad(lat2)) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
-
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-	return R * c;
+	return {
+		type: CHECK_IN_TYPE, // kept only because your current schema requires it
+		label: state.nextLabel,
+		successTitle: state.successTitle,
+		successText: state.successText,
+	};
 }
 
 async function getOrCreateDeviceId() {
@@ -198,10 +202,7 @@ async function getOrCreateDeviceId() {
 }
 
 function PunchTable({ checkIns, isLoading }) {
-	const firstEntry = checkIns?.entrada_1;
-	const firstExit = checkIns?.salida_1;
-	const secondEntry = checkIns?.entrada_2;
-	const secondExit = checkIns?.salida_2;
+	const punches = Array.isArray(checkIns?.punches) ? checkIns.punches : [];
 
 	return (
 		<View style={styles.punchTable}>
@@ -209,65 +210,63 @@ function PunchTable({ checkIns, isLoading }) {
 				<Text style={[styles.punchHeaderText, styles.punchRoundCell]}>
 					Horario
 				</Text>
-				<Text style={[styles.punchHeaderText, styles.punchCell]}>Entrada</Text>
-				<Text style={[styles.punchHeaderText, styles.punchCell]}>Salida</Text>
+				<Text style={[styles.punchHeaderText, styles.punchCell]}>
+					Entrada
+				</Text>
+				<Text style={[styles.punchHeaderText, styles.punchCell]}>
+					Salida
+				</Text>
 			</View>
 
-			<View style={styles.punchRow}>
-				<View style={styles.punchRoundCell}>
-					<Text style={styles.punchRoundText}>1</Text>
-				</View>
+			{punches.length === 0 && !isLoading ? (
+				<View style={styles.punchRow}>
+					<View style={styles.punchRoundCell}>
+						<Text style={styles.punchRoundText}>1</Text>
+					</View>
 
-				<View style={styles.punchCell}>
-					<Text
-						style={[
-							styles.punchTimeText,
-							!hasPunch(firstEntry) && styles.pendingText,
-						]}
-					>
-						{isLoading ? "..." : formatPunchTime(firstEntry)}
-					</Text>
-				</View>
+					<View style={styles.punchCell}>
+						<Text style={[styles.punchTimeText, styles.pendingText]}>
+							--:--
+						</Text>
+					</View>
 
-				<View style={styles.punchCell}>
-					<Text
-						style={[
-							styles.punchTimeText,
-							!hasPunch(firstExit) && styles.pendingText,
-						]}
-					>
-						{isLoading ? "..." : formatPunchTime(firstExit)}
-					</Text>
+					<View style={styles.punchCell}>
+						<Text style={[styles.punchTimeText, styles.pendingText]}>
+							--:--
+						</Text>
+					</View>
 				</View>
-			</View>
+			) : (
+				punches.map((row) => (
+					<View key={`punch-row-${row.horario}`} style={styles.punchRow}>
+						<View style={styles.punchRoundCell}>
+							<Text style={styles.punchRoundText}>{row.horario}</Text>
+						</View>
 
-			<View style={styles.punchRow}>
-				<View style={styles.punchRoundCell}>
-					<Text style={styles.punchRoundText}>2</Text>
-				</View>
+						<View style={styles.punchCell}>
+							<Text
+								style={[
+									styles.punchTimeText,
+									!hasPunch(row.entrada) && styles.pendingText,
+								]}
+							>
+								{isLoading ? "..." : formatPunchTime(row.entrada)}
+							</Text>
+						</View>
 
-				<View style={styles.punchCell}>
-					<Text
-						style={[
-							styles.punchTimeText,
-							!hasPunch(secondEntry) && styles.pendingText,
-						]}
-					>
-						{isLoading ? "..." : formatPunchTime(secondEntry)}
-					</Text>
-				</View>
-
-				<View style={styles.punchCell}>
-					<Text
-						style={[
-							styles.punchTimeText,
-							!hasPunch(secondExit) && styles.pendingText,
-						]}
-					>
-						{isLoading ? "..." : formatPunchTime(secondExit)}
-					</Text>
-				</View>
-			</View>
+						<View style={styles.punchCell}>
+							<Text
+								style={[
+									styles.punchTimeText,
+									!hasPunch(row.salida) && styles.pendingText,
+								]}
+							>
+								{isLoading ? "..." : formatPunchTime(row.salida)}
+							</Text>
+						</View>
+					</View>
+				))
+			)}
 		</View>
 	);
 }
@@ -278,9 +277,14 @@ export default function CheckIn() {
 
 	const [isWorking, setIsWorking] = useState(false);
 	const [isLoadingCheckIns, setIsLoadingCheckIns] = useState(false);
+	const [isCheckingZone, setIsCheckingZone] = useState(false);
 	const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
 	const [todayCheckIns, setTodayCheckIns] = useState(null);
+	const [zoneStatus, setZoneStatus] = useState(null);
+	const [zoneRefreshSecondsLeft, setZoneRefreshSecondsLeft] = useState(
+		ZONE_REFRESH_INTERVAL_SECONDS,
+	);
 	const [lastStatus, setLastStatus] = useState("Cargando checadas del día...");
 	const [confirmData, setConfirmData] = useState({
 		title: "Entrada registrada",
@@ -288,9 +292,16 @@ export default function CheckIn() {
 	});
 
 	const pulse = useRef(new Animated.Value(0)).current;
+	const zoneRefreshInFlightRef = useRef(false);
 
 	const nextPunchAction = getNextPunchAction(todayCheckIns);
-	const isDayComplete = !nextPunchAction;
+	const isDayComplete = false;
+	const canCheckInFromZone = zoneStatus?.canCheckIn === true;
+
+	const canPressCheckButton =
+		!isWorking && !isLoadingCheckIns && !isCheckingZone && canCheckInFromZone;
+
+	const shouldPulseButton = canPressCheckButton;
 
 	useEffect(() => {
 		const animation = Animated.loop(
@@ -316,8 +327,37 @@ export default function CheckIn() {
 	useEffect(() => {
 		if (!accessToken) return;
 
-		loadTodayCheckIns();
+		initializeCheckInScreen();
 	}, [accessToken]);
+
+	useEffect(() => {
+		if (!accessToken) return;
+
+		if (isDayComplete) {
+			setZoneRefreshSecondsLeft(0);
+			return;
+		}
+
+		setZoneRefreshSecondsLeft(ZONE_REFRESH_INTERVAL_SECONDS);
+
+		const intervalId = setInterval(() => {
+			setZoneRefreshSecondsLeft((previousValue) => {
+				if (previousValue <= 1) {
+					refreshZoneStatus({
+						silent: true,
+						showAlert: false,
+						updateFetchingStatus: false,
+					});
+
+					return ZONE_REFRESH_INTERVAL_SECONDS;
+				}
+
+				return previousValue - 1;
+			});
+		}, 1000);
+
+		return () => clearInterval(intervalId);
+	}, [accessToken, isDayComplete]);
 
 	const pulseScale = pulse.interpolate({
 		inputRange: [0, 1],
@@ -333,8 +373,21 @@ export default function CheckIn() {
 		setIsConfirmVisible(false);
 	}
 
-	async function getCurrentCoords() {
-		setLastStatus("Solicitando permiso de ubicación...");
+	async function initializeCheckInScreen() {
+		await loadTodayCheckIns();
+		await refreshZoneStatus({
+			silent: false,
+			showAlert: false,
+			updateFetchingStatus: true,
+		});
+	}
+
+	async function getCurrentCoords(options = {}) {
+		const { updateFetchingStatus = true } = options;
+
+		if (updateFetchingStatus) {
+			setLastStatus("Solicitando permiso de ubicación...");
+		}
 
 		const permission = await Location.requestForegroundPermissionsAsync();
 
@@ -342,7 +395,9 @@ export default function CheckIn() {
 			throw new Error("LOCATION_PERMISSION_DENIED");
 		}
 
-		setLastStatus("Obteniendo ubicación actual...");
+		if (updateFetchingStatus) {
+			setLastStatus("Obteniendo ubicación actual...");
+		}
 
 		const currentLocation = await Location.getCurrentPositionAsync({
 			accuracy: Location.Accuracy.Highest,
@@ -350,20 +405,6 @@ export default function CheckIn() {
 		});
 
 		return currentLocation.coords;
-	}
-
-	function getLocalLocationValidation(coords) {
-		const distance = haversineDistance(
-			coords.latitude,
-			coords.longitude,
-			FENCE_CENTER.latitude,
-			FENCE_CENTER.longitude,
-		);
-
-		return {
-			distance,
-			isInsideLocalFence: distance <= FENCE_RADIUS_METERS,
-		};
 	}
 
 	async function buildCheckInPayload(coords, type) {
@@ -374,8 +415,6 @@ export default function CheckIn() {
 			latitude: Number(coords.latitude),
 			longitude: Number(coords.longitude),
 			accuracy: coords.accuracy !== undefined ? Number(coords.accuracy) : null,
-			clientTimestamp: new Date().toISOString(),
-			clientTimezone: getTimezone(),
 			deviceId,
 			platform: Platform.OS,
 			appVersion: appVersion ? String(appVersion) : null,
@@ -399,12 +438,15 @@ export default function CheckIn() {
 		return response?.data?.handleCheckIn;
 	}
 
-	async function fetchTodayCheckIns() {
+	async function fetchCheckInZoneStatus(coords) {
 		const query = {
-			query: TODAY_CHECK_INS_QUERY,
+			query: CHECK_IN_ZONE_STATUS_QUERY,
 			variables: {
 				input: {
-					timezone: getTimezone(),
+					latitude: Number(coords.latitude),
+					longitude: Number(coords.longitude),
+					accuracy:
+						coords.accuracy !== undefined ? Number(coords.accuracy) : null,
 				},
 			},
 		};
@@ -414,7 +456,105 @@ export default function CheckIn() {
 			token: accessToken,
 		});
 
-		// console.log("Today check-ins response:", JSON.stringify(response, null, 2));
+		if (response?.errors?.length) {
+			console.error("Check-in zone GraphQL errors:", response.errors);
+			throw new Error(response.errors[0]?.message || "ZONE_GRAPHQL_ERROR");
+		}
+
+		const result = response?.data?.CheckInZoneStatus;
+
+		if (!result) {
+			throw new Error("EMPTY_ZONE_STATUS_RESPONSE");
+		}
+
+		if (result.success === false) {
+			throw new Error(result.message || "ZONE_STATUS_REJECTED");
+		}
+
+		return result.data;
+	}
+
+	async function refreshZoneStatus(options = {}) {
+		const {
+			silent = false,
+			showAlert = false,
+			updateFetchingStatus = true,
+		} = options;
+
+		if (!accessToken || zoneRefreshInFlightRef.current) return null;
+
+		zoneRefreshInFlightRef.current = true;
+
+		try {
+			if (!silent) {
+				setIsCheckingZone(true);
+			}
+
+			const coords = await getCurrentCoords({ updateFetchingStatus });
+			const result = await fetchCheckInZoneStatus(coords);
+
+			setZoneStatus(result);
+			setZoneRefreshSecondsLeft(ZONE_REFRESH_INTERVAL_SECONDS);
+
+			if (isDayComplete) {
+				setLastStatus("Registros completos del día");
+			} else if (result.canCheckIn) {
+				setLastStatus(
+					result.geofenceName && result.geofenceName !== "BYPASS"
+						? `Dentro de zona: ${result.geofenceName}`
+						: "Dentro de zona permitida",
+				);
+			} else {
+				setLastStatus(result.message || "Fuera de zona permitida");
+			}
+
+			return result;
+		} catch (error) {
+			console.error("Check-in zone status error:", error);
+
+			setZoneStatus(null);
+
+			if (error.message === "LOCATION_PERMISSION_DENIED") {
+				setLastStatus("Permiso de ubicación denegado");
+
+				if (showAlert) {
+					Alert.alert(
+						"Permiso requerido",
+						"Necesitas permitir el acceso a tu ubicación para registrar tu checada.",
+					);
+				}
+
+				return null;
+			}
+
+			setLastStatus("No se pudo validar la zona");
+
+			if (showAlert) {
+				Alert.alert(
+					"Error",
+					"No se pudo validar tu ubicación. Intenta nuevamente.",
+				);
+			}
+
+			return null;
+		} finally {
+			zoneRefreshInFlightRef.current = false;
+
+			if (!silent) {
+				setIsCheckingZone(false);
+			}
+		}
+	}
+
+	async function fetchTodayCheckIns() {
+		const query = {
+			query: TODAY_CHECK_INS_QUERY,
+		};
+
+		const response = await fetchPost({
+			query,
+			token: accessToken,
+		});
 
 		const result = response?.data?.TodayCheckIns;
 
@@ -450,10 +590,12 @@ export default function CheckIn() {
 
 			const nextAction = getNextPunchAction(checkIns);
 
-			if (nextAction) {
-				setLastStatus(`Listo para ${nextAction.label.toLowerCase()}`);
-			} else {
-				setLastStatus("Registros completos del día");
+			if (!zoneStatus) {
+				if (nextAction) {
+					setLastStatus("Validando zona...");
+				} else {
+					setLastStatus("Registros completos del día");
+				}
 			}
 		} catch (error) {
 			console.error("Today check-ins error:", error);
@@ -466,7 +608,7 @@ export default function CheckIn() {
 	}
 
 	async function handleCheckIn() {
-		if (isWorking || isLoadingCheckIns) return;
+		if (!canPressCheckButton) return;
 
 		if (!accessToken) {
 			Alert.alert(
@@ -481,7 +623,7 @@ export default function CheckIn() {
 		if (!currentAction) {
 			Alert.alert(
 				"Jornada completa",
-				"Ya tienes registradas las cuatro checadas del día.",
+				"Ya tienes registradas las checadas permitidas del día.",
 			);
 			return;
 		}
@@ -489,21 +631,21 @@ export default function CheckIn() {
 		try {
 			setIsWorking(true);
 
-			const coords = await getCurrentCoords();
-			const localValidation = getLocalLocationValidation(coords);
+			const coords = await getCurrentCoords({ updateFetchingStatus: true });
 
-			if (
-				coords.accuracy !== null &&
-				coords.accuracy !== undefined &&
-				coords.accuracy > MAX_LOCATION_ACCURACY_METERS
-			) {
-				setLastStatus("Precisión insuficiente");
+			setLastStatus("Validando zona...");
+
+			const currentZoneStatus = await fetchCheckInZoneStatus(coords);
+
+			setZoneStatus(currentZoneStatus);
+
+			if (!currentZoneStatus?.canCheckIn) {
+				setLastStatus(currentZoneStatus?.message || "Fuera de zona permitida");
 
 				Alert.alert(
-					"Ubicación poco precisa",
-					`La precisión actual es de ${formatMeters(
-						coords.accuracy,
-					)}. Muévete a un área más abierta e intenta de nuevo.`,
+					"Fuera de zona",
+					currentZoneStatus?.message ||
+						"No estás dentro de una zona permitida para registrar tu checada.",
 				);
 
 				return;
@@ -528,8 +670,6 @@ export default function CheckIn() {
 			}
 
 			if (result.success === true) {
-				// console.log("CheckIn success:", JSON.stringify(result, null, 1));
-
 				setLastStatus(
 					currentAction.type === CHECK_OUT_TYPE
 						? "Salida registrada"
@@ -538,17 +678,17 @@ export default function CheckIn() {
 
 				setConfirmData({
 					title: currentAction.successTitle,
-					text:
-						result.message ||
-						(localValidation.isInsideLocalFence
-							? currentAction.successText
-							: "Tu ubicación fue enviada para validación."),
+					text: result.message || currentAction.successText,
 				});
 
-				// small delay to allow UI update/animation before reloading data
 				await new Promise((res) => setTimeout(res, 3000));
 
 				await loadTodayCheckIns({ silent: true });
+				await refreshZoneStatus({
+					silent: true,
+					showAlert: false,
+					updateFetchingStatus: false,
+				});
 
 				setIsConfirmVisible(true);
 				return;
@@ -591,11 +731,11 @@ export default function CheckIn() {
 				<ContentHeader title="Check In" />
 
 				<View style={styles.contentContainer}>
-					{/* <View style={styles.card}> */}
+					{/* <View style={styles.headerBlock, { borderWidth: 1, borderColor: "blue"}}> */}
 					<View style={styles.headerBlock}>
 						<Text style={styles.eyebrow}>Control de asistencia</Text>
 						<Text style={styles.title}>
-							{nextPunchAction?.label || "Jornada completa"}
+							{nextPunchAction?.label || "Registrar checada"}
 						</Text>
 						<Text style={styles.subtitle}>
 							Consulta tus checadas del día y registra tu siguiente movimiento.
@@ -615,7 +755,7 @@ export default function CheckIn() {
 							style={[
 								styles.pulseRing,
 								{
-									opacity: isDayComplete ? 0 : pulseOpacity,
+									opacity: shouldPulseButton ? pulseOpacity : 0,
 									transform: [{ scale: pulseScale }],
 								},
 							]}
@@ -623,32 +763,40 @@ export default function CheckIn() {
 
 						<TouchableOpacity
 							onPress={handleCheckIn}
-							disabled={isWorking || isLoadingCheckIns || isDayComplete}
+							disabled={!canPressCheckButton}
 							activeOpacity={0.88}
 							style={[
 								styles.checkButton,
-								(isWorking || isLoadingCheckIns || isDayComplete) &&
-									styles.checkButtonDisabled,
+								!canPressCheckButton && styles.checkButtonDisabled,
 							]}
 						>
 							<Text style={styles.checkButtonIcon}>
-								{isDayComplete ? "✓" : "↳"}
+								{isDayComplete ? "✓" : canCheckInFromZone ? "↳" : "×"}
 							</Text>
 							<Text style={styles.checkButtonText}>
 								{isWorking
 									? "Validando..."
 									: isLoadingCheckIns
 										? "Cargando..."
-										: nextPunchAction?.label || "Completo"}
+										: isCheckingZone
+											? "Validando zona..."
+											: isDayComplete
+												? "Completo"
+												: canCheckInFromZone
+													? nextPunchAction?.label
+													: "Fuera de zona"}
 							</Text>
 						</TouchableOpacity>
 					</View>
 
 					<Text style={styles.footerText}>
-						{isDayComplete ??
-							"Ya tienes registradas las cuatro checadas del día."}
+						{isDayComplete
+							? "Ya tienes registradas las checadas permitidas del día."
+							: `${
+									zoneStatus?.message ||
+									"La zona será validada automáticamente antes de registrar la checada."
+								} Próxima validación en ${zoneRefreshSecondsLeft}s.`}
 					</Text>
-					{/* </View> */}
 				</View>
 
 				{isWorking && (

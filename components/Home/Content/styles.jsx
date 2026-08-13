@@ -2121,14 +2121,17 @@ const checkin = StyleSheet.create({
 		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
+		// borderWidth: 1
 	},
 
 	contentContainer: {
 		flex: 19,
 		width: "94%",
 		// marginTop: "2%",
-		justifyContent: "center",
+		justifyContent: "flex-start",
 		alignItems: "center",
+		// borderWidth: 1,
+		// borderColor: "blue"
 	},
 
 	card: {
@@ -2154,6 +2157,7 @@ const checkin = StyleSheet.create({
 	headerBlock: {
 		width: "100%",
 		alignItems: "center",
+		// borderWidth: 1,
 	},
 
 	eyebrow: {
@@ -2184,7 +2188,7 @@ const checkin = StyleSheet.create({
 	},
 
 	statusPill: {
-		marginTop: 22,
+		marginTop: 20,
 		paddingVertical: 10,
 		paddingHorizontal: 16,
 		borderRadius: 999,
@@ -2212,7 +2216,7 @@ const checkin = StyleSheet.create({
 
 	punchTable: {
 		width: "100%",
-		marginTop: 26,
+		marginTop: 20,
 		borderRadius: 20,
 		backgroundColor: "#F7F8FB",
 		overflow: "hidden",
@@ -2300,7 +2304,7 @@ const checkin = StyleSheet.create({
 		height: 190,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 26,
+		marginTop: 25,
 	},
 
 	pulseRing: {
@@ -2355,7 +2359,7 @@ const checkin = StyleSheet.create({
 		fontSize: 11,
 		color: "#9CA3AF",
 		textAlign: "center",
-		marginTop: 12,
+		marginTop: 5,
 	},
 });
 
