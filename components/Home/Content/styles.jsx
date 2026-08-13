@@ -2127,11 +2127,8 @@ const checkin = StyleSheet.create({
 	contentContainer: {
 		flex: 19,
 		width: "94%",
-		// marginTop: "2%",
-		justifyContent: "flex-start",
 		alignItems: "center",
-		// borderWidth: 1,
-		// borderColor: "blue"
+		justifyContent: "flex-start",
 	},
 
 	card: {
@@ -2191,6 +2188,7 @@ const checkin = StyleSheet.create({
 		marginTop: 20,
 		paddingVertical: 10,
 		paddingHorizontal: 16,
+		maxWidth: "90%",
 		borderRadius: 999,
 		backgroundColor: "rgba(32, 67, 137, 0.08)",
 		flexDirection: "row",
@@ -2360,6 +2358,43 @@ const checkin = StyleSheet.create({
 		color: "#9CA3AF",
 		textAlign: "center",
 		marginTop: 5,
+	},
+
+	scrollView: {
+		// flex: 1,
+		height: "100%",
+		width: "100%",
+		// borderWidth: 1
+	},
+
+	scrollContentContainer: {
+		width: "100%",
+		alignItems: "center",
+		paddingBottom: 170,
+	},
+
+	punchActions: {
+		width: "100%",
+		alignItems: "center",
+		marginTop: 12,
+		marginBottom: 14,
+	},
+
+	refreshPunchButton: {
+		paddingVertical: 9,
+		paddingHorizontal: 18,
+		borderRadius: 18,
+		backgroundColor: "#1F6FEB",
+	},
+
+	refreshPunchButtonDisabled: {
+		opacity: 0.55,
+	},
+
+	refreshPunchButtonText: {
+		color: "#FFFFFF",
+		fontSize: 13,
+		fontWeight: "700",
 	},
 });
 

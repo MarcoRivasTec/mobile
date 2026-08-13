@@ -1,13 +1,18 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import {
 	View,
 	Text,
 	TouchableOpacity,
-	Keyboard,
-	TouchableWithoutFeedback,
 	Alert,
 	Animated,
 	Platform,
+	ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
@@ -22,13 +27,16 @@ import { AppContext } from "../../AppContext";
 import fetchPost from "../../fetching";
 
 const DEVICE_ID_KEY = "@tecma_checkin_device_id";
-const ZONE_REFRESH_INTERVAL_MS = 3000;
+const ZONE_REFRESH_INTERVAL_MS = 5000;
 const ZONE_REFRESH_INTERVAL_SECONDS = Math.ceil(
 	ZONE_REFRESH_INTERVAL_MS / 1000,
 );
 
 const CHECK_IN_TYPE = "CHECK_IN";
 const CHECK_OUT_TYPE = "CHECK_OUT";
+
+const CHECK_IN_UPDATE_DELAY_MESSAGE =
+	"La checada fue enviada correctamente. La tabla puede tardar hasta 1 minuto en actualizarse.";
 
 const HANDLE_CHECK_IN_MUTATION = `
 	mutation HandleCheckIn($input: CheckInInput!) {
@@ -75,6 +83,8 @@ const CHECK_IN_ZONE_STATUS_QUERY = `
 				canCheckIn
 				isInsideAllowedZone
 				isBypass
+				hasPendingPoll
+				pendingPollCount
 				status
 				message
 				geofenceName
@@ -82,6 +92,22 @@ const CHECK_IN_ZONE_STATUS_QUERY = `
 				longitude
 				accuracy
 				maxAccuracy
+				checkedAt
+			}
+		}
+	}
+`;
+
+const CHECK_IN_PENDING_POLL_QUERY = `
+	query CheckInPendingPollStatus {
+		CheckInPendingPollStatus {
+			success
+			message
+			data {
+				hasPendingPoll
+				pendingPollCount
+				status
+				message
 				checkedAt
 			}
 		}
@@ -119,7 +145,7 @@ function formatPunchTime(value) {
 	return cleanValue;
 }
 
-const MAX_PUNCH_ROUNDS = 6;
+const MAX_PUNCH_ROUNDS = 30;
 
 function getPunchRows(checkIns) {
 	if (Array.isArray(checkIns?.punches)) {
@@ -210,12 +236,8 @@ function PunchTable({ checkIns, isLoading }) {
 				<Text style={[styles.punchHeaderText, styles.punchRoundCell]}>
 					Horario
 				</Text>
-				<Text style={[styles.punchHeaderText, styles.punchCell]}>
-					Entrada
-				</Text>
-				<Text style={[styles.punchHeaderText, styles.punchCell]}>
-					Salida
-				</Text>
+				<Text style={[styles.punchHeaderText, styles.punchCell]}>Entrada</Text>
+				<Text style={[styles.punchHeaderText, styles.punchCell]}>Salida</Text>
 			</View>
 
 			{punches.length === 0 && !isLoading ? (
@@ -301,6 +323,8 @@ export default function CheckIn() {
 	const canPressCheckButton =
 		!isWorking && !isLoadingCheckIns && !isCheckingZone && canCheckInFromZone;
 
+	const hasPendingPoll = zoneStatus?.hasPendingPoll === true;
+
 	const shouldPulseButton = canPressCheckButton;
 
 	useEffect(() => {
@@ -343,11 +367,17 @@ export default function CheckIn() {
 		const intervalId = setInterval(() => {
 			setZoneRefreshSecondsLeft((previousValue) => {
 				if (previousValue <= 1) {
-					refreshZoneStatus({
-						silent: true,
-						showAlert: false,
-						updateFetchingStatus: false,
-					});
+					if (zoneStatus?.hasPendingPoll === true) {
+						refreshPendingPollStatus({
+							silent: true,
+						});
+					} else {
+						refreshZoneStatus({
+							silent: true,
+							showAlert: false,
+							updateFetchingStatus: false,
+						});
+					}
 
 					return ZONE_REFRESH_INTERVAL_SECONDS;
 				}
@@ -357,7 +387,18 @@ export default function CheckIn() {
 		}, 1000);
 
 		return () => clearInterval(intervalId);
-	}, [accessToken, isDayComplete]);
+	}, [accessToken, isDayComplete, zoneStatus?.hasPendingPoll]);
+
+	useEffect(() => {
+		if (!accessToken) return;
+		if (zoneStatus?.status !== "POLL_CLEARED") return;
+
+		refreshZoneStatus({
+			silent: true,
+			showAlert: false,
+			updateFetchingStatus: false,
+		});
+	}, [accessToken, zoneStatus?.status]);
 
 	const pulseScale = pulse.interpolate({
 		inputRange: [0, 1],
@@ -369,9 +410,9 @@ export default function CheckIn() {
 		outputRange: [0.35, 0],
 	});
 
-	function confirmationModalHandler() {
+	const confirmationModalHandler = useCallback(() => {
 		setIsConfirmVisible(false);
-	}
+	}, []);
 
 	async function initializeCheckInScreen() {
 		await loadTodayCheckIns();
@@ -430,12 +471,37 @@ export default function CheckIn() {
 			},
 		};
 
+		console.log(
+			"Sending check-in to API with input:",
+			JSON.stringify(input, null, 2),
+			" query:",
+			JSON.stringify(query, null, 2),
+		);
+
 		const response = await fetchPost({
 			query,
 			token: accessToken,
 		});
 
-		return response?.data?.handleCheckIn;
+		console.log(
+			"handleCheckIn raw response:",
+			JSON.stringify(response, null, 2),
+		);
+
+		if (response?.errors?.length) {
+			console.error("handleCheckIn GraphQL errors:", response.errors);
+			throw new Error(
+				response.errors[0]?.message || "HANDLE_CHECK_IN_GRAPHQL_ERROR",
+			);
+		}
+
+		const result = response?.data?.handleCheckIn;
+
+		if (!result) {
+			throw new Error("EMPTY_HANDLE_CHECK_IN_RESPONSE");
+		}
+
+		return result;
 	}
 
 	async function fetchCheckInZoneStatus(coords) {
@@ -574,8 +640,106 @@ export default function CheckIn() {
 		return result.data;
 	}
 
+	function buildCheckInSuccessText(apiMessage, fallbackText) {
+		const baseMessage = apiMessage || fallbackText;
+
+		return `${baseMessage}\n\n${CHECK_IN_UPDATE_DELAY_MESSAGE}`;
+	}
+
+	async function fetchPendingPollStatus() {
+		const query = {
+			query: CHECK_IN_PENDING_POLL_QUERY,
+		};
+
+		const response = await fetchPost({
+			query,
+			token: accessToken,
+		});
+
+		if (response?.errors?.length) {
+			console.error("Pending POLL GraphQL errors:", response.errors);
+			throw new Error(
+				response.errors[0]?.message || "PENDING_POLL_GRAPHQL_ERROR",
+			);
+		}
+
+		const result = response?.data?.CheckInPendingPollStatus;
+
+		if (!result) {
+			throw new Error("EMPTY_PENDING_POLL_RESPONSE");
+		}
+
+		if (result.success === false) {
+			throw new Error(result.message || "PENDING_POLL_REJECTED");
+		}
+
+		return result.data;
+	}
+
+	async function refreshPendingPollStatus(options = {}) {
+		const { silent = true } = options;
+
+		if (!accessToken || zoneRefreshInFlightRef.current) return null;
+
+		zoneRefreshInFlightRef.current = true;
+
+		try {
+			if (!silent) {
+				setIsCheckingZone(true);
+			}
+
+			const pendingPoll = await fetchPendingPollStatus();
+
+			setZoneRefreshSecondsLeft(ZONE_REFRESH_INTERVAL_SECONDS);
+
+			if (pendingPoll.hasPendingPoll) {
+				setZoneStatus((previousStatus) => ({
+					...(previousStatus || {}),
+					canCheckIn: false,
+					hasPendingPoll: true,
+					pendingPollCount: pendingPoll.pendingPollCount,
+					status: "PENDING_POLL",
+					message: pendingPoll.message,
+					checkedAt: pendingPoll.checkedAt,
+				}));
+
+				setLastStatus(pendingPoll.message);
+				return pendingPoll;
+			}
+
+			setZoneStatus((previousStatus) => ({
+				...(previousStatus || {}),
+				canCheckIn: false,
+				hasPendingPoll: false,
+				pendingPollCount: 0,
+				status: "POLL_CLEARED",
+				message: "Checada procesada. Validando zona nuevamente...",
+				checkedAt: pendingPoll.checkedAt,
+			}));
+
+			setLastStatus("Checada procesada. Validando zona nuevamente...");
+
+			await loadTodayCheckIns({
+				silent: true,
+				successStatus: "Checadas actualizadas",
+			});
+
+			return pendingPoll;
+		} catch (error) {
+			console.error("Pending POLL status error:", error);
+			setLastStatus("No se pudo validar si hay checadas pendientes");
+			return null;
+		} finally {
+			zoneRefreshInFlightRef.current = false;
+
+			if (!silent) {
+				setIsCheckingZone(false);
+			}
+		}
+	}
+
 	async function loadTodayCheckIns(options = {}) {
-		const { silent = false } = options;
+		const { silent = false, successStatus = null } = options;
 
 		if (!accessToken) return;
 
@@ -588,14 +752,10 @@ export default function CheckIn() {
 
 			setTodayCheckIns(checkIns);
 
-			const nextAction = getNextPunchAction(checkIns);
-
-			if (!zoneStatus) {
-				if (nextAction) {
-					setLastStatus("Validando zona...");
-				} else {
-					setLastStatus("Registros completos del día");
-				}
+			if (successStatus) {
+				setLastStatus(successStatus);
+			} else if (!zoneStatus) {
+				setLastStatus("Validando zona...");
 			}
 		} catch (error) {
 			console.error("Today check-ins error:", error);
@@ -640,12 +800,19 @@ export default function CheckIn() {
 			setZoneStatus(currentZoneStatus);
 
 			if (!currentZoneStatus?.canCheckIn) {
-				setLastStatus(currentZoneStatus?.message || "Fuera de zona permitida");
+				const isPendingPoll = currentZoneStatus?.status === "PENDING_POLL";
+
+				setLastStatus(
+					currentZoneStatus?.message ||
+						(isPendingPoll ? "Checada en proceso" : "Fuera de zona permitida"),
+				);
 
 				Alert.alert(
-					"Fuera de zona",
+					isPendingPoll ? "Checada en proceso" : "Registro no permitido",
 					currentZoneStatus?.message ||
-						"No estás dentro de una zona permitida para registrar tu checada.",
+						(isPendingPoll
+							? "Tu última checada aún se está procesando. Espera aproximadamente 1 minuto."
+							: "No estás dentro de una zona permitida para registrar tu checada."),
 				);
 
 				return;
@@ -670,25 +837,27 @@ export default function CheckIn() {
 			}
 
 			if (result.success === true) {
-				setLastStatus(
-					currentAction.type === CHECK_OUT_TYPE
-						? "Salida registrada"
-						: "Entrada registrada",
-				);
+				setLastStatus(currentAction.successTitle);
 
 				setConfirmData({
 					title: currentAction.successTitle,
-					text: result.message || currentAction.successText,
+					text: buildCheckInSuccessText(
+						result.message,
+						currentAction.successText,
+					),
 				});
 
-				await new Promise((res) => setTimeout(res, 3000));
+				setZoneStatus((previousStatus) => ({
+					...(previousStatus || {}),
+					canCheckIn: false,
+					hasPendingPoll: true,
+					pendingPollCount: 1,
+					status: "PENDING_POLL",
+					message:
+						"Tu última checada aún se está procesando. Espera aproximadamente 1 minuto.",
+				}));
 
 				await loadTodayCheckIns({ silent: true });
-				await refreshZoneStatus({
-					silent: true,
-					showAlert: false,
-					updateFetchingStatus: false,
-				});
 
 				setIsConfirmVisible(true);
 				return;
@@ -726,12 +895,17 @@ export default function CheckIn() {
 	}
 
 	return (
-		<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-			<View style={styles.container}>
-				<ContentHeader title="Check In" />
+		// <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+		<View style={styles.container}>
+			<ContentHeader title="Check In" />
 
-				<View style={styles.contentContainer}>
-					{/* <View style={styles.headerBlock, { borderWidth: 1, borderColor: "blue"}}> */}
+			<View style={styles.contentContainer}>
+				<ScrollView
+					style={styles.scrollView}
+					contentContainerStyle={styles.scrollContentContainer}
+					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps="handled"
+				>
 					<View style={styles.headerBlock}>
 						<Text style={styles.eyebrow}>Control de asistencia</Text>
 						<Text style={styles.title}>
@@ -746,8 +920,6 @@ export default function CheckIn() {
 						<View style={styles.statusDot} />
 						<Text style={styles.statusText}>{lastStatus}</Text>
 					</View>
-
-					<PunchTable checkIns={todayCheckIns} isLoading={isLoadingCheckIns} />
 
 					<View style={styles.actionArea}>
 						<Animated.View
@@ -771,8 +943,9 @@ export default function CheckIn() {
 							]}
 						>
 							<Text style={styles.checkButtonIcon}>
-								{isDayComplete ? "✓" : canCheckInFromZone ? "↳" : "×"}
+								{hasPendingPoll ? "…" : canCheckInFromZone ? "↳" : "×"}
 							</Text>
+
 							<Text style={styles.checkButtonText}>
 								{isWorking
 									? "Validando..."
@@ -780,8 +953,8 @@ export default function CheckIn() {
 										? "Cargando..."
 										: isCheckingZone
 											? "Validando zona..."
-											: isDayComplete
-												? "Completo"
+											: hasPendingPoll
+												? "Procesando..."
 												: canCheckInFromZone
 													? nextPunchAction?.label
 													: "Fuera de zona"}
@@ -790,29 +963,30 @@ export default function CheckIn() {
 					</View>
 
 					<Text style={styles.footerText}>
-						{isDayComplete
-							? "Ya tienes registradas las checadas permitidas del día."
-							: `${
-									zoneStatus?.message ||
-									"La zona será validada automáticamente antes de registrar la checada."
-								} Próxima validación en ${zoneRefreshSecondsLeft}s.`}
+						{`${
+							zoneStatus?.message ||
+							"La zona será validada automáticamente antes de registrar la checada."
+						} Próxima validación en ${zoneRefreshSecondsLeft}s.`}
 					</Text>
-				</View>
 
-				{isWorking && (
-					<Working isModalVisible={isWorking} text="Verificando ubicación..." />
-				)}
-
-				{isConfirmVisible && (
-					<Confirm
-						isModalVisible={isConfirmVisible}
-						onCallback={confirmationModalHandler}
-						onExit={confirmationModalHandler}
-						customTitle={confirmData.title}
-						customText={confirmData.text}
-					/>
-				)}
+					<PunchTable checkIns={todayCheckIns} isLoading={isLoadingCheckIns} />
+				</ScrollView>
 			</View>
-		</TouchableWithoutFeedback>
+
+			{isWorking && (
+				<Working isModalVisible={isWorking} text="Verificando ubicación..." />
+			)}
+
+			{isConfirmVisible && (
+				<Confirm
+					isModalVisible={isConfirmVisible}
+					onCallback={confirmationModalHandler}
+					onExit={confirmationModalHandler}
+					customTitle={confirmData.title}
+					customText={confirmData.text}
+				/>
+			)}
+		</View>
+		// </TouchableWithoutFeedback>
 	);
 }
