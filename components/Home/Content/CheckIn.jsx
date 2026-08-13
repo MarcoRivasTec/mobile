@@ -36,7 +36,7 @@ const CHECK_IN_TYPE = "CHECK_IN";
 const CHECK_OUT_TYPE = "CHECK_OUT";
 
 const CHECK_IN_UPDATE_DELAY_MESSAGE =
-	"La checada fue enviada correctamente. La tabla puede tardar hasta 1 minuto en actualizarse.";
+	"La tabla puede tardar hasta 1 minuto en actualizarse.";
 
 const HANDLE_CHECK_IN_MUTATION = `
 	mutation HandleCheckIn($input: CheckInInput!) {
