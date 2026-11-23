@@ -1,7 +1,9 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # Android
-android/
+/android/
+
+/modules/device-credential/android/
 
 # dependencies
 node_modules/
@@ -45,5 +47,5 @@ env/
 *.tsbuildinfo
 .env
 
-ios/
+/ios/
 .yarn/install-state.gz

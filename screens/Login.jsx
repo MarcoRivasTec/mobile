@@ -34,7 +34,7 @@ import DownArrow from "../components/Animations/DownArrow";
 import fetchPost from "../components/fetching";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
-import { biometricAuthenticate } from "../components/Login/biometricAuth";
+import { authenticateWithDevice } from "../components/Login/biometricAuth";
 import * as SecureStore from "expo-secure-store";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -53,12 +53,14 @@ const Login = ({ navigation, route }) => {
 	const [isNipShown, setIsNipShown] = useState(true);
 	const [region, setRegion] = useState("Selecciona");
 	const [biometricSet, setBiometricSet] = useState(false);
+	const [deviceLoginReady, setDeviceLoginReady] = useState(false);
 	const [checkboxState, setCheckboxState] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [versionCheck, setVersionCheck] = useState(false);
 	const setNumEmp = createSetInputValue(setInfoFields, "numEmp");
 	const inputRef = useRef(null);
+	const deviceLoginInProgress = useRef(false);
 
 	useEffect(() => {
 		StatusBar.setHidden(true);
@@ -72,7 +74,9 @@ const Login = ({ navigation, route }) => {
 				console.log("Stored flag is: ", biometricFlag);
 				if (biometricFlag === "true") setBiometricSet(true);
 			} catch (error) {
-				console.error("Failed to load stored employee number: ", error);
+				console.error("Failed to load saved login settings:", error);
+			} finally {
+				setDeviceLoginReady(true);
 			}
 		};
 
@@ -248,7 +252,7 @@ const Login = ({ navigation, route }) => {
 	}
 
 	const handleLogin = async () => {
-		// console.log("Prueba");
+		if (deviceLoginInProgress.current) return;
 
 		setIsLoading(true);
 		if (numEmp === "") {
@@ -327,7 +331,6 @@ const Login = ({ navigation, route }) => {
 
 		const data = await fetchPost({ query: loginQuery });
 		try {
-			console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
 			if (data.data.login.success) {
 				if (checkboxState) {
 					console.log("Checkbox checked");
@@ -372,191 +375,106 @@ const Login = ({ navigation, route }) => {
 						}
 					}`;
 
-	const handleBiometricLogin = async () => {
+	const handleDeviceLogin = async () => {
+		if (!deviceLoginReady || deviceLoginInProgress.current || isLoading) return;
+		deviceLoginInProgress.current = true;
+		setIsLoading(true);
+
 		try {
+			const storeOptions = {
+				keychainService: "com.tecma.movilconnect.service.login",
+				requireAuthentication: false,
+			};
+			let loginCredentials = { numEmp, nip, region };
+
 			if (biometricSet) {
-				console.log("Biometric set, authenticating...");
-				const auth = await biometricAuthenticate();
-				if (!auth) {
-					showMessage({
-						message: "Error de autenticación",
-						description: "No se pudo autenticar con biometría.",
-						type: "danger",
-						duration: 5000,
-					});
-					return;
-				}
+				if (!(await confirmDeviceIdentity())) return;
 
-				console.log(
-					"Biometric authentication successful, retrieving credentials...",
-				);
-				const storedNumEmp = await SecureStore.getItemAsync("numEmp", {
-					keychainService: "com.tecma.movilconnect.service.login",
-					requireAuthentication: false,
-				});
-				const storedNip = await SecureStore.getItemAsync("nip", {
-					keychainService: "com.tecma.movilconnect.service.login",
-					requireAuthentication: false,
-				});
-				const storedRegion = await SecureStore.getItemAsync("region", {
-					keychainService: "com.tecma.movilconnect.service.login",
-					requireAuthentication: false,
-				});
+				const [savedNumEmp, savedNip, savedRegion] = await Promise.all([
+					SecureStore.getItemAsync("numEmp", storeOptions),
+					SecureStore.getItemAsync("nip", storeOptions),
+					SecureStore.getItemAsync("region", storeOptions),
+				]);
 
-				console.log(
-					"Stored credentials: ",
-					storedNumEmp,
-					storedNip,
-					storedRegion,
-				);
-
-				if (!storedNumEmp || !storedNip || !storedRegion) {
-					showMessage({
-						message: "Faltan datos guardados",
-						description:
-							"Inicia sesión manualmente para configurar biométricos.",
-						type: "danger",
-						duration: 5000,
-					});
-					return;
-				}
-
-				const loginQuery = {
-					query: loginMutation,
-					variables: {
-						numEmp: storedNumEmp,
-						region: storedRegion,
-						nip: storedNip,
-					},
-				};
-
-				console.log("Logging in with stored credentials...");
-				const data = await fetchPost({ query: loginQuery });
-				try {
-					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
-					if (data.data.login.success) {
-						console.log("Login successful, setting fields...");
-						if (checkboxState) {
-							console.log("Checkbox checked");
-							await AsyncStorage.setItem("storedNumEmp", numEmp);
-							await AsyncStorage.setItem("storedRegion", region);
-							console.log("Set items: ", region, numEmp);
-						}
-						// console.log(JSON.stringify(data.data.login, null, 1));
-						console.log("Setting info fields and navigating...");
-						await setInfoFields({ region: storedRegion, numEmp: storedNumEmp });
-						navigation.replace("WelcomeHome", {
-							screen: "Welcome",
-							params: {
-								name: data.data.login.data.name,
-								accessToken: data.data.login.data.token,
-							},
-						});
-					} else if (!data.data.login.success) {
-						Alert.alert("Error", `${data.data.login.message}`);
-						return;
-					} else {
-						Alert.alert(
-							"Error",
-							"Ocurrió un error inesperado, vuelve a intentarlo.",
-						);
-						return;
-					}
-				} catch (error) {
+				if (!savedNumEmp || !savedNip || !savedRegion) {
+					await AsyncStorage.removeItem("biometricEnabled");
+					setBiometricSet(false);
 					Alert.alert(
-						"Error",
-						"Ocurrió un error al iniciar sesión con biometría.",
+						"Faltan datos guardados",
+						"Ingresa tu número de empleado, NIP y región para configurar de nuevo el acceso con el teléfono.",
 					);
-					console.error("Error at ingreso", error);
-				} finally {
-					setIsLoading(false);
-				}
-			} else {
-				console.log("Biometric not set, checking credentials");
-				if (numEmp !== "" && nip !== "" && region !== "Selecciona") {
-					const loginQuery = {
-						query: loginMutation,
-						variables: {
-							numEmp: numEmp,
-							region: region,
-							nip: nip,
-						},
-					};
-					const data = await fetchPost({ query: loginQuery });
-					console.log(`Data is: ${JSON.stringify(data, null, 1)}`);
-					if (data.data.login.success) {
-						if (checkboxState) {
-							console.log("Checkbox checked");
-							await AsyncStorage.setItem("storedNumEmp", numEmp);
-							await AsyncStorage.setItem("storedRegion", region);
-							console.log("Set items: ", region, numEmp);
-						}
-
-						console.log("Authenticating with biometrics...");
-						const auth = await biometricAuthenticate();
-						if (!auth) {
-							showMessage({
-								message: "Error de autenticación",
-								description: "No se pudo autenticar con biometría.",
-								type: "danger",
-								duration: 5000,
-							});
-							return;
-						}
-
-						await SecureStore.setItemAsync("numEmp", numEmp, {
-							keychainService: "com.tecma.movilconnect.service.login",
-							requireAuthentication: false,
-						});
-						await SecureStore.setItemAsync("nip", nip, {
-							keychainService: "com.tecma.movilconnect.service.login",
-							requireAuthentication: false,
-						});
-						await SecureStore.setItemAsync("region", region, {
-							keychainService: "com.tecma.movilconnect.service.login",
-							requireAuthentication: false,
-						});
-
-						await AsyncStorage.setItem("biometricEnabled", "true");
-
-						await setInfoFields({ region: region });
-						navigation.replace("WelcomeHome", {
-							screen: "Welcome",
-							params: {
-								name: data.data.login.data.name,
-								accessToken: data.data.login.data.token,
-							},
-						});
-					} else if (!data.data.login.success) {
-						Alert.alert("Error", `${data.data.login.message}`);
-						return;
-					} else {
-						Alert.alert(
-							"Error",
-							"Ocurrió un error inesperado, vuelve a intentarlo.",
-						);
-						return;
-					}
-				} else {
-					showMessage({
-						message: "La autenticación biométrica requiere tus credenciales",
-						description:
-							"Por favor, ingresa tu número de empleado, NIP y región antes de usar la autenticación biométrica.",
-						type: "danger",
-						duration: 10000,
-					});
 					return;
 				}
+
+				loginCredentials = {
+					numEmp: savedNumEmp,
+					nip: savedNip,
+					region: savedRegion,
+				};
+			} else if (!numEmp || !nip || region === "Selecciona") {
+				Alert.alert(
+					"Configurar acceso con el teléfono",
+					"Ingresa tu número de empleado, NIP y región para activar este acceso.",
+				);
+				return;
 			}
-		} catch (error) {
-			console.error("Error during biometric login: ", error);
-			showMessage({
-				message: "Error de autenticación biométrica",
-				description: "Hubo un problema al intentar autenticarte.",
-				type: "danger",
-				duration: 5000,
+
+			const response = await fetchPost({
+				query: { query: loginMutation, variables: loginCredentials },
 			});
+			const result = response?.data?.login;
+			if (!result?.success) {
+				Alert.alert("Error", result?.message || "No se pudo iniciar sesión.");
+				return;
+			}
+
+			if (!biometricSet) {
+				if (!(await confirmDeviceIdentity())) return;
+
+				await SecureStore.setItemAsync("numEmp", loginCredentials.numEmp, storeOptions);
+				await SecureStore.setItemAsync("nip", loginCredentials.nip, storeOptions);
+				await SecureStore.setItemAsync("region", loginCredentials.region, storeOptions);
+				await AsyncStorage.setItem("biometricEnabled", "true");
+				setBiometricSet(true);
+			}
+
+			if (checkboxState) {
+				await AsyncStorage.setItem("storedNumEmp", loginCredentials.numEmp);
+				await AsyncStorage.setItem("storedRegion", loginCredentials.region);
+			}
+
+			await setInfoFields({
+				numEmp: loginCredentials.numEmp,
+				region: loginCredentials.region,
+			});
+			navigation.replace("WelcomeHome", {
+				screen: "Welcome",
+				params: {
+					name: result.data.name,
+					accessToken: result.data.token,
+				},
+			});
+		} catch (error) {
+			console.error("Error during device login:", error);
+			Alert.alert("Error", "Ocurrió un problema al iniciar sesión con el teléfono.");
+		} finally {
+			deviceLoginInProgress.current = false;
+			setIsLoading(false);
 		}
+	};
+
+	const confirmDeviceIdentity = async () => {
+		const result = await authenticateWithDevice();
+		if (result === "success") return true;
+		if (result === "unavailable") {
+			Alert.alert(
+				"Acceso con el teléfono no disponible",
+				"Configura el bloqueo de pantalla o la biometría en los ajustes de tu teléfono.",
+			);
+		} else if (result !== "cancelled") {
+			Alert.alert("Error de autenticación", "No se pudo confirmar tu identidad.");
+		}
+		return false;
 	};
 
 	return (
@@ -681,13 +599,16 @@ const Login = ({ navigation, route }) => {
 					{/* Login button */}
 					<View style={login.buttonsContainer}>
 						<TouchableOpacity
-							onPress={handleBiometricLogin}
+							onPress={handleDeviceLogin}
+							disabled={!deviceLoginReady || isLoading || versionCheck}
+							accessibilityRole="button"
+							accessibilityLabel="Iniciar sesión con el teléfono"
 							style={[
 								login.buttonContainer,
 								{ width: "15%", backgroundColor: COLORS.naranja },
 							]}
 						>
-							<IconMCI name="fingerprint" size={32} color={COLORS.white} />
+							<IconMCI name="cellphone-lock" size={32} color={COLORS.white} />
 						</TouchableOpacity>
 						<LinearGradient
 							colors={[COLORS.naranja, COLORS.rojo]}

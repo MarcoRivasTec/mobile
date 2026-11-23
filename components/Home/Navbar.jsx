@@ -77,7 +77,7 @@ function Navbar({ changeContent, navigation }) {
 
 	const removeBiometrics = async () => {
 		try {
-			console.log("Iniciando eliminación de datos biométricos...");
+			console.log("Desactivando el acceso con el teléfono...");
 			// Delete secure credentials
 			await SecureStore.deleteItemAsync("numEmp", {
 				keychainService: "com.tecma.movilconnect.service.login",
@@ -93,9 +93,9 @@ function Navbar({ changeContent, navigation }) {
 			await AsyncStorage.removeItem("biometricEnabled");
 
 			showMessage({
-				message: "Datos biométricos eliminados",
+				message: "Acceso con el teléfono desactivado",
 				description:
-					"Se ha desactivado el acceso con huella digital / reconocimiento facial.",
+					"Se eliminaron las credenciales de TECMA guardadas para este acceso.",
 				type: "success",
 				duration: 4000,
 			});
@@ -325,8 +325,8 @@ function Navbar({ changeContent, navigation }) {
 								console.log("Opción de remover datos biométricos seleccionada");
 								setShowSettings(false);
 								Alert.alert(
-									"Remover datos biométricos",
-									"¿Estás seguro que deseas eliminar el acceso con huella o reconocimiento facial?",
+									"Desactivar acceso con el teléfono",
+									"¿Quieres eliminar las credenciales de TECMA guardadas para iniciar sesión con el teléfono?",
 									[
 										{ text: "Cancelar", style: "cancel" },
 										{
@@ -340,7 +340,7 @@ function Navbar({ changeContent, navigation }) {
 							style={{ paddingVertical: 12 }}
 						>
 							<Text style={{ color: "#d9534f", fontWeight: "600" }}>
-								Remover datos biométricos (huella digital/rostro)
+								Desactivar acceso con el teléfono
 							</Text>
 						</TouchableOpacity>
 
