@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "TECMA Móvil Connect",
-    "slug": "tecma-movil-connect",
-    "version": "1.1.6",
+    "name": "TECMA Móvil Connect Dev",
+    "slug": "tecma-movil-connect-dev",
+    "version": "1.1.7dev",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-dev.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./assets/icon-dev.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,11 +15,11 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "16",
+      "buildNumber": "17",
       "supportsTablet": true,
-      "bundleIdentifier": "com.tecma.TecmaMovilConnect",
+      "bundleIdentifier": "com.tecma.TecmaMovilConnectDev",
       "infoPlist": {
-        "CFBundleDisplayName": "TECMA Móvil Connect",
+        "CFBundleDisplayName": "TECMA Móvil Connect Dev",
         "NSLocalNetworkUsageDescription": "This app requires access to the local network to retrieve the device name.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -29,14 +29,14 @@
       }
     },
     "android": {
-      "versionCode": 16,
+      "versionCode": 17,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon-dev.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tecma.movilconnect",
+      "package": "com.tecma.movilconnecttest",
       "softwareKeyboardLayoutMode": "pan",
-      "name": "TECMA Móvil Connect",
+      "name": "TECMA Móvil Connect Test",
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"

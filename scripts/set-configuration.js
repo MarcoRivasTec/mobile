@@ -31,7 +31,7 @@ async function updateJsonValues(mode) {
 		if (mode === "dev") {
 			appJson.expo.name = "TECMA Móvil Connect Dev";
 			appJson.expo.slug = "tecma-movil-connect-dev";
-			appJson.expo.version = "1.1.6dev";
+			appJson.expo.version = "1.1.7dev";
 			appJson.expo.icon = "./assets/icon-dev.png";
 			appJson.expo.splash.image = "./assets/icon-dev.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/icon-dev.png";
@@ -45,7 +45,7 @@ async function updateJsonValues(mode) {
 			
 			appJson.expo.name = "TECMA Móvil Connect";
 			appJson.expo.slug = "tecma-movil-connect";
-			appJson.expo.version = "1.1.6";
+			appJson.expo.version = "1.1.7";
 			appJson.expo.icon = "./assets/icon.png";
 			appJson.expo.splash.image = "./assets/icon.png";
 			appJson.expo.android.adaptiveIcon.foregroundImage = "./assets/adaptive-icon.png";
