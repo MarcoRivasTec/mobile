@@ -1,9 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, Animated } from "react-native";
+import { View, Text, TouchableOpacity, Animated, Image } from "react-native";
+
 import sectionButton from "./styles";
+
 import Icon from "../../icons";
 import { Ionicons } from "@expo/vector-icons";
 import AD from "react-native-vector-icons/AntDesign";
+
 import COLORS from "../../../../constants/colors";
 import { ShadowedView } from "react-native-fast-shadow";
 
@@ -15,12 +18,8 @@ function SectionButton({
 	rowHeight,
 	delay = 0,
 }) {
-	const IconComponent =
-		iconLibrary === "default" ? Icon : iconLibrary === "AD" ? AD : Ionicons;
-
 	/*
 	 * Base icon size on the button row, not the complete menu.
-	 * Adjust 0.38 if you want larger or smaller icons.
 	 */
 	const iconSize = rowHeight ? rowHeight * 0.34 : 0;
 
@@ -48,6 +47,44 @@ function SectionButton({
 		]).start();
 	}, [rowHeight, delay, fadeAnim, scaleAnim]);
 
+	const renderIcon = () => {
+		if (!rowHeight) {
+			return null;
+		}
+
+		/*
+		 * Image stored in assets.
+		 *
+		 * icon should be:
+		 * require("../../../../assets/images/example.png")
+		 */
+		if (iconLibrary === "asset") {
+			return (
+				<Image
+					source={icon}
+					style={{
+						width: iconSize,
+						height: iconSize,
+					}}
+					resizeMode="contain"
+				/>
+			);
+		}
+
+		if (iconLibrary === "AD") {
+			return <AD name={icon} size={iconSize} color={COLORS.white} />;
+		}
+
+		if (iconLibrary === "Ionicons") {
+			return <Ionicons name={icon} size={iconSize} color={COLORS.white} />;
+		}
+
+		/*
+		 * Default custom TECMA icon library.
+		 */
+		return <Icon name={icon} size={iconSize} color={COLORS.white} />;
+	};
+
 	return (
 		<Animated.View
 			style={[
@@ -74,13 +111,7 @@ function SectionButton({
 								},
 							]}
 						>
-							{rowHeight > 0 && (
-								<IconComponent
-									name={icon}
-									size={iconSize}
-									color={COLORS.white}
-								/>
-							)}
+							{renderIcon()}
 						</View>
 
 						<Text

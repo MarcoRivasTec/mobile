@@ -88,7 +88,8 @@ const Welcome = ({ navigation, route }) => {
 					// 	data.data.UserInfo.restricted_sections
 					// );
 					setMenuButtons({
-						checkin: !data.data.UserInfo.restricted_sections.includes("checkin"),
+						checkin:
+							!data.data.UserInfo.restricted_sections.includes("checkin"),
 						badge: !data.data.UserInfo.restricted_sections.includes("badge"),
 						payroll:
 							!data.data.UserInfo.restricted_sections.includes("payroll"),
@@ -111,6 +112,9 @@ const Welcome = ({ navigation, route }) => {
 							!data.data.UserInfo.restricted_sections.includes("denounces"),
 						opinion:
 							!data.data.UserInfo.restricted_sections.includes("opinion"),
+						toka: !data.data.UserInfo.restricted_sections.includes("toka"),
+						courses:
+							!data.data.UserInfo.restricted_sections.includes("courses"),
 					});
 					// navigation.replace("Home");
 					if (data.data.IsSupervisor && data.data.IsSupervisor.success) {
@@ -120,7 +124,7 @@ const Welcome = ({ navigation, route }) => {
 					navigation.replace("Login");
 					Alert.alert(
 						"Error",
-						"Hubo un error al obtener la información del usuario, si esto persiste, contacta a tu departamento de Recursos Humanos."
+						"Hubo un error al obtener la información del usuario, si esto persiste, contacta a tu departamento de Recursos Humanos.",
 					);
 					console.warn("Error retrieving user info");
 				}
@@ -157,7 +161,7 @@ const Welcome = ({ navigation, route }) => {
 					setProfileImg(null);
 				} else {
 					setProfileImg(
-						Buffer.from(data.data.ImageBlob.image, "base64").toString("base64")
+						Buffer.from(data.data.ImageBlob.image, "base64").toString("base64"),
 					);
 					console.log("Image set properly");
 				}

@@ -2398,6 +2398,409 @@ const checkin = StyleSheet.create({
 	},
 });
 
+const toka = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	// contentContainer: {
+	// 	width: "100%",
+	// 	alignItems: "center",
+	// 	paddingHorizontal: "6%",
+	// 	paddingTop: 20,
+	// 	paddingBottom: 50,
+	// },
+	contentContainer: {
+		flex: 19,
+		width: "94%",
+		alignItems: "center",
+		justifyContent: "flex-start",
+		// paddingTop: 15,
+	},
+
+	scrollView: {
+		height: "100%",
+		width: "100%",
+	},
+
+	scrollContentContainer: {
+		width: "100%",
+		alignItems: "center",
+		// paddingBottom: 170,
+	},
+
+	/* ---------------------------------
+	 * TOKA CARD
+	 * --------------------------------- */
+
+	card: {
+		width: "91%",
+		aspectRatio: 1.88,
+		backgroundColor: "#00346B",
+		borderRadius: 22,
+		paddingHorizontal: "5%",
+		paddingVertical: "5%",
+		justifyContent: "space-between",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 3,
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 5,
+		elevation: 3,
+	},
+
+	tokaLogo: {
+		width: "27%",
+		height: 50,
+		alignSelf: "flex-start",
+	},
+
+	cardMiddle: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+
+	cardNumber: {
+		color: "#FFFFFF",
+		fontSize: 23,
+		fontWeight: "800",
+		letterSpacing: 0.5,
+	},
+
+	securityCode: {
+		color: "#FFFFFF",
+		fontSize: 23,
+		fontWeight: "800",
+	},
+
+	cardBottom: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "flex-end",
+	},
+
+	employeeName: {
+		color: "#FFFFFF",
+		fontSize: 23,
+		fontWeight: "800",
+	},
+
+	expiration: {
+		color: "#FFFFFF",
+		fontSize: 23,
+		fontWeight: "800",
+	},
+
+	/* ---------------------------------
+	 * CERTIFICATE
+	 * --------------------------------- */
+
+	certificateContainer: {
+		width: "91%",
+		marginTop: 32,
+	},
+
+	certificateTitleRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		zIndex: 2,
+		marginBottom: -20,
+		marginLeft: -10,
+	},
+
+	certificateLogoContainer: {
+		width: 50,
+		height: 50,
+		borderRadius: 29,
+		// marginTop: 10,
+		backgroundColor: "#00346B",
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 3,
+		borderWidth: 1,
+	},
+
+	certificateLogo: {
+		width: 34,
+		height: 34,
+	},
+
+	certificateTitleBackground: {
+		backgroundColor: "#CBCDCF",
+		height: 35,
+		minWidth: 200,
+		marginLeft: -20,
+		paddingLeft: 42,
+		paddingRight: 28,
+		marginTop: 10,
+		justifyContent: "center",
+		borderTopRightRadius: 25,
+		borderBottomRightRadius: 25,
+	},
+
+	certificateTitle: {
+		color: "#111111",
+		fontSize: 15,
+		fontWeight: "800",
+	},
+
+	certificateBody: {
+		backgroundColor: "#E7E8E9",
+		minHeight: 65,
+		borderRadius: 30,
+		justifyContent: "center",
+		paddingHorizontal: "8%",
+		paddingTop: 8,
+	},
+
+	certificateNumber: {
+		color: "#2F8588",
+		fontSize: 22,
+		fontWeight: "800",
+		letterSpacing: 1,
+	},
+
+	/* ---------------------------------
+	 * CHATBOT
+	 * --------------------------------- */
+
+	chatbotButton: {
+		// width: "81%",
+		marginHorizontal: "4%",
+		minHeight: 56,
+		marginTop: 32,
+		borderRadius: 32,
+
+		flexDirection: "row",
+		alignItems: "center",
+
+		paddingHorizontal: 16,
+
+		backgroundColor: "#FF6800",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
+	},
+
+	chatbotIcon: {
+		width: 50,
+		height: 50,
+		marginRight: 10,
+	},
+
+	chatbotText: {
+		flex: 1,
+		color: "#FFFFFF",
+		fontSize: 18,
+		fontWeight: "800",
+	},
+
+	chatbotDivider: {
+		fontWeight: "400",
+	},
+
+	/* ---------------------------------
+	 * PHONE
+	 * --------------------------------- */
+
+	phoneButton: {
+		alignSelf: "flex-start",
+		marginLeft: "4%",
+		marginTop: 32,
+
+		flexDirection: "row",
+		alignItems: "center",
+
+		backgroundColor: "#E4E5E7",
+		borderRadius: 30,
+
+		paddingRight: 25,
+		height: 55,
+	},
+
+	phoneIconContainer: {
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+		backgroundColor: "#2F8588",
+
+		justifyContent: "center",
+		alignItems: "center",
+
+		marginLeft: 3,
+		marginRight: 14,
+	},
+
+	phoneIcon: {
+		color: "#FFFFFF",
+		fontSize: 26,
+		transform: [{ rotate: "-15deg" }],
+	},
+
+	phoneText: {
+		color: "#3E3E42",
+		fontSize: 22,
+		fontWeight: "800",
+	},
+});
+
+const cursos = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	contentContainer: {
+		flex: 19,
+		width: "94%",
+		alignItems: "center",
+		justifyContent: "flex-start",
+	},
+
+	/* ---------------------------------
+	 * LIST
+	 * --------------------------------- */
+
+	courseList: {
+		width: "100%",
+	},
+
+	courseListContent: {
+		paddingTop: 16,
+		paddingBottom: 170,
+	},
+
+	courseRow: {
+		width: "100%",
+		justifyContent: "space-between",
+		paddingHorizontal: "2%",
+		marginBottom: 18,
+	},
+
+	/* ---------------------------------
+	 * COURSE CARD
+	 * --------------------------------- */
+
+	courseCard: {
+		width: "47.5%",
+		backgroundColor: "#E5E6E8",
+		borderRadius: 18,
+
+		paddingHorizontal: 10,
+		paddingTop: 10,
+		paddingBottom: 10,
+
+		alignItems: "center",
+
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 4,
+		},
+		shadowOpacity: 0.13,
+		shadowRadius: 7,
+		elevation: 5,
+	},
+
+	courseImageContainer: {
+		width: "100%",
+		aspectRatio: 1.7,
+		overflow: "hidden",
+		borderRadius: 4,
+		backgroundColor: "#DADCDD",
+	},
+
+	courseImage: {
+		width: "100%",
+		height: "100%",
+	},
+
+	courseTitle: {
+		width: "100%",
+
+		color: "#2F8588",
+		fontSize: 16,
+		fontWeight: "800",
+
+		marginTop: 10,
+
+		textAlign: "left",
+	},
+
+	/* ---------------------------------
+	 * PROGRESS
+	 * --------------------------------- */
+
+	courseStatusRow: {
+		width: "100%",
+
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+
+		marginTop: 8,
+	},
+
+	progressContainer: {
+		width: 42,
+		height: 42,
+
+		justifyContent: "center",
+		alignItems: "center",
+
+		marginRight: 7,
+	},
+
+	progressTextContainer: {
+		position: "absolute",
+
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	progressText: {
+		color: "#2F8588",
+		fontSize: 8,
+		fontWeight: "800",
+	},
+
+	courseStatus: {
+		color: "#3E3E42",
+		fontSize: 13,
+		fontWeight: "700",
+	},
+
+	/* ---------------------------------
+	 * ARROW
+	 * --------------------------------- */
+
+	courseArrowIcon: {
+		width: 34,
+		height: 34,
+		marginTop: 10,
+	},
+});
+
 export {
 	menu,
 	header,
@@ -2419,4 +2822,6 @@ export {
 	polizas,
 	opiniones,
 	checkin,
+	toka,
+	cursos,
 };

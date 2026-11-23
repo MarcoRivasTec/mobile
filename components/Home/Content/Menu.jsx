@@ -5,6 +5,9 @@ import SectionButton from "./Menu/SectionButton";
 import { AppContext } from "../../AppContext";
 import { HomeContext } from "../../HomeContext";
 
+const courseIcon = require("../../../assets/images/courses-icon.png");
+const tokaIcon = require("../../../assets/images/toka-logo.png");
+
 const BUTTONS_PER_ROW = 3;
 const ROWS_PER_PAGE = 4;
 const BUTTONS_PER_PAGE = BUTTONS_PER_ROW * ROWS_PER_PAGE;
@@ -76,6 +79,20 @@ function Menu({ changeContent, navigation }) {
 					title: "Préstamos",
 					icon: "PRESTAMOS",
 					onPress: () => changeContent("Prestamos"),
+				},
+				menuButtons.toka && {
+					id: "toka",
+					title: "TOKA",
+					iconLibrary: "asset",
+					icon: tokaIcon,
+					onPress: () => changeContent("Toka"),
+				},
+				menuButtons.courses && {
+					id: "courses",
+					title: "Cursos",
+					iconLibrary: "asset",
+					icon: courseIcon,
+					onPress: () => changeContent("Cursos"),
 				},
 				menuButtons.savings && {
 					id: "savings",

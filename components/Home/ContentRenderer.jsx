@@ -22,6 +22,8 @@ import Directorio from "./Content/Directorio";
 import TecmaIdeas from "./Content/TecmaIdeas";
 import Notificaciones from "./Content/Notificaciones";
 import CheckIn from "./Content/CheckIn";
+import Toka from "./Content/Toka";
+import Cursos from "./Content/Cursos";
 
 function ContentRenderer({ content, changeContent, navigation }) {
 	const [visibleContent, setVisibleContent] = useState(content);
@@ -72,6 +74,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Prestamos changeContent={changeContent} />;
 			case "RetiroAhorro":
 				return <RetiroAhorro />;
+			case "Cursos":
+				return <Cursos />;
 			case "Cartas":
 				return <Cartas />;
 			case "Reposiciones":
@@ -84,6 +88,8 @@ function ContentRenderer({ content, changeContent, navigation }) {
 				return <Opiniones />;
 			case "CheckIn":
 				return <CheckIn />;
+			case "Toka":
+				return <Toka />;
 			default:
 				return null;
 		}
